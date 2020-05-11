@@ -35,7 +35,7 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
             $user->save();
 
-            return ['status' => 200, 'reason' => 'Registration successfully done'];
+            return ['status' => 200, 'reason' => 'Registration successfully done. An email with registration link have been sent to your email address.'];
         } catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
