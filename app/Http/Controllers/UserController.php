@@ -93,19 +93,20 @@ class UserController extends Controller
     }
 
     public function promotion(Request $request){
-        try {
+        //try {
             $user = Auth::user();
             if($request->ajax()) {
-                $returnHTML = View::make('promotion',compact('users'))->renderSections()['content'];
+                $returnHTML = View::make('promotion',compact('user'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('promotion',compact('users'));
-        } catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
-                $e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+            return view('promotion',compact('user'));
+        // } 
+        // catch (\Exception $e) {
+        //     SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
+        //         $e->getFile(), '', '', '', '');
+        //     // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+        //     return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        // }
     }
 
     public function profile(Request $request){

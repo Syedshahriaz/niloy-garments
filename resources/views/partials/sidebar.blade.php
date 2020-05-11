@@ -1,4 +1,4 @@
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-sidebar-fixed">
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-sidebar-fixed page-container-bg-solid ">
 <!-- BEGIN HEADER -->
 <div class="page-header navbar navbar-fixed-top">
     <!-- BEGIN HEADER INNER -->
