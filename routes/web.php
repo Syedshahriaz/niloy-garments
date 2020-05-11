@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/post_login', 'AuthenticationController@postLogin');
 Route::get('/registration', 'UserController@create');
+Route::get('/promotion', 'UserController@promotion');
 Route::post('user/store', 'UserController@store');
 
 
@@ -28,5 +29,6 @@ Route::get('home', 'HomeController@index')->name('home');
 Route::get('profile', 'HomeController@profile')->name('profile');
 
 /*User project routs*/
+Route::get('select_shipment', 'UserProjectController@selectShipment')->name('user.select_shipment');
 Route::get('all_project', 'UserProjectController@allProject')->name('user.all_project');
 Route::get('my_project', 'UserProjectController@myProject')->name('user.my_project');
