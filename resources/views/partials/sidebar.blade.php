@@ -23,14 +23,14 @@
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle">
                         <img alt="" class="img-circle" src="{{asset('assets/layouts/layout/img/avatar3_small.jpg')}}">
-                        <span class="username username-hide-on-mobile"> Welcome Nick Jonas</span>
+                        <span class="username username-hide-on-mobile"> {{\Auth::user()->first_name." ".\Auth::user()->last_name}}</span>
                     </a>
                 </li>
             </ul>
             <ul class="nav navbar-nav pull-right">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                {{--<li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <i class="icon-bell"></i>
                         <span class="badge badge-default"> 7 </span>
@@ -127,7 +127,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li>--}}
                 <!-- END NOTIFICATION DROPDOWN -->
                 <!-- BEGIN INBOX DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
@@ -210,11 +210,17 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{url('logout')}}" class="nav-link">
+                <a  href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();" class="nav-link">
                     <i class="icon-logout"></i>
                     <span class="title">Log Out</span>
                     <span class="selected"></span>
                 </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </li>
         </ul>
         <!-- END SIDEBAR MENU -->

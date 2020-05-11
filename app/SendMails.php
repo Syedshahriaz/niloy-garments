@@ -23,20 +23,8 @@ class SendMails
     const FROM_ADDRESS = Common::NOTIFICATION_FROM_EMAIL;
     const FROM_NAME = Common::NOTIFICATION_FROM_NAME;
 
-    const SMTP_HOST = 'email-smtp.us-east-1.amazonaws.com';
-    const PORT = 587;
-    const SMTP_SECURE = 'tls';
-    const SMTP_USERNAME = 'AKIAYTCANS5ITSCJR7XC';
-    const SMTP_PASS = 'BIR9LuIRYCsqn+xTiOIaJiNTKMBrK2LeUAqFyDBfsTKX';
-
-    public static function sendMail(array $data, $view, $application_id=''){ // Send email with AWS ses
+    public static function sendMail(array $data, $view){
         try{
-            /*
-             * Format base64 image data inside message string
-             * */
-            if($data['bodyMessage'] != ''){
-                $data['bodyMessage'] = self::imageSendToMail($data['bodyMessage']);
-            }
 
             if(isset($data['email'])) {
                 $to_email = $data['email'];
