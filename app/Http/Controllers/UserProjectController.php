@@ -57,6 +57,23 @@ class UserProjectController extends Controller
         }
     }
 
+    public function selectShipment(Request $request){
+        try{
+            $user = Auth::user();
+            if($request->ajax()) {
+                $returnHTML = View::make('user.project.select_shipment')->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.project.select_shipment');
+        }
+        catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
     public function addProject(Request $request){
         try{
             DB::beginTransaction();
@@ -130,7 +147,7 @@ class UserProjectController extends Controller
 
     public function myProject(Request $request){
         try{
-            $projects = Project::select('user_projects.*','projects.name','projects.fabrication','projects.color','projects.quantity','projects.')
+            $projects = Project::select('user_projects.*','projects.name','projects.fabrication','projects.color','projects.quantity','projects.size_range')
                 ->where('status','active')
                 ->join('user_projects','user_projects.project_id','=','projects.id')
                 ->get();

@@ -11,11 +11,11 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="{{url('/home')}}">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>Projects</span>
+                        <span>All Projects</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">

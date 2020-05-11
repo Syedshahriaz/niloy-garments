@@ -190,7 +190,7 @@
             <li class="nav-item">
                 <a href="{{url('my_project')}}" class="nav-link">
                     <i class="icon-puzzle"></i>
-                    <span class="title">Selected Projects</span>
+                    <span class="title">My Projects</span>
                     <span class="selected"></span>
                 </a>
             </li>

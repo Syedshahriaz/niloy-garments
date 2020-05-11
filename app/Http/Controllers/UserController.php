@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Common;
 use App\SendMails;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class UserController extends Controller
@@ -61,9 +62,25 @@ class UserController extends Controller
 
     public function multiTinent(Request $request){
         try {
-            return redirect('home');
+            return redirect('promotion');
         } catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'multiTinent', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function promotion(Request $request){
+        try {
+            $user = Auth::user();
+            if($request->ajax()) {
+                $returnHTML = View::make('promotion',compact('users'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('promotion',compact('users'));
+        } catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
