@@ -19,27 +19,11 @@ class Common
     const SITE_TITLE = 'Lightfield Industries Cloud';
     const DOMAIN_NAME = '68.183.191.122';
     const SITE_URL = 'http://68.183.191.122';
-    const FROM_EMAIL = 'admin@lightfield.industries';
-    const INVITATION_FROM_NAME = 'Support';
-    const INVITATION_FROM_EMAIL = 'support@plinth.it';
-    const INVITATION_NOTIFICATION_EMAIL = 'hello@plinth.it ';
-    const NOTIFICATION_FROM_NAME = 'Plinth.it';
-    const NOTIFICATION_FROM_EMAIL = 'notify@plinth.it';
-    const NOTIFICATION_EMAIL = 'info@lightfield.industries';
-    //const NOTIFICATION_EMAIL = 'mail2technerd@gmail.com';
-    const OAUTH_TOKEN = 'lfi123456';
+    const FROM_EMAIL = 'mail2technerd@gmail.com';
+    const FROM_NAME = 'Niloy';
 
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
-
-    public static function getGitVersion()
-    {
-        $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
-        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-        $commitDate->setTimezone(new \DateTimeZone('UTC'));
-
-        return sprintf('%s', $commitDate->format('Y-m-d H:i:s'));
-    }
 
     public static function is_admin_login(){
         if (Session::get('superadmin_user_id')) {
@@ -50,13 +34,6 @@ class Common
 
     public static function is_user_login(){
         if (Session::get('user_id') && Session::get('role_id') == 1) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public static function is_artist_login(){
-        if (Session::get('user_id') && Session::get('role_id') == 2) {
             return 1;
         }
         return 0;

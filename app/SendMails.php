@@ -20,12 +20,14 @@ use Image;
  */
 class SendMails
 {
-    const FROM_ADDRESS = Common::NOTIFICATION_FROM_EMAIL;
-    const FROM_NAME = Common::NOTIFICATION_FROM_NAME;
+    const FROM_ADDRESS = Common::FROM_EMAIL;
+    const FROM_NAME = Common::FROM_NAME;
 
-    public static function sendMail(array $data, $view){
+    public static function sendMail(array $data, $view)
+    {
         try{
-
+            $from_email = self::FROM_ADDRESS;
+            $from_name = self::FROM_NAME;
             if(isset($data['email'])) {
                 $to_email = $data['email'];
             }
@@ -58,33 +60,32 @@ class SendMails
                 $subject = "Welcome To ".SendMails::FROM_NAME;
             }
 
-            $EmailBody = View::make($view,$data);
 
-            $mail = new MailWithAws(SendMails::SMTP_HOST, SendMails::PORT);
-            $mail->setProtocol(MailWithAws::TLS);
-            $mail->setLogin(SendMails::SMTP_USERNAME, SendMails::SMTP_PASS);
-            $mail->setFrom(SendMails::FROM_ADDRESS, SendMails::FROM_NAME);
-            foreach($to_email as $t_email){
-                $mail->addTo($t_email, '');
-            }
-            if(count($cc_email) !=0){
-                foreach($cc_email as $c_email){
-                    $mail->addCc($c_email, '');
-                }
-            }
-            if(count($bcc_email) !=0){
-                foreach($bcc_email as $b_email){
-                    $mail->addCc($b_email, '');
-                }
-            }
-            $mail->setSubject($subject);
-            $mail->setHtmlMessage($EmailBody);
+            Mail::send($view, $data, function ($message) use ($to_email,$from_email,$from_name,$cc_email,$bcc_email,$attachments,$subject) {
 
-            if($mail->send()){
-                return 'ok';;
-            } else {
-                echo 'Email not sent. An error occurred.';
-            }
+                // dd($from_email);
+                $message->from($from_email, $from_name);
+
+                if(count($to_email)!=0){
+                    $message->to($to_email);
+                }
+                if(count($cc_email)!=0){
+                    $message->cc($cc_email);
+                }
+                if(count($bcc_email)!=0){
+                    $message->bcc($bcc_email);
+                }
+                if(count($attachments)!=0){
+                    foreach ($attachments as $attach) {
+                        if($attach != ''){
+                            $message->attach($attach);
+                        }
+                    }
+                }
+                $message->subject($subject);
+            });
+
+            return 'ok';
         }catch (\Exception $exception){
             return $exception->getMessage();
         }

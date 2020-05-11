@@ -27,7 +27,7 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
-        try {
+        //try {
             $user = new User();
             $user->username = $request->username;
             $user->email = $request->email;
@@ -35,13 +35,34 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
             $user->save();
 
+            /*
+             * Send confirmation email
+             */
+            $email_to = [$request->email];
+            $email_cc = [];
+            $email_bcc = [];
+
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+
+            $emailData['bodyMessage'] = '';
+
+            $view = 'emails.registration_confirmation_email';
+
+            $result = SendMails::sendMail($emailData, $view);
+            return $result;
+
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with registration link have been sent to your email address.'];
-        } catch (\Exception $e) {
+        /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function selectUser(Request $request){
