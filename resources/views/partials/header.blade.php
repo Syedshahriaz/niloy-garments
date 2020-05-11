@@ -29,7 +29,9 @@
 
         <!-- BEGIN GLOBAL PAGE STYLES -->
         <link href="{{asset('assets/pages/css/login.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('assets/pages/css/profile.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/global/plugins/intl-tel-input-master/css/intlTelInput.min.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL PAGE STYLES-->
 
         <!-- BEGIN THEME LAYOUT STYLES -->

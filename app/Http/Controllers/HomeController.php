@@ -41,4 +41,13 @@ class HomeController extends Controller
         }
         return view('user.profile', compact('user'));
     }
+
+    public function profileEdit()
+    {
+        return view('user.profile-edit');
+    }
+    public function resetPassword()
+    {
+        return view('user.reset-password');
+    }
 }
