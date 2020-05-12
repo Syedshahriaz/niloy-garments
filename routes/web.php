@@ -27,6 +27,8 @@ Route::get('/multi_tinent', 'UserController@multiTinent');
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
 Route::get('profile', 'HomeController@profile')->name('profile');
+Route::get('profile-edit', 'HomeController@profileEdit')->name('profile_edit');
+Route::get('reset-password', 'HomeController@resetPassword')->name('reset-password');
 
 /*User project routs*/
 Route::get('select_shipment', 'UserProjectController@selectShipment')->name('user.select_shipment');
