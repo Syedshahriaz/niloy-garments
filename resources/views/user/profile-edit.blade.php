@@ -33,6 +33,11 @@
 
             <div class="row mt-3">
                 <div class="col-md-12">
+                    <form  id="profile_form" method="post" action="" enctype="multipart/form-data">
+                    {{csrf_field()}}
+                        <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+                        <div class="alert alert-success" id="success_message" style="display:none"></div>
+                        <div class="alert alert-danger" id="error_message" style="display: none"></div>
                     <!-- BEGIN PROFILE SIDEBAR -->
                     <div class="profile-sidebar">
                         <!-- PORTLET MAIN -->
@@ -45,7 +50,7 @@
 
                             <!-- SIDEBAR BUTTONS -->
                             <div class="profile-userbuttons">
-                                <button id="image_change_btn" type="button" class="btn btn-green green btn-sm">Update Image</a>
+                                <button id="image_change_btn" type="button" class="btn btn-green green btn-sm">Update Image</button>
                             </div>
                             <!-- END SIDEBAR BUTTONS -->
                         </div>
@@ -65,49 +70,51 @@
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                    <form action="">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for=""><b>User Name</b></label>
-                                                    <input type="text" class="form-control" name="user-info-name" value="Marcus Doe">
-                                                </div> 
+                                                    <label for=""><b>First Name</b></label>
+                                                    <input type="text" class="form-control" name="first_name" id="first_name" value="{{$user->first_name}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for=""><b>Last Name</b></label>
+                                                    <input type="text" class="form-control" name="last_name" id="last_name" value="{{$user->last_name}}">
+                                                </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Gender</b></label>
-                                                    <select name="" id="" name="user-info-gender" class="form-control">
-                                                        <option value="">Select Gender</option>
-                                                        <option value="1">Male</option>
-                                                        <option value="2">Female</option>
-                                                        <option value="3">Others</option>
+                                                    <select name="gender" id="gender" name="user-info-gender" class="form-control">
+                                                        <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
+                                                        <option value="Female" @if($user->gender=='Female') selected @endif>Female</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Email Address</b></label>
-                                                    <input type="email" class="form-control" name="user-info-email" value="marcus@gmail.com">
+                                                    <input type="email" class="form-control" name="email" id="email" value="{{$user->email}}">
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            {{--<div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Shipping Date</b></label>
                                                     <input class="form-control date-picker" size="16" type="text" value="" />
                                                 </div>
-                                            </div>
+                                            </div>--}}
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
-                                                    <input type="phone" class="form-control" name="user-info-phone" value="+8801614355552">
+                                                    <input type="phone" class="form-control" name="phone" id="phone" value="{{$user->phone}}">
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group text-right">
-                                            <button type="submit" class="btn green btn-sm">Update Info</button>
+                                            <button type="submit" class="btn green btn-sm" id="profile_button">Update Info</button>
                                         </div>
-                                    </form> 
                                     </div>
                                 </div>
                                 <!-- END PORTLET -->
@@ -115,6 +122,7 @@
                         </div>
                     </div>
                     <!-- END PROFILE CONTENT -->
+                    </form>
                 </div>
             </div>
 
@@ -147,7 +155,66 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+
         });
+
+        $(document).on("submit", "#profile_form", function(event) {
+            event.preventDefault();
+
+            var first_name = $("#first_name").val();
+            var email = $("#email").val();
+            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            var validate = "";
+
+            if (first_name.trim() == "") {
+                validate = validate + "First name is required</br>";
+            }
+            if (email.trim() == "") {
+                validate = validate + "Email is required</br>";
+            }
+            if(email.trim()!=''){
+                if(!re.test(email)){
+                    validate = validate+'Email is invalid<br>';
+                }
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#profile_form")[0]);
+                var url = "{{ url('profile_update') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        if (data.status == 200) {
+                            $("#success_message").show();
+                            $("#error_message").hide();
+                            $("#success_message").html(data.reason);
+                        } else {
+                            $("#success_message").hide();
+                            $("#error_message").show();
+                            $("#error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                $("#success_message").hide();
+                $("#error_message").show();
+                $("#error_message").html(validate);
+            }
+        });
+
+
     </script>
 @endsection
 

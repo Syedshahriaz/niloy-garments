@@ -107,7 +107,7 @@ class UserController extends Controller
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('promotion',compact('user'));
-        // } 
+        // }
         // catch (\Exception $e) {
         //     SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
         //         $e->getFile(), '', '', '', '');
@@ -118,7 +118,9 @@ class UserController extends Controller
 
     public function profile(Request $request){
         try {
-            $user = User::where('id',Auth::user()->id)->first();
+            $user = User::where('users.id',Auth::user()->id)
+                ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
+                ->first();
             if($request->ajax()) {
                 $returnHTML = View::make('user.profile',compact('user'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
@@ -133,26 +135,41 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request){
-        try {
+    public function profileEdit(Request $request)
+    {
+        $user = User::where('users.id',Auth::user()->id)
+            ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
+            ->first();
+        if($request->ajax()) {
+            $returnHTML = View::make('user.profile-edit',compact('user'))->renderSections()['content'];
+            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        }
+        return view('user.profile-edit',compact('user'));
+    }
+    public function resetPassword()
+    {
+        return view('user.reset-password');
+    }
+
+    public function profileUpdate(Request $request){
+        //try {
             $user = User::where('id',$request->user_id)->first();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
-            $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
-            $user->birthday = date('Y-m-d', strtotime($request->birthday));
+            //$user->birthday = date('Y-m-d', strtotime($request->birthday));
             $user->gender = $request->gender;
             $user->save();
 
             return ['status' => 200, 'reason' => 'User successfully updated'];
-        }
+        /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updateUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function updatePassword(Request $request){
