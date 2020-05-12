@@ -61,32 +61,27 @@
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">User Name*</label>
             <input class="form-control placeholder-no-fix" type="text" placeholder="User Name*" name="username" id="username" />
-            <small id="fullname-error" class="help-block text-danger">Enter your user name.</small>
         </div>
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
             <label class="control-label visible-ie8 visible-ie9">Email</label>
             <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" />
-            <small id="Email-error" class="help-block text-danger">Enter your email address.</small>
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
             <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" />
-            <small id="Phone-error" class="help-block text-danger">Enter your phone number</small>
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <input class="form-control placeholder-no-fix" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
-            <small id="password-error" class="help-block text-danger">Enter your Password</small>
+            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
-            <input class="form-control placeholder-no-fix" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
-            <small id="repassword-error" class="help-block text-danger">Reenter your password</small>
+            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
         </div>
         <div class="form-group margin-top-20 margin-bottom-20">
             <label class="mt-checkbox mt-checkbox-outline mb-0">
-                <input type="checkbox" name="show_password" /> Show password
+                <input type="checkbox" class="show-password" name="show_password" /> Show password
                 <span></span>
             </label>
             <div id="register_tnc_error"> </div>

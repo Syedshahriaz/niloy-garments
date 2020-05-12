@@ -69,7 +69,9 @@
         vertical-align: middle;
     }
     /*Modal css END*/
-
+    .alert{
+        font-size: 13px;
+    }
 /*Core css END*/
 /*Rewrite layout START*/
 body {
@@ -118,6 +120,12 @@ body {
 /*phone plugin Edit END*/
 
 /*Select project START*/
+.add-new-usre {
+    margin-top: 8px;
+    border-radius: 0;
+    margin-right: 20px;
+    padding: 6px 12px !important;
+}
 .project-item{
     cursor: pointer;
     border: 1px solid #eee;

@@ -49,22 +49,22 @@
                                     <form action="">
                                         <div class="form-group">
                                             <label for=""><b>New password</b></label>
-                                            <input type="password" class="form-control" name="new-password" value="">
+                                            <input type="password" class="form-control password-field" name="new-password" value="">
                                         </div> 
 
                                         <div class="form-group">
                                             <label for=""><b>Confirm password</b></label>
-                                            <input type="password" class="form-control" name="confirm-password" value="">
+                                            <input type="password" class="form-control password-field" name="confirm-password" value="">
                                         </div> 
                                         <div class="form-group margin-top-20 margin-bottom-20">
                                             <label class="mt-checkbox mt-checkbox-outline mb-0">
-                                                <input type="checkbox" name="show_password" /> Show password
+                                                <input type="checkbox" class="show-password" name="show_password" /> Show password
                                                 <span></span>
                                             </label>
                                         </div>
                                         
                                         <div class="form-group text-right">
-                                            <button type="submit" class="btn green btn-sm">Reset</button>
+                                            <button type="submit" class="btn green">Reset</button>
                                         </div>
                                     </form> 
                                     </div>

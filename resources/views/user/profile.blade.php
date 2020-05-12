@@ -48,8 +48,8 @@
                             <!-- END SIDEBAR USER TITLE -->
                             <!-- SIDEBAR BUTTONS -->
                             <div class="profile-userbuttons">
-                                <a href="{{url('profile-edit')}}" class="btn btn-circle green btn-sm">Update Info</a>
-                                <a href="{{url('reset-password')}}" class="btn btn-circle red btn-sm">Reset password</a>
+                                <a href="{{url('profile-edit')}}" class="btn blue btn-sm">Update Info</a>
+                                <a href="{{url('reset-password')}}" class="btn red btn-sm">Reset password</a>
                             </div>
                             <!-- END SIDEBAR BUTTONS -->
                         </div>
