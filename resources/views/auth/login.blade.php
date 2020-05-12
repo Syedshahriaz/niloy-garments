@@ -59,14 +59,10 @@
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
             <label class="control-label visible-ie8 visible-ie9">Email Address</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Email Address" name="email" id="email" />
-            <small id="login-email" class="help-block text-danger">Enter your email address</small>
-        </div>
+            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Email Address" name="email" id="email" />        </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="password" name="password" id="password" />
-            <small id="login-password" class="help-block text-danger">Enter your password</small>
-        </div>
+            <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="password" name="password" id="password" />        </div>
         <div class="form-actions">
 
             <label class="rememberme check mt-checkbox mt-checkbox-outline">
