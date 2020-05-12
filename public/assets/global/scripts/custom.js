@@ -6,6 +6,17 @@ $("#telephone").intlTelInput({
 //$('#iti-0__item-bd').find('.iti__dial-code').text('+88');
 //$('.iti__selected-dial-code').text('+88');
 
+//User registration show password
+$('.show-password').click(function(){
+    if($(this).is(":checked") == true){
+        $(this).parents('form').find('.password-field').prop("type", "text");
+    }
+    else{
+        $(this).parents('form').find('.password-field').prop("type", "password");
+    }
+});
+
+
 //project selection action
 $(document).on('click','.project-item',function(){
     var check_status = $(this).find('.project-item-check').val();

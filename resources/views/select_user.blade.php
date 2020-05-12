@@ -60,7 +60,7 @@
                 <option value="2">User 2</option>
                 <option value="3">User 3</option>
             </select>
-            <small id="user_is" class="help-block text-danger">Select an account to sign in</small>
+            <!-- <small id="user_is" class="help-block text-danger">Select an account to sign in</small> -->
         </div>
 
         <div class="form-actions">

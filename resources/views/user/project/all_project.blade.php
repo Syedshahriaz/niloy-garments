@@ -496,6 +496,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button class="btn green">Add Selected Project</button>  
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- END PORTLET-->

@@ -50,7 +50,7 @@
 
                             <!-- SIDEBAR BUTTONS -->
                             <div class="profile-userbuttons">
-                                <button id="image_change_btn" type="button" class="btn btn-green green btn-sm">Update Image</button>
+                                <button id="image_change_btn" type="button" class="btn blue btn-sm">Update Image</button>
                             </div>
                             <!-- END SIDEBAR BUTTONS -->
                         </div>
@@ -113,7 +113,7 @@
                                         </div>
 
                                         <div class="form-group text-right">
-                                            <button type="submit" class="btn green btn-sm" id="profile_button">Update Info</button>
+                                            <button type="submit" class="btn green" id="profile_button">Update Info</button>
                                         </div>
                                     </div>
                                 </div>
