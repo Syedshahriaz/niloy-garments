@@ -18,3 +18,14 @@ $(document).on('click','.project-item',function(){
         $(this).removeClass('project_added');
     }
 });
+
+//Select shipment date modal
+$(window).on('load',function(){
+    $('#select_ship_date').modal('show');
+});
+$('#select_ship_date').on('show.bs.modal', function (e) {
+    $('body').addClass('shipment_modal-open');
+});
+$('#select_ship_date').on('hidden.bs.modal', function (e) {
+    $('body').removeClass('shipment_modal-open');
+});

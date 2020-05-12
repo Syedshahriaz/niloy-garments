@@ -44,10 +44,31 @@
         border-color: #7030a0 !important;
         color: #fff;
     }
-    .theme-btn:hover{
+    .theme-btn:hover, .theme-btn:focus{
         color: #fff;
     }
     /*Color css END*/
+
+    /*Modal css START*/
+    .modal {
+        text-align: center;
+        padding: 0!important;
+    }
+    
+    .modal:before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -4px;
+    }
+    
+    .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+    /*Modal css END*/
 
 /*Core css END*/
 /*Rewrite layout START*/
@@ -128,4 +149,25 @@ body {
     overflow: hidden;
 }
 /*Select project END*/
+
+/*Select shipment date START*/
+#select_ship_date .modal-title{
+    font-size: 22px;
+    font-weight: 400;
+}
+#select_ship_date .modal-footer{
+    text-align: center !important;
+}
+@media (min-width: 768px){
+    #select_ship_date .modal-dialog {
+        width: 400px;
+    }
+}
+.shipment_modal-open .modal-backdrop.fade.in {
+    background-color: #211d36 !important;
+    opacity: 0.98 !important;
+}
+/*Select shipment date END*/
+
+
 /*Rewrite layout END*/
