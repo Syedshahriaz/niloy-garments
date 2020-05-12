@@ -43,7 +43,7 @@
                             <!-- END SIDEBAR USERPIC -->
                             <!-- SIDEBAR USER TITLE -->
                             <div class="profile-usertitle">
-                                <div class="profile-usertitle-name"> Marcus Doe </div>
+                                <div class="profile-usertitle-name"> {{$user->first_name." ".$user->last_name}} </div>
                             </div>
                             <!-- END SIDEBAR USER TITLE -->
                             <!-- SIDEBAR BUTTONS -->
@@ -73,28 +73,30 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>User Name</b></h5>
-                                                    <p>Marcus Doe</p>
+                                                    <p>{{$user->first_name." ".$user->last_name}}</p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Gender</b></h5>
-                                                    <p>Male</p>
+                                                    <p>{{$user->gender}}</p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Phone Number</b></h5>
-                                                    <p>+8801614355552</p>
+                                                    <p>{{$user->phone}}</p>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Email Address</b></h5>
-                                                    <p>marcus@gmail.com</p>
+                                                    <p>{{$user->email}}</p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Shipping Date</b></h5>
-                                                    <p>Tuesday 26, May, 2020</p>
+                                                    @if($user->shipment_date !='')
+                                                        <p>{{date('l d, M, Y', strtotime($user->shipment_date))}}</p>
+                                                    @endif
                                                 </div>
-                                                
+
                                             </div>
-                                        </div>  
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- END PORTLET -->

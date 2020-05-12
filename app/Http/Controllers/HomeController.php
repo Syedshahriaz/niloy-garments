@@ -31,23 +31,4 @@ class HomeController extends Controller
         }
         return view('user.dashboard');
     }
-
-    public function profile(Request $request)
-    {
-        $user = User::where('id',Auth::user()->id)->first();
-        if($request->ajax()) {
-            $returnHTML = View::make('user.profile', compact('user'))->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
-        }
-        return view('user.profile', compact('user'));
-    }
-
-    public function profileEdit()
-    {
-        return view('user.profile-edit');
-    }
-    public function resetPassword()
-    {
-        return view('user.reset-password');
-    }
 }

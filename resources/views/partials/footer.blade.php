@@ -11,6 +11,7 @@
 <!-- BEGIN FOOTER scripts-->
 @include('partials.scripts')
 <!-- END FOOTER scripts-->
+@yield('js')
 </body>
 
 </html>
