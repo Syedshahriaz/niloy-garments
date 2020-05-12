@@ -27,7 +27,14 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
-        //try {
+        try {
+            /*
+             * Check duplicate username
+             * */
+            $duplicateUser = User::where('username',$request->username)->first();
+            if(!empty($duplicateUser)){
+                return [ 'status' => 401, 'reason' => 'Duplicate username'];
+            }
             $user = new User();
             $user->username = $request->username;
             $user->email = $request->email;
@@ -57,12 +64,12 @@ class UserController extends Controller
             return $result;
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with registration link have been sent to your email address.'];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function selectUser(Request $request){
