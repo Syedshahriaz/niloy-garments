@@ -39,7 +39,8 @@
                         <div class="portlet light profile-sidebar-portlet ">
                             <!-- SIDEBAR USERPIC -->
                             <div class="profile-userpic">
-                                <img src="../../assets/layouts/layout/img/photo3.jpg" class="img-responsive" alt=""> </div>
+                                <img src="../../assets/layouts/layout/img/photo3.jpg" class="img-responsive" alt="">
+                            </div>
                             <!-- END SIDEBAR USERPIC -->
                             <!-- SIDEBAR USER TITLE -->
                             <div class="profile-usertitle">
