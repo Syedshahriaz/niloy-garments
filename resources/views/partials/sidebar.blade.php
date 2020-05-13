@@ -23,7 +23,7 @@
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle">
                         <img alt="" class="img-circle" src="{{asset('assets/layouts/layout/img/avatar3_small.jpg')}}">
-                        <span class="username username-hide-on-mobile"> {{\Auth::user()->first_name." ".\Auth::user()->last_name}}</span>
+                        <span class="username username-hide-on-mobile"> {{\Auth::user()->username}}</span>
                     </a>
                 </li>
             </ul>
@@ -31,7 +31,7 @@
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <li>
                     <a href="" class="add-new-usre btn btn-danger">Add New User</a>
-                </li>  
+                </li>
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 {{--<li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">

@@ -77,7 +77,11 @@
                                         <div class="user-info">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <h5 class="mb-0"><b>User Name</b></h5>
+                                                    <h5 class="mb-0"><b>Username</b></h5>
+                                                    <p>{{$user->username}}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-0"><b>Name</b></h5>
                                                     <p>{{$user->first_name." ".$user->last_name}}</p>
                                                 </div>
                                                 <div class="col-md-6">
