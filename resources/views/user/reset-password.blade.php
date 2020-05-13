@@ -46,27 +46,33 @@
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                    <form action="">
+                                    <form id="profile_form" method="post" action="">
+                                        {{csrf_field()}}
+                                        <input type="hidden" name="user_id" id="user-id" value="{{$user->id}}">
+
+                                        <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                        <div class="alert alert-danger" id="error_message" style="display: none"></div>
+
                                         <div class="form-group">
                                             <label for=""><b>New password</b></label>
-                                            <input type="password" class="form-control password-field" name="new-password" value="">
-                                        </div> 
+                                            <input type="password" class="form-control password-field" name="password" id="password" value="">
+                                        </div>
 
                                         <div class="form-group">
                                             <label for=""><b>Confirm password</b></label>
-                                            <input type="password" class="form-control password-field" name="confirm-password" value="">
-                                        </div> 
+                                            <input type="password" class="form-control password-field" name="confirm_password" id="confirm_password" value="">
+                                        </div>
                                         <div class="form-group margin-top-20 margin-bottom-20">
                                             <label class="mt-checkbox mt-checkbox-outline mb-0">
                                                 <input type="checkbox" class="show-password" name="show_password" /> Show password
                                                 <span></span>
                                             </label>
                                         </div>
-                                        
+
                                         <div class="form-group text-right">
                                             <button type="submit" class="btn green">Reset</button>
                                         </div>
-                                    </form> 
+                                    </form>
                                     </div>
                                 </div>
                                 <!-- END PORTLET -->
@@ -95,6 +101,56 @@
                     $('input[type="password"]').prop("type", "password");
                 }
             });
+        });
+
+        $(document).on("submit", "#profile_form", function(event) {
+            event.preventDefault();
+
+            var password = $("#password").val();
+            var confirm_password = $("#confirm_password").val();
+
+            var validate = "";
+
+            if (password.trim() == "") {
+                validate = validate + "Password is required</br>";
+            }
+            if (password.trim() != "" && password.trim() != confirm_password.trim()) {
+                validate = validate + "Password and confirm password not matched</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#profile_form")[0]);
+                var url = "{{ url('update_password') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        if (data.status == 200) {
+                            $("#success_message").show();
+                            $("#error_message").hide();
+                            $("#success_message").html(data.reason);
+                        } else {
+                            $("#success_message").hide();
+                            $("#error_message").show();
+                            $("#error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                $("#success_message").hide();
+                $("#error_message").show();
+                $("#error_message").html(validate);
+            }
         });
     </script>
     <!-- Scripts for registration END-->
