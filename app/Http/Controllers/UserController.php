@@ -8,6 +8,7 @@ use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use Spatie\PdfToImage\Pdf;
 
 class UserController extends Controller
 {
@@ -160,7 +161,22 @@ class UserController extends Controller
             $user->phone = $request->phone;
             //$user->birthday = date('Y-m-d', strtotime($request->birthday));
             $user->gender = $request->gender;
+
+            /*
+             * Update profile photo
+             * */
+            if($request->hasFile('photo')){
+                $file = $request->File('photo');
+                $extension = $file->getClientOriginalExtension();
+                $file_name = md5(rand(10,10000)).time().'.'.$file->getClientOriginalExtension();
+                $destinationPath = public_path('uploads/users');
+                $file->move($destinationPath, $file_name);
+
+                $user->photo = 'uploads/users/'.$file_name;
+            }
+
             $user->save();
+
 
             return ['status' => 200, 'reason' => 'User successfully updated'];
         /*}

@@ -44,8 +44,14 @@
                         <div class="portlet light profile-sidebar-portlet ">
                             <!-- SIDEBAR USERPIC -->
                             <div class="profile-userpic">
-                                <img src="../../assets/layouts/layout/img/photo3.jpg" id="image" class="img-responsive" alt="user image" style="max-height:150px; max-width:150px;"> </div>
-                                <input id="image_change_hidden_btn" type="file" class="hidden">
+                                @if($user->photo !='')
+                                    <img src="{{asset($user->photo)}}" class="img-responsive" alt="">
+                                @else
+                                    <img src="{{asset('assets/layouts/layout/img/photo3.jpg')}}" class="img-responsive" alt="">
+                                @endif
+                            </div>
+
+                                <input name="photo" id="image_change_hidden_btn" type="file" class="hidden">
                             <!-- END SIDEBAR USERPIC -->
 
                             <!-- SIDEBAR BUTTONS -->
@@ -192,6 +198,9 @@
                             $("#success_message").show();
                             $("#error_message").hide();
                             $("#success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
                         } else {
                             $("#success_message").hide();
                             $("#error_message").show();
