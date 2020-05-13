@@ -45,14 +45,7 @@
                             </div>
                         </div>
                         <div class="portlet-body">
-                            <form>
-                                <div>
-                                    <input type="date" name="shipment_date" id="shipment_date">
-                                </div>
-                                <div>
-                                    <button type="submit">Submit</button>
-                                </div>
-                            </form>
+
                         </div>
                     </div>
                     <!-- END PORTLET-->
@@ -66,37 +59,42 @@
                     <div class="modal-header">
                         <h4 class="modal-title text-center font-theme uppercase" id="select_ship_dateLabel">Welcome</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="">
-                        <div class="row">
-                            <div class="col-md-10 col-md-offset-1">
-                                <div class="alert alert-danger text-center" role="alert">
-                                    Select <b>Shipment Date and Gender</b>
+
+                    <form id="shipment_form" method="post" action="">
+                        <div class="modal-body">
+                                {{csrf_field()}}
+                                <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+
+                                <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
+
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="alert alert-danger text-center" role="alert">
+                                            Select <b>Shipment Date and Gender</b>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="form-group">
+                                            <label for=""><b>Shipping Date</b></label>
+                                            <input class="form-control date-picker" size="16" type="text" name="shipment_date" id="shipment_date" value="" placeholder="Select Shipping Date"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="form-group">
+                                            <label for=""><b>Gender</b></label>
+                                            <select name="gender" id="gender" name="user-info-gender" class="form-control">
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-10 col-md-offset-1">
-                                <div class="form-group">
-                                    <label for=""><b>Shipping Date</b></label>
-                                    <input class="form-control date-picker" size="16" type="text" value="" placeholder="Select Shipping Date"/>
-                                </div>
-                            </div>
-                            <div class="col-md-10 col-md-offset-1">
-                                <div class="form-group">
-                                    <label for=""><b>Gender</b></label>
-                                    <select name="gender" id="gender" name="user-info-gender" class="form-control">
-                                        <option value="Male">Select your gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Female">Others</option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn theme-btn">Done</button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn theme-btn">Done</button>
+                        </div>
+                    </form>
                     </div>
                 </div>
             </div>
@@ -109,7 +107,54 @@
 
 @section('js')
     <script type="text/javascript">
-        
+        $(document).on("submit", "#shipment_form", function(event) {
+            event.preventDefault();
+
+            var shipment_date = $("#shipment_date").val();
+
+            var validate = "";
+
+            if (shipment_date.trim() == "") {
+                validate = validate + "Shipment date is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#shipment_form")[0]);
+                var url = "{{ url('store_shipment') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        if (data.status == 200) {
+                            $("#success_message").show();
+                            $("#error_message").hide();
+                            $("#success_message").html(data.reason);
+                            setTimeout(function(){
+                                window.location.href="{{url('all_project')}}";
+                            },2000)
+                        } else {
+                            $("#success_message").hide();
+                            $("#error_message").show();
+                            $("#error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                $("#success_message").hide();
+                $("#error_message").show();
+                $("#error_message").html(validate);
+            }
+        });
     </script>
 @endsection
 
