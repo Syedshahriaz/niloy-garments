@@ -149,11 +149,12 @@ class UserController extends Controller
     }
     public function resetPassword()
     {
-        return view('user.reset-password');
+        $user = User::where('users.id',Auth::user()->id)->first();
+        return view('user.reset-password',compact('user'));
     }
 
     public function profileUpdate(Request $request){
-        //try {
+        try {
             $user = User::where('id',$request->user_id)->first();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
@@ -179,25 +180,25 @@ class UserController extends Controller
 
 
             return ['status' => 200, 'reason' => 'User successfully updated'];
-        /*}
+        }
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updateUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function updatePassword(Request $request){
         try {
             $user = User::where('id',$request->user_id)->first();
-            $user->password = $request->password;
+            $user->password = bcrypt($request->password);
             $user->save();
 
             return ['status' => 200, 'reason' => 'Password successfully updated'];
         }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updatePssword', $e->getLine(),
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updatePassword', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

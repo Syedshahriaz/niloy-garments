@@ -39,7 +39,11 @@
                         <div class="portlet light profile-sidebar-portlet ">
                             <!-- SIDEBAR USERPIC -->
                             <div class="profile-userpic">
-                                <img src="../../assets/layouts/layout/img/photo3.jpg" class="img-responsive" alt="">
+                                @if($user->photo !='')
+                                    <img src="{{asset($user->photo)}}" class="img-responsive" alt="">
+                                @else
+                                    <img src="{{asset('assets/layouts/layout/img/photo3.jpg')}}" class="img-responsive" alt="">
+                                @endif
                             </div>
                             <!-- END SIDEBAR USERPIC -->
                             <!-- SIDEBAR USER TITLE -->

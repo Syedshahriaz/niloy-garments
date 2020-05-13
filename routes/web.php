@@ -31,6 +31,7 @@ Route::get('profile', 'UserController@profile')->name('profile');
 Route::get('profile-edit', 'UserController@profileEdit')->name('profile_edit');
 Route::post('profile_update', 'UserController@profileUpdate')->name('profile-update');
 Route::get('reset-password', 'UserController@resetPassword')->name('reset-password');
+Route::post('update_password', 'UserController@updatePassword')->name('update_password');
 
 /*User project routs*/
 Route::get('select_shipment', 'UserProjectController@selectShipment')->name('user.select_shipment');
