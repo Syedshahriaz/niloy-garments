@@ -91,6 +91,12 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
+                                                    <label for=""><b>Username</b></label>
+                                                    <input type="text" class="form-control" name="username" id="username" value="{{$user->username}}" disabled >
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
                                                     <label for=""><b>Gender</b></label>
                                                     <select name="gender" id="gender" name="user-info-gender" class="form-control">
                                                         <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
@@ -101,7 +107,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Email Address</b></label>
-                                                    <input type="email" class="form-control" name="email" id="email" value="{{$user->email}}">
+                                                    <input type="email" class="form-control" name="email" id="email" value="{{$user->email}}" disabled>
                                                 </div>
                                             </div>
                                             {{--<div class="col-md-6">

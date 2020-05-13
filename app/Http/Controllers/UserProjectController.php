@@ -17,7 +17,7 @@ use DB;
 class UserProjectController extends Controller
 {
     public function storeShipmentDate(Request $request){
-        try{
+        //try{
             $user = Auth::user();
             $shipment = NEW UserShipment();
             $shipment->user_id = $user->id;
@@ -25,17 +25,17 @@ class UserProjectController extends Controller
             $shipment->save();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
-        }
+       /* }
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipmentDate', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function allProject(Request $request){
-        try{
+        //try{
             $user = Auth::user();
             $shipment = UserShipment::where('user_id',$user->id)->first();
             if(empty($shipment)){
@@ -50,17 +50,17 @@ class UserProjectController extends Controller
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('user.project.all_project',compact('shipment','projects'));
-        }
+        /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function selectShipment(Request $request){
-        try{
+        //try{
             $user = User::where('users.id',Auth::user()->id)->first();
             $shipment = UserShipment::where('user_id',$user->id)->first();
             if(!empty($shipment)){
@@ -71,17 +71,17 @@ class UserProjectController extends Controller
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('user.project.select_shipment', compact('user'));
-        }
+       /* }
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function storeShipment(Request $request){
-        try{
+        //try{
             $user = User::where('users.id',$request->user_id)->first();
             $user->gender = $request->gender;
             $user->save();
@@ -95,17 +95,17 @@ class UserProjectController extends Controller
             $shipment->save();
 
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
-        }
+        /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function addProject(Request $request){
-        try{
+        //try{
             DB::beginTransaction();
 
             $tasks = Task::get();
@@ -165,18 +165,18 @@ class UserProjectController extends Controller
             DB::commit();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
-        }
+        /*}
         catch (\Exception $e) {
             DB::rollback();
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipmentDate', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function myProject(Request $request){
-        try{
+        //try{
             $projects = Project::select('user_projects.*','projects.name','projects.fabrication','projects.color','projects.quantity','projects.size_range')
                 ->where('status','active')
                 ->join('user_projects','user_projects.project_id','=','projects.id')
@@ -186,17 +186,17 @@ class UserProjectController extends Controller
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('user.project.my_project',compact('projects'));
-        }
+        /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function myProjectTask(Request $request){
-        try{
+        //try{
             $project = Project::select('projects.*')
                 ->where('id',$request->project_id)
                 ->get();
@@ -211,17 +211,17 @@ class UserProjectController extends Controller
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('user.project.my_project',compact('project','tasks'));
-        }
+        /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function updateProjectTaskStatus(Request $request){
-        try{
+        //try{
             $date_updated = 0;
             $date_increased = 0;
             $task = UserProjectTask::where('id',$request->project_task_id)->first();
@@ -273,12 +273,12 @@ class UserProjectController extends Controller
             }
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
-        }
+        /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 }

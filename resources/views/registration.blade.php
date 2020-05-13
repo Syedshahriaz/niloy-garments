@@ -143,6 +143,7 @@
 
         var username = $("#username").val();
         var email = $("#email").val();
+        var phone = $("#telephone").val();
         var password = $("#password").val();
         var repassword = $("#repassword").val();
         var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -157,6 +158,9 @@
         }
         if (password.trim() != "" && password.trim() != repassword.trim()) {
             validate = validate + "Password and retype password not matched</br>";
+        }
+        if (phone.trim() == "") {
+            validate = validate + "Phone is required</br>";
         }
         if (email.trim() == "") {
             validate = validate + "Email is required</br>";
