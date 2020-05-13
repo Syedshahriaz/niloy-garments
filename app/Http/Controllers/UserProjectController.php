@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\UserShipment;
 use App\Models\UserProject;
 use App\Models\UserProjectTask;
+use App\Models\User;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -36,9 +37,10 @@ class UserProjectController extends Controller
     public function allProject(Request $request){
         try{
             $user = Auth::user();
-            $shipment = UserShipment::where('user_id',$user->id)
-                ->orderBy('id','DESC')
-                ->first();
+            $shipment = UserShipment::where('user_id',$user->id)->first();
+            if(empty($shipment)){
+                return redirect('select_shipment');
+            }
             $projects = Project::select('projects.*','user_projects.user_id')
                 ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
                 ->where('status','active')
@@ -59,15 +61,43 @@ class UserProjectController extends Controller
 
     public function selectShipment(Request $request){
         try{
-            $user = Auth::user();
+            $user = User::where('users.id',Auth::user()->id)->first();
+            $shipment = UserShipment::where('user_id',$user->id)->first();
+            if(!empty($shipment)){
+                return redirect('all_project');
+            }
             if($request->ajax()) {
-                $returnHTML = View::make('user.project.select_shipment')->renderSections()['content'];
+                $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('user.project.select_shipment');
+            return view('user.project.select_shipment', compact('user'));
         }
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function storeShipment(Request $request){
+        try{
+            $user = User::where('users.id',$request->user_id)->first();
+            $user->gender = $request->gender;
+            $user->save();
+
+            /*
+             * Save shipment date
+             * */
+            $shipment = NEW UserShipment();
+            $shipment->user_id = $request->user_id;
+            $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
+            $shipment->save();
+
+            return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
+        }
+        catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
