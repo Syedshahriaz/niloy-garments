@@ -25,10 +25,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()) {
-            $returnHTML = View::make('user.dashboard')->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
-        }
-        return view('user.dashboard');
+        return redirect('all_project');
     }
 }

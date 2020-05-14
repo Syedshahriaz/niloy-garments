@@ -98,9 +98,9 @@ class UserController extends Controller
 
     public function multiTinent(Request $request){
         //try {
-        $user = User::where('id',$request->user_id)->first();
+            $user = User::where('id',$request->user_id)->first();
 
-        $this->createUserSession($user);
+            $this->createUserSession($user);
 
             return redirect('promotion');
         /*} catch (\Exception $e) {
