@@ -44,7 +44,8 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
-    <form id="select_user_form" class="login-form" action="{{url('select_shipment')}}" method="get">
+    <form id="select_user_form" class="login-form" action="{{url('payment_success')}}" method="post">
+        {{csrf_field()}}
 
         <div class="form-actions">
             <button type="submit" class="btn uppercase theme-btn pull-right">Payment</button>

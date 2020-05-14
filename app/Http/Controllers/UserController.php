@@ -42,6 +42,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->password = bcrypt($request->password);
+            $user->role = 3;
             $user->save();
 
             /*
@@ -63,7 +64,6 @@ class UserController extends Controller
             $view = 'emails.registration_confirmation_email';
 
             $result = SendMails::sendMail($emailData, $view);
-            return $result;
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with registration link have been sent to your email address.'];
         /*} catch (\Exception $e) {
@@ -77,6 +77,12 @@ class UserController extends Controller
     public function selectUser(Request $request){
         //try {
             $users = User::where('email',Session::get('user_email'))->get();
+            if(count($users)==1){
+                $user = $users[0];
+                $this->createUserSession($user);
+
+                return redirect('promotion');
+            }
             if($request->ajax()) {
                 $returnHTML = View::make('select_user',compact('users'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
@@ -92,6 +98,10 @@ class UserController extends Controller
 
     public function multiTinent(Request $request){
         //try {
+        $user = User::where('id',$request->user_id)->first();
+
+        $this->createUserSession($user);
+
             return redirect('promotion');
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'multiTinent', $e->getLine(),
@@ -101,9 +111,19 @@ class UserController extends Controller
         }*/
     }
 
+    private function createUserSession($user){
+        Session::put('user_id', $user->id);
+        Session::put('role_id',$user->role_id);
+        Session::put('username', $user->username);
+        Session::put('user_email', $user->email);
+        Session::put('first_name', $user->first_name);
+        Session::put('last_name', $user->last_name);
+        Session::put('user_photo', $user->photo);
+    }
+
     public function promotion(Request $request){
         //try {
-            $user = Auth::user();
+            $user = user::where('id',Session::get('user_id'))->first();
             $payment = Payment::where('user_id',$user->id)->first();
             if(!empty($payment) && $payment->payment_status=='Completed'){
                 return redirect('all_project');
