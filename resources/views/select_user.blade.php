@@ -44,7 +44,8 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
-    <form id="select_user_form" class="login-form" action="{{url('multi_tinent')}}" method="get">
+    <form id="select_user_form" class="login-form" action="{{url('multi_tinent')}}" method="post">
+        {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
             <a href="index.html">
@@ -56,9 +57,10 @@
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
             <label class="control-label visible-ie8 visible-ie9">User</label>
-            <select class="form-control form-control-solid placeholder-no-fix" name="user_id" id="user_is">
-                <option value="2">User 2</option>
-                <option value="3">User 3</option>
+            <select class="form-control form-control-solid placeholder-no-fix" name="user_id" id="user_id">
+                @foreach($users as $user)
+                <option value="{{$user->id}}">{{$user->username}}</option>
+                @endforeach
             </select>
             <!-- <small id="user_is" class="help-block text-danger">Select an account to sign in</small> -->
         </div>

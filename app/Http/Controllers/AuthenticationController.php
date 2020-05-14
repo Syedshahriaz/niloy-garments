@@ -34,6 +34,7 @@ class AuthenticationController extends Controller
         $result = Auth::attempt([
             'email' => trim($request->email),
             'password' => $request->password,
+            'role' => 3,
             'status' => 'active',
         ], $request->has('remember'));
 
@@ -41,12 +42,7 @@ class AuthenticationController extends Controller
             $user = Auth::user();
 
             Session::put('user_id', $user->id);
-            Session::put('role_id',$user->role_id);
             Session::put('user_email', $user->email);
-            Session::put('first_name', $user->first_name);
-            Session::put('last_name', $user->last_name);
-            Session::put('user_photo', $user->photo);
-
 
             return ['status' => 200, 'reason' => 'Successfully Authenticated','role_id'=>$user->role];
         } else {
@@ -171,6 +167,7 @@ class AuthenticationController extends Controller
         Auth::logout();
 
         Session::forget('user_id');
+        Session::forget('username');
         Session::forget('user_email');
         Session::forget('first_name');
         Session::forget('last_name');

@@ -22,7 +22,9 @@ Route::post('user/store', 'UserController@store');
 Auth::routes();
 
 Route::get('select_user', 'UserController@selectUser');
-Route::get('multi_tinent', 'UserController@multiTinent');
+Route::post('multi_tinent', 'UserController@multiTinent');
+
+Route::post('payment_success', 'PaymentController@success');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
