@@ -13,30 +13,13 @@ use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use Session;
 
 class UserProjectController extends Controller
 {
-    public function storeShipmentDate(Request $request){
-        //try{
-            $user = Auth::user();
-            $shipment = NEW UserShipment();
-            $shipment->user_id = $user->id;
-            $shipment->shipment_date = date('Y-m-d', strtotime($request->shipment_date));
-            $shipment->save();
-
-            return ['status'=>200, 'reason'=>'Successfully saved'];
-       /* }
-        catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipmentDate', $e->getLine(),
-                $e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
-    }
-
     public function allProject(Request $request){
         //try{
-            $user = Auth::user();
+            $user = User::where('users.id',Session::get('user_id'))->first();
             $shipment = UserShipment::where('user_id',$user->id)->first();
             if(empty($shipment)){
                 return redirect('select_shipment');
@@ -61,7 +44,7 @@ class UserProjectController extends Controller
 
     public function selectShipment(Request $request){
         //try{
-            $user = User::where('users.id',Auth::user()->id)->first();
+            $user = User::where('users.id',Session::get('user_id'))->first();
             $shipment = UserShipment::where('user_id',$user->id)->first();
             if(!empty($shipment)){
                 return redirect('all_project');
@@ -110,7 +93,7 @@ class UserProjectController extends Controller
 
             $tasks = Task::get();
 
-            $user = Auth::user();
+            $user = User::where('users.id',Session::get('user_id'))->first();
             $projects = $request->projects;
             $startDates = $request->start_dates;
 
@@ -168,7 +151,7 @@ class UserProjectController extends Controller
         /*}
         catch (\Exception $e) {
             DB::rollback();
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipmentDate', $e->getLine(),
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'addProject', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
