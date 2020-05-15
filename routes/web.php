@@ -39,5 +39,6 @@ Route::post('update_password', 'UserController@updatePassword')->name('update_pa
 Route::get('select_shipment', 'UserProjectController@selectShipment')->name('user.select_shipment');
 Route::post('store_shipment', 'UserProjectController@storeShipment')->name('user.store_shipment');
 Route::get('all_project', 'UserProjectController@allProject')->name('user.all_project');
+Route::post('add_project', 'UserProjectController@addProject')->name('user.add_project');
 Route::get('my_project', 'UserProjectController@myProject')->name('user.my_project');
 
