@@ -24,8 +24,8 @@ class UserProjectController extends Controller
             if(empty($shipment)){
                 return redirect('select_shipment');
             }
-            $projects = Project::select('projects.*','user_projects.user_id')
-                ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
+            $projects = Project::select('projects.*')
+                //->leftJoin('user_projects','user_projects.project_id','=','projects.id')
                 ->where('status','active')
                 ->get();
             if($request->ajax()) {
@@ -91,57 +91,38 @@ class UserProjectController extends Controller
         //try{
             DB::beginTransaction();
 
-            $tasks = Task::get();
-
             $user = User::where('users.id',Session::get('user_id'))->first();
-            $projects = $request->projects;
+            $project_checks = $request->project_check;
+            $projects = $request->project_id;
             $startDates = $request->start_dates;
 
-            foreach($projects as $key=>$project){
-                $userProject = NEW UserProject();
-                $userProject->user_id = $user->id;
-                $userProject->project_id = $projects[$key];
-                $userProject->start_date = $startDates[$key];
-                $userProject->save();
+            foreach($project_checks as $key=>$check){
+                if($project_checks[$key]==1){
+                    $userProject = NEW UserProject();
+                    $userProject->user_id = $user->id;
+                    $userProject->project_id = $projects[$key];
+                    $userProject->start_date = $startDates[$key];
+                    $userProject->save();
 
-                /*
-                 * Saving user project tasks
-                 * */
-                foreach($tasks as $key=>$task){
-                    $projectTask = NEW UserProjectTask();
-                    $projectTask->user_project_id = $userProject->id;
-                    $projectTask->task_id = $task->id;
-                    if($key==0){
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + 46 days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + 46 days'));;
-                        $projectTask->status = 'processing';
+                    $tasks = Task::where('project_id',$projects[$key])->get();
+
+                    /*
+                     * Saving user project tasks
+                     * */
+                    foreach($tasks as $key=>$task){
+                        $projectTask = NEW UserProjectTask();
+                        $projectTask->user_project_id = $userProject->id;
+                        $projectTask->task_id = $task->id;
+                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + '.$task->days_to_add.' days'));
+                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + '.$task->days_to_add.' days'));
+                        if($key==0){
+                            $projectTask->status = 'processing';
+                        }
+                        else{
+                            $projectTask->status = 'not initiate';
+                        }
+                        $projectTask->save();
                     }
-                    if($key==1){
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + 77 days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + 77 days'));
-                        $projectTask->status = 'not initiate';
-                    }
-                    if($key==2){
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + 108 days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + 108 days'));
-                        $projectTask->status = 'not initiate';
-                    }
-                    if($key==3){
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + 551 days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + 551 days'));
-                        $projectTask->status = 'not initiate';
-                    }
-                    if($key==4){
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + 1828 days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + 1828 days'));
-                        $projectTask->status = 'not initiate';
-                    }
-                    if($key==5){
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + 4383 days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + 4383 days'));
-                        $projectTask->status = 'not initiate';
-                    }
-                    $projectTask->save();
                 }
             }
 

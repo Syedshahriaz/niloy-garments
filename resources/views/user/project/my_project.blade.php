@@ -46,12 +46,15 @@
                         </div>
                         <div class="portlet-body">
                             <div class="row">
+                                <?php
+                                foreach($projects as $project){
+                                ?>
                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                     <div class="dashboard-stat2 project-item">
                                         <div class="display">
                                             <div class="number">
                                                 <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
+                                                    {{$project->name}}
                                                 </h5>
                                             </div>
                                             <div class="icon">
@@ -64,187 +67,15 @@
                                             </div>
                                             <div class="status">
                                                 <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
+                                                <div class="status-number">{{date('l M d, Y', strtotime($project->start_date))}} </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" class="project-item-check" value="0">
+                                        <input type="hidden" class="project-item-check" name="project_check[]" value="0">
                                     </div>
                                 </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    <div class="dashboard-stat2 project-item">
-                                        <div class="display">
-                                            <div class="number">
-                                                <h5 class="font-theme project-item-name">
-                                                    PROJECT NAME
-                                                </h5>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="icon-check"></i>
-                                            </div>
-                                        </div>
-                                        <div class="progress-info">
-                                            <div class="progress">
-                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                            </div>
-                                            <div class="status">
-                                                <div class="status-title"> Due Date </div>
-                                                <div class="status-number"> Wed Jun 20, 2020 </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="project-item-check" value="0">
-                                    </div>
-                                </div>
+                                <?php
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
