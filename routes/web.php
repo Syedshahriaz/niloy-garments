@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/post_login', 'AuthenticationController@postLogin');
-Route::get('/registration', 'UserController@create');
+Route::get('/registration', 'UserController@create')->name('registration');
 Route::get('/promotion', 'UserController@promotion');
 Route::post('user/store', 'UserController@store');
 

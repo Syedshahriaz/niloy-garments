@@ -45,12 +45,20 @@
 
 <!-- BEGIN LOGIN -->
 <div class="content">
+    <?php
+    if(isset($_GET['token'])){
+        $email = base64_decode($_GET['token']);
+    }
+    else{
+        $email = '';
+    }
+    ?>
     <!-- BEGIN REGISTRATION FORM -->
     <form id="registration_form" class="register-form" action="index.html" method="post">
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <img src="../../assets/global/img/logo-invert.png" alt="" /> 
+            <img src="../../assets/global/img/logo-invert.png" alt="" />
         </div>
         <!-- END LOGO -->
         <h3 class="font-theme">Sign Up</h3>
@@ -66,7 +74,7 @@
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
             <label class="control-label visible-ie8 visible-ie9">Email</label>
-            <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" />
+            <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$email}}" />
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
