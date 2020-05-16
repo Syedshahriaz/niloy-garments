@@ -3,8 +3,14 @@
 Login page
 ***/
 /* bg color */
-.login {
-  background-color: #364150 !important; }
+.login{
+    background-color: #364150 !important;
+    background-image: url(https://www.lascrucescountrymusic.com/wp-content/uploads/2018/01/banner-bg-1.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
 body.login {
     display: flex;
     height: 100vh;
