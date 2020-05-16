@@ -45,9 +45,9 @@
                             <!-- SIDEBAR USERPIC -->
                             <div class="profile-userpic">
                                 @if($user->photo !='')
-                                    <img src="{{asset($user->photo)}}" class="img-responsive" alt="">
+                                    <img src="{{asset($user->photo)}}" class="img-responsive" alt="user image" style="max-height:150px; max-width:150px;">
                                 @else
-                                    <img src="{{asset('assets/layouts/layout/img/photo3.jpg')}}" class="img-responsive" alt="">
+                                    <img src="{{asset('assets/layouts/layout/img/photo3.jpg')}}" class="img-responsive" alt="user image" style="max-height:150px; max-width:150px;">
                                 @endif
                             </div>
 
