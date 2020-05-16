@@ -72,8 +72,8 @@
                                                 </div>
                                                 <div class="status">
                                                     <div class="status-title"> Due Date </div>
-                                                    <div class="status-number"> Wed Jun 20, 2020 </div>
-                                                    <input type="hidden" name="start_dates[]" value="2020-05-18">
+                                                    <div class="status-number"> {{date('l M d, Y', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}</div>
+                                                    <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}">
                                                 </div>
                                             </div>
                                             <input type="hidden" class="project-item-check" name="project_check[]" value="0">

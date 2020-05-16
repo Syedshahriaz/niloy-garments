@@ -24,9 +24,11 @@ class UserProjectController extends Controller
             if(empty($shipment)){
                 return redirect('select_shipment');
             }
-            $projects = Project::select('projects.*')
+            $projects = Project::select('projects.*','tasks.title','tasks.days_to_add')
+                ->leftJoin('tasks','tasks.project_id','=','projects.id')
                 //->leftJoin('user_projects','user_projects.project_id','=','projects.id')
-                ->where('status','active')
+                ->where('projects.status','active')
+                ->groupBy('projects.id')
                 ->get();
             if($request->ajax()) {
                 $returnHTML = View::make('user.project.all_project',compact('shipment','projects'))->renderSections()['content'];
