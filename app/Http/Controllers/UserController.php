@@ -232,4 +232,60 @@ class UserController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }*/
     }
+
+    public function addUser(Request $request)
+    {
+        $user = User::where('users.id',Session::get('user_id'))->first();
+        if($request->ajax()) {
+            $returnHTML = View::make('user.create_new_user',compact('user'))->renderSections()['content'];
+            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        }
+        return view('user.create_new_user',compact('user'));
+    }
+
+    public function storeNewUser(Request $request){
+        //try {
+            /*
+             * Check duplicate username
+             * */
+            $duplicateUser = User::where('username',$request->username)->first();
+            if(!empty($duplicateUser)){
+                return [ 'status' => 401, 'reason' => 'Duplicate username'];
+            }
+            $user = new User();
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->password = bcrypt($request->password);
+            $user->role = 3;
+            $user->save();
+
+            /*
+             * Send confirmation email
+             */
+            /*$email_to = [$request->email];
+            $email_cc = [];
+            $email_bcc = [];
+
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+
+            $emailData['bodyMessage'] = '';
+
+            $view = 'emails.registration_confirmation_email';
+
+            $result = SendMails::sendMail($emailData, $view);*/
+
+            return ['status' => 200, 'reason' => 'New user created successfully'];
+        /*} catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
 }
