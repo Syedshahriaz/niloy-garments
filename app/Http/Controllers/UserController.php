@@ -236,11 +236,9 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         $user = User::where('users.id',Session::get('user_id'))->first();
-        if($request->ajax()) {
-            $returnHTML = View::make('user.create_new_user',compact('user'))->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
-        }
-        return view('user.create_new_user',compact('user'));
+        Auth::logout();
+
+        return redirect()->route('registration',['token'=>base64_encode($user->email)]);
     }
 
     public function storeNewUser(Request $request){
