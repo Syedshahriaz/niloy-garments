@@ -37,6 +37,8 @@
     <link href="{{asset('assets/layouts/layout/css/themes/blue.min.css')}}" rel="stylesheet" type="text/css" id="style_color" />
     <link href="{{asset('assets/layouts/layout/css/custom.css')}}" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
+
+    <link href="{{asset('assets/holdon/holdon.min.css')}}" rel="stylesheet" />
 </head>
 
 <body class=" login">
@@ -137,9 +139,20 @@
 <script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>
 <!-- END GLOABL CUSTOM SCRIPTS -->
 
+<script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
+
 <script type="text/javascript">
     $(document).on("submit", "#registration_form", function(event) {
         event.preventDefault();
+
+        var options = {
+            theme: "sk-cube-grid",
+            message: 'Please wait while saving all data.....',
+            backgroundColor: "#1847B1",
+            textColor: "white"
+        };
+
+        HoldOn.open(options);
 
         var username = $("#username").val();
         var email = $("#email").val();
@@ -180,10 +193,14 @@
                 url: url,
                 data: formData,
                 success: function(data) {
+                    HoldOn.close();
                     if (data.status == 200) {
                         $("#success_message").show();
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
+                        setTimeout(function(){
+                            window.location.href="{{url('login')}}";
+                        },2000)
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
@@ -191,6 +208,7 @@
                     }
                 },
                 error: function(data) {
+                    HoldOn.close();
                     $("#success_message").hide();
                     $("#error_message").show();
                     $("#error_message").html(data);
@@ -200,6 +218,7 @@
                 processData: false
             });
         } else {
+            HoldOn.close();
             $("#success_message").hide();
             $("#error_message").show();
             $("#error_message").html(validate);
