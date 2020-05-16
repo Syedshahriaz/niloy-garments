@@ -25,7 +25,7 @@
                         @if(Session::get('user_photo') !='')
                             <img alt="" class="img-circle" src="{{asset(Session::get('user_photo'))}}">
                         @else
-                            <img alt="" class="img-circle" src="{{asset('assets/layouts/layout/img/avatar3_small.jpg')}}">
+                            <img alt="" class="img-circle" src="{{asset('assets/layouts/layout/img/emptyuserphoto.jpg')}}">
                         @endif
                         <span class="username username-hide-on-mobile"> {{Session::get('username')}}</span>
                     </a>
