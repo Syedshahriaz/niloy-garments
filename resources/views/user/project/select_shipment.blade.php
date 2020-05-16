@@ -65,8 +65,12 @@
                                 {{csrf_field()}}
                                 <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
 
-                                <div class="alert alert-success" id="success_message" style="display:none"></div>
-                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                        <div class="alert alert-danger" id="error_message" style="display: none"></div>
+                                    </div>
+                                </div> 
 
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
