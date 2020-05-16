@@ -70,14 +70,10 @@
 
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
-                                        <div class="alert alert-danger text-center" role="alert">
-                                            Select <b>Shipment Date and Gender</b>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-10 col-md-offset-1">
                                         <div class="form-group">
                                             <label for=""><b>Shipping Date</b></label>
                                             <input class="form-control date-picker" size="16" type="text" name="shipment_date" id="shipment_date" value="" placeholder="Select Shipping Date"/>
+                                            <input class="date-picker-hidden" type="hidden"/>   
                                         </div>
                                     </div>
                                     <div class="col-md-10 col-md-offset-1">
