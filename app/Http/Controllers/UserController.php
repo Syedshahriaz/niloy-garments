@@ -124,6 +124,7 @@ class UserController extends Controller
     public function promotion(Request $request){
         //try {
             $user = user::where('id',Session::get('user_id'))->first();
+
             $payment = Payment::where('user_id',$user->id)->first();
             if(!empty($payment) && $payment->payment_status=='Completed'){
                 return redirect('all_project');
@@ -144,7 +145,7 @@ class UserController extends Controller
 
     public function profile(Request $request){
         //try {
-            $user = User::where('users.id',Auth::user()->id)
+            $user = User::where('users.id',Session::get('user_id'))
                 ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
                 ->first();
             if($request->ajax()) {
@@ -163,7 +164,8 @@ class UserController extends Controller
 
     public function profileEdit(Request $request)
     {
-        $user = User::where('users.id',Auth::user()->id)
+        $user = User::where('users.id',Session::get('user_id'))
+            ->select('users.*','user_shipments.shipment_date')
             ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
             ->first();
         if($request->ajax()) {
@@ -174,7 +176,7 @@ class UserController extends Controller
     }
     public function resetPassword()
     {
-        $user = User::where('users.id',Auth::user()->id)->first();
+        $user = User::where('users.id',Session::get('user_id'))->first();
         return view('user.reset-password',compact('user'));
     }
 
@@ -197,7 +199,9 @@ class UserController extends Controller
                 $destinationPath = public_path('uploads/users');
                 $file->move($destinationPath, $file_name);
 
-                $user->photo = 'uploads/users/'.$file_name;
+                $photo_path = 'uploads/users/'.$file_name;
+                $user->photo = $photo_path;
+                Session::put('user_photo', $photo_path);
             }
 
             $user->save();

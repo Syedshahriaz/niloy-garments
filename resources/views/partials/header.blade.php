@@ -39,6 +39,8 @@
         <link href="{{asset('assets/layouts/layout/css/themes/blue.min.css')}}" rel="stylesheet" type="text/css" id="style_color" />
         <link href="{{asset('assets/layouts/layout/css/custom.css')}}" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
+
+        <link href="{{asset('assets/holdon/holdon.min.css')}}" rel="stylesheet" />
     </head>
 
     <!-- BEGIN SIDEBAR -->

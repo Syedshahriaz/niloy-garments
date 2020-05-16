@@ -3,7 +3,7 @@
     <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <!-- metas -->
-    
+
     <meta name="author" content="Chitrakoot Web">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -37,7 +37,7 @@
 <body>
 
     <!-- start page loading -->
-    
+
     <!-- end page loading -->
 
     <!-- start main-wrapper section -->
@@ -64,18 +64,18 @@
 
                                     <!-- start menu area -->
                                     <ul class="navbar-nav ml-auto" id="nav" style="">
-                                        
+
                                         <!-- <li><a class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle" href="javascript:;">Purchase</a></li> -->
-                                        
+
                                         <div class="content">
                                             <form id="select_user_form" class="login-form" action="{{url('payment_success')}}" method="post">
                                                 {{csrf_field()}}
 
                                                 <div class="form-actions">
-                                                    <button type="submit" class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle">Payment</button>
+                                                    <button type="submit" class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle">Pay Now</button>
                                                 </div>
                                             </form>
-                                        </div> 
+                                        </div>
                                     </ul>
                                     <!-- end menu area -->
 
@@ -359,7 +359,7 @@
         <!-- start footer section -->
         <footer class="footer-style3 bg-white bg-img cover-background" data-background="{{asset('assets/promotion/img/content/footer.png')}}" style="background-image: url('{{asset('assets/promotion/img/content/footer.png')}}');">
             <div class="container lg-container">
-                 
+
                     <div class="row">
                         <div class="col-lg-3 col-md-6 sm-margin-50px-bottom xs-margin-30px-bottom">
                             <span class="footer-logo margin-25px-bottom display-inline-block">
@@ -417,7 +417,7 @@
                             </ul>
                         </div>
                     </div>
-                 
+
             </div>
             <div class="footer-style3-bottom">
                 <div class="container">
@@ -438,7 +438,7 @@
     <!-- end scroll to top -->
 
     <!-- all js include start -->
-    
+
     <!-- core.min js -->
     <script src="{{asset('assets/promotion/assets/core.min.js')}}"></script>
 

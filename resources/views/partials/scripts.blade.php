@@ -45,3 +45,5 @@
 <!-- BEGIN GLOABL CUSTOM SCRIPTS -->
 <script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>
 <!-- END GLOABL CUSTOM SCRIPTS -->
+
+<script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
