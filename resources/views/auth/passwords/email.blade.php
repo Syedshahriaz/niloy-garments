@@ -103,8 +103,7 @@
         @csrf
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <a href="index.html">
-                <img src="../../assets/global/img/logo-invert.png" alt="" /> </a>
+            <img src="../../assets/global/img/logo-invert.png" alt="" />
         </div>
         <!-- END LOGO -->
 

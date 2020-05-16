@@ -50,8 +50,7 @@
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <a href="index.html">
-                <img src="../../assets/global/img/logo-invert.png" alt="" /> </a>
+            <img src="../../assets/global/img/logo-invert.png" alt="" /> 
         </div>
         <!-- END LOGO -->
         <h3 class="font-theme">Sign Up</h3>
