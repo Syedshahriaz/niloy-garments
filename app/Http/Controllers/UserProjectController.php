@@ -146,6 +146,7 @@ class UserProjectController extends Controller
             $projects = Project::select('user_projects.*','projects.name','projects.fabrication','projects.color','projects.quantity','projects.size_range')
                 ->where('status','active')
                 ->join('user_projects','user_projects.project_id','=','projects.id')
+                ->where('user_projects.user_id',Session::get('user_id'))
                 ->get();
             if($request->ajax()) {
                 $returnHTML = View::make('user.project.my_project',compact('projects'))->renderSections()['content'];

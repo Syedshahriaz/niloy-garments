@@ -65,7 +65,7 @@ class UserController extends Controller
 
             $result = SendMails::sendMail($emailData, $view);
 
-            return ['status' => 200, 'reason' => 'Registration successfully done. An email with registration link have been sent to your email address.'];
+            return ['status' => 200, 'reason' => 'Registration successfully done. An email with login link have been sent to your email address.'];
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
