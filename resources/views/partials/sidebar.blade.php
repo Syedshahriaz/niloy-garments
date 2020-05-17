@@ -1,5 +1,11 @@
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-sidebar-fixed page-container-bg-solid ">
 <!-- BEGIN HEADER -->
+<?php
+    $current_url = $_SERVER['REQUEST_URI'];
+    $current_url = explode('?',$current_url);
+    $uri = explode('/',$current_url[0]);
+    $page = $uri[1];
+?>
 <div class="page-header navbar navbar-fixed-top">
     <!-- BEGIN HEADER INNER -->
     <div class="page-header-inner ">
@@ -180,28 +186,28 @@
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
 
-            <li class="nav-item active">
+            <li class="nav-item  @if($page=='dashboard') active @endif">
                 <a href="master-dashboard.html" class="nav-link">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item @if($page=='all_project') active @endif">
                 <a href="{{url('all_project')}}" class="nav-link">
                     <i class="icon-layers"></i>
                     <span class="title">All Projects</span>
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item @if($page=='my_project') active @endif">
                 <a href="{{url('my_project')}}" class="nav-link">
                     <i class="icon-puzzle"></i>
                     <span class="title">My Projects</span>
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item @if($page=='messages') active @endif">
                 <a href="#" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
@@ -209,7 +215,7 @@
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item @if($page=='profile' || $page=='profile-edit' || $page=='reset-password') active @endif">
                 <a href="{{url('profile')}}" class="nav-link">
                     <i class="icon-user"></i>
                     <span class="title">Profile</span>
