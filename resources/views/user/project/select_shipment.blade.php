@@ -41,7 +41,6 @@
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions">
-
                             </div>
                         </div>
                         <div class="portlet-body">
