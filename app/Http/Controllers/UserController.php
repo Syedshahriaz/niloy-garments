@@ -13,13 +13,20 @@ use Spatie\PdfToImage\Pdf;
 
 class UserController extends Controller
 {
-    public function create(Request $request){
+    public function registration(Request $request){
         //try {
+            if($request->token !=''){
+                $email = base64_decode($request->token);
+                $reffer_user = User::where('email',$email)->first();
+            }
+            else{
+                $reffer_user = array();
+            }
             if($request->ajax()) {
-                $returnHTML = View::make('registration')->renderSections()['content'];
+                $returnHTML = View::make('registration', compact('reffer_user'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('registration');
+            return view('registration', compact('reffer_user'));
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'create', $e->getLine(),
                 $e->getFile(), '', '', '', '');
