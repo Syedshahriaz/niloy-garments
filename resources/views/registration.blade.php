@@ -46,11 +46,13 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     <?php
-    if(isset($_GET['token'])){
-        $email = base64_decode($_GET['token']);
+    if(!empty($reffer_user)){
+        $email = $reffer_user->email;
+        $phone = $reffer_user->phone;
     }
     else{
         $email = '';
+        $phone = '';
     }
     ?>
     <!-- BEGIN REGISTRATION FORM -->
@@ -78,7 +80,7 @@
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" />
+            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$phone}}" />
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
