@@ -50,6 +50,7 @@
                                 foreach($projects as $project){
                                 ?>
                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                    <a href="{{url('my_project_task',$project->id)}}">
                                     <div class="dashboard-stat2 project-item">
                                         <div class="display">
                                             <div class="number">
@@ -72,6 +73,8 @@
                                         </div>
                                         <input type="hidden" class="project-item-check" name="project_check[]" value="0">
                                     </div>
+                                    </a>
+
                                 </div>
                                 <?php
                                 }
