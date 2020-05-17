@@ -30,7 +30,7 @@ class UserProjectController extends Controller
                 ->where('projects.status','active')
                 ->groupBy('projects.id')
                 ->get();
-            
+
             $my_projects = Project::select('user_projects.project_id')
             ->where('status','active')
             ->join('user_projects','user_projects.project_id','=','projects.id')
