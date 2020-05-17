@@ -55,7 +55,7 @@
                                     foreach($projects as $project){
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="dashboard-stat2 project-item">
+                                        <div class="dashboard-stat2 project-item" @if($project->user_project_id !='') style="background: #b7b2b2;" @endif>
                                             <div class="display">
                                                 <div class="number">
                                                     <h5 class="font-theme project-item-name">
@@ -73,11 +73,11 @@
                                                 <div class="status">
                                                     <div class="status-title"> Due Date </div>
                                                     <div class="status-number"> {{date('l M d, Y', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}</div>
-                                                    <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}">
+                                                    <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}" @if($project->user_project_id !='') disabled @endif>
                                                 </div>
                                             </div>
-                                            <input type="hidden" class="project-item-check" name="project_check[]" value="0">
-                                            <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}">
+                                            <input type="hidden" class="project-item-check" name="project_check[]" value="0" @if($project->user_project_id !='') disabled @endif>
+                                            <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}" @if($project->user_project_id !='') disabled @endif>
                                         </div>
                                     </div>
                                     <?php
@@ -106,6 +106,14 @@
     <script>
         $(document).on("submit", "#project_form", function(event) {
             event.preventDefault();
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while saving all data.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
 
             var validate = "";
 
@@ -118,6 +126,7 @@
                     url: url,
                     data: formData,
                     success: function(data) {
+                        HoldOn.close();
                         if (data.status == 200) {
                             $("#success_message").show();
                             $("#error_message").hide();
@@ -132,6 +141,7 @@
                         }
                     },
                     error: function(data) {
+                        HoldOn.close();
                         $("#success_message").hide();
                         $("#error_message").show();
                         $("#error_message").html(data);
@@ -141,6 +151,7 @@
                     processData: false
                 });
             } else {
+                HoldOn.close();
                 $("#success_message").hide();
                 $("#error_message").show();
                 $("#error_message").html(validate);
