@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Niloy Garments::Dashboard')
+@section('title', 'Select Shipment')
 @section('content')
 
     <!-- BEGIN CONTENT -->

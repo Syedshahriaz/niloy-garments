@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Niloy Garments::Dashboard')
+@section('title', 'Reset Password')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>Projects</span>
+                        <span>Reset Password</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
