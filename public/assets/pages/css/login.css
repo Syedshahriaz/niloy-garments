@@ -3,8 +3,14 @@
 Login page
 ***/
 /* bg color */
-.login {
-  background-color: #364150 !important; }
+.login{
+    background-color: #364150 !important;
+    background-image: url('../../layouts/layout/img/login-banner.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
 body.login {
     display: flex;
     height: 100vh;
@@ -120,7 +126,7 @@ body.login {
 .login .content .register-form .form-actions {
   border: 0;
   margin-bottom: 0;
-  padding-top: 0px; }
+  padding-top: 0px; 
   padding-bottom: 0px; }
 
 .login .content .form-actions .btn {

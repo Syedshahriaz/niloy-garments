@@ -11,7 +11,7 @@
     <meta name="description" content="Amava - Startup Agency and SasS Business Template">
 
     <!-- title  -->
-    <title>Amava - Startup Agency and SasS Business Template</title>
+    <title>Welcome</title>
 
     <!-- favicon -->
     <link rel="shortcut icon" href="">

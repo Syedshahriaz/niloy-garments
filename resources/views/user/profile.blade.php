@@ -42,7 +42,7 @@
                                 @if($user->photo !='')
                                     <img src="{{asset($user->photo)}}" class="img-responsive" alt="">
                                 @else
-                                    <img src="{{asset('assets/layouts/layout/img/photo3.jpg')}}" class="img-responsive" alt="">
+                                    <img src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" class="img-responsive" alt="">
                                 @endif
                             </div>
                             <!-- END SIDEBAR USERPIC -->
@@ -82,7 +82,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Name</b></h5>
-                                                    <p>{{$user->first_name." ".$user->last_name}}</p>
+                                                    <p>{{$user->first_name." ".$user->last_name}} &nbsp;</p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Gender</b></h5>
