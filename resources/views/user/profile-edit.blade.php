@@ -179,9 +179,9 @@
 
             var validate = "";
 
-            if (first_name.trim() == "") {
+            /*if (first_name.trim() == "") {
                 validate = validate + "First name is required</br>";
-            }
+            }*/
             if (email.trim() == "") {
                 validate = validate + "Email is required</br>";
             }

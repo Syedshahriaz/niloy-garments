@@ -43,5 +43,6 @@ Route::post('store_shipment', 'UserProjectController@storeShipment')->name('user
 Route::get('all_project', 'UserProjectController@allProject')->name('user.all_project');
 Route::post('add_project', 'UserProjectController@addProject')->name('user.add_project');
 Route::get('my_project', 'UserProjectController@myProject')->name('user.my_project');
+Route::get('my_project_task/{id}', 'UserProjectController@myProjectTask')->name('user.my_project_details');
 
 

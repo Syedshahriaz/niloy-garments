@@ -166,18 +166,18 @@ class UserProjectController extends Controller
         //try{
             $project = Project::select('projects.*')
                 ->where('id',$request->project_id)
-                ->get();
+                ->first();
 
             $tasks = UserProjectTask::select('user_project_tasks.*')
                 ->join('tasks','tasks.id','=','user_project_tasks.task_id')
-                ->where('user_project_id',$request->user_project_id)
+                ->where('user_project_id',$request->id)
                 ->get();
 
             if($request->ajax()) {
                 $returnHTML = View::make('user.project.my_project_task',compact('project','tasks'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('user.project.my_project',compact('project','tasks'));
+            return view('user.project.my_project_task',compact('project','tasks'));
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
