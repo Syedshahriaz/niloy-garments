@@ -190,5 +190,12 @@ body {
 }
 /*Select shipment date END*/
 
-
+/*Data table style START*/
+.data-table tr>th{
+    min-width: 120px;
+}
+.data-table td {
+    font-size: 13px;
+}
+/*Data table style END*/
 /*Rewrite layout END*/
