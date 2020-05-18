@@ -34,6 +34,10 @@
         <link href="{{asset('assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL PAGE STYLES-->
 
+        <!-- START DATA TABLE STYLES-->
+        <link href="{{asset('assets/global/plugins/datatables/dataTables.bootstrap.min.csss')}}" rel="stylesheet" type="text/css" />
+        <!-- END DATA TABLE STYLES-->
+
         <!-- BEGIN THEME LAYOUT STYLES -->
         <link href="{{asset('assets/layouts/layout/css/layout.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/layouts/layout/css/themes/blue.min.css')}}" rel="stylesheet" type="text/css" id="style_color" />

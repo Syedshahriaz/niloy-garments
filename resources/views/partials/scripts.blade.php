@@ -42,8 +42,15 @@
 <script src="{{asset('assets/pages/scripts/dashboard.js')}}" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<!-- <script src="{{asset('assets/global/scripts/datatable.js')}}" type="text/javascript"></script> -->
+<script src="{{asset('assets/global/plugins/datatables/jquery.dataTables.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('assets/global/plugins/datatables/dataTables.bootstrap.min.js')}}" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+
+<script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
+
 <!-- BEGIN GLOABL CUSTOM SCRIPTS -->
 <script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>
 <!-- END GLOABL CUSTOM SCRIPTS -->
 
-<script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
