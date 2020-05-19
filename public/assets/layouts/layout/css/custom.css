@@ -48,6 +48,14 @@
         border-color: #7030a0 !important;
         color: #fff;
     }
+    .theme-btn.btn-outline{
+        background: transparent !important;
+        border-color: #7030a0 !important;
+        color: #7030a0;
+    }
+    .theme-btn.btn-outline:hover, .theme-btn.btn-outline:focus{
+        color: #7030a0;
+    }
     .theme-btn:hover, .theme-btn:focus{
         color: #fff;
     }

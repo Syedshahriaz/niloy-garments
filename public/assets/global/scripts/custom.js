@@ -40,3 +40,17 @@ $('#select_ship_date').on('show.bs.modal', function (e) {
 $('#select_ship_date').on('hidden.bs.modal', function (e) {
     $('body').removeClass('shipment_modal-open');
 });
+
+//User task page
+$('#vertical_view_btn').click(function(){
+    $(this).removeClass('btn-outline');
+    $('#horzon_view_btn').addClass('btn-outline');
+    $('#user_horizontal_task').addClass('hidden');
+    $('#user_vertical_task').removeClass('hidden');
+});
+$('#horzon_view_btn').click(function(){
+    $(this).removeClass('btn-outline');
+    $('#vertical_view_btn').addClass('btn-outline');
+    $('#user_vertical_task').addClass('hidden');
+    $('#user_horizontal_task').removeClass('hidden');
+});
