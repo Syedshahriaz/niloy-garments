@@ -43,10 +43,10 @@
 
                             <div class="actions">
                                 <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summery</a>
-                                <a title="List View" class="btn btn-transparent green btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
+                                <a title="List View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
                                     <i class="icon-list icons"></i>
                                 </a> 
-                                <a title="Grid View" class="btn btn-transparent green btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
+                                <a title="Grid View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
                                     <i class="icon-grid icons"></i>
                                 </a> 
                             </div>
@@ -77,30 +77,30 @@
                                     </tr>
                                     <tr>
                                         <td> <b>Due Date</b></td>
-                                        <td> Wednesday<br> August 16, 2017 </td>
-                                        <td> Saturday<br> September 16, 2017 </td>
-                                        <td> Friday<br> October 20, 2017 </td>
-                                        <td> Sunday<br> January 06, 2019 </td>
-                                        <td> Wednesday<br> July 06, 2022 </td>
-                                        <td> Friday<br> July 06, 2029 </td>
+                                        <td> Wednesday,<br> August 16, 2017 </td>
+                                        <td> Saturday,<br> September 16, 2017 </td>
+                                        <td> Friday,<br> October 20, 2017 </td>
+                                        <td> Sunday,<br> January 06, 2019 </td>
+                                        <td> Wednesday,<br> July 06, 2022 </td>
+                                        <td> Friday,<br> July 06, 2029 </td>
                                     </tr>
                                     <tr>
                                         <td> <b>Original Delivery Date</b></td>
                                         <td class="bg-success"> 
                                             <div class="edit-table-date">
-                                                Wednesday<br> August 16, 2017 
+                                                Wednesday,<br> August 16, 2017 
                                                 <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
                                             </div>
                                         </td>
                                         <td class="bg-warning"> 
                                             <div class="edit-table-date">
-                                                Saturday<br> September 16, 2017 
+                                                Saturday,<br> September 16, 2017 
                                                 <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
                                             </div> 
                                         </td>
                                         <td class="bg-danger"> 
                                             <div class="edit-table-date">
-                                                Friday<br> October 20, 2017 
+                                                Friday,<br> October 20, 2017 
                                                 <a class="" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
                                             </div> 
                                         </td>
@@ -122,24 +122,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- <tr class="focus-tr">
-                                        <td> <b>Rule</b></td>
-                                        <td> <b>Cutting</b></td>
-                                        <td> <b>Sewing</b></td>
-                                        <td> <b>Finishing</b></td>
-                                        <td> <b>Final Inspection Date</b></td>
-                                        <td> <b>X Factor</b> </td>
-                                        <td> <b>ETA</b></td>
-                                    </tr> -->
                                     <tr>
                                         <td> <b>Cotton</b></td>
                                         <td> <b>Cutting</b></td>
                                         <td> 
-                                            Wednesday<br> August 16, 2017
+                                            Wednesday, August 16, 2017
                                         </td>
                                         <td class="bg-success"> 
                                             <div class="edit-table-date">
-                                                Saturday<br> September 16, 2017 
+                                                Saturday, September 16, 2017 
                                                 <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
                                             </div> 
                                         </td>
@@ -148,24 +139,24 @@
                                         <td> <b>Spining</b></td>
                                         <td> <b>Sewing</b></td>
                                         <td> 
-                                            Wednesday<br> August 16, 2017
+                                            Wednesday, August 16, 2017
                                         </td>
                                         <td class="bg-warning"> 
                                             <div class="edit-table-date">
-                                                Saturday<br> September 16, 2017 
+                                                Saturday, September 16, 2017 
                                                 <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
                                             </div> 
                                         </td>
                                     </tr>
                                     <tr>
                                         <td> <b>Knitting</b></td>
-                                        <td> <b>Finishingg</b></td>
+                                        <td> <b>Finishing</b></td>
                                         <td> 
-                                            Wednesday<br> August 16, 2017
+                                            Wednesday, August 16, 2017
                                         </td>
                                         <td class="bg-danger"> 
                                             <div class="edit-table-date">
-                                                Saturday<br> September 16, 2017 
+                                                Saturday, September 16, 2017 
                                                 <a class="" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
                                             </div> 
                                         </td>
@@ -174,7 +165,7 @@
                                         <td> <b>Dying</b></td>
                                         <td> <b>Final Inspection</b></td>
                                         <td> 
-                                            Wednesday<br> August 16, 2017
+                                            Wednesday, August 16, 2017
                                         </td>
                                         <td class=""> 
                                             <div class="edit-table-date">
@@ -187,7 +178,7 @@
                                         <td> <b>Finishing</b></td>
                                         <td> <b>X Factor</b></td>
                                         <td> 
-                                            Wednesday<br> August 16, 2017
+                                            Wednesday, August 16, 2017
                                         </td>
                                         <td class=""> 
                                             <div class="edit-table-date">
@@ -200,7 +191,7 @@
                                         <td> <b>Test</b></td>
                                         <td> <b>ETA</b></td>
                                         <td> 
-                                            Wednesday<br> August 16, 2017
+                                            Wednesday, August 16, 2017
                                         </td>
                                         <td class=""> 
                                             <div class="edit-table-date">
@@ -293,19 +284,6 @@
                 "ordering": false,
                 "info":     false,
                 "searching": false
-            });
-
-            $('#vertical_view_btn').click(function(){
-                $(this).removeClass('.btn-outline');
-                $('#horzon_view_btn').addClass('btn-outline');
-                $('#user_horizontal_task').addClass('hidden');
-                $('#user_vertical_task').removeClass('hidden');
-            });
-            $('#horzon_view_btn').click(function(){
-                $(this).removeClass('.btn-outline');
-                $('#vertical_view_btn').addClass('btn-outline');
-                $('#user_vertical_task').addClass('hidden');
-                $('#user_horizontal_task').removeClass('hidden');
             });
         });
     </script>

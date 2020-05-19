@@ -7,7 +7,7 @@ var ComponentsDateTimePickers = function () {
                 rtl: App.isRTL(),
                 orientation: "left",
                 autoclose: true,
-                format: 'DD dd, MM, yyyy',
+                format: 'DD, MM dd, yyyy',
             });
             $('.date-picker').on('changeDate', function(e){
                 $(this).next('input[type=hidden].date-picker-hidden').val( moment(e.date).format('DD-MM-YYYY') );
