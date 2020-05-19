@@ -32,6 +32,10 @@
         margin-bottom: 5rem;
     }
 
+    b, optgroup, strong {
+        font-weight: 600;
+    }
+
     /*Color css START*/
     .font-theme{
         color: #7030a0 !important;
@@ -46,6 +50,15 @@
     }
     .theme-btn:hover, .theme-btn:focus{
         color: #fff;
+    }
+    .focus-tr, .focus-td{
+        background-color: #642d9029 !important;
+    }
+    .bg-warning {
+        background-color: #f9d591;
+    }
+    .bg-danger{
+        background-color: #ffa8ae !important;
     }
     /*Color css END*/
 
@@ -172,15 +185,15 @@ body {
 /*Select project END*/
 
 /*Select shipment date START*/
-#select_ship_date .modal-title{
+#select_ship_date .modal-title, #select_delivery_modal .modal-title{
     font-size: 22px;
     font-weight: 400;
 }
-#select_ship_date .modal-footer{
+#select_ship_date .modal-footer, #select_delivery_modal .modal-footer{
     text-align: center !important;
 }
 @media (min-width: 768px){
-    #select_ship_date .modal-dialog {
+    #select_ship_date .modal-dialog, #select_delivery_modal .modal-dialog{
         width: 400px;
     }
 }
@@ -195,7 +208,27 @@ body {
     min-width: 120px;
 }
 .data-table td {
+    color: #000;
+    font-size: 12px;
+}
+.focus-table thead{
+    background: linear-gradient(45deg, #7030a0, #151b26) !important;
+}
+.focus-table thead>tr>th{
     font-size: 13px;
+    color: #fff;
+}
+.edit-table-date{
+    position: relative;
+}
+.edit-table-date>a{
+    top: 0;
+    right: 0;
+    position: absolute;
+    width: 100%;
+    text-align: right;
+    height: 100%;
+    color: #ff0505;
 }
 /*Data table style END*/
 /*Rewrite layout END*/

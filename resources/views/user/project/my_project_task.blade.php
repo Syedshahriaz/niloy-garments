@@ -43,17 +43,17 @@
 
                             <div class="actions">
                                 <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summery</a>
-                                <a title="List View" class="btn btn-transparent green btn-outline btn-circle btn-sm" href="javascript:;">
+                                <a title="List View" class="btn btn-transparent green btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
                                     <i class="icon-list icons"></i>
                                 </a> 
-                                <a title="Grid View" class="btn btn-transparent green btn-circle btn-sm" href="javascript:;">
+                                <a title="Grid View" class="btn btn-transparent green btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
                                     <i class="icon-grid icons"></i>
                                 </a> 
                             </div>
                         </div>
                         <div class="portlet-body">
 
-                            <table class="table table-striped table-bordered table-hover data-table " id="user_horizontal_task">
+                            <table class="table table-striped table-bordered table-hover data-table focus-table" id="user_horizontal_task">
                                 <thead>
                                     <tr>
                                         <th>Title</th>
@@ -66,14 +66,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr class="focus-tr">
                                         <td> <b>Rule</b></td>
-                                        <td> Cutting </td>
-                                        <td> Sewing </td>
-                                        <td> Finishing </td>
-                                        <td> Final Inspection Date </td>
-                                        <td> X Factor </td>
-                                        <td> ETA </td>
+                                        <td> <b>Cutting</b></td>
+                                        <td> <b>Sewing</b></td>
+                                        <td> <b>Finishing</b></td>
+                                        <td> <b>Final Inspection Date</b></td>
+                                        <td> <b>X Factor</b> </td>
+                                        <td> <b>ETA</b></td>
                                     </tr>
                                     <tr>
                                         <td> <b>Due Date</b></td>
@@ -86,12 +86,128 @@
                                     </tr>
                                     <tr>
                                         <td> <b>Original Delivery Date</b></td>
-                                        <td> Wednesday<br> August 16, 2017 </td>
-                                        <td> Saturday<br> September 16, 2017 </td>
-                                        <td> Friday<br> October 20, 2017 </td>
-                                        <td> Sunday<br> January 06, 2019 </td>
-                                        <td> Wednesday<br> July 06, 2022 </td>
-                                        <td> Friday<br> July 06, 2029 </td>
+                                        <td class="bg-success"> 
+                                            <div class="edit-table-date">
+                                                Wednesday<br> August 16, 2017 
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div>
+                                        </td>
+                                        <td class="bg-warning"> 
+                                            <div class="edit-table-date">
+                                                Saturday<br> September 16, 2017 
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                        <td class="bg-danger"> 
+                                            <div class="edit-table-date">
+                                                Friday<br> October 20, 2017 
+                                                <a class="" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                            <table class="table table-striped table-bordered table-hover data-table focus-table hidden" id="user_vertical_task">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th> Role </th>
+                                        <th> Due Date </th>
+                                        <th> Original Delivery Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- <tr class="focus-tr">
+                                        <td> <b>Rule</b></td>
+                                        <td> <b>Cutting</b></td>
+                                        <td> <b>Sewing</b></td>
+                                        <td> <b>Finishing</b></td>
+                                        <td> <b>Final Inspection Date</b></td>
+                                        <td> <b>X Factor</b> </td>
+                                        <td> <b>ETA</b></td>
+                                    </tr> -->
+                                    <tr>
+                                        <td> <b>Cotton</b></td>
+                                        <td> <b>Cutting</b></td>
+                                        <td> 
+                                            Wednesday<br> August 16, 2017
+                                        </td>
+                                        <td class="bg-success"> 
+                                            <div class="edit-table-date">
+                                                Saturday<br> September 16, 2017 
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Spining</b></td>
+                                        <td> <b>Sewing</b></td>
+                                        <td> 
+                                            Wednesday<br> August 16, 2017
+                                        </td>
+                                        <td class="bg-warning"> 
+                                            <div class="edit-table-date">
+                                                Saturday<br> September 16, 2017 
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Knitting</b></td>
+                                        <td> <b>Finishingg</b></td>
+                                        <td> 
+                                            Wednesday<br> August 16, 2017
+                                        </td>
+                                        <td class="bg-danger"> 
+                                            <div class="edit-table-date">
+                                                Saturday<br> September 16, 2017 
+                                                <a class="" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Dying</b></td>
+                                        <td> <b>Final Inspection</b></td>
+                                        <td> 
+                                            Wednesday<br> August 16, 2017
+                                        </td>
+                                        <td class=""> 
+                                            <div class="edit-table-date">
+                                                <!-- Saturday<br> September 16, 2017  -->
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Finishing</b></td>
+                                        <td> <b>X Factor</b></td>
+                                        <td> 
+                                            Wednesday<br> August 16, 2017
+                                        </td>
+                                        <td class=""> 
+                                            <div class="edit-table-date">
+                                                <!-- Saturday<br> September 16, 2017  -->
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <b>Test</b></td>
+                                        <td> <b>ETA</b></td>
+                                        <td> 
+                                            Wednesday<br> August 16, 2017
+                                        </td>
+                                        <td class=""> 
+                                            <div class="edit-table-date">
+                                                <!-- Saturday<br> September 16, 2017  -->
+                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div> 
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -131,6 +247,42 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- END TASK SUMMERY MODAL -->
+
+    <!-- START TASK Delivery date MODAL -->
+    <div class="modal fade" id="select_delivery_modal" tabindex="-1" role="select_delivery_modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Update task</h4>
+                </div>
+                <div class="modal-body"> 
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="form-group">
+                                <label for=""><b>Original Delivery Date</b></label>
+                                <input class="form-control date-picker" size="16" type="text" name="org_delivery_date" id="org_delivery_date" value="" placeholder="Select Delivery Date"/>
+                                <input class="date-picker-hidden" type="hidden" name="org_delivery_date_hidden"/>
+                            </div>
+
+                            <div class="form-group margin-top-20 margin-bottom-20">
+                                <label class="mt-checkbox mt-checkbox-outline mb-0">
+                                    <input type="checkbox" class="show-password" name="task-done" /> Task Done
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn theme-btn">Submit</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- END TASK SUMMERY MODAL -->
 @endsection
 
 @section('js')
@@ -141,6 +293,19 @@
                 "ordering": false,
                 "info":     false,
                 "searching": false
+            });
+
+            $('#vertical_view_btn').click(function(){
+                $(this).removeClass('.btn-outline');
+                $('#horzon_view_btn').addClass('btn-outline');
+                $('#user_horizontal_task').addClass('hidden');
+                $('#user_vertical_task').removeClass('hidden');
+            });
+            $('#horzon_view_btn').click(function(){
+                $(this).removeClass('.btn-outline');
+                $('#vertical_view_btn').addClass('btn-outline');
+                $('#user_vertical_task').addClass('hidden');
+                $('#user_horizontal_task').removeClass('hidden');
             });
         });
     </script>
