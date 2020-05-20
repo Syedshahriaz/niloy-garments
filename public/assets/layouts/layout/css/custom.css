@@ -175,20 +175,35 @@ body {
 .project-item-name {
     font-size: 16px;
     font-weight: 600;
-    margin-top: 7px;
+    margin-top: 0px;
     text-transform: uppercase;
+    word-break: break-word;
 }
-.project-item:hover .icon-check {
+.project-item:hover i {
     color: #7030a0 !important;
     transition: all 0.7s ease;
 }
-.project-item.project_added .icon>i.icon-check{
+.project-item.project_added .icon i.icon-heart{
     color: #7030a0;
 }
 .project-item .display .number{
-    height: 42px;
-    max-width: 80%;
+    height: 35px;
+    max-width: 70%;
     overflow: hidden;
+}
+.project-item i{
+    width: 23px;
+    height: 23px;
+    font-size: 23px;
+    color: #cbd4e0;
+    line-height: 23px;
+    margin-left: 3px;
+}
+.dashboard-stat2.project-item .icon{
+    padding: 0px 0 0;
+}
+.dashboard-stat2.project-item .icon>a{
+    text-decoration: none !important;
 }
 /*Select project END*/
 

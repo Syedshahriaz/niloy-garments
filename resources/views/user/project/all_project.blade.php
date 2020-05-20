@@ -55,7 +55,7 @@
                                     foreach($projects as $project){
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="dashboard-stat2 project-item" @if(in_array($project->id,$my_projects)) style="background: #e0dddd ;border: 1px solid #b7b2b2 ;" @endif>
+                                        <div class="dashboard-stat2 project-item  @if(in_array($project->id,$my_projects)) project_added @endif">
                                             <div class="display">
                                                 <div class="number">
                                                     <h5 class="font-theme project-item-name">
@@ -63,7 +63,12 @@
                                                     </h5>
                                                 </div>
                                                 <div class="icon">
-                                                    <i class="icon-check"></i>
+                                                    <a href="javascript:;" title="Favourite">
+                                                        <i class="icon-heart"></i>
+                                                    </a>
+                                                    <a href="#" title="Details">
+                                                        <i class="icon-arrow-right"></i>
+                                                    </a>      
                                                 </div>
                                             </div>
                                             <div class="progress-info">

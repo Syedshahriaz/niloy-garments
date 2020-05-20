@@ -18,15 +18,15 @@ $('.show-password').click(function(){
 
 
 //project selection action
-$(document).on('click','.project-item',function(){
-    var check_status = $(this).find('.project-item-check').val();
+$(document).on('click','.project-item .icon-heart',function(){
+    var check_status = $(this).parents('.project-item').find('.project-item-check').val();
     if(check_status == '0'){
-        $(this).find('.project-item-check').val('1');
-        $(this).addClass('project_added');
+        $(this).parents('.project-item').find('.project-item-check').val('1');
+        $(this).parents('.project-item').addClass('project_added');
     }
     else{
-        $(this).find('.project-item-check').val('0');
-        $(this).removeClass('project_added');
+        $(this).parents('.project-item').find('.project-item-check').val('0');
+        $(this).parents('.project-item').removeClass('project_added');
     }
 });
 
