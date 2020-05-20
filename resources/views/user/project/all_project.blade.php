@@ -55,6 +55,7 @@
                                     foreach($projects as $project){
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+
                                         <div class="dashboard-stat2 project-item  @if(in_array($project->id,$my_projects)) project_added @endif">
                                             <div class="display">
                                                 <div class="number">
@@ -66,9 +67,9 @@
                                                     <a href="javascript:;" title="Favourite" class="add_to_fav">
                                                         <i class="icon-heart"></i>
                                                     </a>
-                                                    <a href="#" title="Details">
+                                                    <a href="{{url('my_project_task',$project->id)}}" title="Details">
                                                         <i class="icon-arrow-right"></i>
-                                                    </a>      
+                                                    </a>
                                                 </div>
                                             </div>
                                             <div class="progress-info">
