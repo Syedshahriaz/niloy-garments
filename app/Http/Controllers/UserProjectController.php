@@ -17,59 +17,25 @@ use Session;
 
 class UserProjectController extends Controller
 {
-    public function allProject(Request $request){
-        //try{
-            $user = User::where('users.id',Session::get('user_id'))->first();
-            $shipment = UserShipment::where('user_id',$user->id)->first();
-            if(empty($shipment)){
-                return redirect('select_shipment');
-            }
-            $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
-                ->leftJoin('tasks','tasks.project_id','=','projects.id')
-                ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
-                ->where('projects.status','active')
-                ->groupBy('projects.id')
-                ->get();
-
-            $my_projects = Project::select('user_projects.project_id')
-            ->where('status','active')
-            ->join('user_projects','user_projects.project_id','=','projects.id')
-            ->where('user_projects.user_id',Session::get('user_id'))
-            ->pluck('user_projects.project_id')
-            ->toArray();
-            if($request->ajax()) {
-                $returnHTML = View::make('user.project.all_project',compact('shipment','projects','my_projects'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
-            }
-            return view('user.project.all_project',compact('shipment','projects','my_projects'));
-        /*}
-        catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
-    }
-
     public function selectShipment(Request $request){
         //try{
-            $user = User::where('users.id',Session::get('user_id'))->first();
-            $shipment = UserShipment::where('user_id',$user->id)->first();
-            if(!empty($shipment)){
-                return redirect('all_project');
-            }
-            if($request->ajax()) {
-                $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
-            }
-            return view('user.project.select_shipment', compact('user'));
-       /* }
-        catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
-                $e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        $user = User::where('users.id',Session::get('user_id'))->first();
+        $shipment = UserShipment::where('user_id',$user->id)->first();
+        if(!empty($shipment)){
+            return redirect('all_project');
+        }
+        if($request->ajax()) {
+            $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
+            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        }
+        return view('user.project.select_shipment', compact('user'));
+        /* }
+         catch (\Exception $e) {
+             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
+                 $e->getFile(), '', '', '', '');
+             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+         }*/
     }
 
     public function storeShipment(Request $request){
@@ -86,10 +52,84 @@ class UserProjectController extends Controller
             $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
             $shipment->save();
 
+            /*
+             * Add user project
+             * */
+            $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
+                ->leftJoin('tasks','tasks.project_id','=','projects.id')
+                ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
+                ->where('projects.status','active')
+                ->groupBy('projects.id')
+                ->get();
+
+            foreach($projects as $key=>$project){
+                $userProject = NEW UserProject();
+                $userProject->user_id = $user->id;
+                $userProject->project_id = $project->id;
+                $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
+                $userProject->save();
+
+                $tasks = Task::where('project_id',$project->id)->get();
+
+                /*
+                 * Saving user project tasks
+                 * */
+                foreach($tasks as $key=>$task){
+                    $projectTask = NEW UserProjectTask();
+                    $projectTask->user_project_id = $userProject->id;
+                    $projectTask->task_id = $task->id;
+                    $projectTask->due_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
+                    if($key==0){
+                        $projectTask->status = 'processing';
+                    }
+                    else{
+                        $projectTask->status = 'not initiate';
+                    }
+                    $projectTask->save();
+                }
+            }
+
+            DB::commit();
+
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
+    public function allProject(Request $request){
+        //try{
+        $user = User::where('users.id',Session::get('user_id'))->first();
+        $shipment = UserShipment::where('user_id',$user->id)->first();
+        if(empty($shipment)){
+            return redirect('select_shipment');
+        }
+        $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
+            ->leftJoin('tasks','tasks.project_id','=','projects.id')
+            ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
+            ->where('projects.status','active')
+            ->groupBy('projects.id')
+            ->get();
+
+        $my_projects = Project::select('user_projects.project_id')
+            ->where('status','active')
+            ->join('user_projects','user_projects.project_id','=','projects.id')
+            ->where('user_projects.user_id',Session::get('user_id'))
+            ->pluck('user_projects.project_id')
+            ->toArray();
+        if($request->ajax()) {
+            $returnHTML = View::make('user.project.all_project',compact('shipment','projects','my_projects'))->renderSections()['content'];
+            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        }
+        return view('user.project.all_project',compact('shipment','projects','my_projects'));
+        /*}
+        catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -172,13 +212,15 @@ class UserProjectController extends Controller
     public function myProjectTask(Request $request){
         //try{
             $project = Project::select('projects.*')
-                ->where('id',$request->project_id)
+                ->where('id',$request->id)
                 ->first();
 
-            $tasks = UserProjectTask::select('user_project_tasks.*')
+            $tasks = UserProjectTask::select('user_project_tasks.*','tasks.title','tasks.rule')
                 ->join('tasks','tasks.id','=','user_project_tasks.task_id')
                 ->where('user_project_id',$request->id)
                 ->get();
+
+            //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
 
             if($request->ajax()) {
                 $returnHTML = View::make('user.project.my_project_task',compact('project','tasks'))->renderSections()['content'];

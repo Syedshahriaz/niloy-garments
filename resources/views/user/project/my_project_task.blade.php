@@ -37,7 +37,7 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">Tasks for A </span>
+                                <span class="caption-subject font-dark bold uppercase">Tasks for {{$project->name}} </span>
                                 <span class="caption-helper"></span>
                             </div>
 
@@ -45,10 +45,10 @@
                                 <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summery</a>
                                 <a title="List View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
                                     <i class="icon-list icons"></i>
-                                </a> 
+                                </a>
                                 <a title="Grid View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
                                     <i class="icon-grid icons"></i>
-                                </a> 
+                                </a>
                             </div>
                         </div>
                         <div class="portlet-body">
@@ -57,56 +57,50 @@
                                 <thead>
                                     <tr>
                                         <th>Title</th>
-                                        <th> Cotton </th>
-                                        <th> Spinning </th>
-                                        <th> Knitting </th>
-                                        <th> Dying </th>
-                                        <th> Finising </th>
-                                        <th> Test </th>
+                                        @foreach($tasks as $task)
+                                        <th> {{$task->title}} </th>
+                                        @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="focus-tr">
                                         <td> <b>Rule</b></td>
-                                        <td> <b>Cutting</b></td>
-                                        <td> <b>Sewing</b></td>
-                                        <td> <b>Finishing</b></td>
-                                        <td> <b>Final Inspection Date</b></td>
-                                        <td> <b>X Factor</b> </td>
-                                        <td> <b>ETA</b></td>
+                                        @foreach($tasks as $task)
+                                            <th> {{$task->rule}} </th>
+                                        @endforeach
                                     </tr>
                                     <tr>
                                         <td> <b>Due Date</b></td>
-                                        <td> Wednesday,<br> August 16, 2017 </td>
-                                        <td> Saturday,<br> September 16, 2017 </td>
-                                        <td> Friday,<br> October 20, 2017 </td>
-                                        <td> Sunday,<br> January 06, 2019 </td>
-                                        <td> Wednesday,<br> July 06, 2022 </td>
-                                        <td> Friday,<br> July 06, 2029 </td>
+                                        @foreach($tasks as $task)
+                                            <th>
+                                                {{date('l', strtotime($task->due_date))}},<br>
+                                                {{date('F d, Y', strtotime($task->due_date))}}
+                                            </th>
+                                        @endforeach
                                     </tr>
                                     <tr>
                                         <td> <b>Original Delivery Date</b></td>
-                                        <td class="bg-success"> 
-                                            <div class="edit-table-date">
-                                                Wednesday,<br> August 16, 2017 
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div>
-                                        </td>
-                                        <td class="bg-warning"> 
-                                            <div class="edit-table-date">
-                                                Saturday,<br> September 16, 2017 
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                        <td class="bg-danger"> 
-                                            <div class="edit-table-date">
-                                                Friday,<br> October 20, 2017 
-                                                <a class="" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <?php foreach($tasks as $task){
+                                            $hidden_class = 'hidden';
+                                            $bg_class = '';
+                                            if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                                $hidden_class = '';
+                                            }
+                                            else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                                $hidden_class = 'hidden';
+                                            }
+                                            if($task->status == 'completed'){
+                                                $bg_class = 'bg-success';
+                                            }
+                                            ?>
+                                            <td class="{{$bg_class}}">{{--bg-warning, bg-danger--}}
+                                                <div class="edit-table-date">
+                                                    {{date('l', strtotime($task->original_delivery_date))}},<br>
+                                                    {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
+                                                    <a class="{{$hidden_class}}" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                                </div>
+                                            </td>
+                                        <?php } ?>
                                     </tr>
                                 </tbody>
                             </table>
@@ -122,84 +116,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php foreach($tasks as $task){
+                                        $hidden_class = 'hidden';
+                                        $bg_class = '';
+                                        if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                            $hidden_class = '';
+                                        }
+                                        else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                            $hidden_class = 'hidden';
+                                        }
+                                        if($task->status == 'completed'){
+                                            $bg_class = 'bg-success';
+                                        }
+                                    ?>
                                     <tr>
-                                        <td> <b>Cotton</b></td>
-                                        <td> <b>Cutting</b></td>
-                                        <td> 
-                                            Wednesday, August 16, 2017
+                                        <td> <b>{{$task->title}}</b></td>
+                                        <td> <b>{{$task->rule}}</b></td>
+                                        <td>
+                                            {{date('l, F d, Y', strtotime($task->due_date))}}
                                         </td>
-                                        <td class="bg-success"> 
+                                        <td class="{{$bg_class}}">
                                             <div class="edit-table-date">
-                                                Saturday, September 16, 2017 
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
+                                                {{date('l, F d, Y', strtotime($task->original_delivery_date))}}
+                                                <a class="{{$hidden_class}}" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
+                                            </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td> <b>Spining</b></td>
-                                        <td> <b>Sewing</b></td>
-                                        <td> 
-                                            Wednesday, August 16, 2017
-                                        </td>
-                                        <td class="bg-warning"> 
-                                            <div class="edit-table-date">
-                                                Saturday, September 16, 2017 
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td> <b>Knitting</b></td>
-                                        <td> <b>Finishing</b></td>
-                                        <td> 
-                                            Wednesday, August 16, 2017
-                                        </td>
-                                        <td class="bg-danger"> 
-                                            <div class="edit-table-date">
-                                                Saturday, September 16, 2017 
-                                                <a class="" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td> <b>Dying</b></td>
-                                        <td> <b>Final Inspection</b></td>
-                                        <td> 
-                                            Wednesday, August 16, 2017
-                                        </td>
-                                        <td class=""> 
-                                            <div class="edit-table-date">
-                                                <!-- Saturday<br> September 16, 2017  -->
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td> <b>Finishing</b></td>
-                                        <td> <b>X Factor</b></td>
-                                        <td> 
-                                            Wednesday, August 16, 2017
-                                        </td>
-                                        <td class=""> 
-                                            <div class="edit-table-date">
-                                                <!-- Saturday<br> September 16, 2017  -->
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td> <b>Test</b></td>
-                                        <td> <b>ETA</b></td>
-                                        <td> 
-                                            Wednesday, August 16, 2017
-                                        </td>
-                                        <td class=""> 
-                                            <div class="edit-table-date">
-                                                <!-- Saturday<br> September 16, 2017  -->
-                                                <a class="hidden" data-toggle="modal" href="#select_delivery_modal" title="Edit"><i class="icons icon-note"></i></a>
-                                            </div> 
-                                        </td>
-                                    </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -221,12 +164,12 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                     <h4 class="modal-title">Summery of product</h4>
                 </div>
-                <div class="modal-body"> 
-                    <p class="mt-0 mb-0">Description: Men's Short Sleeve T-Shirt.<br>
-                    Fabrication: (100% Cotton 180GSM Single Jersey),<br>
-                    Colour: Black, White, Blue, Greymarl, Turquise, <br>
-                    Quantity: 10,000<br>
-                    Size range: XS-S-M-L-XL-XXL<br>
+                <div class="modal-body">
+                    <p class="mt-0 mb-0">Description: {{$project->description}}<br>
+                    Fabrication: {{$project->fabrication}}<br>
+                    Colour: {{$project->color}} <br>
+                    Quantity: {{$project->quantity}}<br>
+                    Size range: {{$project->size_range}}<br>
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -247,7 +190,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                     <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Update task</h4>
                 </div>
-                <div class="modal-body"> 
+                <div class="modal-body">
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <div class="form-group">
