@@ -18,7 +18,7 @@ $('.show-password').click(function(){
 
 
 //project selection action
-$(document).on('click','.project-item .icon-heart',function(){
+$(document).on('click','.project-item .add_to_fav',function(){
     var check_status = $(this).parents('.project-item').find('.project-item-check').val();
     if(check_status == '0'){
         $(this).parents('.project-item').find('.project-item-check').val('1');

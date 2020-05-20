@@ -59,7 +59,7 @@
                                                 </h5>
                                             </div>
                                             <div class="icon">
-                                                <a href="javascript:;" title="Favourite">
+                                                <a href="javascript:;" title="Favourite" class="add_to_fav">
                                                     <i class="icon-heart"></i>
                                                 </a>
                                                 <a href="#" title="Details">
