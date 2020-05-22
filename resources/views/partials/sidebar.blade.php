@@ -207,6 +207,13 @@
                     <span class="selected"></span>
                 </a>
             </li>
+            <li class="nav-item @if($page=='user_list') active @endif">
+                <a href="{{url('user_list')}}" class="nav-link">
+                    <i class="icon-users"></i>
+                    <span class="title">Users</span>
+                    <span class="selected"></span>
+                </a>
+            </li>
             <li class="nav-item @if($page=='messages') active @endif">
                 <a href="#" class="nav-link">
                     <i class="icon-envelope"></i>
