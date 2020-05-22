@@ -45,13 +45,13 @@
                             </div>
                         </div>
                         <div class="portlet-body">
-                            <table border="1">
+                            <table id="user_manage_table" class="table table-striped table-bordered table-hover data-table focus-table">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Username</th>
                                         <th>Shipment Date</th>
-                                        <th>Action</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,8 +66,8 @@
                                                 {{date('l d, M, Y', strtotime($user->shipment_date))}}
                                             @endif
                                         </td>
-                                        <td>
-                                            <button type="button">Make separate</button>
+                                        <td class="text-center">
+                                            <button type="button" class="btn theme-btn">Make Separate</button>
                                         </td>
                                     </tr>
                                     <?php
@@ -89,7 +89,14 @@
 
 @section('js')
     <script>
-
+        $(document).ready(function() {
+            $('#user_manage_table').DataTable({
+                "paging":   true,
+                "ordering": true,
+                "info":     true,
+                "searching": true
+            });
+        });
     </script>
 @endsection
 
