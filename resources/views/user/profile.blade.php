@@ -92,10 +92,13 @@
                                                     <h5 class="mb-0"><b>Phone Number</b></h5>
                                                     <p>{{$user->phone}}</p>
                                                 </div>
-
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Email Address</b></h5>
                                                     <p>{{$user->email}}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5 class="mb-0"><b>Profession</b></h5>
+                                                    <p>{{$user->profession}}</p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Shipping Date</b></h5>

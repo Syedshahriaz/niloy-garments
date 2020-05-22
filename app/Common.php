@@ -101,6 +101,15 @@ class Common
         return $string;
     }
 
+    public static function generateUniqueNumber($number){
+        $number_length = strlen($number);
+        $leading_zero = 8-$number_length;
+        for($i=$leading_zero; $i>0; $i--){
+            $number = '0'.$number;
+        }
+        return $number;
+    }
+
     public static function isValidImageExtension($image_file){
         $extension = $image_file->getClientOriginalExtension();
         if(in_array($extension, Common::VALID_IMAGE_EXTENSIONS)){
