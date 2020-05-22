@@ -44,11 +44,14 @@ class UserController extends Controller
             if(!empty($duplicateUser)){
                 return [ 'status' => 401, 'reason' => 'Duplicate username'];
             }
+            $unique_id = Common::generaterandomNumber(8);
+
             $user = new User();
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->password = bcrypt($request->password);
+            $user->unique_id = $unique_id;
             $user->role = 3;
             $user->save();
 
@@ -193,6 +196,7 @@ class UserController extends Controller
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->phone = $request->phone;
+            $user->profession = $request->profession;
             //$user->birthday = date('Y-m-d', strtotime($request->birthday));
             $user->gender = $request->gender;
 

@@ -178,6 +178,9 @@
         if (password.trim() == "") {
             validate = validate + "Password is required</br>";
         }
+        if (password.trim() != "" && password.length<5) {
+            validate = validate + "Password length can not be less than 5 character</br>";
+        }
         if (password.trim() != "" && password.trim() != repassword.trim()) {
             validate = validate + "Password and retype password not matched</br>";
         }

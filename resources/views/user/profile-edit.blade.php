@@ -98,7 +98,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Gender</b></label>
-                                                    <select name="gender" id="gender" name="user-info-gender" class="form-control">
+                                                    <select name="gender" id="gender" class="form-control">
                                                         <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
                                                         <option value="Female" @if($user->gender=='Female') selected @endif>Female</option>
                                                     </select>
@@ -120,6 +120,16 @@
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
                                                     <input type="phone" class="form-control" name="phone" id="phone" value="{{$user->phone}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for=""><b>Profession</b></label>
+                                                    <select name="profession" id="profession" class="form-control">
+                                                        <option value="Male" @if($user->profession=='') selected @endif>Select</option>
+                                                        <option value="Manager" @if($user->profession=='Manager') selected @endif>Manager</option>
+                                                        <option value="Sales Person" @if($user->profession=='Sales Person') selected @endif>Sales Person</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
