@@ -151,6 +151,13 @@ body {
         }
     }
 }
+.dataTables_wrapper   .dataTables_filter{
+    float: right !important;
+}
+ 
+.dataTables_wrapper  .dataTables_paginate{
+    float: right !important;
+}
 /*phone plugin Edit START*/
 .iti{
     width: 100%;
@@ -310,5 +317,6 @@ body {
     height: 100%;
     color: #ff0505;
 }
+
 /*Data table style END*/
 /*Rewrite layout END*/

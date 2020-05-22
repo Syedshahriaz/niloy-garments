@@ -95,6 +95,12 @@
                                                     <input type="text" class="form-control" name="username" id="username" value="{{$user->username}}" disabled >
                                                 </div>
                                             </div>
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for=""><b>Phone Number</b></label>
+                                                    <input type="phone" class="form-control" name="phone" id="telephone" value="{{$user->phone}}">
+                                                </div>
+                                            </div> -->
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
@@ -123,15 +129,8 @@
                                                     <input class="form-control date-picker" size="16" type="text" value="" />
                                                 </div>
                                             </div>--}}
-<<<<<<< HEAD
                                             
-=======
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for=""><b>Phone Number</b></label>
-                                                    <input type="phone" class="form-control" name="phone" id="phone" value="{{$user->phone}}">
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Profession</b></label>
@@ -142,7 +141,6 @@
                                                     </select>
                                                 </div>
                                             </div>
->>>>>>> 9443a1ee39864f4fbfed89652d951004ff9b16e4
                                         </div>
 
                                         <div class="form-group text-right">
