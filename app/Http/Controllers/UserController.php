@@ -44,11 +44,20 @@ class UserController extends Controller
             if(!empty($duplicateUser)){
                 return [ 'status' => 401, 'reason' => 'Duplicate username'];
             }
+            $lastUser = User::orderBy('id','DESC')->first();
+            if(!empty($lastUser)){
+                $unique_id = Common::generateUniqueNumber($lastUser->id+1);
+            }
+            else{
+                $unique_id = Common::generateUniqueNumber(1);
+            }
+
             $user = new User();
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->password = bcrypt($request->password);
+            $user->unique_id = $unique_id;
             $user->role = 3;
             $user->save();
 
@@ -120,6 +129,7 @@ class UserController extends Controller
 
     private function createUserSession($user){
         Session::put('user_id', $user->id);
+        Session::put('unique_id', $user->unique_id);
         Session::put('role_id',$user->role_id);
         Session::put('username', $user->username);
         Session::put('user_email', $user->email);
@@ -193,6 +203,7 @@ class UserController extends Controller
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->phone = $request->phone;
+            $user->profession = $request->profession;
             //$user->birthday = date('Y-m-d', strtotime($request->birthday));
             $user->gender = $request->gender;
 
@@ -234,6 +245,27 @@ class UserController extends Controller
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updatePassword', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
+    public function userList(Request $request){
+        //try {
+        $users = User::where('users.email',Session::get('user_email'))
+            ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
+            ->orderBy('users.id','ASC')
+            ->get();
+        if($request->ajax()) {
+            $returnHTML = View::make('user.user_list',compact('users'))->renderSections()['content'];
+            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        }
+        return view('user.user_list',compact('users'));
+        //echo "<pre>"; print_r($users); echo "</pre>";
+        /*}
+        catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -288,6 +320,29 @@ class UserController extends Controller
             return ['status' => 200, 'reason' => 'New user created successfully'];
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
+    public function separateUser(Request $request){
+        //try {
+            /*
+             * Check duplicate username
+             * */
+            $duplicateUser = User::where('email',$request->email)->first();
+            if(!empty($duplicateUser)){
+                return [ 'status' => 401, 'reason' => 'Duplicate email'];
+            }
+            $user = User::where('id',$request->user_id)->first();
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->save();
+
+            return ['status' => 200, 'reason' => 'User separated successfully'];
+        /*} catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'separateUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
