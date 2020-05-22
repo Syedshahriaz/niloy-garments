@@ -97,6 +97,12 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
+                                                    <label for=""><b>Phone Number</b></label>
+                                                    <input type="phone" class="form-control" name="phone" id="telephone" value="{{$user->phone}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
                                                     <label for=""><b>Gender</b></label>
                                                     <select name="gender" id="gender" name="user-info-gender" class="form-control">
                                                         <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
@@ -104,6 +110,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Email Address</b></label>
@@ -116,12 +123,7 @@
                                                     <input class="form-control date-picker" size="16" type="text" value="" />
                                                 </div>
                                             </div>--}}
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for=""><b>Phone Number</b></label>
-                                                    <input type="phone" class="form-control" name="phone" id="phone" value="{{$user->phone}}">
-                                                </div>
-                                            </div>
+                                            
                                         </div>
 
                                         <div class="form-group text-right">

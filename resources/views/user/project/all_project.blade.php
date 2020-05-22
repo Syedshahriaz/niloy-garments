@@ -41,7 +41,16 @@
                                 <span class="caption-helper">Select to add project</span>
                             </div>
                             <div class="actions">
-
+                                <div class="user-list-tag">
+                                    <ul>
+                                        <li class="active"><a href="">shahriaz01</a></li>
+                                        <li><a href="">shahriaz02</a></li>
+                                        <li><a href="">shahriaz02</a></li>
+                                        <li><a href="">shahriaz03</a></li>
+                                        <li><a href="">shahriaz04</a></li>
+                                        <li><a href="">shahriaz05</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div class="portlet-body">
@@ -55,46 +64,49 @@
                                     foreach($projects as $project){
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-
-                                        <div class="dashboard-stat2 project-item  @if(in_array($project->id,$my_projects)) project_added @endif">
-                                            <div class="display">
-                                                <div class="number">
-                                                    <h5 class="font-theme project-item-name">
-                                                        {{$project->name}}
-                                                    </h5>
-                                                </div>
-                                                <div class="icon">
-                                                    <a href="javascript:;" title="Favourite" class="add_to_fav">
-                                                        <i class="icon-heart"></i>
-                                                    </a>
-                                                    <a href="{{url('my_project_task',$project->id)}}" title="Details">
+                                        <a class="project-item-title" href="{{url('my_project_task',$project->id)}}" title="{{$project->name}}">
+                                            <div class="dashboard-stat2 project-item  @if(in_array($project->id,$my_projects)) project_added @endif">
+                                                <div class="display title-section">
+                                                    <div class="number">
+                                                        <h5 class="font-theme project-item-name">
+                                                            {{$project->name}}
+                                                        </h5>
+                                                    </div>
+                                                    <div class="icon">
+                                                        <!-- <a href="javascript:;" title="Favourite" class="add_to_fav">
+                                                            <i class="icon-heart"></i>
+                                                        </a> -->
                                                         <i class="icon-arrow-right"></i>
-                                                    </a>
+                                                    </div>
                                                 </div>
+                                                <div class="display">
+                                                    <p class="project-item-sub" title="This is a sub title">This is a sub title</p>   
+                                                    <p class="project-item-task font-theme">Running Task Name</p>    
+                                                </div>
+                                                <div class="progress-info">
+                                                    <div class="progress">
+                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
+                                                    </div>
+                                                    <div class="status">
+                                                        <div class="status-title"> Due Date </div>
+                                                        <div class="status-number"> {{date('l M d, Y', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}</div>
+                                                        <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}" @if(in_array($project->id,$my_projects)) disabled @endif>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" class="project-item-check" name="project_check[]" value="0" @if(in_array($project->id,$my_projects)) disabled @endif>
+                                                <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}" @if(in_array($project->id,$my_projects)) disabled @endif>
                                             </div>
-                                            <div class="progress-info">
-                                                <div class="progress">
-                                                    <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                                </div>
-                                                <div class="status">
-                                                    <div class="status-title"> Due Date </div>
-                                                    <div class="status-number"> {{date('l M d, Y', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}</div>
-                                                    <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}" @if(in_array($project->id,$my_projects)) disabled @endif>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" class="project-item-check" name="project_check[]" value="0" @if(in_array($project->id,$my_projects)) disabled @endif>
-                                            <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}" @if(in_array($project->id,$my_projects)) disabled @endif>
-                                        </div>
+                                        </a>
                                     </div>
                                     <?php
                                     }
                                     ?>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-md-12 text-right">
                                         <button type="submit" class="btn green">Add Selected Project</button>
                                     </div>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
                     </div>

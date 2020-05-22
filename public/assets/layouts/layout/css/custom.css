@@ -1,5 +1,9 @@
 /* here you can put your own css to customize and override the theme */
 /*Core css START*/
+    :root {
+        --primary-theme-color: #7030a0;
+        --seconadry-theme-color: #fbae42;
+    }
     .mt-0{
         margin-top: 0 !important;
     }
@@ -38,23 +42,23 @@
 
     /*Color css START*/
     .font-theme{
-        color: #7030a0 !important;
+        color: var(--primary-theme-color) !important;
     }
     .theme-bg{
-        background: linear-gradient(45deg, #7030a0, #151b26) !important;
+        background: linear-gradient(45deg, var(--primary-theme-color), #151b26) !important;
     }
     .theme-btn{
-        background: linear-gradient(45deg, #7030a0, #151b26) !important;
-        border-color: #7030a0 !important;
+        background: linear-gradient(45deg, var(--primary-theme-color), #151b26) !important;
+        border-color: var(--primary-theme-color) !important;
         color: #fff;
     }
     .theme-btn.btn-outline{
         background: transparent !important;
-        border-color: #7030a0 !important;
-        color: #7030a0;
+        border-color: var(--primary-theme-color) !important;
+        color: var(--primary-theme-color);
     }
     .theme-btn.btn-outline:hover, .theme-btn.btn-outline:focus{
-        color: #7030a0;
+        color: var(--primary-theme-color);
     }
     .theme-btn:hover, .theme-btn:focus{
         color: #fff;
@@ -99,7 +103,7 @@ body {
     background-color: #151b26;
 }
 .page-header.navbar {
-    background: linear-gradient(45deg, #7030a0, #151b26) !important;
+    background: linear-gradient(45deg, var(--primary-theme-color), #151b26) !important;
 }
 .page-sidebar, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover {
     background-color: #151b26 !important;
@@ -151,6 +155,11 @@ body {
 .iti{
     width: 100%;
 }
+.iti__country-list{
+    max-height: 180px;
+    max-width: 340px;
+    overflow-x: hidden;
+}
 /*phone plugin Edit END*/
 
 /*Select project START*/
@@ -159,6 +168,9 @@ body {
     border-radius: 0;
     margin-right: 20px;
     padding: 6px 12px !important;
+}
+.project-item-title:hover,.project-item-title:focus,.project-item-title:visited{
+    text-decoration: none;
 }
 .project-item{
     cursor: pointer;
@@ -180,15 +192,15 @@ body {
     word-break: break-word;
 }
 .project-item:hover i {
-    color: #7030a0 !important;
+    color: var(--primary-theme-color) !important;
     transition: all 0.7s ease;
 }
 .project-item.project_added .icon i.icon-heart{
-    color: #7030a0;
+    color: var(--primary-theme-color);
 }
 .project-item .display .number{
     height: 35px;
-    max-width: 70%;
+    max-width: 80%;
     overflow: hidden;
 }
 .project-item i{
@@ -198,6 +210,51 @@ body {
     color: #cbd4e0;
     line-height: 23px;
     margin-left: 3px;
+}
+.project-item .display{
+    margin-bottom: 0;
+}
+.display.title-section {
+    margin-bottom: 5px;
+}
+.project-item-sub {
+    color: #000;
+    font-size: 13px;
+    display: initial;
+    overflow: hidden;
+    margin-bottom: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.project-item-task {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.user-list-tag>ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0px !important;
+}
+.user-list-tag>ul>li {
+    list-style: none;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+.user-list-tag>ul>li>a {
+    color: #000;
+    font-size: 13px;
+    font-weight: 600;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.user-list-tag>ul>li>a:hover{
+    text-decoration: none;
+    border-bottom: 2px solid var(--seconadry-theme-color);
+}
+.user-list-tag>ul>li.active>a {
+    border-bottom: 2px solid var(--seconadry-theme-color);
 }
 .dashboard-stat2.project-item .icon{
     padding: 0px 0 0;
@@ -235,7 +292,7 @@ body {
     font-size: 12px;
 }
 .focus-table thead{
-    background: linear-gradient(45deg, #7030a0, #151b26) !important;
+    background: linear-gradient(45deg, var(--primary-theme-color), #151b26) !important;
 }
 .focus-table thead>tr>th{
     font-size: 13px;
