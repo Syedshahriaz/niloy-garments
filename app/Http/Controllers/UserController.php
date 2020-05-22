@@ -325,4 +325,27 @@ class UserController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }*/
     }
+
+    public function separateUser(Request $request){
+        //try {
+            /*
+             * Check duplicate username
+             * */
+            $duplicateUser = User::where('email',$request->email)->first();
+            if(!empty($duplicateUser)){
+                return [ 'status' => 401, 'reason' => 'Duplicate email'];
+            }
+            $user = User::where('id',$request->user_id)->first();
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->save();
+
+            return ['status' => 200, 'reason' => 'User separated successfully'];
+        /*} catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'separateUser', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
 }
