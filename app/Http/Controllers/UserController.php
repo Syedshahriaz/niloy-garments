@@ -254,6 +254,7 @@ class UserController extends Controller
     public function userList(Request $request){
         //try {
         $users = User::where('users.email',Session::get('user_email'))
+            ->select('users.*','user_shipments.shipment_date')
             ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
             ->orderBy('users.id','ASC')
             ->get();
@@ -335,9 +336,10 @@ class UserController extends Controller
             if(!empty($duplicateUser)){
                 return [ 'status' => 401, 'reason' => 'Duplicate email'];
             }
+            
             $user = User::where('id',$request->user_id)->first();
             $user->email = $request->email;
-            $user->phone = $request->phone;
+            //$user->phone = $request->phone;
             $user->save();
 
             return ['status' => 200, 'reason' => 'User separated successfully'];
