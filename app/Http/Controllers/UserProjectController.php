@@ -109,9 +109,10 @@ class UserProjectController extends Controller
         if(empty($shipment)){
             return redirect('select_shipment');
         }
-        $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
+        $projects = UserProject::with('running_task')
+            ->select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
+            ->leftJoin('projects','projects.id','=','user_projects.project_id')
             ->leftJoin('tasks','tasks.project_id','=','projects.id')
-            ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
             ->where('projects.status','active')
             ->groupBy('projects.id')
             ->get();

@@ -80,8 +80,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="display">
-                                                    <p class="project-item-sub" title="This is a sub title">This is a sub title</p>   
-                                                    <p class="project-item-task font-theme">Running Task Name</p>    
+                                                    <p class="project-item-sub" title="This is a sub title">{{$project->sub_title}}</p>
+                                                    <p class="project-item-task font-theme">{{$project->running_task->title}}</p>
                                                 </div>
                                                 <div class="progress-info">
                                                     <div class="progress">
