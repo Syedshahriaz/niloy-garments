@@ -280,9 +280,10 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         $user = User::where('users.id',Session::get('user_id'))->first();
-        Auth::logout();
+        //Auth::logout();
 
-        return redirect()->route('registration',['token'=>base64_encode($user->email)]);
+        return view('user.create_new_user',compact('user'));
+        //return redirect()->route('registration',['token'=>base64_encode($user->email)]);
     }
 
     public function storeNewUser(Request $request){
@@ -322,7 +323,7 @@ class UserController extends Controller
 
             $result = SendMails::sendMail($emailData, $view);*/
 
-            return ['status' => 200, 'reason' => 'New user created successfully'];
+            return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
