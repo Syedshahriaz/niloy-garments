@@ -48,11 +48,11 @@
                             <div class="form-group">
                                 <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                                 <label class="control-label visible-ie8 visible-ie9">Email</label>
-                                <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$user->email}}"/>
+                                <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$user->email}}" readonly/>
                             </div>
                             <div class="form-group">
                                 <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-                                <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" />
+                                <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$user->phone}}"/>
                             </div>
                             <div class="form-group">
                                 <label class="control-label visible-ie8 visible-ie9">Password</label>
@@ -75,6 +75,22 @@
                         </form>
                     </div>
                 </div>
+            </div>
+
+            <div class="hidden">
+                <form id="select_user_form" class="login-form" action="{{url('multi_tinent')}}" method="post">
+                {{csrf_field()}}
+                    <div class="form-group">
+                        <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                        <label class="control-label visible-ie8 visible-ie9">User</label>
+                        <input type="hidden" name="user_id" id="user_id">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn uppercase theme-btn pull-right">Submit</button>
+                        <!-- <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a> -->
+                    </div>
+                </form>
             </div>
 
         </div>
@@ -112,6 +128,9 @@
             if (password.trim() == "") {
                 validate = validate + "Password is required</br>";
             }
+            if (password.trim() != "" && password.length<5) {
+                validate = validate + "Password length can not be less than 5 character</br>";
+            }
             if (password.trim() != "" && password.trim() != repassword.trim()) {
                 validate = validate + "Password and retype password not matched</br>";
             }
@@ -141,9 +160,9 @@
                             $("#success_message").show();
                             $("#error_message").hide();
                             $("#success_message").html(data.reason);
-                            setTimeout(function(){
-                                location.reload();
-                            },2000)
+
+                            $('#user_id').val(data.user_id);
+                            $('#select_user_form').submit();
                         } else {
                             $("#success_message").hide();
                             $("#error_message").show();
