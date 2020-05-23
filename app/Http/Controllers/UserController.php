@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Payment;
+use App\Models\Profession;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -163,7 +164,9 @@ class UserController extends Controller
     public function profile(Request $request){
         //try {
             $user = User::where('users.id',Session::get('user_id'))
+                ->select('users.*','user_shipments.shipment_date','professions.title as profession_name')
                 ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
+                ->leftJoin('professions','professions.id','=','users.profession')
                 ->first();
             if($request->ajax()) {
                 $returnHTML = View::make('user.profile',compact('user'))->renderSections()['content'];
@@ -185,11 +188,12 @@ class UserController extends Controller
             ->select('users.*','user_shipments.shipment_date')
             ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
             ->first();
+        $professions = Profession::where('status','active')->get();
         if($request->ajax()) {
-            $returnHTML = View::make('user.profile-edit',compact('user'))->renderSections()['content'];
+            $returnHTML = View::make('user.profile-edit',compact('user','professions'))->renderSections()['content'];
             return response()->json(array('status' => 200, 'html' => $returnHTML));
         }
-        return view('user.profile-edit',compact('user'));
+        return view('user.profile-edit',compact('user','professions'));
     }
     public function resetPassword()
     {
@@ -336,7 +340,7 @@ class UserController extends Controller
             if(!empty($duplicateUser)){
                 return [ 'status' => 401, 'reason' => 'Duplicate email'];
             }
-            
+
             $user = User::where('id',$request->user_id)->first();
             $user->email = $request->email;
             //$user->phone = $request->phone;

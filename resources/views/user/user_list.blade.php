@@ -148,7 +148,7 @@
 
             var options = {
                 theme: "sk-cube-grid",
-                message: 'Please wait while saving all data.....',
+                message: 'Please wait while exporting and saving all data.....',
                 backgroundColor: "#1847B1",
                 textColor: "white"
             };
