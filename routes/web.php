@@ -37,6 +37,7 @@ Route::post('update_password', 'UserController@updatePassword')->name('update_pa
 Route::get('user_list', 'UserController@userList')->name('user.user_list');
 Route::get('add_user', 'UserController@addUser')->name('user.add_user');
 Route::post('store_new_user', 'UserController@storeNewUser')->name('user.store_new_user');
+Route::post('separate_user', 'UserController@separateUser')->name('user.separate_user');
 
 /*User project routs*/
 Route::get('select_shipment', 'UserProjectController@selectShipment')->name('user.select_shipment');
