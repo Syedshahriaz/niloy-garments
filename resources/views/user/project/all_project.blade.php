@@ -43,12 +43,9 @@
                             <div class="actions">
                                 <div class="user-list-tag">
                                     <ul>
-                                        <li class="active"><a href="">shahriaz01</a></li>
-                                        <li><a href="">shahriaz02</a></li>
-                                        <li><a href="">shahriaz02</a></li>
-                                        <li><a href="">shahriaz03</a></li>
-                                        <li><a href="">shahriaz04</a></li>
-                                        <li><a href="">shahriaz05</a></li>
+                                        @foreach($child_users as $user)
+                                        <li class="@if($user->id==$user_id) active @endif"><a href="{{url('all_project').'?u_id='.$user->id}}" @if($user->shipment_date=='') disabled @endif>{{$user->username}}</a></li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>

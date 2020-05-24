@@ -104,8 +104,19 @@ class UserProjectController extends Controller
 
     public function allProject(Request $request){
         //try{
-        $user = User::where('users.id',Session::get('user_id'))->first();
-        $shipment = UserShipment::where('user_id',$user->id)->first();
+        if($request->u_id==''){
+            $user_id = Session::get('user_id');
+        }
+        else{
+            $user_id = $request->u_id;
+        }
+
+        $user = User::where('users.id',$user_id)->first();
+        $child_users = User::where('users.email',Session::get('user_email'))
+            ->select('users.*','user_shipments.shipment_date')
+            ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
+            ->get();
+        $shipment = UserShipment::where('user_id',$user_id)->first();
         if(empty($shipment)){
             return redirect('select_shipment');
         }
@@ -113,6 +124,7 @@ class UserProjectController extends Controller
             ->select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
             ->leftJoin('projects','projects.id','=','user_projects.project_id')
             ->leftJoin('tasks','tasks.project_id','=','projects.id')
+            ->where('user_projects.user_id',$user_id)
             ->where('projects.status','active')
             ->groupBy('projects.id')
             ->get();
@@ -120,14 +132,16 @@ class UserProjectController extends Controller
         $my_projects = Project::select('user_projects.project_id')
             ->where('status','active')
             ->join('user_projects','user_projects.project_id','=','projects.id')
-            ->where('user_projects.user_id',Session::get('user_id'))
+            ->where('user_projects.user_id',$user_id)
             ->pluck('user_projects.project_id')
             ->toArray();
+
+        //return $user_id;
         if($request->ajax()) {
-            $returnHTML = View::make('user.project.all_project',compact('shipment','projects','my_projects'))->renderSections()['content'];
+            $returnHTML = View::make('user.project.all_project',compact('user_id','child_users','shipment','projects','my_projects'))->renderSections()['content'];
             return response()->json(array('status' => 200, 'html' => $returnHTML));
         }
-        return view('user.project.all_project',compact('shipment','projects','my_projects'));
+        return view('user.project.all_project',compact('user_id','child_users','shipment','projects','my_projects'));
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
