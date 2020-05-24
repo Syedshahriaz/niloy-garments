@@ -200,13 +200,7 @@
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='my_project' || $page=='my_project_task') active @endif">
-                <a href="{{url('my_project')}}" class="nav-link">
-                    <i class="icon-puzzle"></i>
-                    <span class="title">My Projects</span>
-                    <span class="selected"></span>
-                </a>
-            </li>
+
             <li class="nav-item @if($page=='user_list') active @endif">
                 <a href="{{url('user_list')}}" class="nav-link">
                     <i class="icon-users"></i>

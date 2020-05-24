@@ -67,7 +67,8 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class="btn theme-btn" onclick="separate_user({{$user->id}})">Make Separate</button>
+                                            <button type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</button>
+                                            <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-action-redo"></i> Make Separate</button>
                                         </td>
                                     </tr>
                                     <?php
@@ -92,14 +93,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Make Selection</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">New Credential</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <form id="separate_user_form" method="post" action="">
-                            <div class="alert alert-success" id="success_message" style="display:none"></div>
-                            <div class="alert alert-danger" id="error_message" style="display: none"></div>
-
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
+                            </div>
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="user_id">
                             <div class="col-md-10 col-md-offset-1">
@@ -118,7 +120,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn theme-btn" id="separate_button">Submit</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn" id="separate_button">Submit</button>
+                    </div>
                 </div>
             </div>
             <!-- /.modal-content -->
