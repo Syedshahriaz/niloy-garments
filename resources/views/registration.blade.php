@@ -84,7 +84,7 @@
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
+            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password* (At least 5 characters)" name="password" />
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>

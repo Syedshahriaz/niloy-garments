@@ -63,6 +63,10 @@
     .theme-btn:hover, .theme-btn:focus{
         color: #fff;
     }
+    .action-btn {
+        padding: 3px 10px;
+        font-size: 13px;
+    }
     .focus-tr, .focus-td{
         background-color: #642d9029 !important;
     }
@@ -153,6 +157,14 @@ body {
 }
 .dataTables_wrapper   .dataTables_filter{
     float: right !important;
+}
+.table>tbody>tr>td, 
+.table>tbody>tr>th, 
+.table>tfoot>tr>td, 
+.table>tfoot>tr>th, 
+.table>thead>tr>td, 
+.table>thead>tr>th{
+    vertical-align: middle !important;
 }
  
 .dataTables_wrapper  .dataTables_paginate{
@@ -280,7 +292,7 @@ body {
     text-align: center !important;
 }
 @media (min-width: 768px){
-    #select_ship_date .modal-dialog, #select_delivery_modal .modal-dialog{
+    #select_ship_date .modal-dialog, #select_delivery_modal .modal-dialog, #invidual_user_modal .modal-dialog{
         width: 400px;
     }
 }

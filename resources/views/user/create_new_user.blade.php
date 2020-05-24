@@ -31,48 +31,83 @@
             <!-- END PAGE BAR -->
             <!-- END PAGE HEADER-->
 
+            <div class="profile-content">
+                <div class="row mt-3">
+                    <div class="col-md-6 col-md-offset-3">
+                        <!-- BEGIN PORTLET -->
+                        <div class="portlet light ">
+                            <div class="portlet-title">
+                                <div class="caption caption-md">
+                                    <i class="icon-bar-chart theme-font hide"></i>
+                                    <span class="caption-subject font-blue-madison bold uppercase">New User Information</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <form id="registration_form" class="register-form" action="index.html" method="post">
+                                {{csrf_field()}}
+
+                                <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">User Name*</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="User Name*" name="username" id="username" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                                            <label class="control-label visible-ie8 visible-ie9">Email</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$user->email}}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">  
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">Phone*</label>
+                                            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$user->phone}}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">Password</label>
+                                            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">  
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
+                                            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group margin-top-20 margin-bottom-20">
+                                            <label class="mt-checkbox mt-checkbox-outline mb-0">
+                                                <input type="checkbox" class="show-password" name="show_password" /> Show password
+                                                <span></span>
+                                            </label>
+                                            <div id="register_tnc_error"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-actions">
+                                            <button type="submit" id="register-submit-btn" class="btn theme-btn uppercase pull-right">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row mt-3">
                 <div class="col-md-12">
                     <div class="profile-sidebar">
-                        <form id="registration_form" class="register-form" action="index.html" method="post">
-                            {{csrf_field()}}
-
-                            <div class="alert alert-success" id="success_message" style="display:none"></div>
-                            <div class="alert alert-danger" id="error_message" style="display: none"></div>
-
-                            <p class="hint"> Enter your personal details below: </p>
-                            <div class="form-group">
-                                <label class="control-label visible-ie8 visible-ie9">User Name*</label>
-                                <input class="form-control placeholder-no-fix" type="text" placeholder="User Name*" name="username" id="username" />
-                            </div>
-                            <div class="form-group">
-                                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                                <label class="control-label visible-ie8 visible-ie9">Email</label>
-                                <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$user->email}}" readonly/>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-                                <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$user->phone}}"/>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label visible-ie8 visible-ie9">Password</label>
-                                <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
-                                <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
-                            </div>
-                            <div class="form-group margin-top-20 margin-bottom-20">
-                                <label class="mt-checkbox mt-checkbox-outline mb-0">
-                                    <input type="checkbox" class="show-password" name="show_password" /> Show password
-                                    <span></span>
-                                </label>
-                                <div id="register_tnc_error"> </div>
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" id="register-submit-btn" class="btn theme-btn uppercase pull-right">Submit</button>
-                            </div>
-                        </form>
+                        
                     </div>
                 </div>
             </div>
