@@ -48,7 +48,7 @@
 
                                 <div class="alert alert-success" id="success_message" style="display:none"></div>
                                 <div class="alert alert-danger" id="error_message" style="display: none"></div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -63,31 +63,10 @@
                                             <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$user->email}}" readonly/>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">  
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
                                             <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$user->phone}}"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label visible-ie8 visible-ie9">Password</label>
-                                            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">  
-                                        <div class="form-group">
-                                            <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
-                                            <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group margin-top-20 margin-bottom-20">
-                                            <label class="mt-checkbox mt-checkbox-outline mb-0">
-                                                <input type="checkbox" class="show-password" name="show_password" /> Show password
-                                                <span></span>
-                                            </label>
-                                            <div id="register_tnc_error"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -107,7 +86,7 @@
             <div class="row mt-3">
                 <div class="col-md-12">
                     <div class="profile-sidebar">
-                        
+
                     </div>
                 </div>
             </div>
@@ -151,23 +130,12 @@
             var username = $("#username").val();
             var email = $("#email").val();
             var phone = $("#telephone").val();
-            var password = $("#password").val();
-            var repassword = $("#repassword").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             var validate = "";
 
             if (username.trim() == "") {
                 validate = validate + "Username is required</br>";
-            }
-            if (password.trim() == "") {
-                validate = validate + "Password is required</br>";
-            }
-            if (password.trim() != "" && password.length<5) {
-                validate = validate + "Password length can not be less than 5 character</br>";
-            }
-            if (password.trim() != "" && password.trim() != repassword.trim()) {
-                validate = validate + "Password and retype password not matched</br>";
             }
             if (phone.trim() == "") {
                 validate = validate + "Phone is required</br>";

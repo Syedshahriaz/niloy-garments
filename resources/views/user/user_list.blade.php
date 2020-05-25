@@ -115,6 +115,15 @@
                                     <label class="control-label visible-ie8 visible-ie9">Phone*</label>
                                     <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" style="padding-left: 0px !important;"/>
                                 </div>--}}
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Password</label>
+                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
+                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -161,6 +170,8 @@
 
             var email = $("#email").val();
             var phone = $("#telephone").val();
+            var password = $("#password").val();
+            var repassword = $("#repassword").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             var validate = "";
@@ -175,6 +186,15 @@
                 if(!re.test(email)){
                     validate = validate+'Email is invalid<br>';
                 }
+            }
+            if (password.trim() == "") {
+                validate = validate + "Password is required</br>";
+            }
+            if (password.trim() != "" && password.length<5) {
+                validate = validate + "Password length can not be less than 5 character</br>";
+            }
+            if (password.trim() != "" && password.trim() != repassword.trim()) {
+                validate = validate + "Password and retype password not matched</br>";
             }
 
             if (validate == "") {
