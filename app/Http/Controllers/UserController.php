@@ -295,11 +295,23 @@ class UserController extends Controller
             if(!empty($duplicateUser)){
                 return [ 'status' => 401, 'reason' => 'Duplicate username'];
             }
+
+            $parentUser = User::where('email',$request->email)->first();
+
+            $lastUser = User::orderBy('id','DESC')->first();
+            if(!empty($lastUser)){
+                $unique_id = Common::generateUniqueNumber($lastUser->id+1);
+            }
+            else{
+                $unique_id = Common::generateUniqueNumber(1);
+            }
+
             $user = new User();
+            $user->unique_id = $unique_id;
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
-            $user->password = bcrypt($request->password);
+            $user->password = $parentUser->password;
             $user->role = 3;
             $user->save();
 
@@ -344,6 +356,7 @@ class UserController extends Controller
 
             $user = User::where('id',$request->user_id)->first();
             $user->email = $request->email;
+            $user->password = bcrypt($request->password);
             //$user->phone = $request->phone;
             $user->save();
 
