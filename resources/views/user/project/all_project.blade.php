@@ -61,7 +61,7 @@
                                     foreach($projects as $project){
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <a class="project-item-title" href="{{url('my_project_task',$project->id)}}" title="{{$project->name}}">
+                                        <a class="project-item-title" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}">
                                             <div class="dashboard-stat2 project-item  @if(in_array($project->id,$my_projects)) project_added @endif">
                                                 <div class="display title-section">
                                                     <div class="number">

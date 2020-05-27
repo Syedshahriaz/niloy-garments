@@ -19,16 +19,21 @@ class UserProjectController extends Controller
 {
     public function selectShipment(Request $request){
         //try{
-        $user = User::where('users.id',Session::get('user_id'))->first();
-        $shipment = UserShipment::where('user_id',$user->id)->first();
-        if(!empty($shipment)){
-            return redirect('all_project');
+        if (Auth::check()) {
+            $user = User::where('users.id', Session::get('user_id'))->first();
+            $shipment = UserShipment::where('user_id', $user->id)->first();
+            if (!empty($shipment)) {
+                return redirect('all_project');
+            }
+            if ($request->ajax()) {
+                $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.project.select_shipment', compact('user'));
         }
-        if($request->ajax()) {
-            $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        else{
+            return redirect('login');
         }
-        return view('user.project.select_shipment', compact('user'));
         /* }
          catch (\Exception $e) {
              SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
@@ -104,44 +109,51 @@ class UserProjectController extends Controller
 
     public function allProject(Request $request){
         //try{
-        if($request->u_id==''){
-            $user_id = Session::get('user_id');
+        if (Auth::check()) {
+            if ($request->u_id == '') {
+                $user_id = Session::get('user_id');
+            } else {
+                $user_id = $request->u_id;
+            }
+
+            $user = User::where('users.id', $user_id)->first();
+            $child_users = User::where('users.email', Session::get('user_email'))
+                ->select('users.*', 'user_shipments.shipment_date')
+                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->get();
+            $shipment = UserShipment::where('user_id', $user_id)->first();
+            if (empty($shipment)) {
+                return redirect('select_shipment');
+            }
+            $projects = UserProject::with('running_task')
+                ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id')
+                ->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id')
+                ->leftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
+                ->where('user_projects.user_id', $user_id)
+                ->where('projects.status', 'active')
+                ->groupBy('projects.id')
+                ->get();
+
+            $my_projects = Project::select('user_projects.project_id')
+                ->where('status', 'active')
+                ->join('user_projects', 'user_projects.project_id', '=', 'projects.id')
+                ->where('user_projects.user_id', $user_id)
+                ->pluck('user_projects.project_id')
+                ->toArray();
+
+            //return $user_id;
+            if ($request->ajax()) {
+                $returnHTML = View::make('user.project.all_project',
+                    compact('user_id', 'child_users', 'shipment', 'projects',
+                        'my_projects'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.project.all_project',
+                compact('user_id', 'child_users', 'shipment', 'projects', 'my_projects'));
         }
         else{
-            $user_id = $request->u_id;
+            return redirect('login');
         }
-
-        $user = User::where('users.id',$user_id)->first();
-        $child_users = User::where('users.email',Session::get('user_email'))
-            ->select('users.*','user_shipments.shipment_date')
-            ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
-            ->get();
-        $shipment = UserShipment::where('user_id',$user_id)->first();
-        if(empty($shipment)){
-            return redirect('select_shipment');
-        }
-        $projects = UserProject::with('running_task')
-            ->select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
-            ->leftJoin('projects','projects.id','=','user_projects.project_id')
-            ->leftJoin('tasks','tasks.project_id','=','projects.id')
-            ->where('user_projects.user_id',$user_id)
-            ->where('projects.status','active')
-            ->groupBy('projects.id')
-            ->get();
-
-        $my_projects = Project::select('user_projects.project_id')
-            ->where('status','active')
-            ->join('user_projects','user_projects.project_id','=','projects.id')
-            ->where('user_projects.user_id',$user_id)
-            ->pluck('user_projects.project_id')
-            ->toArray();
-
-        //return $user_id;
-        if($request->ajax()) {
-            $returnHTML = View::make('user.project.all_project',compact('user_id','child_users','shipment','projects','my_projects'))->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
-        }
-        return view('user.project.all_project',compact('user_id','child_users','shipment','projects','my_projects'));
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
@@ -226,22 +238,34 @@ class UserProjectController extends Controller
 
     public function myProjectTask(Request $request){
         //try{
-            $project = Project::select('projects.*')
-                ->where('id',$request->id)
-                ->first();
+            if (Auth::check()) {
+                $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule',
+                    'tasks.project_id')
+                    ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+                    ->where('user_project_id', $request->id)
+                    ->get();
 
-            $tasks = UserProjectTask::select('user_project_tasks.*','tasks.title','tasks.rule')
-                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
-                ->where('user_project_id',$request->id)
-                ->get();
+                if (!empty($tasks)) {
+                    $project = Project::select('projects.*')
+                        ->where('id', $tasks[0]->project_id)
+                        ->first();
+                } else {
+                    $project = array();
+                }
 
-            //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
 
-            if($request->ajax()) {
-                $returnHTML = View::make('user.project.my_project_task',compact('project','tasks'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+                //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
+
+                if ($request->ajax()) {
+                    $returnHTML = View::make('user.project.my_project_task',
+                        compact('project', 'tasks'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('user.project.my_project_task', compact('project', 'tasks'));
             }
-            return view('user.project.my_project_task',compact('project','tasks'));
+            else{
+                return redirect('login');
+            }
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
