@@ -287,6 +287,7 @@ class UserController extends Controller
             $users = User::where('users.email', Session::get('user_email'))
                 ->select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->where('users.id','!=',Session::get('user_id'))
                 ->orderBy('users.id', 'ASC')
                 ->get();
             if ($request->ajax()) {

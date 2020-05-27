@@ -70,7 +70,7 @@
                                         <div class="alert alert-success" id="success_message" style="display:none"></div>
                                         <div class="alert alert-danger" id="error_message" style="display: none"></div>
                                     </div>
-                                </div> 
+                                </div>
 
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
@@ -110,6 +110,15 @@
         $(document).on("submit", "#shipment_form", function(event) {
             event.preventDefault();
 
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while saving all data.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
             var shipment_date = $("#shipment_date").val();
 
             var validate = "";
@@ -127,6 +136,7 @@
                     url: url,
                     data: formData,
                     success: function(data) {
+                        HoldOn.close();
                         if (data.status == 200) {
                             $("#success_message").show();
                             $("#error_message").hide();
@@ -141,6 +151,7 @@
                         }
                     },
                     error: function(data) {
+                        HoldOn.close();
                         $("#success_message").hide();
                         $("#error_message").show();
                         $("#error_message").html(data);
@@ -150,6 +161,7 @@
                     processData: false
                 });
             } else {
+                HoldOn.close();
                 $("#success_message").hide();
                 $("#error_message").show();
                 $("#error_message").html(validate);
