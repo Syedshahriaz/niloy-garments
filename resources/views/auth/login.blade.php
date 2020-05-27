@@ -48,7 +48,7 @@
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <img src="../../assets/global/img/logo-invert.png" alt="" /> 
+            <img src="../../assets/global/img/logo-invert.png" alt="" />
         </div>
         <!-- END LOGO -->
         <h3 class="form-title font-theme">Sign In</h3>
@@ -153,7 +153,7 @@
                         $("#success_message").show();
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
-                        window.location.href = "{{ url('select_user') }}";
+                        window.location.href = "{{ url('promotion') }}";
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();

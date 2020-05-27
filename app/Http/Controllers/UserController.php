@@ -93,18 +93,23 @@ class UserController extends Controller
 
     public function selectUser(Request $request){
         //try {
-            $users = User::where('email',Session::get('user_email'))->get();
-            if(count($users)==1){
-                $user = $users[0];
-                $this->createUserSession($user);
+            if (Auth::check()) {
+                $users = User::where('email', Session::get('user_email'))->get();
+                if (count($users) == 1) {
+                    $user = $users[0];
+                    $this->createUserSession($user);
 
-                return redirect('promotion');
+                    return redirect('promotion');
+                }
+                if ($request->ajax()) {
+                    $returnHTML = View::make('select_user', compact('users'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('select_user', compact('users'));
             }
-            if($request->ajax()) {
-                $returnHTML = View::make('select_user',compact('users'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            else{
+                return redirect('login');
             }
-            return view('select_user',compact('users'));
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'selectUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
@@ -141,17 +146,22 @@ class UserController extends Controller
 
     public function promotion(Request $request){
         //try {
-            $user = user::where('id',Session::get('user_id'))->first();
+            if (Auth::check()) {
+                $user = user::where('id', Session::get('user_id'))->first();
 
-            $payment = Payment::where('user_id',$user->id)->first();
-            if(!empty($payment) && $payment->payment_status=='Completed'){
-                return redirect('all_project');
+                $payment = Payment::where('user_id', $user->id)->first();
+                if (!empty($payment) && $payment->payment_status == 'Completed') {
+                    return redirect('all_project');
+                }
+                if ($request->ajax()) {
+                    $returnHTML = View::make('promotion', compact('user'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('promotion', compact('user'));
             }
-            if($request->ajax()) {
-                $returnHTML = View::make('promotion',compact('user'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            else{
+                return redirect('login');
             }
-            return view('promotion',compact('user'));
         // }
         // catch (\Exception $e) {
         //     SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
@@ -163,16 +173,21 @@ class UserController extends Controller
 
     public function profile(Request $request){
         //try {
-            $user = User::where('users.id',Session::get('user_id'))
-                ->select('users.*','user_shipments.shipment_date','professions.title as profession_name')
-                ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
-                ->leftJoin('professions','professions.id','=','users.profession')
-                ->first();
-            if($request->ajax()) {
-                $returnHTML = View::make('user.profile',compact('user'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            if (Auth::check()) {
+                $user = User::where('users.id', Session::get('user_id'))
+                    ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
+                    ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                    ->leftJoin('professions', 'professions.id', '=', 'users.profession')
+                    ->first();
+                if ($request->ajax()) {
+                    $returnHTML = View::make('user.profile', compact('user'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('user.profile', compact('user'));
             }
-            return view('user.profile',compact('user'));
+            else{
+                return redirect('login');
+            }
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'profile', $e->getLine(),
@@ -184,21 +199,32 @@ class UserController extends Controller
 
     public function profileEdit(Request $request)
     {
-        $user = User::where('users.id',Session::get('user_id'))
-            ->select('users.*','user_shipments.shipment_date')
-            ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
-            ->first();
-        $professions = Profession::where('status','active')->get();
-        if($request->ajax()) {
-            $returnHTML = View::make('user.profile-edit',compact('user','professions'))->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        if (Auth::check()) {
+            $user = User::where('users.id', Session::get('user_id'))
+                ->select('users.*', 'user_shipments.shipment_date')
+                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->first();
+            $professions = Profession::where('status', 'active')->get();
+            if ($request->ajax()) {
+                $returnHTML = View::make('user.profile-edit',
+                    compact('user', 'professions'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.profile-edit', compact('user', 'professions'));
         }
-        return view('user.profile-edit',compact('user','professions'));
+        else{
+            return redirect('login');
+        }
     }
     public function resetPassword()
     {
-        $user = User::where('users.id',Session::get('user_id'))->first();
-        return view('user.reset-password',compact('user'));
+        if (Auth::check()) {
+            $user = User::where('users.id', Session::get('user_id'))->first();
+            return view('user.reset-password', compact('user'));
+        }
+        else{
+            return redirect('login');
+        }
     }
 
     public function profileUpdate(Request $request){
@@ -257,16 +283,21 @@ class UserController extends Controller
 
     public function userList(Request $request){
         //try {
-        $users = User::where('users.email',Session::get('user_email'))
-            ->select('users.*','user_shipments.shipment_date')
-            ->leftJoin('user_shipments','user_shipments.user_id','=','users.id')
-            ->orderBy('users.id','ASC')
-            ->get();
-        if($request->ajax()) {
-            $returnHTML = View::make('user.user_list',compact('users'))->renderSections()['content'];
-            return response()->json(array('status' => 200, 'html' => $returnHTML));
+        if (Auth::check()) {
+            $users = User::where('users.email', Session::get('user_email'))
+                ->select('users.*', 'user_shipments.shipment_date')
+                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->orderBy('users.id', 'ASC')
+                ->get();
+            if ($request->ajax()) {
+                $returnHTML = View::make('user.user_list', compact('users'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.user_list', compact('users'));
         }
-        return view('user.user_list',compact('users'));
+        else{
+            return redirect('login');
+        }
         //echo "<pre>"; print_r($users); echo "</pre>";
         /*}
         catch (\Exception $e) {
@@ -279,11 +310,16 @@ class UserController extends Controller
 
     public function addUser(Request $request)
     {
-        $user = User::where('users.id',Session::get('user_id'))->first();
-        //Auth::logout();
+        if (Auth::check()) {
+            $user = User::where('users.id', Session::get('user_id'))->first();
+            //Auth::logout();
 
-        return view('user.create_new_user',compact('user'));
-        //return redirect()->route('registration',['token'=>base64_encode($user->email)]);
+            return view('user.create_new_user', compact('user'));
+            //return redirect()->route('registration',['token'=>base64_encode($user->email)]);
+        }
+        else{
+            return redirect('login');
+        }
     }
 
     public function storeNewUser(Request $request){
