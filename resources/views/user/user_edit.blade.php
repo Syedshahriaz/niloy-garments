@@ -213,7 +213,7 @@
 
             if (validate == "") {
                 var formData = new FormData($("#profile_form")[0]);
-                var url = "{{ url('profile_update') }}";
+                var url = "{{ url('user_update') }}";
 
                 $.ajax({
                     type: "POST",

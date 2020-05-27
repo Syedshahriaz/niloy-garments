@@ -30,13 +30,14 @@ Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
 
 Route::get('profile', 'UserController@profile')->name('profile');
-Route::get('profile-edit', 'UserController@profileEdit')->name('profile_edit');
-Route::post('profile_update', 'UserController@profileUpdate')->name('profile-update');
-Route::get('reset-password', 'UserController@resetPassword')->name('reset-password');
-Route::post('update_password', 'UserController@updatePassword')->name('update_password');
 Route::get('user_list', 'UserController@userList')->name('user.user_list');
 Route::get('add_user', 'UserController@addUser')->name('user.add_user');
 Route::post('store_new_user', 'UserController@storeNewUser')->name('user.store_new_user');
+Route::get('user_details/{id}', 'UserController@userDetails')->name('user.user_details');
+Route::get('user_edit/{id}', 'UserController@userEdit')->name('user_edit');
+Route::post('user_update', 'UserController@userUpdate')->name('user-update');
+Route::get('reset-password', 'UserController@resetPassword')->name('reset-password');
+Route::post('update_password', 'UserController@updatePassword')->name('update_password');
 Route::post('separate_user', 'UserController@separateUser')->name('user.separate_user');
 
 /*User project routs*/

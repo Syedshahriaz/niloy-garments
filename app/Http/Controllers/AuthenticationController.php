@@ -41,13 +41,23 @@ class AuthenticationController extends Controller
         if ($result) {
             $user = Auth::user();
 
-            Session::put('user_id', $user->id);
-            Session::put('user_email', $user->email);
+            $this->createUserSession($user);
 
             return ['status' => 200, 'reason' => 'Successfully Authenticated','role_id'=>$user->role];
         } else {
             return ['status' => 401, 'reason' => 'Invalid credentials'];
         }
+    }
+
+    private function createUserSession($user){
+        Session::put('user_id', $user->id);
+        Session::put('unique_id', $user->unique_id);
+        Session::put('role_id',$user->role_id);
+        Session::put('username', $user->username);
+        Session::put('user_email', $user->email);
+        Session::put('first_name', $user->first_name);
+        Session::put('last_name', $user->last_name);
+        Session::put('user_photo', $user->photo);
     }
 
     public function forgotPassword()

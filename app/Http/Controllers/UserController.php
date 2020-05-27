@@ -197,20 +197,20 @@ class UserController extends Controller
         }*/
     }
 
-    public function profileEdit(Request $request)
+    public function userEdit(Request $request)
     {
         if (Auth::check()) {
-            $user = User::where('users.id', Session::get('user_id'))
+            $user = User::where('users.id', $request->id)
                 ->select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                 ->first();
             $professions = Profession::where('status', 'active')->get();
             if ($request->ajax()) {
-                $returnHTML = View::make('user.profile-edit',
+                $returnHTML = View::make('user.user_edit',
                     compact('user', 'professions'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('user.profile-edit', compact('user', 'professions'));
+            return view('user.user_edit', compact('user', 'professions'));
         }
         else{
             return redirect('login');
@@ -227,7 +227,7 @@ class UserController extends Controller
         }
     }
 
-    public function profileUpdate(Request $request){
+    public function userUpdate(Request $request){
         //try {
             $user = User::where('id',$request->user_id)->first();
             $user->first_name = $request->first_name;
@@ -302,6 +302,33 @@ class UserController extends Controller
         /*}
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
+    public function userDetails(Request $request){
+        //try {
+        if (Auth::check()) {
+            $user = User::where('users.id', $request->id)
+                ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
+                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->leftJoin('professions', 'professions.id', '=', 'users.profession')
+                ->first();
+            if ($request->ajax()) {
+                $returnHTML = View::make('user.user_details', compact('user'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.user_details', compact('user'));
+        }
+        else{
+            return redirect('login');
+        }
+        //echo "<pre>"; print_r($users); echo "</pre>";
+        /*}
+        catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userDetails', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

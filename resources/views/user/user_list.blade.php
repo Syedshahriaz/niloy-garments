@@ -67,7 +67,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</button>
+                                            <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</a>
                                             <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-action-redo"></i> Make Separate</button>
                                         </td>
                                     </tr>

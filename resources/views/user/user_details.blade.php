@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Profile')
+@section('title', 'User Details')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -11,11 +11,15 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="{{url('/')}}">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>Profile</span>
+                        <a href="{{url('user_list')}}">Users</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>User Details</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -54,7 +58,7 @@
                             <!-- SIDEBAR BUTTONS -->
                             <div class="profile-userbuttons">
                                 <a href="{{url('user_edit',$user->id)}}" class="btn blue btn-sm">Update Info</a>
-                                <a href="{{url('reset-password')}}" class="btn red btn-sm">Reset password</a>
+                                {{--<a href="{{url('reset-password')}}" class="btn red btn-sm">Reset password</a>--}}
                             </div>
                             <!-- END SIDEBAR BUTTONS -->
                         </div>
