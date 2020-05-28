@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserShipment;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Payment;
@@ -151,6 +152,11 @@ class UserController extends Controller
 
                 $payment = Payment::where('user_id', $user->id)->first();
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
+                    $shipment = UserShipment::where('user_id', $user->id)->first();
+                    if (empty($shipment)) {
+                        return redirect('select_shipment');
+                    }
+
                     return redirect('all_project');
                 }
                 if ($request->ajax()) {

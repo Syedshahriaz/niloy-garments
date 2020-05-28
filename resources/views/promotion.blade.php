@@ -68,7 +68,7 @@
                                         <!-- <li><a class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle" href="javascript:;">Purchase</a></li> -->
 
                                         <div class="content">
-                                            <form id="select_user_form" class="login-form" action="{{url('payment_success')}}" method="post">
+                                            <form id="select_user_form" class="login-form" action="{{url('payment_success',$user->id)}}" method="post">
                                                 {{csrf_field()}}
 
                                                 <div class="form-actions">
