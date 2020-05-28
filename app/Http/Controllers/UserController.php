@@ -147,7 +147,7 @@ class UserController extends Controller
     public function promotion(Request $request){
         //try {
             if (Auth::check()) {
-                $user = user::where('id', Session::get('user_id'))->first();
+                $user = user::where('id', $request->id)->first();
 
                 $payment = Payment::where('user_id', $user->id)->first();
                 if (!empty($payment) && $payment->payment_status == 'Completed') {

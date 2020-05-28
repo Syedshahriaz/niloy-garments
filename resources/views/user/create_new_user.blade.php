@@ -91,7 +91,7 @@
                 </div>
             </div>
 
-            <div class="hidden">
+            {{--<div class="hidden">
                 <form id="select_user_form" class="login-form" action="{{url('multi_tinent')}}" method="post">
                 {{csrf_field()}}
                     <div class="form-group">
@@ -105,7 +105,7 @@
                         <!-- <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a> -->
                     </div>
                 </form>
-            </div>
+            </div>--}}
 
         </div>
         <!-- END CONTENT BODY -->
@@ -165,7 +165,7 @@
                             $("#success_message").html(data.reason);
 
                             $('#user_id').val(data.user_id);
-                            $('#select_user_form').submit();
+                            window.location.href="{{url('promotion')}}/"+data.user_id;
                         } else {
                             $("#success_message").hide();
                             $("#error_message").show();

@@ -43,7 +43,7 @@ class AuthenticationController extends Controller
 
             $this->createUserSession($user);
 
-            return ['status' => 200, 'reason' => 'Successfully Authenticated','role_id'=>$user->role];
+            return ['status' => 200, 'reason' => 'Successfully Authenticated','user_id'=>$user->id,'role_id'=>$user->role];
         } else {
             return ['status' => 401, 'reason' => 'Invalid credentials'];
         }
