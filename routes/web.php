@@ -24,7 +24,7 @@ Auth::routes();
 Route::get('select_user', 'UserController@selectUser');
 Route::post('multi_tinent', 'UserController@multiTinent');
 
-Route::post('payment_success', 'PaymentController@success');
+Route::post('payment_success/{id}', 'PaymentController@success');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
@@ -41,7 +41,7 @@ Route::post('update_password', 'UserController@updatePassword')->name('update_pa
 Route::post('separate_user', 'UserController@separateUser')->name('user.separate_user');
 
 /*User project routs*/
-Route::get('select_shipment', 'UserProjectController@selectShipment')->name('user.select_shipment');
+Route::get('select_shipment/{id}', 'UserProjectController@selectShipment')->name('user.select_shipment');
 Route::post('store_shipment', 'UserProjectController@storeShipment')->name('user.store_shipment');
 Route::get('all_project', 'UserProjectController@allProject')->name('user.all_project');
 Route::post('add_project', 'UserProjectController@addProject')->name('user.add_project');

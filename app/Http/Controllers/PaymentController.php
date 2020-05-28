@@ -15,17 +15,18 @@ class PaymentController extends Controller
 {
     public function success(Request $request){
         //try {
-            $payment = Payment::where('user_id', Session::get('user_id'))->first();
+            $user_id = $request->id;
+            $payment = Payment::where('user_id', $user_id)->first();
             if(empty($payment)){
                 $payment = NEW Payment();
             }
-            $payment->user_id = Session::get('user_id');
+            $payment->user_id = $user_id;
             $payment->amount = 50;
             $payment->payment_status = 'Completed';
             $payment->txn_id = 'Txn123456';
             $payment->save();
 
-            return redirect('select_shipment');
+            return redirect('select_shipment/'.$user_id);
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'PaymentController', 'success', $e->getLine(),
                 $e->getFile(), '', '', '', '');

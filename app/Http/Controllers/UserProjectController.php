@@ -20,7 +20,7 @@ class UserProjectController extends Controller
     public function selectShipment(Request $request){
         //try{
         if (Auth::check()) {
-            $user = User::where('users.id', Session::get('user_id'))->first();
+            $user = User::where('users.id', $request->id)->first();
             $shipment = UserShipment::where('user_id', $user->id)->first();
             if (!empty($shipment)) {
                 return redirect('all_project');
@@ -123,7 +123,7 @@ class UserProjectController extends Controller
                 ->get();
             $shipment = UserShipment::where('user_id', $user_id)->first();
             if (empty($shipment)) {
-                return redirect('select_shipment');
+                return redirect('select_shipment/'.$user_id);
             }
             $projects = UserProject::with('running_task')
                 ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id')
