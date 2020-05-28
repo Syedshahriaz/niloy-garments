@@ -153,7 +153,7 @@
                         $("#success_message").show();
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
-                        window.location.href = "{{ url('promotion') }}";
+                        window.location.href="{{url('promotion')}}/"+data.user_id;
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
