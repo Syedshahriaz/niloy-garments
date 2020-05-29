@@ -329,6 +329,10 @@ body {
     height: 100%;
     color: #ff0505;
 }
-
+@media only screen and (max-width: 1200px){
+    .dataTables_wrapper {
+        overflow-x: auto;
+    }
+}
 /*Data table style END*/
 /*Rewrite layout END*/

@@ -192,7 +192,7 @@
 
         $(document).on("submit", "#profile_form", function(event) {
             event.preventDefault();
-
+            
             var first_name = $("#first_name").val();
             var email = $("#email").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
