@@ -68,6 +68,7 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</a>
+                                            <button type="button" class="btn green action-btn" title="Send OTP" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i> Send OTP </button>
                                             <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-action-redo"></i> Make Separate</button>
                                         </td>
                                     </tr>
@@ -88,7 +89,7 @@
     <!-- END CONTENT -->
 
     <!-- Modal -->
-    <div class="modal fade" id="invidual_user_modal" tabindex="-1" role="select_delivery_modal" aria-hidden="true">
+    <div class="modal fade" id="user_otp_modal" tabindex="-1" role="select_delivery_modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,7 +98,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form id="separate_user_form" method="post" action="">
+                        <form id="user_otp_form" method="post" action="">
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="alert alert-success" id="success_message" style="display:none"></div>
                                 <div class="alert alert-danger" id="error_message" style="display: none"></div>
@@ -130,7 +131,50 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center">
-                        <button type="submit" class="btn theme-btn" id="separate_button">Submit</button>
+                        <button type="submit" class="btn theme-btn" id="send_otp_button">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="separate_user_modal" tabindex="-1" role="select_delivery_modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">New Credential</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="separate_user_form" method="post" action="">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="alert alert-success" id="separate_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="separate_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="separate_user_id">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                                    <label class="control-label visible-ie8 visible-ie9">Email</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="separate_email" value=""/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">OTP</label>
+                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="otp" placeholder="OTP*" name="otp" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn" id="separate_user_button">Submit</button>
                     </div>
                 </div>
             </div>
@@ -151,17 +195,17 @@
             });
         });
 
-        function separate_user(user_id){
+        function send_otp(user_id){
             $('#user_id').val(user_id);
-            $('#invidual_user_modal').modal('show');
+            $('#user_otp_modal').modal('show');
         }
 
-        $(document).on("click", "#separate_button", function(event) {
+        $(document).on("click", "#send_otp_button", function(event) {
             event.preventDefault();
 
             var options = {
                 theme: "sk-cube-grid",
-                message: 'Please wait while exporting and saving all data.....',
+                message: 'Please wait while sending email.....',
                 backgroundColor: "#1847B1",
                 textColor: "white"
             };
@@ -169,7 +213,6 @@
             HoldOn.open(options);
 
             var email = $("#email").val();
-            var phone = $("#telephone").val();
             var password = $("#password").val();
             var repassword = $("#repassword").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -198,8 +241,8 @@
             }
 
             if (validate == "") {
-                var formData = new FormData($("#separate_user_form")[0]);
-                var url = "{{ url('separate_user') }}";
+                var formData = new FormData($("#user_otp_form")[0]);
+                var url = "{{ url('send_user_otp') }}";
 
                 $.ajax({
                     type: "POST",
@@ -235,6 +278,85 @@
                 $("#success_message").hide();
                 $("#error_message").show();
                 $("#error_message").html(validate);
+            }
+        });
+
+        function separate_user(user_id){
+            $('#separate_user_id').val(user_id);
+            $('#separate_user_modal').modal('show');
+        }
+
+        $(document).on("click", "#separate_user_button", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while exporting and saving all data.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var email = $("#separate_email").val();
+            var otp = $("#otp").val();
+            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            var validate = "";
+
+            if (email.trim() == "") {
+                validate = validate + "Email is required</br>";
+            }
+            /*if (phone.trim() == "") {
+                validate = validate + "Phone is required</br>";
+            }*/
+            if(email.trim()!=''){
+                if(!re.test(email)){
+                    validate = validate+'Email is invalid<br>';
+                }
+            }
+            if (otp.trim() == "") {
+                validate = validate + "OTP is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#separate_user_form")[0]);
+                var url = "{{ url('separate_user') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#separate_success_message").show();
+                            $("#separate_error_message").hide();
+                            $("#separate_success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#separate_success_message").hide();
+                            $("#separate_error_message").show();
+                            $("#separate_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#separate_success_message").hide();
+                        $("#separate_error_message").show();
+                        $("#separate_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#separate_success_message").hide();
+                $("#separate_error_message").show();
+                $("#separate_error_message").html(validate);
             }
         });
     </script>

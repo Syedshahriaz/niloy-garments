@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserShipment;
 use Illuminate\Http\Request;
+use App\Models\UserShipment;
+use App\Models\UserProject;
 use App\Models\User;
 use App\Models\Payment;
 use App\Models\Profession;
+use App\Models\SeparateUserLog;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Spatie\PdfToImage\Pdf;
+use DB;
 
 class UserController extends Controller
 {
@@ -39,51 +42,44 @@ class UserController extends Controller
 
     public function store(Request $request){
         //try {
-            /*
-             * Check duplicate username
-             * */
-            $duplicateUser = User::where('username',$request->username)->first();
-            if(!empty($duplicateUser)){
-                return [ 'status' => 401, 'reason' => 'Duplicate username'];
-            }
-            $lastUser = User::orderBy('id','DESC')->first();
-            if(!empty($lastUser)){
-                $unique_id = Common::generateUniqueNumber($lastUser->id+1);
-            }
-            else{
-                $unique_id = Common::generateUniqueNumber(1);
-            }
+        $lastUser = User::orderBy('id','DESC')->first();
+        if(!empty($lastUser)){
+            $unique_id = Common::generateUniqueNumber($lastUser->id+1);
+        }
+        else{
+            $unique_id = Common::generateUniqueNumber(1);
+        }
 
-            $user = new User();
-            $user->username = $request->username;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->password = bcrypt($request->password);
-            $user->unique_id = $unique_id;
-            $user->role = 3;
-            $user->save();
+        $user = new User();
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = bcrypt($request->password);
+        $user->unique_id = $unique_id;
+        $user->role = 3;
+        $user->save();
 
-            /*
-             * Send confirmation email
-             */
-            $email_to = [$request->email];
-            $email_cc = [];
-            $email_bcc = [];
+        /*
+         * Send confirmation email
+         */
+        $email_to = [$request->email];
+        $email_cc = [];
+        $email_bcc = [];
 
-            $emailData['from_email'] = Common::FROM_EMAIL;
-            $emailData['from_name'] = Common::FROM_NAME;
-            $emailData['email'] = $email_to;
-            $emailData['email_cc'] = $email_cc;
-            $emailData['email_bcc'] = $email_bcc;
-            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+        $emailData['from_email'] = Common::FROM_EMAIL;
+        $emailData['from_name'] = Common::FROM_NAME;
+        $emailData['email'] = $email_to;
+        $emailData['email_cc'] = $email_cc;
+        $emailData['email_bcc'] = $email_bcc;
+        $emailData['subject'] = 'Niloy Garments- Registration confirmation';
 
-            $emailData['bodyMessage'] = '';
+        $emailData['bodyMessage'] = '';
 
-            $view = 'emails.registration_confirmation_email';
+        $view = 'emails.registration_confirmation_email';
 
-            $result = SendMails::sendMail($emailData, $view);
+        $result = SendMails::sendMail($emailData, $view);
 
-            return ['status' => 200, 'reason' => 'Registration successfully done. An email with login link have been sent to your email address.'];
+        return ['status' => 200, 'reason' => 'Registration successfully done. An email with login link have been sent to your email address.'];
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
@@ -358,54 +354,47 @@ class UserController extends Controller
 
     public function storeNewUser(Request $request){
         //try {
-            /*
-             * Check duplicate username
-             * */
-            $duplicateUser = User::where('username',$request->username)->first();
-            if(!empty($duplicateUser)){
-                return [ 'status' => 401, 'reason' => 'Duplicate username'];
-            }
 
-            $parentUser = User::where('email',$request->email)->first();
+        $parentUser = User::where('email',$request->email)->first();
 
-            $lastUser = User::orderBy('id','DESC')->first();
-            if(!empty($lastUser)){
-                $unique_id = Common::generateUniqueNumber($lastUser->id+1);
-            }
-            else{
-                $unique_id = Common::generateUniqueNumber(1);
-            }
+        $lastUser = User::orderBy('id','DESC')->first();
+        if(!empty($lastUser)){
+            $unique_id = Common::generateUniqueNumber($lastUser->id+1);
+        }
+        else{
+            $unique_id = Common::generateUniqueNumber(1);
+        }
 
-            $user = new User();
-            $user->unique_id = $unique_id;
-            $user->username = $request->username;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->password = $parentUser->password;
-            $user->role = 3;
-            $user->save();
+        $user = new User();
+        $user->unique_id = $unique_id;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = $parentUser->password;
+        $user->role = 3;
+        $user->save();
 
-            /*
-             * Send confirmation email
-             */
-            /*$email_to = [$request->email];
-            $email_cc = [];
-            $email_bcc = [];
+        /*
+         * Send confirmation email
+         */
+        /*$email_to = [$request->email];
+        $email_cc = [];
+        $email_bcc = [];
 
-            $emailData['from_email'] = Common::FROM_EMAIL;
-            $emailData['from_name'] = Common::FROM_NAME;
-            $emailData['email'] = $email_to;
-            $emailData['email_cc'] = $email_cc;
-            $emailData['email_bcc'] = $email_bcc;
-            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+        $emailData['from_email'] = Common::FROM_EMAIL;
+        $emailData['from_name'] = Common::FROM_NAME;
+        $emailData['email'] = $email_to;
+        $emailData['email_cc'] = $email_cc;
+        $emailData['email_bcc'] = $email_bcc;
+        $emailData['subject'] = 'Niloy Garments- Registration confirmation';
 
-            $emailData['bodyMessage'] = '';
+        $emailData['bodyMessage'] = '';
 
-            $view = 'emails.registration_confirmation_email';
+        $view = 'emails.registration_confirmation_email';
 
-            $result = SendMails::sendMail($emailData, $view);*/
+        $result = SendMails::sendMail($emailData, $view);*/
 
-            return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
+        return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
@@ -414,24 +403,122 @@ class UserController extends Controller
         }*/
     }
 
-    public function separateUser(Request $request){
+    public function sendUserOtp(Request $request){
         //try {
             /*
-             * Check duplicate username
+             * Authenticate user
              * */
-            $duplicateUser = User::where('email',$request->email)->first();
-            if(!empty($duplicateUser)){
-                return [ 'status' => 401, 'reason' => 'Duplicate email'];
+            $result = Auth::attempt([
+                'email' => Session::get('user_email'),
+                'password' => $request->password
+            ]);
+
+            if (!$result) {
+                return ['status' => 401, 'reason' => 'Authentication failed'];
             }
 
-            $user = User::where('id',$request->user_id)->first();
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
-            //$user->phone = $request->phone;
-            $user->save();
+            /*
+             * store separate user email log
+             * */
+            $otp = Common::generaterandomNumber(4);
+
+            $s_user = SeparateUserLog::where('email', $request->email)->first();
+            if(empty($s_user)){
+                $s_user = NEW SeparateUserLog();
+            }
+            $s_user->email = $request->email;
+            $s_user->otp = $otp;
+            $s_user->is_used = 0;
+            $s_user->save();
+
+            /*
+             * Send otp confirmation email
+             */
+            $email_to = [$request->email];
+            $email_cc = [];
+            $email_bcc = [];
+
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['otp'] = $otp;
+            $emailData['subject'] = 'Niloy Garments- User separation request';
+
+            $emailData['bodyMessage'] = '';
+
+            $view = 'emails.user_separation_otp_email';
+
+            $result = SendMails::sendMail($emailData, $view);
+
+
+            return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
+        /*} catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'sendUserOtp', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
+    public function separateUser(Request $request){
+        //try {
+            DB::beginTransaction();
+
+            $s_user = SeparateUserLog::where('email', $request->email)
+                ->where('otp',$request->otp)
+                ->where('is_used',0)
+                ->first();
+            if(empty($s_user)){
+                return [ 'status' => 401, 'reason' => 'Invalid OTP. Try again with valid OTP'];
+            }
+            $s_user->is_used = 1;
+            $s_user->save();
+
+            /*
+             * Get new parent user
+             * */
+            $parent_user = User::where('email',$request->email)->first();
+
+            /*
+             * Export user payment
+             * */
+            $payment = Payment::where('user_id',$request->user_id)->first();
+            if(!empty($payment)){
+                $payment->user_id = $parent_user->id;
+            }
+            $payment->save();
+
+            /*
+             * Export user shipment
+             * */
+            $shipment = UserShipment::where('user_id',$request->user_id)->first();
+            if(!empty($shipment)){
+                $shipment->user_id = $parent_user->id;
+            }
+            $shipment->save();
+
+            /*
+             * Export user project
+             * */
+            UserProject::where('user_id',$request->user_id)
+                ->update(['user_id' => $parent_user->id]);
+
+            /*
+             * Export user messages
+             * */
+
+            /*
+             * Now remove old child user
+             * */
+            User::where('id',$request->user_id)->delete();
+
+            DB::commit();
 
             return ['status' => 200, 'reason' => 'User separated successfully'];
         /*} catch (\Exception $e) {
+            DB::rollback();
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'separateUser', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.

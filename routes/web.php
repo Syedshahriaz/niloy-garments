@@ -38,6 +38,7 @@ Route::get('user_edit/{id}', 'UserController@userEdit')->name('user_edit');
 Route::post('user_update', 'UserController@userUpdate')->name('user-update');
 Route::get('reset-password', 'UserController@resetPassword')->name('reset-password');
 Route::post('update_password', 'UserController@updatePassword')->name('update_password');
+Route::post('send_user_otp', 'UserController@sendUserOtp')->name('user.send_user_otp');
 Route::post('separate_user', 'UserController@separateUser')->name('user.separate_user');
 
 /*User project routs*/
