@@ -125,7 +125,7 @@ class UserProjectController extends Controller
             if (empty($shipment)) {
                 return redirect('select_shipment/'.$user_id);
             }
-            $projects = UserProject::with('running_task')
+            $projects = UserProject::with('running_task','last_task')
                 ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id')
                 ->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id')
                 ->leftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
@@ -275,23 +275,25 @@ class UserProjectController extends Controller
         }*/
     }
 
-    public function updateProjectTaskStatus(Request $request){
+    public function updateProjectTaskDeliveryStatus(Request $request){
         //try{
             $date_updated = 0;
             $date_increased = 0;
+            $daysAdded = 0;
             $task = UserProjectTask::where('id',$request->project_task_id)->first();
 
             /*
              * Check if original delivery date updated and then update next tasks original delivery date
              * */
-            if($request->original_delivery_date != $request->old_delivery_date){
+            if($request->original_delivery_date !='' && ($request->original_delivery_date != $request->old_delivery_date)){
                 $date_updated = 1;
                 $delivery_date_update_count  = $task->delivery_date_update_count+1;
 
-                if($request->old_delivery_date > $request->original_delivery_date){
+                $timeDiff = strtotime($request->original_delivery_date) - strtotime($request->old_delivery_date);
+                $daysAdded = $timeDiff/86400;  // 86400 seconds in one day
+
+                if($daysAdded>0){
                     $date_increased = 1;
-                    $timeDiff = abs(strtotime($request->old_delivery_date) - strtotime($request->original_delivery_date));
-                    $daysAdded = $timeDiff/86400;  // 86400 seconds in one day
                 }
             }
             else{
@@ -307,22 +309,39 @@ class UserProjectController extends Controller
             if($date_updated==1){
                 $task->delivery_date_update_count = $delivery_date_update_count;
             }
+            if($request->original_delivery_date !=''){
+                $task->original_delivery_date = date('Y-m-d', strtotime($request->original_delivery_date));
+            }
             $task->save();
+
+            /*
+             * Start imediate next task to processing
+             * */
+            if($request->is_done == 1){
+                $next_task = UserProjectTask::where('id','>',$request->project_task_id)
+                    ->where('user_project_id',$task->user_project_id)
+                    ->orderBy('id','ASC')
+                    ->first();
+                if(!empty($next_task)){
+                    $next_task->status = 'processing';
+                    $next_task->save();
+                }
+            }
 
             /*
              * Update next task original due date if date updated by user
              * */
-            if($date_updated==1){
+            if($date_updated==1 && $date_increased==1){
                 /*
                  * Get all next task of this user project
                  * */
                 $tasks = UserProjectTask::where('id','>',$request->project_task_id)
-                    ->where('user_project_id',$request->user_project_id)
+                    ->where('user_project_id',$task->user_project_id)
                     ->get();
 
-                foreach($tasks as $task){
+                foreach($tasks as $key=>$task){
                     $taskData = UserProjectTask::where('id',$task->id)->first();
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($task->original_delivery_date. ' + '.$daysAdded.' days'));
+                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.$daysAdded.' days'));
                     $taskData->save();
                 }
             }

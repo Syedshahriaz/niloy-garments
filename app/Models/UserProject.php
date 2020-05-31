@@ -22,4 +22,14 @@ class UserProject extends Model
         //$instance = $instance->limit(1);
         return $instance;
     }
+
+    public function last_task()
+    {
+        $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','id');
+        $instance = $instance->select('user_project_tasks.*','tasks.title');
+        $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
+        $instance = $instance->orderBy('user_project_tasks.id','DESC');
+        //$instance = $instance->limit(1);
+        return $instance;
+    }
 }
