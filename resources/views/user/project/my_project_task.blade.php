@@ -52,8 +52,8 @@
                             </div>
                         </div>
                         <div class="portlet-body">
-
-                            <table class="table table-striped table-bordered table-hover data-table focus-table" id="user_horizontal_task">
+                    
+                            <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_horizontal_task">
                                 <thead>
                                     <tr>
                                         <th>Title</th>
@@ -257,13 +257,16 @@
 @endsection
 
 @section('js')
+    <!-- <script src="https://cdn.datatables.net/responsive/2.2.4/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.4/js/responsive.bootstrap.min.js"></script> -->
     <script>
         $(document).ready(function() {
-            $('#user_horizontal_task').DataTable({
+            $('#user_horizontal_task, #user_vertical_task').DataTable({
                 "paging":   false,
                 "ordering": false,
                 "info":     false,
-                "searching": false
+                "searching": false,
+                //"responsive": true
             });
         });
 

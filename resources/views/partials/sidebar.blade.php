@@ -33,7 +33,7 @@
                         @else
                             <img alt="" class="img-circle" src="{{asset('assets/layouts/layout/img/emptyuserphoto.jpg')}}">
                         @endif
-                        <span class="username username-hide-on-mobile"> {{Session::get('username')}}</span>
+                        <span class="username username-hide-on-mobile"> {{Session::get('username')}} (ID: 000-000-024)</span>
                     </a>
                 </li>
             </ul>
