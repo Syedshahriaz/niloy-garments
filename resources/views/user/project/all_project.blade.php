@@ -59,10 +59,41 @@
                                 <div class="row">
                                     <?php
                                     foreach($projects as $project){
+
+                                        if(!empty($project->running_task)){
+                                            $task = $project->running_task;
+                                        }
+                                        else{
+                                            $task = $project->last_task;
+                                        }
+
+                                        $bg_class = '';
+
+                                        /*
+                                         * Calculate number of days left to complete
+                                         * */
+                                        $now = time();
+                                        $datediff = strtotime($task->original_delivery_date) - $now;
+                                        $day_left = round($datediff / (60 * 60 * 24));
+
+                                        /*
+                                         * Create bg class
+                                         * */
+                                        if($task->status == 'completed'){
+                                            $bg_class = 'bg-success';
+                                        }
+                                        else{
+                                            if(strtotime($task->original_delivery_date) < time()) {
+                                                $bg_class = 'bg-danger';
+                                            }
+                                            else if($day_left<=7){
+                                                $bg_class = 'bg-warning';
+                                            }
+                                        }
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                         <a class="project-item-title" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}">
-                                            <div class="dashboard-stat2 project-item  @if(in_array($project->id,$my_projects)) project_added @endif">
+                                            <div class="dashboard-stat2 project-item {{$bg_class}} @if(in_array($project->id,$my_projects)) project_added @endif">
                                                 <div class="display title-section">
                                                     <div class="number">
                                                         <h5 class="font-theme project-item-name">
@@ -78,7 +109,7 @@
                                                 </div>
                                                 <div class="display">
                                                     <p class="project-item-sub" title="This is a sub title">{{$project->sub_title}}</p>
-                                                    <p class="project-item-task font-theme">{{$project->running_task->title}}</p>
+                                                    <p class="project-item-task font-theme">{{$task->title}}</p>
                                                 </div>
                                                 <div class="progress-info">
                                                     <div class="progress">
@@ -86,8 +117,8 @@
                                                     </div>
                                                     <div class="status">
                                                         <div class="status-title"> Due Date </div>
-                                                        <div class="status-number"> {{date('l M d, Y', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}</div>
-                                                        <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'))}}" @if(in_array($project->id,$my_projects)) disabled @endif>
+                                                        <div class="status-number"> {{date('l M d, Y', strtotime($task->original_delivery_date))}}</div>
+                                                        <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($task->original_delivery_date))}}" @if(in_array($project->id,$my_projects)) disabled @endif>
                                                     </div>
                                                 </div>
                                                 <input type="hidden" class="project-item-check" name="project_check[]" value="0" @if(in_array($project->id,$my_projects)) disabled @endif>

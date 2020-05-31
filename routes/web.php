@@ -47,5 +47,6 @@ Route::get('all_project', 'UserProjectController@allProject')->name('user.all_pr
 Route::post('add_project', 'UserProjectController@addProject')->name('user.add_project');
 Route::get('my_project', 'UserProjectController@myProject')->name('user.my_project');
 Route::get('my_project_task/{id}', 'UserProjectController@myProjectTask')->name('user.my_project_details');
+Route::post('update_task_delivery_status', 'UserProjectController@updateProjectTaskDeliveryStatus')->name('user.update_task_delivery_status');
 
 
