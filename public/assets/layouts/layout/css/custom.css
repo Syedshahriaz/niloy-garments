@@ -70,6 +70,9 @@
     .focus-tr, .focus-td{
         background-color: #642d9029 !important;
     }
+    .bg-success {
+        background-color: #abe7ed;
+    }
     .bg-warning {
         background-color: #f9d591;
     }
