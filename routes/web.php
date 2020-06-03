@@ -13,10 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('cron/send_task_warning_email', 'CronController@sendTaskWarningEmail')->name('cron.send_task_warning_email');
+
 Route::post('/post_login', 'AuthenticationController@postLogin');
 Route::get('/registration', 'UserController@registration')->name('registration');
 Route::get('/promotion/{id}', 'UserController@promotion');
 Route::post('user/store', 'UserController@store');
+
 
 
 Auth::routes();
