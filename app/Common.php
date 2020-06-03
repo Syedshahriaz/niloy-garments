@@ -16,28 +16,14 @@ use DB;
  */
 class Common
 {
-    const SITE_TITLE = 'Lightfield Industries Cloud';
-    const DOMAIN_NAME = '68.183.191.122';
-    const SITE_URL = 'http://68.183.191.122';
+    const SITE_TITLE = 'Niloy Garments';
+    const DOMAIN_NAME = 'tna.ownenterprise.com';
+    const SITE_URL = 'http://tna.ownenterprise.com';
     const FROM_EMAIL = 'mail2technerd@gmail.com';
-    const FROM_NAME = 'Niloy';
+    const FROM_NAME = 'Niloy Garments';
 
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
-
-    public static function is_admin_login(){
-        if (Session::get('superadmin_user_id')) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public static function is_user_login(){
-        if (Session::get('user_id') && Session::get('role_id') == 1) {
-            return 1;
-        }
-        return 0;
-    }
 
     public static function saveErrorLog($method,$line_number,$file_path,$message,$object,$type,$screenshot,$page_url,$argument,$prefix,$domain){
 
