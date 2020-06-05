@@ -187,7 +187,7 @@
             </li>
 
             <li class="nav-item  @if($page=='dashboard') active @endif">
-                <a href="master-dashboard.html" class="nav-link">
+                <a href="#" class="nav-link">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <span class="selected"></span>
@@ -209,7 +209,7 @@
                 </a>
             </li>
             <li class="nav-item @if($page=='messages') active @endif">
-                <a href="#" class="nav-link">
+                <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
                     <span class="badge badge-danger">2</span>

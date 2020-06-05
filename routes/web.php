@@ -53,4 +53,7 @@ Route::get('my_project', 'UserProjectController@myProject')->name('user.my_proje
 Route::get('my_project_task/{id}', 'UserProjectController@myProjectTask')->name('user.my_project_details');
 Route::post('update_task_delivery_status', 'UserProjectController@updateProjectTaskDeliveryStatus')->name('user.update_task_delivery_status');
 
+/*User massage routs*/
+Route::get('message', 'MessageController@message');
+
 
