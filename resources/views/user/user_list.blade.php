@@ -106,6 +106,7 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="user_id">
                             <div class="col-md-10 col-md-offset-1">
+                                <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, user will get a <strong>24 hours valid OTP.</strong> </div>
                                 <div class="form-group">
                                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                                     <label class="control-label">New user email</label>
@@ -158,7 +159,7 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="separate_user_id">
                             <div class="col-md-10 col-md-offset-1">
-                            <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, this user will be <strong>separated</strong> from your account. You will not be able to access this user anymore. </div>
+                                <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, this user will be <strong>separated</strong> from your account. You will not be able to access this user anymore. </div>
                                 <div class="form-group">
                                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                                     <label class="control-label visible-ie8 visible-ie9">Email</label>
