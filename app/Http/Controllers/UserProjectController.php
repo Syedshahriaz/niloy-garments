@@ -134,22 +134,14 @@ class UserProjectController extends Controller
                 ->groupBy('projects.id')
                 ->get();
 
-            $my_projects = Project::select('user_projects.project_id')
-                ->where('status', 'active')
-                ->join('user_projects', 'user_projects.project_id', '=', 'projects.id')
-                ->where('user_projects.user_id', $user_id)
-                ->pluck('user_projects.project_id')
-                ->toArray();
-
             //return $user_id;
             if ($request->ajax()) {
                 $returnHTML = View::make('user.project.all_project',
-                    compact('user_id', 'child_users', 'shipment', 'projects',
-                        'my_projects'))->renderSections()['content'];
+                    compact('user_id', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('user.project.all_project',
-                compact('user_id', 'child_users', 'shipment', 'projects', 'my_projects'));
+                compact('user_id', 'child_users', 'shipment', 'projects'));
         }
         else{
             return redirect('login');

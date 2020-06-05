@@ -466,8 +466,7 @@ class UserController extends Controller
         //try {
             DB::beginTransaction();
 
-            $s_user = SeparateUserLog::where('email', $request->email)
-                ->where('otp',$request->otp)
+            $s_user = SeparateUserLog::where('otp',$request->otp)
                 ->where('is_used',0)
                 ->first();
             if(empty($s_user)){
@@ -479,7 +478,7 @@ class UserController extends Controller
             /*
              * Get new parent user
              * */
-            $parent_user = User::where('email',$request->email)->first();
+            $parent_user = User::where('email',$s_user->email)->first();
 
             /*
              * Export user payment
