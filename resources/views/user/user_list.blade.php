@@ -69,7 +69,7 @@
                                         <td class="text-center">
                                             <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</a>
                                             <button type="button" class="btn green action-btn" title="Send OTP" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i> Send OTP </button>
-                                            <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-action-redo"></i> Make Separate</button>
+                                            <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
                                         </td>
                                     </tr>
                                     <?php
@@ -94,7 +94,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">New Credential</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send OTP</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -108,22 +108,22 @@
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="form-group">
                                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                                    <label class="control-label visible-ie8 visible-ie9">Email</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value=""/>
+                                    <label class="control-label">New user email</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter new user email*" name="email" id="email" value=""  autocomplete="off"/>
                                 </div>
 
                                 {{--<div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">Phone*</label>
+                                    <label class="control-label">Phone*</label>
                                     <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" style="padding-left: 0px !important;"/>
                                 </div>--}}
 
                                 <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">Password</label>
-                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password*" name="password" />
+                                    <label class="control-label">Your Current Password</label>
+                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Enter your current password*" name="password" />
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
-                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
+                                    <label class="control-label">Re-type Your Current Password</label>
+                                    <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type your current password*" name="repassword" />
                                 </div>
                             </div>
                         </form>
@@ -146,7 +146,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">New Credential</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">One Time Password(OTP)</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -158,6 +158,7 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="separate_user_id">
                             <div class="col-md-10 col-md-offset-1">
+                            <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, this user will be <strong>separated</strong> from your account. You will not be able to access this user anymore. </div>
                                 <div class="form-group">
                                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                                     <label class="control-label visible-ie8 visible-ie9">Email</label>
