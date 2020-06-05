@@ -68,7 +68,7 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</a>
-                                            <button type="button" class="btn green action-btn" title="Send OTP" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i> Send OTP </button>
+                                            <button type="button" class="btn green action-btn" title="Send OTP to separate this user" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i> Send OTP </button>
                                             <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
                                         </td>
                                     </tr>
