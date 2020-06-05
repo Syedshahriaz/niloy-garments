@@ -417,6 +417,11 @@ class UserController extends Controller
                 return ['status' => 401, 'reason' => 'Authentication failed'];
             }
 
+            $hasUser = User::where('email',$request->email)->first();
+            if(empty($hasUser)){
+                return ['status' => 401, 'reason' => 'Sorry! No user registered with this email address'];
+            }
+
             /*
              * store separate user email log
              * */
