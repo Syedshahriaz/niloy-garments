@@ -159,12 +159,6 @@
                             <input type="hidden" name="user_id" id="separate_user_id">
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="form-group">
-                                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                                    <label class="control-label visible-ie8 visible-ie9">Email</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="separate_email" value=""/>
-                                </div>
-
-                                <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">OTP</label>
                                     <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="otp" placeholder="OTP*" name="otp" />
                                 </div>
@@ -298,23 +292,11 @@
 
             HoldOn.open(options);
 
-            var email = $("#separate_email").val();
             var otp = $("#otp").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             var validate = "";
 
-            if (email.trim() == "") {
-                validate = validate + "Email is required</br>";
-            }
-            /*if (phone.trim() == "") {
-                validate = validate + "Phone is required</br>";
-            }*/
-            if(email.trim()!=''){
-                if(!re.test(email)){
-                    validate = validate+'Email is invalid<br>';
-                }
-            }
             if (otp.trim() == "") {
                 validate = validate + "OTP is required</br>";
             }
