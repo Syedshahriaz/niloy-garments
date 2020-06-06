@@ -104,7 +104,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
-                                                    <input type="phone" class="form-control" name="phone" id="telephone" value="{{$user->phone}}">
+                                                    <input type="text" class="form-control" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->phone}}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -192,7 +192,7 @@
 
         $(document).on("submit", "#profile_form", function(event) {
             event.preventDefault();
-            
+
             var first_name = $("#first_name").val();
             var email = $("#email").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
