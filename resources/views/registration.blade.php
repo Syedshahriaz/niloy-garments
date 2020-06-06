@@ -80,7 +80,7 @@
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$phone}}" />
+            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$phone}}" />
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
