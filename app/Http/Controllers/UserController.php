@@ -498,7 +498,7 @@ class UserController extends Controller
                  * If separating as parent user then Export all it's properties to selected parent user
                  * */
 
-                
+
                 /*
                  * Export user payment
                  * */

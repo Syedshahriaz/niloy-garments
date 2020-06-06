@@ -14,9 +14,10 @@ class UserProject extends Model
 
     public function running_task()
     {
-        $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','id');
+        $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
         $instance = $instance->select('user_project_tasks.*','tasks.title');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
+        $instance = $instance->where('tasks.status','active');
         $instance = $instance->where('user_project_tasks.status','processing');
         //$instance = $instance->orderBy('user_project_tasks.id','ASC');
         //$instance = $instance->limit(1);
@@ -25,9 +26,10 @@ class UserProject extends Model
 
     public function last_task()
     {
-        $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','id');
+        $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
         $instance = $instance->select('user_project_tasks.*','tasks.title');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
+        $instance = $instance->where('tasks.status','active');
         $instance = $instance->orderBy('user_project_tasks.id','DESC');
         //$instance = $instance->limit(1);
         return $instance;

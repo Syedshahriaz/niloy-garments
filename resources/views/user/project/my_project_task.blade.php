@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="portlet-body">
-                    
+
                             <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_horizontal_task">
                                 <thead>
                                     <tr>
@@ -73,8 +73,10 @@
                                         <td> <b>Due Date</b></td>
                                         @foreach($tasks as $task)
                                             <th>
+                                                @if($task->due_date !='')
                                                 {{date('l', strtotime($task->due_date))}},<br>
                                                 {{date('F d, Y', strtotime($task->due_date))}}
+                                                @endif
                                             </th>
                                         @endforeach
                                     </tr>
@@ -116,12 +118,14 @@
                                                 }
                                             }
                                             ?>
-                                            <td class="{{$bg_class}}">{{--bg-success, bg-warning, bg-danger--}}
+                                            <td class="@if($task->original_delivery_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                 <div class="edit-table-date">
-                                                    {{date('l', strtotime($task->original_delivery_date))}},<br>
-                                                    {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
-                                                    @if($task->status == 'processing')
-                                                        <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
+                                                    @if($task->original_delivery_date !='')
+                                                        {{date('l', strtotime($task->original_delivery_date))}},<br>
+                                                        {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
+                                                        @if($task->status == 'processing')
+                                                            <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </td>

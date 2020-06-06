@@ -74,7 +74,9 @@ class UserProjectController extends Controller
                 $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
                 $userProject->save();
 
-                $tasks = Task::where('project_id',$project->id)->get();
+                $tasks = Task::where('project_id',$project->id)
+                    //->where('status','active')
+                    ->get();
 
                 /*
                  * Saving user project tasks
@@ -83,8 +85,10 @@ class UserProjectController extends Controller
                     $projectTask = NEW UserProjectTask();
                     $projectTask->user_project_id = $userProject->id;
                     $projectTask->task_id = $task->id;
-                    $projectTask->due_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
-                    $projectTask->original_delivery_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
+                    if($task->status =='active'){
+                        $projectTask->due_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
+                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
+                    }
                     if($key==0){
                         $projectTask->status = 'processing';
                     }
@@ -133,6 +137,8 @@ class UserProjectController extends Controller
                 ->where('projects.status', 'active')
                 ->groupBy('projects.id')
                 ->get();
+
+            //echo "<pre>"; print_r($projects); echo "</pre>"; exit();
 
             //return $user_id;
             if ($request->ajax()) {
@@ -207,32 +213,10 @@ class UserProjectController extends Controller
         }*/
     }
 
-    public function myProject(Request $request){
-        //try{
-            $projects = Project::select('user_projects.*','projects.name','projects.fabrication','projects.color','projects.quantity','projects.size_range')
-                ->where('status','active')
-                ->join('user_projects','user_projects.project_id','=','projects.id')
-                ->where('user_projects.user_id',Session::get('user_id'))
-                ->get();
-            if($request->ajax()) {
-                $returnHTML = View::make('user.project.my_project',compact('projects'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
-            }
-            return view('user.project.my_project',compact('projects'));
-        /*}
-        catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
-    }
-
     public function myProjectTask(Request $request){
         //try{
             if (Auth::check()) {
-                $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule',
-                    'tasks.project_id')
+                $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->where('user_project_id', $request->id)
                     ->get();
@@ -310,9 +294,11 @@ class UserProjectController extends Controller
              * Start imediate next task to processing
              * */
             if($request->is_done == 1){
-                $next_task = UserProjectTask::where('id','>',$request->project_task_id)
+                $next_task = UserProjectTask::where('user_project_tasks.id','>',$request->project_task_id)
+                    ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->where('user_project_id',$task->user_project_id)
-                    ->orderBy('id','ASC')
+                    ->where('tasks.status','active')
+                    ->orderBy('user_project_tasks.id','ASC')
                     ->first();
                 if(!empty($next_task)){
                     $next_task->status = 'processing';
@@ -327,8 +313,10 @@ class UserProjectController extends Controller
                 /*
                  * Get all next task of this user project
                  * */
-                $tasks = UserProjectTask::where('id','>',$request->project_task_id)
+                $tasks = UserProjectTask::where('user_project_tasks.id','>',$request->project_task_id)
+                    ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->where('user_project_id',$task->user_project_id)
+                    ->where('tasks.status','active')
                     ->get();
 
                 foreach($tasks as $key=>$task){
