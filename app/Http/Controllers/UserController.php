@@ -485,40 +485,56 @@ class UserController extends Controller
              * */
             $parent_user = User::where('email',$s_user->email)->first();
 
-            /*
-             * Export user payment
-             * */
-            $payment = Payment::where('user_id',$request->user_id)->first();
-            if(!empty($payment)){
-                $payment->user_id = $parent_user->id;
+            if($request->is_child_user==1){
+                /*
+                 * If separating as child user then only update user's parent email address
+                 * */
+                $child_user = User::where('id',$request->user_id)->first();
+                $child_user->email = $s_user->email;
+                $child_user->save();
             }
-            $payment->save();
+            else{
+                /*
+                 * If separating as parent user then Export all it's properties to selected parent user
+                 * */
 
-            /*
-             * Export user shipment
-             * */
-            $shipment = UserShipment::where('user_id',$request->user_id)->first();
-            if(!empty($shipment)){
-                $shipment->user_id = $parent_user->id;
+                
+                /*
+                 * Export user payment
+                 * */
+                $payment = Payment::where('user_id',$request->user_id)->first();
+                if(!empty($payment)){
+                    $payment->user_id = $parent_user->id;
+                }
+                $payment->save();
+
+                /*
+                 * Export user shipment
+                 * */
+                $shipment = UserShipment::where('user_id',$request->user_id)->first();
+                if(!empty($shipment)){
+                    $shipment->user_id = $parent_user->id;
+                }
+                $shipment->save();
+
+                /*
+                 * Export user project
+                 * */
+                UserProject::where('user_id',$request->user_id)
+                    ->update(['user_id' => $parent_user->id]);
+
+                /*
+                 * Export user messages
+                 * */
+
+                /*
+                 * Now remove old child user
+                 * */
+                User::where('id',$request->user_id)->delete();
             }
-            $shipment->save();
 
-            /*
-             * Export user project
-             * */
-            UserProject::where('user_id',$request->user_id)
-                ->update(['user_id' => $parent_user->id]);
 
-            /*
-             * Export user messages
-             * */
-
-            /*
-             * Now remove old child user
-             * */
-            User::where('id',$request->user_id)->delete();
-
-            DB::commit();
+        DB::commit();
 
             return ['status' => 200, 'reason' => 'User separated successfully'];
         /*} catch (\Exception $e) {
