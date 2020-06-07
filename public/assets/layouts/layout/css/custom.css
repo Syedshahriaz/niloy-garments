@@ -191,6 +191,15 @@ body {
     margin-right: 20px;
     padding: 6px 12px !important;
 }
+.project-item.bg-success{
+    background-color: #92d050 !important;
+}
+.project-item.bg-warning{
+    background-color: #ffc000 !important;
+}
+.project-item.bg-danger{
+    background-color: #ff8989 !important;
+} 
 .project-item-title:hover,.project-item-title:focus,.project-item-title:visited{
     text-decoration: none;
 }
@@ -213,7 +222,7 @@ body {
     text-transform: uppercase;
     word-break: break-word;
 }
-.project-item:hover i {
+.project-item i {
     color: var(--primary-theme-color) !important;
     transition: all 0.7s ease;
 }
@@ -306,6 +315,15 @@ body {
 /*Select shipment date END*/
 
 /*Data table style START*/
+div#user_horizontal_task_wrapper {
+    overflow-x: auto;
+}
+div#user_horizontal_task_wrapper .row {
+    margin: 0;
+}
+div#user_horizontal_task_wrapper .col-sm-12 {
+    padding: 0;
+}
 .data-table tr>th{
     min-width: 120px;
 }
