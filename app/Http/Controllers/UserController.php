@@ -54,6 +54,7 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->country_code = $request->country_code;
         $user->password = bcrypt($request->password);
         $user->unique_id = $unique_id;
         $user->role = 3;
@@ -81,7 +82,7 @@ class UserController extends Controller
 
         return ['status' => 200, 'reason' => 'Registration successfully done. An email with login link have been sent to your email address.'];
         /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeUser', $e->getLine(),
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'store', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -234,6 +235,7 @@ class UserController extends Controller
             $user = User::where('id',$request->user_id)->first();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
+            $user->country_code = $request->country_code;
             $user->phone = $request->phone;
             $user->profession = $request->profession;
             //$user->birthday = date('Y-m-d', strtotime($request->birthday));
@@ -287,8 +289,9 @@ class UserController extends Controller
         //try {
         if (Auth::check()) {
             $users = User::where('users.email', Session::get('user_email'))
-                ->select('users.*', 'user_shipments.shipment_date')
+                ->select('users.*', 'user_shipments.shipment_date','separate_user_logs.otp','separate_user_logs.created_at as otp_sent_at')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->leftJoin('separate_user_logs', 'separate_user_logs.user_id', '=', 'users.id')
                 ->where('users.id','!=',Session::get('user_id'))
                 ->orderBy('users.id', 'ASC')
                 ->get();
@@ -417,9 +420,20 @@ class UserController extends Controller
                 return ['status' => 401, 'reason' => 'Authentication failed'];
             }
 
+            /*
+             * Check if user created with this email address. If not then return false
+             * */
             $hasUser = User::where('email',$request->email)->first();
             if(empty($hasUser)){
                 return ['status' => 401, 'reason' => 'Sorry! No user registered with this email address'];
+            }
+
+            /*
+             * Check if email address is the parent user's email address. If yes then return false
+             * */
+            $thisUser = User::where('id',$request->user_id)->first();
+            if($thisUser->email==$request->email){
+                return ['status' => 401, 'reason' => "You can not send OTP to this users's current parent user"];
             }
 
             /*
@@ -431,9 +445,11 @@ class UserController extends Controller
             if(empty($s_user)){
                 $s_user = NEW SeparateUserLog();
             }
+            $s_user->user_id = $request->user_id;
             $s_user->email = $request->email;
             $s_user->otp = $otp;
             $s_user->is_used = 0;
+            $s_user->created_at = date('Y-m-d h:i:s');
             $s_user->save();
 
             /*
@@ -473,10 +489,21 @@ class UserController extends Controller
 
             $s_user = SeparateUserLog::where('otp',$request->otp)
                 ->where('is_used',0)
+                ->where('user_id',$request->user_id)
                 ->first();
             if(empty($s_user)){
                 return [ 'status' => 401, 'reason' => 'Invalid OTP. Try again with valid OTP'];
             }
+
+            $t1 = strtotime( date('Y-m-d h:i:s') );
+            $t2 = strtotime( $s_user->created_at );
+            $diff = $t1 - $t2;
+            $hours = $diff / ( 60 * 60 );
+
+            if($hours>24){
+                return [ 'status' => 401, 'reason' => 'OTP expired. Try again with valid OTP'];
+            }
+
             $s_user->is_used = 1;
             $s_user->save();
 

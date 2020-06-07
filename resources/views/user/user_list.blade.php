@@ -68,8 +68,16 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</a>
-                                            <button type="button" class="btn green action-btn" title="Send OTP to separate this user" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i> Send OTP </button>
-                                            <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
+                                            <button type="button" class="btn green action-btn" title="Send OTP to separate this user" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
+                                                @if($user->otp =='')
+                                                    Send OTP
+                                                @else
+                                                    Send OTP Again
+                                                @endif
+                                            </button>
+                                            @if($user->otp !='')
+                                                <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
+                                            @endif
                                         </td>
                                     </tr>
                                     <?php
@@ -112,11 +120,6 @@
                                     <label class="control-label">New user email</label>
                                     <input class="form-control placeholder-no-fix" type="text" placeholder="Enter new user email*" name="email" id="email" value=""  autocomplete="off"/>
                                 </div>
-
-                                {{--<div class="form-group">
-                                    <label class="control-label">Phone*</label>
-                                    <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" style="padding-left: 0px !important;"/>
-                                </div>--}}
 
                                 <div class="form-group">
                                     <label class="control-label">Your Current Password</label>
