@@ -168,6 +168,11 @@
 @section('js')
     <script>
         $(document).ready(function(){
+            /*
+            * Set selected country code in teliphone
+            * */
+            $(".iti__selected-dial-code").text('{{$user->country_code}}');
+
             $('#image_change_btn').click(function(){
                 $('#image_change_hidden_btn').trigger('click');
             });
@@ -195,6 +200,8 @@
 
             var first_name = $("#first_name").val();
             var email = $("#email").val();
+            var country_code = $(".iti__selected-dial-code").text();
+
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             var validate = "";
@@ -213,6 +220,7 @@
 
             if (validate == "") {
                 var formData = new FormData($("#profile_form")[0]);
+                formData.append('country_code', country_code);
                 var url = "{{ url('user_update') }}";
 
                 $.ajax({
