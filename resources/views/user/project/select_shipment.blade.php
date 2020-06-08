@@ -57,7 +57,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title text-center font-theme uppercase" id="select_ship_dateLabel">Welcome</h4>
+                        <h4 class="modal-title text-center font-theme uppercase" id="select_ship_dateLabel">Welcome {{$user->username}}</h4>
                     </div>
 
                     <form id="shipment_form" method="post" action="">
@@ -75,7 +75,7 @@
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
                                         <div class="form-group">
-                                            <label for=""><b>Shipping Date</b></label>
+                                            <label for=""><b>Shipping Date for {{$user->username}}</b></label>
                                             <input class="form-control date-picker" size="16" type="text" name="" id="shipment_date" value="" placeholder="Select Shipping Date"/>
                                             <input class="date-picker-hidden" type="hidden" name="shipment_date"/>
                                         </div>

@@ -58,15 +58,8 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                                            <label class="control-label visible-ie8 visible-ie9">Email</label>
-                                            <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$user->email}}" readonly/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
                                             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-                                            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" value="{{$user->phone}}"/>
+                                            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->phone}}"/>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -128,7 +121,6 @@
             HoldOn.open(options);
 
             var username = $("#username").val();
-            var email = $("#email").val();
             var phone = $("#telephone").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
@@ -139,14 +131,6 @@
             }
             if (phone.trim() == "") {
                 validate = validate + "Phone is required</br>";
-            }
-            if (email.trim() == "") {
-                validate = validate + "Email is required</br>";
-            }
-            if(email.trim()!=''){
-                if(!re.test(email)){
-                    validate = validate+'Email is invalid<br>';
-                }
             }
 
             if (validate == "") {
