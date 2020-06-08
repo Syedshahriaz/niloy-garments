@@ -58,7 +58,9 @@
                                     <tr>
                                         <th>Title</th>
                                         @foreach($tasks as $task)
-                                        <th> {{$task->title}} </th>
+                                            @if($task->task_status !='deleted')
+                                                <th> {{$task->title}} </th>
+                                            @endif
                                         @endforeach
                                     </tr>
                                 </thead>
@@ -66,18 +68,22 @@
                                     <tr class="focus-tr">
                                         <td> <b>Rule</b></td>
                                         @foreach($tasks as $task)
-                                            <th> {{$task->rule}} </th>
+                                            @if($task->task_status !='deleted')
+                                                <th> {{$task->rule}} </th>
+                                            @endif
                                         @endforeach
                                     </tr>
                                     <tr>
                                         <td> <b>Due Date</b></td>
                                         @foreach($tasks as $task)
-                                            <th>
-                                                @if($task->due_date !='')
-                                                {{date('l', strtotime($task->due_date))}},<br>
-                                                {{date('F d, Y', strtotime($task->due_date))}}
-                                                @endif
-                                            </th>
+                                            @if($task->task_status !='deleted')
+                                                <th>
+                                                    @if($task->task_status =='active')
+                                                    {{date('l', strtotime($task->due_date))}},<br>
+                                                    {{date('F d, Y', strtotime($task->due_date))}}
+                                                    @endif
+                                                </th>
+                                            @endif
                                         @endforeach
                                     </tr>
                                     <tr>
@@ -118,9 +124,11 @@
                                                 }
                                             }
                                             ?>
+
+                                            @if($task->task_status !='deleted')
                                             <td class="@if($task->original_delivery_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                 <div class="edit-table-date">
-                                                    @if($task->original_delivery_date !='')
+                                                    @if($task->task_status =='active')
                                                         {{date('l', strtotime($task->original_delivery_date))}},<br>
                                                         {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
                                                         @if($task->status == 'processing')
@@ -129,6 +137,7 @@
                                                     @endif
                                                 </div>
                                             </td>
+                                            @endif
                                         <?php } ?>
                                     </tr>
                                 </tbody>
@@ -146,59 +155,63 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach($tasks as $task){
-                                        $hidden_class = 'hidden';
-                                        $bg_class = '';
-
-                                        /*
-                                         * Calculate number of days left to complete
-                                         * */
-                                        $now = time();
-                                        $datediff = strtotime($task->original_delivery_date) - $now;
-                                        $day_left = round($datediff / (60 * 60 * 24));
-
-                                        /*
-                                         * Create hidden class
-                                         * */
-                                        if($task->status == 'processing' && $task->delivery_date_update_count<2){
-                                            $hidden_class = '';
-                                        }
-                                        else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                        if($task->task_status !='deleted'){
                                             $hidden_class = 'hidden';
-                                        }
+                                            $bg_class = '';
 
-                                        /*
-                                         * Create bg class
-                                         * */
-                                        if($task->status == 'completed'){
-                                            $bg_class = 'bg-success';
-                                        }
-                                        else{
-                                            if(strtotime($task->original_delivery_date) < time()) {
-                                                $bg_class = 'bg-danger';
+                                            /*
+                                             * Calculate number of days left to complete
+                                             * */
+                                            $now = time();
+                                            $datediff = strtotime($task->original_delivery_date) - $now;
+                                            $day_left = round($datediff / (60 * 60 * 24));
+
+                                            /*
+                                             * Create hidden class
+                                             * */
+                                            if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                                $hidden_class = '';
                                             }
-                                            else if($day_left<=7){
-                                                $bg_class = 'bg-warning';
+                                            else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                                $hidden_class = 'hidden';
                                             }
-                                        }
-                                    ?>
-                                    <tr>
-                                        <td> <b>{{$task->title}}</b></td>
-                                        <td> <b>{{$task->rule}}</b></td>
-                                        <td>
-                                            {{date('l, F d, Y', strtotime($task->due_date))}}
-                                        </td>
-                                        <td class="@if($task->original_delivery_date !='') {{$bg_class}} @endif">
-                                            <div class="edit-table-date">
-                                                @if($task->original_delivery_date !='')
-                                                    {{date('l, F d, Y', strtotime($task->original_delivery_date))}}
-                                                    @if($task->status == 'processing')
-                                                        <a class="{{$hidden_class}}" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
+
+                                            /*
+                                             * Create bg class
+                                             * */
+                                            if($task->status == 'completed'){
+                                                $bg_class = 'bg-success';
+                                            }
+                                            else{
+                                                if(strtotime($task->original_delivery_date) < time()) {
+                                                    $bg_class = 'bg-danger';
+                                                }
+                                                else if($day_left<=7){
+                                                    $bg_class = 'bg-warning';
+                                                }
+                                            }
+                                        ?>
+                                            <tr>
+                                                <td> <b>{{$task->title}}</b></td>
+                                                <td> <b>{{$task->rule}}</b></td>
+                                                <td>
+                                                    @if($task->task_status =='active')
+                                                        {{date('l, F d, Y', strtotime($task->due_date))}}
                                                     @endif
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php } ?>
+                                                </td>
+                                                <td class="@if($task->original_delivery_date !='') {{$bg_class}} @endif">
+                                                    <div class="edit-table-date">
+                                                        @if($task->task_status =='active')
+                                                            {{date('l, F d, Y', strtotime($task->original_delivery_date))}}
+                                                            @if($task->status == 'processing')
+                                                                <a class="{{$hidden_class}}" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                    <?php } // endif
+                                    } // endforeach ?>
                                 </tbody>
                             </table>
                         </div>

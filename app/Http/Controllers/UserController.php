@@ -512,7 +512,12 @@ class UserController extends Controller
              * */
             $parent_user = User::where('email',$s_user->email)->first();
 
-            if($request->is_child_user==1){
+            /*
+             * Check if there has child for this new parent user
+             * */
+            $child_users = User::where('email',$s_user->email)->get();
+
+            if(count($child_users)>1){
                 /*
                  * If separating as child user then only update user's parent email address
                  * */
