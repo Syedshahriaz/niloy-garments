@@ -19,6 +19,9 @@ Route::post('/post_login', 'AuthenticationController@postLogin');
 Route::get('/registration', 'UserController@registration')->name('registration');
 Route::get('/promotion/{id}', 'UserController@promotion');
 Route::post('user/store', 'UserController@store');
+Route::get('verify_email', 'UserController@verifyEmail');
+
+Route::get('error_404', 'ErrorController@error404');
 
 
 
