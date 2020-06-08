@@ -138,8 +138,6 @@ class UserProjectController extends Controller
                 ->groupBy('projects.id')
                 ->get();
 
-            //echo "<pre>"; print_r($projects); echo "</pre>"; exit();
-
             //return $user_id;
             if ($request->ajax()) {
                 $returnHTML = View::make('user.project.all_project',
@@ -268,9 +266,7 @@ class UserProjectController extends Controller
                 $timeDiff = strtotime($request->original_delivery_date) - strtotime($request->old_delivery_date);
                 $daysAdded = $timeDiff/86400;  // 86400 seconds in one day
 
-                if($daysAdded>0){
-                    $date_increased = 1;
-                }
+                $date_increased = 1;
             }
             else{
                 $delivery_date_update_count  = $task->delivery_date_update_count;
@@ -287,14 +283,16 @@ class UserProjectController extends Controller
             }
             if($request->original_delivery_date !=''){
                 $task->original_delivery_date = date('Y-m-d', strtotime($request->original_delivery_date));
+
             }
             $task->save();
 
             /*
-             * Start imediate next task to processing
+             * Make immediate next task to processing
              * */
             if($request->is_done == 1){
                 $next_task = UserProjectTask::where('user_project_tasks.id','>',$request->project_task_id)
+                    ->select('user_project_tasks.*')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->where('user_project_id',$task->user_project_id)
                     ->where('tasks.status','active')
@@ -313,14 +311,15 @@ class UserProjectController extends Controller
                 /*
                  * Get all next task of this user project
                  * */
-                $tasks = UserProjectTask::where('user_project_tasks.id','>',$request->project_task_id)
+                $project_tasks = UserProjectTask::where('user_project_tasks.id','>',$request->project_task_id)
+                    ->select('user_project_tasks.*')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->where('user_project_id',$task->user_project_id)
                     ->where('tasks.status','active')
                     ->get();
 
-                foreach($tasks as $key=>$task){
-                    $taskData = UserProjectTask::where('id',$task->id)->first();
+                foreach($project_tasks as $key=>$p_task){
+                    $taskData = UserProjectTask::where('id',$p_task->id)->first();
                     $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.$daysAdded.' days'));
                     $taskData->save();
                 }

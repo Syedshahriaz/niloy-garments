@@ -168,13 +168,6 @@
                                     <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="otp" placeholder="OTP*" name="otp" />
                                 </div>
                             </div>
-
-                            <div class="col-md-10 col-md-offset-1">
-                                <label class="mt-checkbox mt-checkbox-outline mb-0">
-                                    <input type="checkbox" class="" name="is_child_user" value="1" /> Is child user
-                                    <span></span>
-                                </label>
-                            </div>
                         </form>
                     </div>
                 </div>
