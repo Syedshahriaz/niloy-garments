@@ -58,7 +58,15 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->unique_id = $unique_id;
         $user->role = 3;
+        $user->status = 'pending';
         $user->save();
+
+        $token = base64_encode($user->id."#".$user->email);
+        $userDetails = User::where('id',$user->id)->first();
+        $userDetails->verification_token = $token;
+        $userDetails->save();
+
+        $verification_link = url('verify_email').'?token='.$token;
 
         /*
          * Send confirmation email
@@ -72,6 +80,7 @@ class UserController extends Controller
         $emailData['email'] = $email_to;
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
+        $emailData['verification_link'] = $verification_link;
         $emailData['subject'] = 'Niloy Garments- Registration confirmation';
 
         $emailData['bodyMessage'] = '';
@@ -80,7 +89,7 @@ class UserController extends Controller
 
         $result = SendMails::sendMail($emailData, $view);
 
-        return ['status' => 200, 'reason' => 'Registration successfully done. An email with login link have been sent to your email address.'];
+        return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
         /*} catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'store', $e->getLine(),
                 $e->getFile(), '', '', '', '');
@@ -89,27 +98,29 @@ class UserController extends Controller
         }*/
     }
 
-    public function selectUser(Request $request){
+    public function verifyEmail(Request $request){
         //try {
-            if (Auth::check()) {
-                $users = User::where('email', Session::get('user_email'))->get();
-                if (count($users) == 1) {
-                    $user = $users[0];
-                    $this->createUserSession($user);
+            $user = User::where('verification_token', $request->token)->where('status','pending')->first();
+            if (empty($user)) {
+                return redirect('error_404'); // Token not matched
+            }
+            $tokenData = base64_decode($request->token);
+            $tokenExplode = explode('#',$tokenData);
+            if(count($tokenExplode) !=2){
+                return redirect('error_404'); // Invalid token
+            }
 
-                    return redirect('promotion');
-                }
-                if ($request->ajax()) {
-                    $returnHTML = View::make('select_user', compact('users'))->renderSections()['content'];
-                    return response()->json(array('status' => 200, 'html' => $returnHTML));
-                }
-                return view('select_user', compact('users'));
-            }
-            else{
-                return redirect('login');
-            }
+            /*
+             * Update user status
+             * */
+            $user->status = 'active';
+            $user->email_verified_at = date('Y-m-d h:i:s');
+            $user->save();
+
+            return view('registration_confirmation');
+
         /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'selectUser', $e->getLine(),
+            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyEmail', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
