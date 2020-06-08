@@ -321,6 +321,7 @@ class UserProjectController extends Controller
                 foreach($project_tasks as $key=>$p_task){
                     $taskData = UserProjectTask::where('id',$p_task->id)->first();
                     $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.$daysAdded.' days'));
+                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.$daysAdded.' days'));
                     $taskData->save();
                 }
             }

@@ -73,7 +73,7 @@
                                          * Calculate number of days left to complete
                                          * */
                                         $now = time();
-                                        $datediff = strtotime($task->original_delivery_date) - $now;
+                                        $datediff = strtotime($task->due_date) - $now;
                                         $day_left = round($datediff / (60 * 60 * 24));
 
                                         /*
@@ -83,7 +83,7 @@
                                             $bg_class = 'bg-success';
                                         }
                                         else{
-                                            if(strtotime($task->original_delivery_date) < time()) {
+                                            if(strtotime($task->due_date) < time()) {
                                                 $bg_class = 'bg-danger';
                                             }
                                             else if($day_left<=7){

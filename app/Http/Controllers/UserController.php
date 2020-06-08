@@ -358,7 +358,7 @@ class UserController extends Controller
     public function storeNewUser(Request $request){
         //try {
 
-        $parentUser = User::where('email',$request->email)->first();
+        $parentUser = User::where('email',Session::get('user_email'))->first();
 
         $lastUser = User::orderBy('id','DESC')->first();
         if(!empty($lastUser)){
@@ -371,7 +371,7 @@ class UserController extends Controller
         $user = new User();
         $user->unique_id = $unique_id;
         $user->username = $request->username;
-        $user->email = $request->email;
+        $user->email = Session::get('user_email');
         $user->phone = $request->phone;
         $user->password = $parentUser->password;
         $user->role = 3;
