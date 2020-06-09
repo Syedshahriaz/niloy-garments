@@ -94,7 +94,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Phone Number</b></h5>
-                                                    <p>{{$user->phone}}</p>
+                                                    <p>{{$user->country_code.$user->phone}}</p>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h5 class="mb-0"><b>Email Address</b></h5>
