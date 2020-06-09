@@ -122,6 +122,7 @@
 
             var username = $("#username").val();
             var phone = $("#telephone").val();
+            var country_code = $(".iti__selected-dial-code").text();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             var validate = "";
@@ -135,6 +136,7 @@
 
             if (validate == "") {
                 var formData = new FormData($("#registration_form")[0]);
+                formData.append('country_code', country_code);
                 var url = "{{ url('store_new_user') }}";
 
                 $.ajax({

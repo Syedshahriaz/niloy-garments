@@ -384,6 +384,7 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->email = Session::get('user_email');
         $user->phone = $request->phone;
+        $user->country_code = $request->country_code;
         $user->password = $parentUser->password;
         $user->role = 3;
         $user->save();
