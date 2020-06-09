@@ -191,13 +191,13 @@ body {
     margin-right: 20px;
     padding: 6px 12px !important;
 }
-.project-item.bg-success{
+.bg-success{
     background-color: #92d050 !important;
 }
-.project-item.bg-warning{
+.bg-warning{
     background-color: #ffc000 !important;
 }
-.project-item.bg-danger{
+.bg-danger{
     background-color: #ff8989 !important;
 } 
 .project-item-title:hover,.project-item-title:focus,.project-item-title:visited{
@@ -213,7 +213,7 @@ body {
     box-shadow: 0px 0px 14px 3px rgba(33,33,33,.2);
 }
 .project-item .progress-info .status{
-    color: #5d5b63;
+    color: #000000;
 }
 .project-item-name {
     font-size: 16px;
@@ -323,6 +323,9 @@ div#user_horizontal_task_wrapper .row {
 }
 div#user_horizontal_task_wrapper .col-sm-12 {
     padding: 0;
+}
+#user_dash_horizontal_task tr>td{
+    min-width: 120px;
 }
 .data-table tr>th{
     min-width: 120px;

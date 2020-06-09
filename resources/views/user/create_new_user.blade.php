@@ -35,7 +35,7 @@
                 <div class="row mt-3">
                     <div class="col-md-6 col-md-offset-3">
                         <!-- BEGIN PORTLET -->
-                        <div class="portlet light ">
+                        <div class="portlet light " style="margin-bottom: 145px;">
                             <div class="portlet-title">
                                 <div class="caption caption-md">
                                     <i class="icon-bar-chart theme-font hide"></i>
