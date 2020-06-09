@@ -59,7 +59,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-                                            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->phone}}"/>
+                                            <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value=""/>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -108,6 +108,8 @@
 
 @section('js')
     <script>
+        $("#telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
+
         $(document).on("submit", "#registration_form", function(event) {
             event.preventDefault();
 
