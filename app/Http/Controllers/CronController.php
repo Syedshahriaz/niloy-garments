@@ -47,31 +47,14 @@ class CronController extends Controller
             //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
 
             foreach($tasks as $task){
-                /*
-                 * Send otp confirmation email
-                 */
-                $email_to = [$task->email];
-                $email_cc = [];
-                $email_bcc = [];
-
-                $emailData['from_email'] = Common::FROM_EMAIL;
-                $emailData['from_name'] = Common::FROM_NAME;
-                $emailData['email'] = $email_to;
-                $emailData['email_cc'] = $email_cc;
-                $emailData['email_bcc'] = $email_bcc;
-                $emailData['task'] = $task;
-                $emailData['subject'] = 'Niloy Garments- Project task completion warning';
-
-                $emailData['bodyMessage'] = '';
+                $email = [$task->email];
 
                 if($task->original_delivery_date<$today){ // Due date have been past
-                    $view = 'emails.project_task_complete_past_warning_email';
+                    $result = Common::sendPastDayWarningEmail($email,$task);
                 }
                 else{
-                    $view = 'emails.project_task_complete_7day_warning_email';
+                    $result = Common::send7dayWarningEmail($email,$task);
                 }
-
-                $result = SendMails::sendMail($emailData, $view);
 
                 if($task->original_delivery_date<$today && $result=='ok'){
                     $task->warning_sent = 1;
@@ -89,4 +72,5 @@ class CronController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }*/
     }
+
 }
