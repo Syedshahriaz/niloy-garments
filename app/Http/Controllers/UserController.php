@@ -127,6 +127,17 @@ class UserController extends Controller
         }*/
     }
 
+    public function registrationThankYou(Request $request){
+        //try {
+            return view('registration_thankyou');
+        /*} catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'registrationThankYou', 'verifyEmail', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
     public function multiTinent(Request $request){
         //try {
             $user = User::where('id',$request->user_id)->first();
