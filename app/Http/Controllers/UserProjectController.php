@@ -124,6 +124,7 @@ class UserProjectController extends Controller
             $child_users = User::where('users.email', Session::get('user_email'))
                 ->select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->orderBy('is_parent','DESC')
                 ->get();
             $shipment = UserShipment::where('user_id', $user_id)->first();
             if (empty($shipment)) {

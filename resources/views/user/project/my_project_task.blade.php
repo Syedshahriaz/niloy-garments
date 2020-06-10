@@ -204,7 +204,7 @@
                                                         @if($task->task_status =='active')
                                                             {{date('l, F d, Y', strtotime($task->original_delivery_date))}}
                                                             @if($task->status == 'processing')
-                                                                <a class="{{$hidden_class}}" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
+                                                                <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif
                                                     </div>
