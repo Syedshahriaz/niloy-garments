@@ -84,358 +84,86 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!-- First table -->
-                                                <tr class="focus-tr">
-                                                    <td> <b>Project</b></td>
-                                                    <td> <b>Rule</b></td>
-                                                    <td> <b>Cutting</b> </td>
-                                                    <td> <b>Sweing</b> </td>
-                                                    <td> <b>Finishing</b> </td>
-                                                    <td> <b>Final Inspection</b> </td>
-                                                    <td> <b>X Factor</b> </td>
-                                                    <td> <b>ETA</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td rowspan="2"> <b>Project A</b>
-                                                    <td> <b>Due Date</b>
-                                                    </td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> <b>Original Delivery Date</b></td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
+                                                @foreach($projects as $project)
 
-                                                <!-- Second table -->
-                                                <tr class="focus-tr">
-                                                    <td> <b>Project</b></td>
-                                                    <td> <b>Rule</b></td>
-                                                    <td> <b>Cutting</b> </td>
-                                                    <td> <b>Sweing</b> </td>
-                                                    <td> <b>Finishing</b> </td>
-                                                    <td> <b>Final Inspection</b> </td>
-                                                    <td> <b>X Factor</b> </td>
-                                                    <td> <b>ETA</b> </td>
-                                                    <td> <b>ETA1</b> </td>
-                                                    <td> <b>ETA2</b> </td>
-                                                    <td> <b>ETA3</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td rowspan="2"> <b>Project B</b>
-                                                    <td> <b>Due Date</b>
-                                                    </td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> <b>Original Delivery Date</b></td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
+                                                    <!-- First table -->
+                                                    <tr class="focus-tr">
+                                                        <td> <b>Project</b></td>
+                                                        <td> <b>Rule</b></td>
+                                                        @foreach($project->tasks as $task)
+                                                            @if($task->task_status !='deleted')
+                                                                <td> <b>{{$task->rule}}</b> </td>
+                                                            @endif
+                                                        @endforeach
+                                                    </tr>
+                                                    <tr>
+                                                        <td rowspan="2"> <b>{{$project->name}}</b>
+                                                        <td> <b>Due Date</b>
+                                                        </td>
+                                                        @foreach($project->tasks as $task)
+                                                            @if($task->task_status !='deleted')
+                                                                <td>
+                                                                    @if($task->task_status =='active')
+                                                                        {{date('l', strtotime($task->due_date))}},<br>
+                                                                        {{date('F d, Y', strtotime($task->due_date))}}
+                                                                    @endif
+                                                                </td>
+                                                            @endif
+                                                        @endforeach
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <b>Original Delivery Date</b></td>
+                                                        <?php foreach($project->tasks as $task){
+                                                        $hidden_class = 'hidden';
+                                                        $bg_class = '';
 
-                                                <!-- Second table -->
-                                                <tr class="focus-tr">
-                                                    <td> <b>Project</b></td>
-                                                    <td> <b>Rule</b></td>
-                                                    <td> <b>Cutting</b> </td>
-                                                    <td> <b>Sweing</b> </td>
-                                                    <td> <b>Finishing</b> </td>
-                                                    <td> <b>Final Inspection</b> </td>
-                                                    <td> <b>X Factor</b> </td>
-                                                    <td> <b>ETA</b> </td>
-                                                    <td> <b>ETA1</b> </td>
-                                                    <td> <b>ETA2</b> </td>
-                                                    <td> <b>ETA3</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td rowspan="2"> <b>Project B</b>
-                                                    <td> <b>Due Date</b>
-                                                    </td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> <b>Original Delivery Date</b></td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
+                                                        /*
+                                                         * Calculate number of days left to complete
+                                                         * */
+                                                        $now = time();
+                                                        $datediff = strtotime($task->due_date) - $now;
+                                                        $day_left = round($datediff / (60 * 60 * 24));
 
-                                                <!-- Second table -->
-                                                <tr class="focus-tr">
-                                                    <td> <b>Project</b></td>
-                                                    <td> <b>Rule</b></td>
-                                                    <td> <b>Cutting</b> </td>
-                                                    <td> <b>Sweing</b> </td>
-                                                    <td> <b>Finishing</b> </td>
-                                                    <td> <b>Final Inspection</b> </td>
-                                                    <td> <b>X Factor</b> </td>
-                                                    <td> <b>ETA</b> </td>
-                                                    <td> <b>ETA1</b> </td>
-                                                    <td> <b>ETA2</b> </td>
-                                                    <td> <b>ETA3</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td rowspan="2"> <b>Project B</b>
-                                                    <td> <b>Due Date</b>
-                                                    </td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> <b>Original Delivery Date</b></td>
-                                                    <td>
-                                                        Wednesday,
-                                                        <br>August 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Saturday,
-                                                        <br>September 16, 2017
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>October 17, 2017
-                                                    </td>
-                                                    <td>
-                                                        Thursday,
-                                                        <br>January 03, 2019
-                                                    </td>
-                                                    <td>
-                                                        Sunday,
-                                                        <br>July 03, 2022
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                    <td>
-                                                        Tuesday,
-                                                        <br>July 03, 2029
-                                                    </td>
-                                                </tr>
+                                                        /*
+                                                         * Create hidden class
+                                                         * */
+                                                        if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                                            $hidden_class = '';
+                                                        }
+                                                        else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                                            $hidden_class = 'hidden';
+                                                        }
+
+                                                        /*
+                                                         * Create bg class
+                                                         * */
+                                                        if($task->status == 'completed'){
+                                                            $bg_class = 'bg-success';
+                                                        }
+                                                        else{
+                                                            if(strtotime($task->due_date) < time()) {
+                                                                $bg_class = 'bg-danger';
+                                                            }
+                                                            else if($day_left<=7){
+                                                                $bg_class = 'bg-warning';
+                                                            }
+                                                        }
+                                                        ?>
+
+                                                        @if($task->task_status !='deleted')
+                                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
+                                                                <div class="edit-table-date">
+                                                                    @if($task->task_status =='active')
+                                                                        {{date('l', strtotime($task->original_delivery_date))}},<br>
+                                                                        {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
+                                                                    @endif
+                                                                </div>
+                                                            </td>
+                                                        @endif
+                                                        <?php } ?>
+                                                    </tr>
+
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -451,7 +179,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+
                                         </tbody>
                                     </table>
                                 </div>

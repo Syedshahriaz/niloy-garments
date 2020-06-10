@@ -12,6 +12,15 @@ class UserProject extends Model
 
     public $timestamps = false;
 
+    public function tasks()
+    {
+        $instance = $this->hasMany('App\Models\UserProjectTask','user_project_id','user_project_id');
+        $instance = $instance->select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id');
+        $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
+        $instance = $instance->where('tasks.status','active');
+        return $instance;
+    }
+
     public function running_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');

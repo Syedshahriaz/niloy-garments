@@ -25,6 +25,58 @@ class Common
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
 
+    public static function send7dayWarningEmail($email,$task){
+        /*
+         * Send task 7 day before complete warning email
+         */
+        $today = date('Y-m-d');
+
+        $email_to = $email;
+        $email_cc = [];
+        $email_bcc = [];
+
+        $emailData['from_email'] = Common::FROM_EMAIL;
+        $emailData['from_name'] = Common::FROM_NAME;
+        $emailData['email'] = $email_to;
+        $emailData['email_cc'] = $email_cc;
+        $emailData['email_bcc'] = $email_bcc;
+        $emailData['task'] = $task;
+        $emailData['subject'] = 'Niloy Garments- Project task completion warning';
+
+        $emailData['bodyMessage'] = '';
+
+        $view = 'emails.project_task_complete_7day_warning_email';
+
+        $result = SendMails::sendMail($emailData, $view);
+        return $result;
+    }
+
+    public static function sendPastDayWarningEmail($email,$task){
+        /*
+         * Send task past day complete warning email
+         */
+        $today = date('Y-m-d');
+
+        $email_to = $email;
+        $email_cc = [];
+        $email_bcc = [];
+
+        $emailData['from_email'] = Common::FROM_EMAIL;
+        $emailData['from_name'] = Common::FROM_NAME;
+        $emailData['email'] = $email_to;
+        $emailData['email_cc'] = $email_cc;
+        $emailData['email_bcc'] = $email_bcc;
+        $emailData['task'] = $task;
+        $emailData['subject'] = 'Niloy Garments- Project task completion warning';
+
+        $emailData['bodyMessage'] = '';
+
+        $view = 'emails.project_task_complete_past_warning_email';
+
+        $result = SendMails::sendMail($emailData, $view);
+        return $result;
+    }
+
     public static function saveErrorLog($method,$line_number,$file_path,$message,$object,$type,$screenshot,$page_url,$argument,$prefix,$domain){
 
         /*Save error to database*/
