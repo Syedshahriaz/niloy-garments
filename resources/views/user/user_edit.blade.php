@@ -170,7 +170,7 @@
         $(document).ready(function(){
 
             $("#telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
-            
+
             /*
             * Set selected country code in teliphone
             * */
