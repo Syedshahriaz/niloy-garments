@@ -213,7 +213,7 @@
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
                         setTimeout(function(){
-                            window.location.href="{{url('login')}}";
+                            window.location.href="{{url('thankyou')}}";
                         },2000)
                     } else {
                         $("#success_message").hide();

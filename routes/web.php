@@ -17,6 +17,7 @@ Route::get('cron/send_task_warning_email', 'CronController@sendTaskWarningEmail'
 
 Route::post('/post_login', 'AuthenticationController@postLogin');
 Route::get('/registration', 'UserController@registration')->name('registration');
+Route::get('/thankyou', 'UserController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');
 Route::post('user/store', 'UserController@store');
 Route::get('verify_email', 'UserController@verifyEmail');
