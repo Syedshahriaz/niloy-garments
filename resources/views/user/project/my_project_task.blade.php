@@ -43,11 +43,11 @@
 
                             <div class="actions">
                                 <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summery</a>
-                                <a title="List View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
-                                    <i class="icon-list icons"></i>
+                                <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
+                                    <!--i class="icon-list icons"></i-->Vertical View
                                 </a>
-                                <a title="Grid View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
-                                    <i class="icon-grid icons"></i>
+                                <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
+                                    <!--i class="icon-grid icons"></i-->Horizontal View
                                 </a>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                                         <td> <b>Rule</b></td>
                                         @foreach($tasks as $task)
                                             @if($task->task_status !='deleted')
-                                                <th> {{$task->rule}} </th>
+                                                <td> <b>{{$task->rule}}</b> </td>
                                             @endif
                                         @endforeach
                                     </tr>
@@ -77,12 +77,12 @@
                                         <td> <b>Due Date</b></td>
                                         @foreach($tasks as $task)
                                             @if($task->task_status !='deleted')
-                                                <th>
+                                                <td>
                                                     @if($task->task_status =='active')
                                                     {{date('l', strtotime($task->due_date))}},<br>
                                                     {{date('F d, Y', strtotime($task->due_date))}}
                                                     @endif
-                                                </th>
+                                                </td>
                                             @endif
                                         @endforeach
                                     </tr>
