@@ -265,8 +265,9 @@ class UserProjectController extends Controller
 
                 $timeDiff = strtotime($request->original_delivery_date) - strtotime($request->old_delivery_date);
                 $daysAdded = $timeDiff/86400;  // 86400 seconds in one day
-
-                $date_increased = 1;
+                if($daysAdded>0) { // If date increased
+                    $date_increased = 1;
+                }
             }
             else{
                 $delivery_date_update_count  = $task->delivery_date_update_count;
@@ -307,7 +308,7 @@ class UserProjectController extends Controller
             /*
              * Update next task original due date if date updated by user
              * */
-            if($date_updated==1 && $date_increased==1){
+            if($date_updated==1){
                 /*
                  * Get all next task of this user project
                  * */
@@ -318,10 +319,17 @@ class UserProjectController extends Controller
                     ->where('tasks.status','active')
                     ->get();
 
+
                 foreach($project_tasks as $key=>$p_task){
                     $taskData = UserProjectTask::where('id',$p_task->id)->first();
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.$daysAdded.' days'));
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.$daysAdded.' days'));
+                    if($date_increased==1){ // If date increased
+                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs($daysAdded).' days'));
+                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs($daysAdded).' days'));
+                    }
+                    else{
+                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs($daysAdded).' days'));
+                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs($daysAdded).' days'));
+                    }
                     $taskData->save();
                 }
             }
