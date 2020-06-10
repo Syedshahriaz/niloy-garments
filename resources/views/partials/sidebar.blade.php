@@ -187,7 +187,7 @@
             </li>
 
             <li class="nav-item  @if($page=='dashboard') active @endif">
-                <a href="#" class="nav-link">
+                <a href="{{url('dashboard')}}" class="nav-link">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <span class="selected"></span>

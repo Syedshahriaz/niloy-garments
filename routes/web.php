@@ -58,5 +58,6 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 
 /*User massage routs*/
 Route::get('message', 'MessageController@message');
+Route::get('dashboard', 'UserDashboardController@dashboard');
 
 
