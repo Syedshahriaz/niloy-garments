@@ -58,10 +58,10 @@
                             </div>
 
                             <div class="actions">
-                                <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
+                                <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_dash_view_btn">
                                     <!--i class="icon-list icons"></i-->Vertical View
                                 </a>
-                                <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
+                                <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_dash_view_btn">
                                     <!--i class="icon-grid icons"></i-->Horizontal View
                                 </a>
                             </div>
@@ -73,7 +73,7 @@
                                         <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_dash_horizontal_task">
                                             <thead>
                                                 <tr>
-                                                    <th>Title</th>
+                                                    <th>Project</th>
                                                     <th>Title</th>
                                                     <th>Cotton</th>
                                                     <th>Spinning</th>
@@ -104,15 +104,15 @@
                                                             @if($task->task_status !='deleted')
                                                                 <td>
                                                                     @if($task->task_status =='active')
-                                                                        {{date('l', strtotime($task->due_date))}},<br>
-                                                                        {{date('F d, Y', strtotime($task->due_date))}}
+                                                                        {{date('l', strtotime($task->due_date))}},
+                                                                        {{date('M d, Y', strtotime($task->due_date))}}
                                                                     @endif
                                                                 </td>
                                                             @endif
                                                         @endforeach
                                                     </tr>
                                                     <tr>
-                                                        <td> <b>Original Delivery Date</b></td>
+                                                        <td> <b>Delivery Date</b></td>
                                                         <?php foreach($project->tasks as $task){
                                                         $hidden_class = 'hidden';
                                                         $bg_class = '';
@@ -154,8 +154,8 @@
                                                             <td class="@if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                                 <div class="edit-table-date">
                                                                     @if($task->task_status =='active')
-                                                                        {{date('l', strtotime($task->original_delivery_date))}},<br>
-                                                                        {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
+                                                                        {{date('l', strtotime($task->original_delivery_date))}},
+                                                                        {{date('M d, Y', strtotime($task->original_delivery_date))}}
                                                                     @endif
                                                                 </div>
                                                             </td>
@@ -172,6 +172,7 @@
                                     <table class="table table-striped table-bordered table-hover data-table focus-table hidden" id="user_dash_vertical_task">
                                         <thead>
                                             <tr>
+                                                <th>Project</th>
                                                 <th>Title</th>
                                                 <th> Role </th>
                                                 <th> Due Date </th>
@@ -179,7 +180,41 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            <tr>
+                                                <td><b>A</b></td>  
+                                                <td><b>Cotton</b></td>  
+                                                <td><b>Cutting</b></td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                            </tr>  
+                                            <tr>
+                                                <td><b>B</b></td>  
+                                                <td><b>Cotton</b></td>  
+                                                <td><b>Cutting</b></td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                            </tr>
+                                            <tr>
+                                                <td><b>C</b></td>  
+                                                <td><b>Cotton</b></b></td>  
+                                                <td><b>Cutting</b></b></td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                            </tr>  
+                                            <tr>
+                                                <td><b>C</b></td>  
+                                                <td><b>Spinning</b></td>  
+                                                <td><b>Sweing</b></td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                            </tr> 
+                                            <tr>
+                                                <td><b>C</b></td>  
+                                                <td><b>Knitting</b></td>  
+                                                <td><b>Finishing</b></td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                                <td>Wednesday,July 29, 2020</td>  
+                                            </tr> 
                                         </tbody>
                                     </table>
                                 </div>
