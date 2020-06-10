@@ -51,6 +51,7 @@ class UserController extends Controller
         }
 
         $user = new User();
+        $user->is_parent = 1;
         $user->username = $request->username;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -464,16 +465,16 @@ class UserController extends Controller
              * */
             $otp = Common::generaterandomNumber(4);
 
-            $s_user = SeparateUserLog::where('email', $request->email)->first();
+            $s_user_log = SeparateUserLog::where('email', $request->email)->where('user_id',$request->user_id)->first();
             if(empty($s_user)){
-                $s_user = NEW SeparateUserLog();
+                $s_user_log = NEW SeparateUserLog();
             }
-            $s_user->user_id = $request->user_id;
-            $s_user->email = $request->email;
-            $s_user->otp = $otp;
-            $s_user->is_used = 0;
-            $s_user->created_at = date('Y-m-d h:i:s');
-            $s_user->save();
+            $s_user_log->user_id = $request->user_id;
+            $s_user_log->email = $request->email;
+            $s_user_log->otp = $otp;
+            $s_user_log->is_used = 0;
+            $s_user_log->created_at = date('Y-m-d h:i:s');
+            $s_user_log->save();
 
             /*
              * Send otp confirmation email
@@ -511,8 +512,8 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $s_user = SeparateUserLog::where('otp',$request->otp)
-                ->where('is_used',0)
                 ->where('user_id',$request->user_id)
+                ->where('is_used',0)
                 ->first();
             if(empty($s_user)){
                 return [ 'status' => 401, 'reason' => 'Invalid OTP. Try again with valid OTP'];
@@ -538,9 +539,11 @@ class UserController extends Controller
             /*
              * Check if there has child for this new parent user
              * */
-            $child_users = User::where('email',$s_user->email)->get();
+            $child_users = User::where('email',$s_user->email)
+                ->join('user_shipments','user_shipments.user_id','=','users.id')
+                ->get();
 
-            if(count($child_users)>1){
+            if(count($child_users)>0){
                 /*
                  * If separating as child user then only update user's parent email address
                  * */
