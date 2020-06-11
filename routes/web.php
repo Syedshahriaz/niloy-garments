@@ -48,6 +48,9 @@ Route::post('update_password', 'UserController@updatePassword')->name('update_pa
 Route::post('send_user_otp', 'UserController@sendUserOtp')->name('user.send_user_otp');
 Route::post('separate_user', 'UserController@separateUser')->name('user.separate_user');
 
+Route::get('dashboard', 'UserDashboardController@dashboard');
+Route::post('save_buyer', 'UserDashboardController@saveBuyer')->name('buyer.save');
+
 /*User project routs*/
 Route::get('select_shipment/{id}', 'UserProjectController@selectShipment')->name('user.select_shipment');
 Route::post('store_shipment', 'UserProjectController@storeShipment')->name('user.store_shipment');
@@ -59,6 +62,5 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 
 /*User massage routs*/
 Route::get('message', 'MessageController@message');
-Route::get('dashboard', 'UserDashboardController@dashboard');
 
 
