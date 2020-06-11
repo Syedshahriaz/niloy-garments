@@ -78,10 +78,15 @@
                                         <td>shahriaz01</td>
                                         <td>shahriaz@gmail.com</td>
                                         <td>Saturday 13, Jun, 2020</td>
-                                        <td>
-                                            <div class="user-status">
-                                                <i class="icon icon-check"></i>
+                                        <td class="text-center">
+                                            <!-- If Task 7days before-->
+                                            <div class="user-status bg-warning">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="SMS Sent">
                                             </div>
+                                            <!-- If Task done-->
+                                            <div class="user-status bg-success"></div>
+                                            <!-- If Task not done-->
+                                            <div class="user-status bg-danger"></div>
                                         </td>
                                         <td class="text-center">
                                             <a href="#" title="User Dashboard">
