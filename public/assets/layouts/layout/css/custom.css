@@ -359,4 +359,17 @@ div#user_horizontal_task_wrapper .col-sm-12 {
     }
 }
 /*Data table style END*/
+
+
+/*Admin part START*/
+#user_list_table a:hover{
+    text-decoration: none;
+}
+#user_list_table .action-icon{
+    font-size: 16px;
+    margin: 0 4px;
+    font-weight: 900;
+    max-height: 20px;
+}
+/*Admin part END*/
 /*Rewrite layout END*/

@@ -63,4 +63,8 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 /*User massage routs*/
 Route::get('message', 'MessageController@message');
 
+/*Admin routes*/
+Route::get('all_user', 'AdminController@adminUserList');
+
+
 
