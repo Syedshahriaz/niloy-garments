@@ -371,5 +371,21 @@ div#user_horizontal_task_wrapper .col-sm-12 {
     font-weight: 900;
     max-height: 20px;
 }
+#user_list_table .user-status{
+    width: 18px;
+    height: 18px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: inline-block;
+}
+#user_list_table .user-status.bg-warning{
+    top: -5px;
+    position: relative;
+}
+#user_list_table .user-status>img{
+    top: -2px;
+    position: relative;
+    max-width: 17px;
+}
 /*Admin part END*/
 /*Rewrite layout END*/
