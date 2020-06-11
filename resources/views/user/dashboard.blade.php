@@ -30,20 +30,25 @@
                     <!-- BEGIN PORTLET-->
                     <div class="portlet light ">
                         <div class="portlet-body" style="padding-top: 0;">
+                            <div class="text-right">
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Save buyer" onclick="open_buyer_modal()">Add/Update Buyer</button>
+                            </div>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <p class="mb-0"><b>Buyer Name:</b> Marcel Holcaustan</p>
-                                    <p class="mb-0"><b>Email:</b> marcel@gmail.com</p>
-                                    <p class="mb-0"><b>Phone:</b> +112131333334</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="mb-0"><b>Buying Agent Name:</b> Marcel Holcaustan</p>
-                                    <p class="mb-0"><b>Email:</b> marcel@gmail.com</p>
-                                    <p class="mb-0"><b>Phone:</b> +112131333334</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="mb-0"><b>Address:</b><br> House-3, Road-3, Sec-3, Mirpur, Dhaka-1230</p>
-                                </div>
+                                @if(!empty($buyer))
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><b>Buyer Name:</b> {{$buyer->buyer_name}}</p>
+                                        <p class="mb-0"><b>Email:</b> {{$buyer->buyer_email}}</p>
+                                        <p class="mb-0"><b>Phone:</b> {{$buyer->buyer_phone}}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><b>Buying Agent Name:</b> {{$buyer->buying_agent_name}}</p>
+                                        <p class="mb-0"><b>Email:</b> {{$buyer->buying_agent_email}}</p>
+                                        <p class="mb-0"><b>Phone:</b> {{$buyer->buying_agent_phone}}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="mb-0"><b>Address:</b><br> {{$buyer->address}}</p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -180,41 +185,64 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><b>A</b></td>  
-                                                <td><b>Cotton</b></td>  
-                                                <td><b>Cutting</b></td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                            </tr>  
-                                            <tr>
-                                                <td><b>B</b></td>  
-                                                <td><b>Cotton</b></td>  
-                                                <td><b>Cutting</b></td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                            </tr>
-                                            <tr>
-                                                <td><b>C</b></td>  
-                                                <td><b>Cotton</b></b></td>  
-                                                <td><b>Cutting</b></b></td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                            </tr>  
-                                            <tr>
-                                                <td><b>C</b></td>  
-                                                <td><b>Spinning</b></td>  
-                                                <td><b>Sweing</b></td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                            </tr> 
-                                            <tr>
-                                                <td><b>C</b></td>  
-                                                <td><b>Knitting</b></td>  
-                                                <td><b>Finishing</b></td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                                <td>Wednesday,July 29, 2020</td>  
-                                            </tr> 
+                                            @foreach($projects as $project)
+                                                <?php foreach($project->tasks as $task){
+                                                    if($task->task_status !='deleted'){
+                                                        $hidden_class = 'hidden';
+                                                        $bg_class = '';
+
+                                                        /*
+                                                         * Calculate number of days left to complete
+                                                         * */
+                                                        $now = time();
+                                                        $datediff = strtotime($task->due_date) - $now;
+                                                        $day_left = round($datediff / (60 * 60 * 24));
+
+                                                        /*
+                                                         * Create hidden class
+                                                         * */
+                                                        if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                                            $hidden_class = '';
+                                                        }
+                                                        else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                                            $hidden_class = 'hidden';
+                                                        }
+
+                                                        /*
+                                                         * Create bg class
+                                                         * */
+                                                        if($task->status == 'completed'){
+                                                            $bg_class = 'bg-success';
+                                                        }
+                                                        else{
+                                                            if(strtotime($task->due_date) < time()) {
+                                                                $bg_class = 'bg-danger';
+                                                            }
+                                                            else if($day_left<=7){
+                                                                $bg_class = 'bg-warning';
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <tr>
+                                                            <td> <b>{{$project->name}}</b></td>
+                                                            <td> <b>{{$task->title}}</b></td>
+                                                            <td> <b>{{$task->rule}}</b></td>
+                                                            <td>
+                                                                @if($task->task_status =='active')
+                                                                    {{date('l, F d, Y', strtotime($task->due_date))}}
+                                                                @endif
+                                                            </td>
+                                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif">
+                                                                <div class="edit-table-date">
+                                                                    @if($task->task_status =='active')
+                                                                        {{date('l, F d, Y', strtotime($task->original_delivery_date))}}
+                                                                    @endif
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } // endif
+                                                } // endforeach ?>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -229,6 +257,74 @@
         </div>
         <!-- END CONTENT BODY -->
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="create_buyer_modal" tabindex="-1" role="create_buyer_modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Buyer Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="buyer_form" method="post" action="">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="buyer_id" id="buyer_id" value="{{$buyer->id}}">
+                            <input type="hidden" name="user_id" id="user_id" value="{{$user_id}}">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <label class="control-label">Buyer Name</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buyer name*" name="buyer_name" id="buyer_name" value="{{$buyer->buyer_name}}"  autocomplete="off"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Buyer email</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buyer email*" name="buyer_email" id="buyer_email" value="{{$buyer->buyer_email}}"  autocomplete="off"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Buyer phone</label>
+                                    <input class="form-control placeholder-no-fix" type="text" name="buyer_phone" id="buyer_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$buyer->buyer_phone}}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Buying Agent Name</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buying agent name*" name="buying_agent_name" id="buying_agent_name" value="{{$buyer->buying_agent_name}}"  autocomplete="off"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Buying Agent email</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buying agent email*" name="buying_agent_email" id="buying_agent_email" value="{{$buyer->buying_agent_email}}"  autocomplete="off"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Buying Agent phone</label>
+                                    <input class="form-control placeholder-no-fix" type="text" name="buying_agent_phone" id="buying_agent_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$buyer->buying_agent_phone}}"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Address</label>
+                                    <input class="form-control placeholder-no-fix" type="text" name="address" id="address" value="{{$buyer->address}}"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn" id="save_buyer_button">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
     <!-- END CONTENT -->
 @endsection
 
@@ -245,6 +341,88 @@
             //     "scrollCollapse": true,
             //     "paging": false
             // });
+        });
+
+        function open_buyer_modal(){
+            $('#create_buyer_modal').modal('show');
+        }
+
+        $(document).on("click", "#save_buyer_button", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while saving all data.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var buyer_name = $("#buyer_name").val();
+            var buyer_email = $("#buyer_email").val();
+            var buying_agent_name = $("#buying_agent_name").val();
+            var buying_agent_email = $("#buying_agent_email").val();
+            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            var validate = "";
+
+            if (buyer_name.trim() == "") {
+                validate = validate + "Buyer name is required</br>";
+            }
+            /*if (phone.trim() == "") {
+                validate = validate + "Phone is required</br>";
+            }*/
+            if(buyer_email.trim()!=''){
+                if(!re.test(buyer_email)){
+                    validate = validate+'Buyer email is invalid<br>';
+                }
+            }
+            if(buying_agent_email.trim()!=''){
+                if(!re.test(buying_agent_email)){
+                    validate = validate+'Buying agent email is invalid<br>';
+                }
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#buyer_form")[0]);
+                var url = "{{ url('save_buyer') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#success_message").show();
+                            $("#error_message").hide();
+                            $("#success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#success_message").hide();
+                            $("#error_message").show();
+                            $("#error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#success_message").hide();
+                $("#error_message").show();
+                $("#error_message").html(validate);
+            }
         });
     </script>
 @endsection
