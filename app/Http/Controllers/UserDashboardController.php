@@ -18,7 +18,12 @@ class UserDashboardController extends Controller
     public function dashboard(Request $request)
     {
         try {
-            $user_id = Session::get('user_id');
+            if ($request->u_id == '') {
+                $user_id = Session::get('user_id');
+            } else {
+                $user_id = $request->u_id;
+            }
+
             $shipment = UserShipment::where('user_id', $user_id)->first();
             if (empty($shipment)) {
                 return redirect('select_shipment/'.$user_id);
@@ -51,7 +56,7 @@ class UserDashboardController extends Controller
 
     public function saveBuyer(Request $request)
     {
-        //try {
+        try {
             $buyer = Buyer::firstOrNew(['id' => $request->buyer_id]);
             $buyer->user_id  = $request->user_id;
             $buyer->buyer_name  = $request->buyer_name;
@@ -64,11 +69,11 @@ class UserDashboardController extends Controller
             $buyer->save();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'storeBuyer', 'dashboard', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 }

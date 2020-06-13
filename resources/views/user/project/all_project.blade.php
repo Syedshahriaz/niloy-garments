@@ -35,6 +35,9 @@
                     <!-- BEGIN PORTLET-->
                     <div class="portlet light bordered">
                         <div class="portlet-title">
+                            <div class="">
+                                {{$setting->message_to_user}}
+                            </div>
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
                                 <span class="caption-subject font-dark bold uppercase">All projects</span>

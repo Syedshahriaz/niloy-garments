@@ -274,41 +274,41 @@
                                 <div class="alert alert-danger" id="error_message" style="display: none"></div>
                             </div>
                             {{csrf_field()}}
-                            <input type="hidden" name="buyer_id" id="buyer_id" value="{{$buyer->id}}">
+                            <input type="hidden" name="buyer_id" id="buyer_id" value="@if(!empty($buyer)){{$buyer->id}}@endif">
                             <input type="hidden" name="user_id" id="user_id" value="{{$user_id}}">
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="form-group">
                                     <label class="control-label">Buyer Name</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buyer name*" name="buyer_name" id="buyer_name" value="{{$buyer->buyer_name}}"  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buyer name*" name="buyer_name" id="buyer_name" value="@if(!empty($buyer)){{$buyer->buyer_name}}@endif"  autocomplete="off"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label">Buyer email</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buyer email*" name="buyer_email" id="buyer_email" value="{{$buyer->buyer_email}}"  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buyer email*" name="buyer_email" id="buyer_email" value="@if(!empty($buyer)){{$buyer->buyer_email}}@endif"  autocomplete="off"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">Buyer phone</label>
-                                    <input class="form-control placeholder-no-fix" type="text" name="buyer_phone" id="buyer_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$buyer->buyer_phone}}"/>
+                                    <input class="form-control placeholder-no-fix" type="text" name="buyer_phone" id="buyer_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="@if(!empty($buyer)){{$buyer->buyer_phone}}@endif"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Buying Agent Name</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buying agent name*" name="buying_agent_name" id="buying_agent_name" value="{{$buyer->buying_agent_name}}"  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buying agent name*" name="buying_agent_name" id="buying_agent_name" value="@if(!empty($buyer)){{$buyer->buying_agent_name}}@endif"  autocomplete="off"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label">Buying Agent email</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buying agent email*" name="buying_agent_email" id="buying_agent_email" value="{{$buyer->buying_agent_email}}"  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter buying agent email*" name="buying_agent_email" id="buying_agent_email" value="@if(!empty($buyer)){{$buyer->buying_agent_email}}@endif"  autocomplete="off"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">Buying Agent phone</label>
-                                    <input class="form-control placeholder-no-fix" type="text" name="buying_agent_phone" id="buying_agent_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$buyer->buying_agent_phone}}"/>
+                                    <input class="form-control placeholder-no-fix" type="text" name="buying_agent_phone" id="buying_agent_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="@if(!empty($buyer)){{$buyer->buying_agent_phone}}@endif"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">Address</label>
-                                    <input class="form-control placeholder-no-fix" type="text" name="address" id="address" value="{{$buyer->address}}"/>
+                                    <input class="form-control placeholder-no-fix" type="text" name="address" id="address" value="@if(!empty($buyer)){{$buyer->address}}@endif"/>
                                 </div>
                             </div>
                         </form>

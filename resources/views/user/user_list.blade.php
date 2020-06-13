@@ -68,6 +68,7 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn" title="Profile"><i class="icon-user"></i> Profile</a>
+                                            <a href="{{url('dashboard').'?u_id='.$user->id}}" type="button" class="btn blue action-btn" title="Dashboard"><i class="icon-user"></i> Dashboard</a>
                                             <button type="button" class="btn green action-btn" title="Send OTP to separate this user" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
                                                 @if($user->otp =='')
                                                     Send OTP

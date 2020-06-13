@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Setting;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\UserShipment;
@@ -121,6 +122,7 @@ class UserProjectController extends Controller
             }
 
             $user = User::where('users.id', $user_id)->first();
+            $setting = Setting::select('message_to_user')->first();
             $child_users = User::where('users.email', Session::get('user_email'))
                 ->select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
@@ -142,11 +144,11 @@ class UserProjectController extends Controller
             //return $user_id;
             if ($request->ajax()) {
                 $returnHTML = View::make('user.project.all_project',
-                    compact('user_id', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
+                    compact('user_id','setting', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('user.project.all_project',
-                compact('user_id', 'child_users', 'shipment', 'projects'));
+                compact('user_id','setting', 'child_users', 'shipment', 'projects'));
         }
         else{
             return redirect('login');
