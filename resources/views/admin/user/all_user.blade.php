@@ -98,7 +98,7 @@
                                             <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/meter.png')}}" alt="Dashboard">
                                             </a>
-                                            <a href="#" title="Send Email">
+                                            <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
                                             <a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
@@ -118,6 +118,50 @@
         </div>
         <!-- END CONTENT BODY -->
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="send_email_modal" tabindex="-1" role="send_email_modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send email</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="email_form" method="post" action="">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="alert alert-success" id="success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="user_id" value="">
+
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <label class="control-label">Subject</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter email subject*" name="subject" id="subject" value=""  autocomplete="off"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Message</label>
+                                    <textarea class="form-control placeholder-no-fix" name="message" id="message"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn" id="send_email">Send</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
     <!-- END CONTENT -->
 
 @endsection
@@ -192,6 +236,77 @@
                 }
             });
         }
+
+        function send_email(user_id){
+            $('#user_id').val(user_id);
+            $("#send_email_modal").modal('show');
+        }
+        $(document).on("click", "#send_email", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending email.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var subject = $("#subject").val();
+            var message = $("#message").val();
+            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            var validate = "";
+
+            if (subject.trim() == "") {
+                validate = validate + "Subject is required</br>";
+            }
+            if (message.trim() == "") {
+                validate = validate + "Message is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#email_form")[0]);
+                var url = "{{ url('admin/send_user_email') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#success_message").show();
+                            $("#error_message").hide();
+                            $("#success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#success_message").hide();
+                            $("#error_message").show();
+                            $("#error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#success_message").hide();
+                $("#error_message").show();
+                $("#error_message").html(validate);
+            }
+        });
+
     </script>
 @endsection
 

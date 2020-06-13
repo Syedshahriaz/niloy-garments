@@ -106,4 +106,35 @@ class UserController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+
+    public function sendUserEmail(Request $request)
+    {
+        try {
+            $user = User::where('id',$request->user_id)->first();
+
+            $email_to = [$user->email];
+            $email_cc = [];
+            $email_bcc = [];
+
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['subject'] = 'Niloy Garments-'.$request->subject;
+
+            $emailData['bodyMessage'] = $request->message;;
+
+            $view = 'emails.user_custom_email';
+
+            $result = SendMails::sendMail($emailData, $view);
+
+            return ['status'=>200, 'reason'=>'Status Successfully updated'];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'sendUserEmail', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
 }
