@@ -51,7 +51,6 @@ class UserController extends Controller
         }
 
         $user = new User();
-        $user->is_parent = 1;
         $user->username = $request->username;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -174,7 +173,7 @@ class UserController extends Controller
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
                     $shipment = UserShipment::where('user_id', $user->id)->first();
                     if (empty($shipment)) {
-                        return redirect('select_shipment');
+                        return redirect('select_shipment/'.$user->id);
                     }
 
                     return redirect('all_project');
@@ -392,6 +391,7 @@ class UserController extends Controller
         }
 
         $user = new User();
+        $user->parent_id = $parentUser->id;
         $user->unique_id = $unique_id;
         $user->username = $request->username;
         $user->email = Session::get('user_email');
@@ -548,6 +548,7 @@ class UserController extends Controller
                  * If separating as child user then only update user's parent email address
                  * */
                 $child_user = User::where('id',$request->user_id)->first();
+                $child_user->parent_id = $parent_user->id;
                 $child_user->email = $s_user->email;
                 $child_user->save();
             }

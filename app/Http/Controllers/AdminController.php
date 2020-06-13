@@ -66,30 +66,17 @@ class AdminController extends Controller
         return redirect('admin/login');
     }
 
-    public function userList(Request $request)
+    public function index(Request $request)
     {
         try {
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            return redirect('admin/users');
 
-            $users = User::select('users.*', 'user_shipments.shipment_date')
-                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
-                ->where('users.is_parent',1)
-                ->where('users.role',3)
-                ->where('users.status', '!=', 'deleted')
-                ->orderBy('users.id', 'ASC')
-                ->get();
-
-            if ($request->ajax()) {
-                $returnHTML = View::make('admin.all_user', compact('users'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
-            }
-
-            return view('admin.all_user', compact('users'));
         } catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'AdminController', 'userList', $e->getLine(),
-                //$e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'AdminController', 'index', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }

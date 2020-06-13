@@ -75,7 +75,11 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 Route::get('message', 'MessageController@message');
 
 /*Admin routes*/
-Route::get('admin/users', 'AdminController@userList');
+Route::get('admin', 'AdminController@index');
+
+Route::get('admin/users', 'Admin\UserController@userList');
+Route::get('admin/user_dashboard', 'Admin\UserController@dashboard');
+Route::post('admin/update_user_status', 'Admin\UserController@updateStatus');
 
 
 

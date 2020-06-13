@@ -11,7 +11,7 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="{{url('/home')}}">Home</a>
+                        <a href="{{url('/admin')}}">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
@@ -95,13 +95,13 @@
                                             <div class="user-status bg-danger"></div>
                                         </td>
                                         <td class="text-center">
-                                            <a href="#" title="User Dashboard">
+                                            <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/meter.png')}}" alt="Dashboard">
                                             </a>
                                             <a href="#" title="Send Email">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
-                                            <a href="#" title="Remove User">
+                                            <a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
                                             </a>
                                         </td>
@@ -132,6 +132,66 @@
                 //"searching": true
             });
         });
+
+        function user_status_update_warning(user_id,status){
+            $(".warning_message").text('Are you sure you want to '+status+' this user? ');
+            $("#warning_modal").modal('show');
+            $('#item_id').val(user_id);
+            $('#item_type').val(status);
+        }
+
+        $(document).on('click','#warning_ok',function() {
+            var user_id = $('#item_id').val();
+            var status = $('#item_type').val();
+
+            update_user_status(user_id,status);
+        });
+
+        function update_user_status(user_id,status){
+            var options = {
+                theme:"sk-cube-grid",
+                message:'Please wait while saving all data.....',
+                backgroundColor:"#1847B1",
+                textColor:"white"
+            };
+
+            HoldOn.open(options);
+
+            var url = "{{ url('admin/update_user_status')}}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {user_id:user_id,status:status,'_token':'{{ csrf_token() }}'},
+                success: function (data) {
+                    HoldOn.close();
+
+                    if(data.status == 200){
+                        $('#warning_modal').modal('hide');
+                        show_success_message('User Successfully '+status);
+                        setTimeout(function(){
+                            location.reload();
+                        },2000);
+                    }
+                    else if(data.status == 402){
+                        show_error_message(data.reason);
+                        setTimeout(function(){
+                            window.location.href="{{url('login')}}";
+                        },2000);
+                    }
+                    else{
+                        HoldOn.close();
+                        show_error_message(data);
+                    }
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    show_error_message('Authentication failed. Login again.');
+                    setTimeout(function(){
+                        //window.location.href="{{url('login')}}";
+                    },2000);
+                }
+            });
+        }
     </script>
 @endsection
 
