@@ -89,14 +89,24 @@ class UserController extends Controller
         try {
             $admin_user = Auth::user();
 
-            $user = User::where('id', $request->user_id)->first();
-            $user->status  = $request->status;
-            $user->updated_by  = $admin_user->id;
-            $user->updated_at  = date('Y-m-d h:i:s');
+            $userIds = explode(',',$request->user_id);
+
             if($request->status=='deleted'){
-                $user->deleted_at  = date('Y-m-d h:i:s');
+                $deleted_at  = date('Y-m-d h:i:s');
             }
-            $user->save();
+            else{
+                $deleted_at = NULL;
+            }
+
+            User::whereIn('id', $userIds)
+            ->update(
+                [
+                    'status' => $request->status,
+                    'updated_by' => $admin_user->id,
+                    'updated_at' => date('Y-m-d h:i:s'),
+                    'deleted_at' => $deleted_at,
+                ]
+            );
 
             return ['status'=>200, 'reason'=>'Status Successfully updated'];
         } catch (\Exception $e) {
@@ -110,9 +120,13 @@ class UserController extends Controller
     public function sendUserEmail(Request $request)
     {
         try {
-            $user = User::where('id',$request->user_id)->first();
+            $userIds = explode(',',$request->user_id);
+            $user_emails = User::select('email')
+                ->whereIN('id',$userIds)
+                ->pluck('email')
+                ->toArray();
 
-            $email_to = [$user->email];
+            $email_to = $user_emails;
             $email_cc = [];
             $email_bcc = [];
 

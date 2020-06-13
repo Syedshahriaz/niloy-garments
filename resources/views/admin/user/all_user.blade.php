@@ -40,8 +40,9 @@
                                 <span class="caption-subject font-dark bold uppercase">All users</span>
                                 <span class="caption-helper"></span>
                             </div>
-                            <div class="actions">
-
+                            <div class="actions hidden" id="action_buttons">
+                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send Email" id="send_email_all">Send Email</button>
+                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>
                             </div>
                         </div>
                         <div class="portlet-body">
@@ -51,7 +52,7 @@
                                         <th style="width: 50px;">
                                             <div class="form-group">
                                                 <label class="mt-checkbox">
-                                                    <input type="checkbox" class="show-password" name="all_user">
+                                                    <input type="checkbox" class="show-password" name="all_user" id="selectall">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -71,7 +72,7 @@
                                         <td style="width: 50px;">
                                             <div class="form-group">
                                                 <label class="mt-checkbox">
-                                                    <input type="checkbox" class="show-password" name="all_user">
+                                                    <input type="checkbox" class="show-password name user_checkbox" name="all_user" value="{{$user->id}}" id="checkbox-1-{{$user->id}}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -177,8 +178,66 @@
             });
         });
 
+
+        /* checkbox select all*/
+
+        $('#selectall').on('change', function () {
+            $('.name').prop('checked', $(this).prop("checked"));
+            if($('.name:checked').length > 0){
+                $("#action_buttons").removeClass("hidden");
+            }
+            else{
+                $("#action_buttons").addClass("hidden");
+            }
+        });
+
+        $('.name').on("click", function () {
+            if ($('.name:checked').length == $('.name').length) {
+                $('#selectall').prop('checked', true);
+            } else {
+                $('#selectall').prop('checked', false);
+            }
+
+            if($('.name:checked').length > 0){
+                $("#action_buttons").removeClass("hidden");
+            }
+            else{
+                $("#action_buttons").addClass("hidden");
+            }
+        });
+
+
+        function checkAll(){
+            selectedAllValue = [];
+            $('input[name="user_id[]"]:checked').each(function () {
+                selectedAllValue.push(this.value);
+            });
+            if (selectedAllValue.length == 0) {
+                $("#action_buttons").addClass("hidden");
+            } else {
+                $("#action_buttons").removeClass("hidden");
+            }
+        }
+
+        $(document).on('click','#send_email_all',function(){
+            var userIDs = $(".user_checkbox:checked").map(function(){
+                return $(this).val();
+            }).get();
+
+            $('#user_id').val(userIDs);
+            $("#send_email_modal").modal('show');
+        });
+
+        $(document).on('click','#delete_user_all',function(){
+            var userIDs = $(".user_checkbox:checked").map(function(){
+                return $(this).val();
+            }).get();
+
+            user_status_update_warning(userIDs,'deleted');
+        });
+
         function user_status_update_warning(user_id,status){
-            $(".warning_message").text('Are you sure you want to '+status+' this user? ');
+            $(".warning_message").text('Are you sure you want to '+status+' this users? This can not be undone in future.');
             $("#warning_modal").modal('show');
             $('#item_id').val(user_id);
             $('#item_type').val(status);
