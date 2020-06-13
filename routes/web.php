@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('cron/send_task_warning_email', 'CronController@sendTaskWarningEmail')->name('cron.send_task_warning_email');
 
+/*
+ * Admin auth route
+ * */
+
+Route::get('admin/login', 'AdminController@login');
+Route::post('admin/post_login', 'AdminController@postLogin');
+Route::get('admin/logout', 'AdminController@logout');
+
+/*
+ * User auth route
+ * */
 Route::post('/post_login', 'AuthenticationController@postLogin');
 Route::get('/registration', 'UserController@registration')->name('registration');
 Route::get('/thankyou', 'UserController@registrationThankYou');
@@ -64,7 +75,7 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 Route::get('message', 'MessageController@message');
 
 /*Admin routes*/
-Route::get('all_user', 'AdminController@adminUserList');
+Route::get('admin/users', 'AdminController@userList');
 
 
 

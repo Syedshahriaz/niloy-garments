@@ -25,6 +25,13 @@ class Common
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
 
+    public static function is_admin_login(){
+        if (Session::get('user_id') && Session::get('role')==2) {
+            return 1;
+        }
+        return 0;
+    }
+
     public static function send7dayWarningEmail($email,$task){
         /*
          * Send task 7 day before complete warning email

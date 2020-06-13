@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.admin_master')
 @section('title', 'All User')
 @section('content')
 
@@ -65,6 +65,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                <?php
+                                foreach($users as $user){ ?>
                                     <tr>
                                         <td style="width: 50px;">
                                             <div class="form-group">
@@ -74,10 +76,14 @@
                                                 </label>
                                             </div>
                                         </td>
-                                        <td>000-000-018</td>
-                                        <td>shahriaz01</td>
-                                        <td>shahriaz@gmail.com</td>
-                                        <td>Saturday 13, Jun, 2020</td>
+                                        <td>{{$user->unique_id}}</td>
+                                        <td>{{$user->username}}</td>
+                                        <td>{{$user->email}}</td>
+                                        <td>
+                                            @if($user->shipment_date !='')
+                                                {{date('l d, M, Y', strtotime($user->shipment_date))}}
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             <!-- If Task 7days before-->
                                             <div class="user-status bg-warning">
@@ -100,6 +106,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                <?php } ?>
                                 </tbody>
                             </table>
                         </div>
