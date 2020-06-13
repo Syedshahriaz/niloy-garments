@@ -80,6 +80,7 @@ Route::get('admin', 'AdminController@index');
 Route::get('admin/users', 'Admin\UserController@userList');
 Route::get('admin/user_dashboard', 'Admin\UserController@dashboard');
 Route::post('admin/update_user_status', 'Admin\UserController@updateStatus');
+Route::post('admin/send_user_email', 'Admin\UserController@sendUserEmail');
 
 
 
