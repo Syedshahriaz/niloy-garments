@@ -109,7 +109,7 @@
                                                             @if($task->task_status !='deleted')
                                                                 <td>
                                                                     @if($task->task_status =='active')
-                                                                        {{date('l', strtotime($task->due_date))}},
+                                                                        {{date('D', strtotime($task->due_date))}},
                                                                         {{date('M d, Y', strtotime($task->due_date))}}
                                                                     @endif
                                                                 </td>
@@ -159,7 +159,7 @@
                                                             <td class="@if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                                 <div class="edit-table-date">
                                                                     @if($task->task_status =='active')
-                                                                        {{date('l', strtotime($task->original_delivery_date))}},
+                                                                        {{date('D', strtotime($task->original_delivery_date))}},
                                                                         {{date('M d, Y', strtotime($task->original_delivery_date))}}
                                                                     @endif
                                                                 </div>
@@ -229,13 +229,13 @@
                                                             <td> <b>{{$task->rule}}</b></td>
                                                             <td>
                                                                 @if($task->task_status =='active')
-                                                                    {{date('l, F d, Y', strtotime($task->due_date))}}
+                                                                    {{date('D, F d, Y', strtotime($task->due_date))}}
                                                                 @endif
                                                             </td>
                                                             <td class="@if($task->due_date !='') {{$bg_class}} @endif">
                                                                 <div class="edit-table-date">
                                                                     @if($task->task_status =='active')
-                                                                        {{date('l, F d, Y', strtotime($task->original_delivery_date))}}
+                                                                        {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
                                                                     @endif
                                                                 </div>
                                                             </td>
