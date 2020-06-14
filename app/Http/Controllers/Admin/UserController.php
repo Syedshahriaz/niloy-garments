@@ -26,7 +26,6 @@ class UserController extends Controller
 
             $users = User::select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
-                ->where('users.parent_id',0)
                 ->where('users.role',3)
                 ->where('users.status', '!=', 'deleted')
                 ->orderBy('users.id', 'ASC')
