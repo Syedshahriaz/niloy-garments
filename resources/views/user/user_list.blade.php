@@ -189,9 +189,9 @@
         $(document).ready(function() {
             $('#user_manage_table').DataTable({
                 "paging":   true,
-                "ordering": true,
-                "info":     true,
-                "searching": true
+                "lengthChange": false,
+                "info":     false,
+                "searching": true,
             });
         });
 
