@@ -133,7 +133,7 @@
     function show_content_loader(){
         var loader_html = '<div class="page-content loader-area">';
         var loader_src = "{{asset('assets/ajax_loader.gif')}}";
-        loader_html += '<img title="Loading..." id="" class="" style="width: 100px; margin: 120px 120px 120px 300px;" src='+loader_src+'>';
+        loader_html += '<img title="Loading..." id="loader-gif" class="" style="" src='+loader_src+'>';
         loader_html += '</div>';
         $('.page-content-wrapper').html(loader_html);
     }
