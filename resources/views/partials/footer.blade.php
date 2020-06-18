@@ -71,8 +71,118 @@
         $('#alert-success-msg').hide();
         $('#alert-error-msg p').html(message);
     }
+
+    /*
+            * Load pages through ajax on menu click
+            * */
+    $(document).on('click','.ajax_item',function(event){
+        event.preventDefault();
+        var item_number = $(this).attr('data-item');
+        $('.ajax_item').removeClass('active');
+        $('.nav-item').removeClass('active');
+        $(this).addClass('active');
+        $('.item-'+item_number).addClass('active');
+
+        var item_name = $(this).attr('data-name');
+        if(item_name=='/'){
+            var browser_title = 'Home';
+        }
+        else{
+            var browser_title = item_name.substr(0,1).toUpperCase()+item_name.substr(1);
+        }
+        var uri_string = '/'+item_name;
+        if(item_name=='/'){
+            var url = "{{url('/')}}";
+        }
+        else{
+            var url = "{{url('/')}}"+uri_string;
+        }
+        load_new_page_content(url,item_name,browser_title);
+    });
+
+    /*
+    * Load and populated new page content
+    * */
+    function load_new_page_content(url,item_name,browser_title){
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: {},
+            beforeSend: function () {
+                show_content_loader();
+            },
+            success: function (data) {
+                HoldOn.close();
+                if(data.status == 200){
+                    window.history.pushState("data","Title",url);
+                    document.title=browser_title;
+                    $('.page-content-wrapper').html(data.html);
+
+                    library_re_initialization(item_name);
+                }
+                else{
+                    show_error_message(data);
+                }
+            },
+            error: function (data) {
+                show_error_message(data);
+            }
+        });
+    }
+
+    function show_content_loader(){
+        var loader_html = '<div class="page-content loader-area">';
+        var loader_src = "{{asset('assets/ajax_loader.gif')}}";
+        loader_html += '<img title="Loading..." id="" class="" style="width: 100px; margin: 120px 120px 120px 300px;" src='+loader_src+'>';
+        loader_html += '</div>';
+        $('.page-content-wrapper').html(loader_html);
+    }
+
+    function show_loader(message=''){
+        if(message==''){
+            message = 'Please wait while saving all data.....'; // Showing default message
+        }
+        var options = {
+            theme: "sk-cube-grid",
+            message: message,
+            backgroundColor: "#1847B1",
+            textColor: "white"
+        };
+
+        HoldOn.open(options);
+    }
+
+    function hide_loader(){
+        HoldOn.close();
+    }
+
+    function library_re_initialization(item_name){
+        re_initiate_date_picker();
+        if(item_name=='add_user'){
+            $("#telephone").intlTelInput("setNumber", "");
+            re_initialize_data_table(3);
+        }
+        if(item_name=='item_activity'){
+            re_initialize_data_table(3);
+        }
+        if(item_name=='borrowing_activities'){
+            re_initialize_data_table(12);
+        }
+    }
+
+    /*
+    * Reloading page on browser back and forth button click
+    * */
+    $(window).on('popstate', function(event) {
+        window.location.reload();
+    });
 </script>
 @yield('js')
+
+@include('partials.js.user.common_js')
+@include('partials.js.user.project_js')
+@include('partials.js.user.user_js')
+
 </body>
 
 </html>

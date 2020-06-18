@@ -12,6 +12,7 @@ use App\SendMails;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use Session;
+use View;
 
 class UserDashboardController extends Controller
 {
@@ -68,7 +69,7 @@ class UserDashboardController extends Controller
             $buyer->address  = $request->address;
             $buyer->save();
 
-            return ['status'=>200, 'reason'=>'Successfully saved'];
+            return ['status'=>200, 'reason'=>'Successfully saved','buyer'=>$buyer];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'storeBuyer', 'dashboard', $e->getLine(),
                 //$e->getFile(), '', '', '', '');

@@ -40,7 +40,7 @@
             <ul class="nav navbar-nav pull-right">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <li>
-                    <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger">Add New User</a>
+                    <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger ajax_item item-3" data-name="add_user" data-item="3">Add New User</a>
                 </li>
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 {{--<li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
@@ -186,14 +186,14 @@
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
 
-            <li class="nav-item  @if($page=='dashboard') active @endif">
+            <li class="nav-item ajax_item item-1  @if($page=='dashboard') active @endif" data-name="dashboard" data-item="1">
                 <a href="{{url('dashboard')}}" class="nav-link">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='all_project') active @endif">
+            <li class="nav-item ajax_item item-2 @if($page=='all_project') active @endif" data-name="all_project" data-item="2">
                 <a href="{{url('all_project')}}" class="nav-link">
                     <i class="icon-layers"></i>
                     <span class="title">All Projects</span>
@@ -201,14 +201,14 @@
                 </a>
             </li>
 
-            <li class="nav-item @if($page=='user_list') active @endif">
+            <li class="nav-item ajax_item item-3 @if($page=='user_list') active @endif" data-name="user_list" data-item="3">
                 <a href="{{url('user_list')}}" class="nav-link">
                     <i class="icon-users"></i>
                     <span class="title">Users</span>
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='messages') active @endif">
+            <li class="nav-item ajax_item item-4 @if($page=='messages') active @endif" data-name="message" data-item="4">
                 <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
@@ -216,7 +216,7 @@
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='profile' || $page=='profile-edit' || $page=='reset-password') active @endif">
+            <li class="nav-item ajax_item item-5 @if($page=='profile' || $page=='profile-edit' || $page=='reset-password') active @endif" data-name="profile" data-item="5">
                 <a href="{{url('profile')}}" class="nav-link">
                     <i class="icon-user"></i>
                     <span class="title">Profile</span>

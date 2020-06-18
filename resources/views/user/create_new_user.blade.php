@@ -108,75 +108,7 @@
 
 @section('js')
     <script>
-        $("#telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
 
-        $(document).on("submit", "#registration_form", function(event) {
-            event.preventDefault();
-
-            var options = {
-                theme: "sk-cube-grid",
-                message: 'Please wait while saving all data.....',
-                backgroundColor: "#1847B1",
-                textColor: "white"
-            };
-
-            HoldOn.open(options);
-
-            var username = $("#username").val();
-            var phone = $("#telephone").val();
-            var country_code = $(".iti__selected-dial-code").text();
-            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-            var validate = "";
-
-            if (username.trim() == "") {
-                validate = validate + "Username is required</br>";
-            }
-            if (phone.trim() == "") {
-                validate = validate + "Phone is required</br>";
-            }
-
-            if (validate == "") {
-                var formData = new FormData($("#registration_form")[0]);
-                formData.append('country_code', country_code);
-                var url = "{{ url('store_new_user') }}";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: formData,
-                    success: function(data) {
-                        HoldOn.close();
-                        if (data.status == 200) {
-                            $("#success_message").show();
-                            $("#error_message").hide();
-                            $("#success_message").html(data.reason);
-
-                            $('#user_id').val(data.user_id);
-                            window.location.href="{{url('promotion')}}/"+data.user_id;
-                        } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
-                        }
-                    },
-                    error: function(data) {
-                        HoldOn.close();
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            } else {
-                HoldOn.close();
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
-            }
-        });
     </script>
 @endsection
 

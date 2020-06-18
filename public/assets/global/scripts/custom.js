@@ -42,31 +42,3 @@ $('#select_ship_date').on('hidden.bs.modal', function (e) {
     $('body').removeClass('shipment_modal-open');
 });
 
-//User task page
-$('#vertical_view_btn').click(function(){
-    $(this).removeClass('btn-outline');
-    $('#horzon_view_btn').addClass('btn-outline');
-    $('#user_horizontal_task').addClass('hidden');
-    $('#user_vertical_task').removeClass('hidden');
-});
-$('#horzon_view_btn').click(function(){
-    $(this).removeClass('btn-outline');
-    $('#vertical_view_btn').addClass('btn-outline');
-    $('#user_vertical_task').addClass('hidden');
-    $('#user_horizontal_task').removeClass('hidden');
-});
-
-//User dashboard task page
-$('#vertical_dash_view_btn').click(function(){
-    $(this).removeClass('btn-outline');
-    $('#horzon_dash_view_btn').addClass('btn-outline');
-    $('#user_dash_horizontal_task').addClass('hidden');
-    $('#user_dash_vertical_task').removeClass('hidden');
-});
-$('#horzon_dash_view_btn').click(function(){
-    $(this).removeClass('btn-outline');
-    $('#vertical_dash_view_btn').addClass('btn-outline');
-    $('#user_dash_vertical_task').addClass('hidden');
-    $('#user_dash_horizontal_task').removeClass('hidden');
-});
-

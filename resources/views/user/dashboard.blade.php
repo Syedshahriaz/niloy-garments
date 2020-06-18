@@ -36,17 +36,17 @@
                             <div class="row">
                                 @if(!empty($buyer))
                                     <div class="col-md-4">
-                                        <p class="mb-0"><b>Buyer Name:</b> {{$buyer->buyer_name}}</p>
-                                        <p class="mb-0"><b>Email:</b> {{$buyer->buyer_email}}</p>
-                                        <p class="mb-0"><b>Phone:</b> {{$buyer->buyer_phone}}</p>
+                                        <p class="mb-0"><b>Buyer Name:</b> <span id="view_buyer_name">{{$buyer->buyer_name}}</span></p>
+                                        <p class="mb-0"><b>Email:</b> <span id="view_buyer_email">{{$buyer->buyer_email}}</span></p>
+                                        <p class="mb-0"><b>Phone:</b> <span id="view_buyer_phone">{{$buyer->buyer_phone}}</span></p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-0"><b>Buying Agent Name:</b> {{$buyer->buying_agent_name}}</p>
-                                        <p class="mb-0"><b>Email:</b> {{$buyer->buying_agent_email}}</p>
-                                        <p class="mb-0"><b>Phone:</b> {{$buyer->buying_agent_phone}}</p>
+                                        <p class="mb-0"><b>Buying Agent Name:</b> <span id="view_buying_agent_name">{{$buyer->buying_agent_name}}</span></p>
+                                        <p class="mb-0"><b>Email:</b> <span id="view_buying_agent_email">{{$buyer->buying_agent_email}}</span></p>
+                                        <p class="mb-0"><b>Phone:</b> <span id="view_buying_agent_phone">{{$buyer->buying_agent_phone}}</span></p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-0"><b>Address:</b><br> {{$buyer->address}}</p>
+                                        <p class="mb-0"><b>Address:</b><br> <span id="view_address">{{$buyer->address}}</span></p>
                                     </div>
                                 @endif
                             </div>
@@ -343,87 +343,6 @@
             // });
         });
 
-        function open_buyer_modal(){
-            $('#create_buyer_modal').modal('show');
-        }
-
-        $(document).on("click", "#save_buyer_button", function(event) {
-            event.preventDefault();
-
-            var options = {
-                theme: "sk-cube-grid",
-                message: 'Please wait while saving all data.....',
-                backgroundColor: "#1847B1",
-                textColor: "white"
-            };
-
-            HoldOn.open(options);
-
-            var buyer_name = $("#buyer_name").val();
-            var buyer_email = $("#buyer_email").val();
-            var buying_agent_name = $("#buying_agent_name").val();
-            var buying_agent_email = $("#buying_agent_email").val();
-            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-            var validate = "";
-
-            if (buyer_name.trim() == "") {
-                validate = validate + "Buyer name is required</br>";
-            }
-            /*if (phone.trim() == "") {
-                validate = validate + "Phone is required</br>";
-            }*/
-            if(buyer_email.trim()!=''){
-                if(!re.test(buyer_email)){
-                    validate = validate+'Buyer email is invalid<br>';
-                }
-            }
-            if(buying_agent_email.trim()!=''){
-                if(!re.test(buying_agent_email)){
-                    validate = validate+'Buying agent email is invalid<br>';
-                }
-            }
-
-            if (validate == "") {
-                var formData = new FormData($("#buyer_form")[0]);
-                var url = "{{ url('save_buyer') }}";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: formData,
-                    success: function(data) {
-                        HoldOn.close();
-                        if (data.status == 200) {
-                            $("#success_message").show();
-                            $("#error_message").hide();
-                            $("#success_message").html(data.reason);
-                            setTimeout(function(){
-                                location.reload();
-                            },2000)
-                        } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
-                        }
-                    },
-                    error: function(data) {
-                        HoldOn.close();
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            } else {
-                HoldOn.close();
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
-            }
-        });
     </script>
 @endsection
 
