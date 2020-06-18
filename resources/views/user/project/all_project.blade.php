@@ -47,7 +47,7 @@
                                 <div class="user-list-tag">
                                     <ul>
                                         @foreach($child_users as $user)
-                                        <li class="@if($user->id==$user_id) active @endif"><a href="{{url('all_project').'?u_id='.$user->id}}" @if($user->shipment_date=='') disabled @endif>{{$user->username}}</a></li>
+                                        <li class="@if($user->id==$user_id) active @endif"><a href="{{url('all_project').'?u_id='.$user->id}}" class="ajax_item item-2" data-name="all_project?u_id={{$user->id}}" data-item="2" @if($user->shipment_date=='') disabled @endif>{{$user->username}}</a></li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -95,7 +95,7 @@
                                         }
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                        <a class="project-item-title" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}">
+                                        <a class="project-item-title ajax_item item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
                                             <div class="dashboard-stat2 project-item {{$bg_class}}">
                                                 <div class="display title-section">
                                                     <div class="number">
@@ -153,59 +153,7 @@
 
 @section('js')
     <script>
-        $(document).on("submit", "#project_form", function(event) {
-            event.preventDefault();
-            var options = {
-                theme: "sk-cube-grid",
-                message: 'Please wait while saving all data.....',
-                backgroundColor: "#1847B1",
-                textColor: "white"
-            };
 
-            HoldOn.open(options);
-
-            var validate = "";
-
-            if (validate == "") {
-                var formData = new FormData($("#project_form")[0]);
-                var url = "{{ url('add_project') }}";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: formData,
-                    success: function(data) {
-                        HoldOn.close();
-                        if (data.status == 200) {
-                            $("#success_message").show();
-                            $("#error_message").hide();
-                            $("#success_message").html(data.reason);
-                            setTimeout(function(){
-                                window.location.href = "{{ url('my_project') }}";
-                            },2000)
-                        } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
-                        }
-                    },
-                    error: function(data) {
-                        HoldOn.close();
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            } else {
-                HoldOn.close();
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
-            }
-        });
     </script>
 @endsection
 

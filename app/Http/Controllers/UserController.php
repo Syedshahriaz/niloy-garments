@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Spatie\PdfToImage\Pdf;
 use DB;
+use View;
 
 class UserController extends Controller
 {
@@ -241,10 +242,15 @@ class UserController extends Controller
             return redirect('login');
         }
     }
-    public function resetPassword()
+    public function resetPassword(Request $request)
     {
         if (Auth::check()) {
             $user = User::where('users.id', Session::get('user_id'))->first();
+
+            if($request->ajax()) {
+                $returnHTML = View::make('user.reset-password', compact('user'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
             return view('user.reset-password', compact('user'));
         }
         else{
@@ -367,10 +373,12 @@ class UserController extends Controller
     {
         if (Auth::check()) {
             $user = User::where('users.id', Session::get('user_id'))->first();
-            //Auth::logout();
 
+            if($request->ajax()) {
+                $returnHTML = View::make('user.create_new_user', compact('user'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
             return view('user.create_new_user', compact('user'));
-            //return redirect()->route('registration',['token'=>base64_encode($user->email)]);
         }
         else{
             return redirect('login');
@@ -380,51 +388,40 @@ class UserController extends Controller
     public function storeNewUser(Request $request){
         //try {
 
-        $parentUser = User::where('email',Session::get('user_email'))->first();
+            $parentUser = User::where('email',Session::get('user_email'))->first();
 
-        $lastUser = User::orderBy('id','DESC')->first();
-        if(!empty($lastUser)){
-            $unique_id = Common::generateUniqueNumber($lastUser->id+1);
-        }
-        else{
-            $unique_id = Common::generateUniqueNumber(1);
-        }
+            $duplicateUsername = User::where('username',$request->username)->count();
 
-        $user = new User();
-        $user->parent_id = $parentUser->id;
-        $user->unique_id = $unique_id;
-        $user->username = $request->username;
-        $user->email = Session::get('user_email');
-        $user->phone = $request->phone;
-        $user->country_code = $request->country_code;
-        $user->password = $parentUser->password;
-        $user->role = 3;
-        $user->save();
+            if($duplicateUsername>0){
+                $username = $request->username.'0'.($duplicateUsername+1);
+            }
+            else{
+                $username = $request->username;
+            }
 
-        /*
-         * Send confirmation email
-         */
-        /*$email_to = [$request->email];
-        $email_cc = [];
-        $email_bcc = [];
+            $lastUser = User::orderBy('id','DESC')->first();
+            if(!empty($lastUser)){
+                $unique_id = Common::generateUniqueNumber($lastUser->id+1);
+            }
+            else{
+                $unique_id = Common::generateUniqueNumber(1);
+            }
 
-        $emailData['from_email'] = Common::FROM_EMAIL;
-        $emailData['from_name'] = Common::FROM_NAME;
-        $emailData['email'] = $email_to;
-        $emailData['email_cc'] = $email_cc;
-        $emailData['email_bcc'] = $email_bcc;
-        $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+            $user = new User();
+            $user->parent_id = $parentUser->id;
+            $user->unique_id = $unique_id;
+            $user->username = $username;
+            $user->email = Session::get('user_email');
+            $user->phone = $request->phone;
+            $user->country_code = $request->country_code;
+            $user->password = $parentUser->password;
+            $user->role = 3;
+            $user->save();
 
-        $emailData['bodyMessage'] = '';
-
-        $view = 'emails.registration_confirmation_email';
-
-        $result = SendMails::sendMail($emailData, $view);*/
-
-        return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
+            return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }*/
@@ -465,10 +462,10 @@ class UserController extends Controller
              * */
             $otp = Common::generaterandomNumber(4);
 
-            $s_user_log = SeparateUserLog::where('email', $request->email)->where('user_id',$request->user_id)->first();
-            if(empty($s_user)){
-                $s_user_log = NEW SeparateUserLog();
-            }
+            // Delete previous log if any
+            SeparateUserLog::where('email', $request->email)->where('user_id',$request->user_id)->delete();
+
+            $s_user_log = NEW SeparateUserLog();
             $s_user_log->user_id = $request->user_id;
             $s_user_log->email = $request->email;
             $s_user_log->otp = $otp;
@@ -528,8 +525,6 @@ class UserController extends Controller
                 return [ 'status' => 401, 'reason' => 'OTP expired. Try again with valid OTP'];
             }
 
-            $s_user->is_used = 1;
-            $s_user->save();
 
             /*
              * Get new parent user
@@ -592,8 +587,10 @@ class UserController extends Controller
                 User::where('id',$request->user_id)->delete();
             }
 
+            // Delete this otp history
+            $s_user = SeparateUserLog::where('otp',$request->otp)->where('user_id',$request->user_id)->delete();
 
-        DB::commit();
+            DB::commit();
 
             return ['status' => 200, 'reason' => 'User separated successfully'];
         /*} catch (\Exception $e) {

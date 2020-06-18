@@ -131,7 +131,7 @@
                                                     @if($task->task_status =='active')
                                                         {{date('D', strtotime($task->original_delivery_date))}},<br>
                                                         {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
-                                                        @if($task->status == 'processing')
+                                                        @if(($task->status == 'processing' || $task->status == 'completed') && $task->delivery_date_update_count < 2)
                                                             <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                         @endif
                                                     @endif
@@ -203,7 +203,7 @@
                                                     <div class="edit-table-date">
                                                         @if($task->task_status =='active')
                                                             {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if($task->status == 'processing')
+                                                            @if(($task->status == 'processing' || $task->status == 'completed') && $task->delivery_date_update_count < 2)
                                                                 <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif
@@ -262,6 +262,7 @@
                 <form id="delivery_form" method="post" action="">
                     {{ csrf_field() }}
                     <input type="hidden" name="project_task_id" id="project_task_id" value="">
+                    <input type="hidden" name="user_project_id" id="user_project_id" value="{{$user_project_id}}">
 
                     <div class="alert alert-success" id="success_message" style="display:none"></div>
                     <div class="alert alert-danger" id="error_message" style="display: none"></div>
@@ -275,18 +276,11 @@
                                     <input class="date-picker-hidden" type="hidden" name="original_delivery_date"/>
                                     <input class="" type="hidden" name="old_delivery_date" id="old_delivery_date_hidden"/>
                                 </div>
-
-                                <div class="form-group margin-top-20 margin-bottom-20">
-                                    <label class="mt-checkbox mt-checkbox-outline mb-0">
-                                        <input type="checkbox" class="show-password" name="is_done" value="1" /> Task Done
-                                        <span></span>
-                                    </label>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn theme-btn">Submit</button>
+                        <button type="submit" class="btn theme-btn" id="delivery_submit_button">Submit</button>
                     </div>
                 </form>
 
@@ -311,62 +305,6 @@
                 //"responsive": true
             });
         });
-
-        function select_delivery(id,original_delivery_date,update_count){
-            $('#project_task_id').val(id);
-            $('#old_delivery_date_hidden').val(original_delivery_date);
-            if(update_count>1){
-                $('#org_delivery_date').prop('disabled',true);
-            }
-            else{
-                $('#org_delivery_date').prop('disabled',false);
-            }
-            $('#select_delivery_modal').modal('show');
-        }
-
-        $(document).on("submit", "#delivery_form", function(event) {
-            event.preventDefault();
-
-            var org_delivery_date = $("#org_delivery_date").val();
-
-            var validate = "";
-
-            /*if (org_delivery_date.trim() == "") {
-                validate = validate + "Delivery date is required</br>";
-            }*/
-
-            if (validate == "") {
-                var formData = new FormData($("#delivery_form")[0]);
-                var url = "{{ url('update_task_delivery_status') }}";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: formData,
-                    success: function(data) {
-                        if (data.status == 200) {
-                            show_success_message(data.reason);
-                            setTimeout(function(){
-                                location.reload();
-                            },2000)
-                        } else {
-                            show_error_message(data.reason);
-                        }
-                    },
-                    error: function(data) {
-                        show_error_message(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            } else {
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
-            }
-        });
-
     </script>
 @endsection
 

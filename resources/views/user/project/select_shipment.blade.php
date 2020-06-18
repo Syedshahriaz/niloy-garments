@@ -92,7 +92,7 @@
                                 </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn theme-btn">Done</button>
+                            <button type="submit" class="btn theme-btn" id="done_button">Done</button>
                         </div>
                     </form>
                     </div>
@@ -107,66 +107,7 @@
 
 @section('js')
     <script type="text/javascript">
-        $(document).on("submit", "#shipment_form", function(event) {
-            event.preventDefault();
 
-            var options = {
-                theme: "sk-cube-grid",
-                message: 'Please wait while saving all data.....',
-                backgroundColor: "#1847B1",
-                textColor: "white"
-            };
-
-            HoldOn.open(options);
-
-            var shipment_date = $("#shipment_date").val();
-
-            var validate = "";
-
-            if (shipment_date.trim() == "") {
-                validate = validate + "Shipment date is required</br>";
-            }
-
-            if (validate == "") {
-                var formData = new FormData($("#shipment_form")[0]);
-                var url = "{{ url('store_shipment') }}";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: formData,
-                    success: function(data) {
-                        HoldOn.close();
-                        if (data.status == 200) {
-                            $("#success_message").show();
-                            $("#error_message").hide();
-                            $("#success_message").html(data.reason);
-                            setTimeout(function(){
-                                window.location.href="{{url('all_project')}}";
-                            },2000)
-                        } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
-                        }
-                    },
-                    error: function(data) {
-                        HoldOn.close();
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            } else {
-                HoldOn.close();
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
-            }
-        });
     </script>
 @endsection
 

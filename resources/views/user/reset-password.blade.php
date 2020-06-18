@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                    <form id="profile_form" method="post" action="">
+                                    <form id="reset_password_form" method="post" action="">
                                         {{csrf_field()}}
                                         <input type="hidden" name="user_id" id="user-id" value="{{$user->id}}">
 
@@ -93,65 +93,10 @@
     <!-- Scripts for registration START-->
     <script>
         $(document).ready(function(){
-            $('input[name="show_password"]').click(function(){
-                if($(this).is(":checked") == true){
-                    $('input[name="password"]').prop("type", "text");
-                }
-                else{
-                    $('input[type="password"]').prop("type", "password");
-                }
-            });
+
         });
 
-        $(document).on("submit", "#profile_form", function(event) {
-            event.preventDefault();
 
-            var password = $("#password").val();
-            var confirm_password = $("#confirm_password").val();
-
-            var validate = "";
-
-            if (password.trim() == "") {
-                validate = validate + "Password is required</br>";
-            }
-            if (password.trim() != "" && password.trim() != confirm_password.trim()) {
-                validate = validate + "Password and confirm password not matched</br>";
-            }
-
-            if (validate == "") {
-                var formData = new FormData($("#profile_form")[0]);
-                var url = "{{ url('update_password') }}";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: formData,
-                    success: function(data) {
-                        if (data.status == 200) {
-                            $("#success_message").show();
-                            $("#error_message").hide();
-                            $("#success_message").html(data.reason);
-                        } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
-                        }
-                    },
-                    error: function(data) {
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            } else {
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
-            }
-        });
     </script>
     <!-- Scripts for registration END-->
 @endsection
