@@ -158,6 +158,7 @@
 
     function library_re_initialization(item_name){
         re_initiate_date_picker();
+        re_initiate_teliphone_plugin();
         if(item_name=='add_user'){
             $("#telephone").intlTelInput("setNumber", "");
             re_initialize_data_table(3);

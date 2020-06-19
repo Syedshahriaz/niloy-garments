@@ -1,5 +1,5 @@
 // init input for phone with code and flag
-$("#telephone").intlTelInput({
+$(".telephone").intlTelInput({
     initialCountry:"BD",
     separateDialCode: true
     //dialCode: "+88",

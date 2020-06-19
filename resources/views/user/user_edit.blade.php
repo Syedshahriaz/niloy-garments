@@ -104,7 +104,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
-                                                    <input type="text" class="form-control" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
+                                                    <input type="text" class="form-control telephone" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -168,7 +168,7 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
+            $(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
         });
 
 

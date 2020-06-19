@@ -20,4 +20,14 @@
             $(this).next('input[type=hidden].date-picker-hidden').val( moment(e.date).format('DD-MM-YYYY') );
         });
     }
+
+    function re_initiate_teliphone_plugin(){
+        //iti.destroy();
+
+        $(".telephone").intlTelInput({
+            initialCountry:"BD",
+            separateDialCode: true
+            //dialCode: "+88",
+        });
+    }
 </script>
