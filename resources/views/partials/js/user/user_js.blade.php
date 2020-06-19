@@ -121,6 +121,7 @@
 
         HoldOn.open(options);
 
+        var user_id = $("#user_id").val();
         var email = $("#email").val();
         var password = $("#password").val();
         var repassword = $("#repassword").val();
@@ -162,6 +163,9 @@
                         $("#success_message").hide();
                         $("#success_message").html('');
                         $('#user_otp_modal').modal('hide');
+
+                        $('#send_otp_button_'+user_id).text('Send OTP Again');
+                        $('#make_separate_button_'+user_id).removeClass('hidden');
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
