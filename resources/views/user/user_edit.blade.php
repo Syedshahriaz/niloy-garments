@@ -36,6 +36,7 @@
                     <form  id="profile_form" method="post" action="" enctype="multipart/form-data">
                     {{csrf_field()}}
                         <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+                        <input type="hidden" name="" id="existing_phone" value="{{$user->country_code.$user->phone}}">
                         <div class="alert alert-success" id="success_message" style="display:none"></div>
                         <div class="alert alert-danger" id="error_message" style="display: none"></div>
                     <!-- BEGIN PROFILE SIDEBAR -->
@@ -170,6 +171,7 @@
         $(document).ready(function(){
             $(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
         });
+
 
 
     </script>
