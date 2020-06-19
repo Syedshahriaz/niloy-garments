@@ -47,7 +47,11 @@
                                 <div class="user-list-tag">
                                     <ul>
                                         @foreach($child_users as $user)
-                                        <li class="@if($user->id==$user_id) active @endif"><a href="{{url('all_project').'?u_id='.$user->id}}" class="ajax_item item-2" data-name="all_project?u_id={{$user->id}}" data-item="2" @if($user->shipment_date=='') disabled @endif>{{$user->username}}</a></li>
+                                            @if($user->shipment_date !='')
+                                                <li class="@if($user->id==$user_id) active @endif"><a href="{{url('all_project').'?u_id='.$user->id}}" class="ajax_item item-2" data-name="all_project?u_id={{$user->id}}" data-item="2">{{$user->username}}</a></li>
+                                            @else
+                                                <li class="@if($user->id==$user_id) active @endif"><a href="{{url('select_shipment',$user->id)}}" class="" >{{$user->username}}</a></li>
+                                            @endif
                                         @endforeach
                                     </ul>
                                 </div>
