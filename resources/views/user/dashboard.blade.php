@@ -289,7 +289,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">Buyer phone</label>
-                                    <input class="form-control placeholder-no-fix" type="text" name="buyer_phone" id="buyer_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="@if(!empty($buyer)){{$buyer->buyer_phone}}@endif"/>
+                                    <input class="form-control placeholder-no-fix telephone" type="text" name="buyer_phone" id="buyer_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="@if(!empty($buyer)){{$buyer->buyer_phone}}@endif"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Buying Agent Name</label>
@@ -303,7 +303,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">Buying Agent phone</label>
-                                    <input class="form-control placeholder-no-fix" type="text" name="buying_agent_phone" id="buying_agent_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="@if(!empty($buyer)){{$buyer->buying_agent_phone}}@endif"/>
+                                    <input class="form-control placeholder-no-fix telephone" type="text" name="buying_agent_phone" id="buying_agent_phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="@if(!empty($buyer)){{$buyer->buying_agent_phone}}@endif"/>
                                 </div>
 
                                 <div class="form-group">
