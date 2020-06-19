@@ -70,15 +70,15 @@
     .focus-tr, .focus-td{
         background-color: #642d9029 !important;
     }
-    .bg-success {
+    /* .bg-success {
         background-color: #abe7ed;
     }
     .bg-warning {
         background-color: #f9d591;
     }
     .bg-danger{
-        background-color: #ffa8ae !important;
-    }
+        background-color: #ef5454 !important;
+    } */
     /*Color css END*/
 
     /*Modal css START*/
@@ -198,7 +198,7 @@ body {
     background-color: #ffc000 !important;
 }
 .bg-danger{
-    background-color: #ff8989 !important;
+    background-color: #ef5454 !important;
 } 
 .project-item-title:hover,.project-item-title:focus,.project-item-title:visited{
     text-decoration: none;
@@ -386,6 +386,15 @@ div#user_horizontal_task_wrapper .col-sm-12 {
     top: -2px;
     position: relative;
     max-width: 17px;
+}
+.loader-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#loader-gif{
+    width: 120px;
+    margin: 0 auto;
 }
 /*Admin part END*/
 /*Rewrite layout END*/
