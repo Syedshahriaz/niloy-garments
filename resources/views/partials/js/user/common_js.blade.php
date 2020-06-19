@@ -8,11 +8,10 @@
             //"responsive": true
         });
         $('#user_manage_table').DataTable({
-            //"paging":   false,
-            //"ordering": false,
-            //"info":     false,
-            //"searching": false,
-            //"responsive": true
+            "paging":   true,
+            "lengthChange": false,
+            "info":     false,
+            "searching": true,
         });
     }
 
