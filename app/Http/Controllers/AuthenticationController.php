@@ -34,6 +34,7 @@ class AuthenticationController extends Controller
         $result = Auth::attempt([
             'email' => trim($request->email),
             'password' => $request->password,
+            'parent_id' => 0,
             'role' => 3,
             'status' => 'active',
         ], $request->has('remember'));
