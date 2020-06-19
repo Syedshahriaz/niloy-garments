@@ -386,18 +386,9 @@ class UserController extends Controller
     }
 
     public function storeNewUser(Request $request){
-        //try {
+        try {
 
             $parentUser = User::where('email',Session::get('user_email'))->first();
-
-            $duplicateUsername = User::where('username',$request->username)->count();
-
-            if($duplicateUsername>0){
-                $username = $request->username.'0'.($duplicateUsername+1);
-            }
-            else{
-                $username = $request->username;
-            }
 
             $lastUser = User::orderBy('id','DESC')->first();
             if(!empty($lastUser)){
@@ -410,7 +401,7 @@ class UserController extends Controller
             $user = new User();
             $user->parent_id = $parentUser->id;
             $user->unique_id = $unique_id;
-            $user->username = $username;
+            $user->username = $request->username;
             $user->email = Session::get('user_email');
             $user->phone = $request->phone;
             $user->country_code = $request->country_code;
@@ -419,12 +410,12 @@ class UserController extends Controller
             $user->save();
 
             return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function sendUserOtp(Request $request){
@@ -463,7 +454,7 @@ class UserController extends Controller
             $otp = Common::generaterandomNumber(4);
 
             // Delete previous log if any
-            SeparateUserLog::where('email', $request->email)->where('user_id',$request->user_id)->delete();
+            SeparateUserLog::where('user_id',$request->user_id)->delete();
 
             $s_user_log = NEW SeparateUserLog();
             $s_user_log->user_id = $request->user_id;

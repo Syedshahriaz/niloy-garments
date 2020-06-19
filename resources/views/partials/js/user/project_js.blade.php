@@ -1,5 +1,66 @@
 <script>
     /*
+    * ******** Select shipment js
+    * */
+    $(document).on("submit", "#shipment_form", function(event) {
+        event.preventDefault();
+
+        $('#done_button').prop('disabled',true);
+
+        show_loader();
+
+        var shipment_date = $("#shipment_date").val();
+
+        var validate = "";
+
+        if (shipment_date.trim() == "") {
+            validate = validate + "Shipment date is required</br>";
+        }
+
+        if (validate == "") {
+            var formData = new FormData($("#shipment_form")[0]);
+            var url = "{{ url('store_shipment') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                success: function(data) {
+                    hide_loader();
+                    if (data.status == 200) {
+                        $("#success_message").show();
+                        $("#error_message").hide();
+                        $("#success_message").html(data.reason);
+                        setTimeout(function(){
+                            window.location.href="{{url('all_project')}}";
+                        },2000)
+                    } else {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data.reason);
+                    }
+                },
+                error: function(data) {
+                    $('#done_button').prop('disabled',false);
+                    hide_loader();
+                    $("#success_message").hide();
+                    $("#error_message").show();
+                    $("#error_message").html(data);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        } else {
+            $('#done_button').prop('disabled',false);
+            hide_loader();
+            $("#success_message").hide();
+            $("#error_message").show();
+            $("#error_message").html(validate);
+        }
+    });
+
+    /*
     **********  All project js
     * */
     $(document).on("submit", "#project_form", function(event) {
@@ -156,64 +217,4 @@
         }
     });
 
-    /*
-    * ******** Select shipment js
-    * */
-    $(document).on("submit", "#shipment_form", function(event) {
-        event.preventDefault();
-
-        $('#done_button').prop('disabled',true);
-
-        show_loader();
-
-        var shipment_date = $("#shipment_date").val();
-
-        var validate = "";
-
-        if (shipment_date.trim() == "") {
-            validate = validate + "Shipment date is required</br>";
-        }
-
-        if (validate == "") {
-            var formData = new FormData($("#shipment_form")[0]);
-            var url = "{{ url('store_shipment') }}";
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: formData,
-                success: function(data) {
-                    hide_loader();
-                    if (data.status == 200) {
-                        $("#success_message").show();
-                        $("#error_message").hide();
-                        $("#success_message").html(data.reason);
-                        setTimeout(function(){
-                            window.location.href="{{url('all_project')}}";
-                        },2000)
-                    } else {
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data.reason);
-                    }
-                },
-                error: function(data) {
-                    $('#done_button').prop('disabled',false);
-                    hide_loader();
-                    $("#success_message").hide();
-                    $("#error_message").show();
-                    $("#error_message").html(data);
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            });
-        } else {
-            $('#done_button').prop('disabled',false);
-            hide_loader();
-            $("#success_message").hide();
-            $("#error_message").show();
-            $("#error_message").html(validate);
-        }
-    });
 </script>

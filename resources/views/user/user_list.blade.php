@@ -69,16 +69,14 @@
                                         <td class="text-center">
                                             <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn ajax_item item-3" data-name="user_details/{{$user->id}}" data-item="3" title="Dashboard" title="Profile"><i class="icon-user"></i> Profile</a>
                                             <a href="{{url('dashboard').'?u_id='.$user->id}}" type="button" class="btn blue action-btn ajax_item item-1" data-name="dashboard?u_id={{$user->id}}" data-item="1" title="Dashboard"><i class="icon-user"></i> Dashboard</a>
-                                            <button type="button" class="btn green action-btn" title="Send OTP to separate this user" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
+                                            <button type="button" class="btn green action-btn" title="Send OTP to separate this user" id="send_otp_button_{{$user->id}}" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
                                                 @if($user->otp =='')
                                                     Send OTP
                                                 @else
                                                     Send OTP Again
                                                 @endif
                                             </button>
-                                            @if($user->otp !='')
-                                                <button type="button" class="btn red action-btn" title="Make Separate" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
-                                            @endif
+                                            <button type="button" class="btn red action-btn @if($user->otp =='') hidden @endif" title="Make Separate" id="make_separate_button_{{$user->id}}" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
                                         </td>
                                     </tr>
                                     <?php
