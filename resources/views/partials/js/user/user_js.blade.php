@@ -113,9 +113,17 @@
         $('#user_otp_modal').modal('show');
     }
 
+    $(document).on("submit", "#user_otp_form", function(event) {
+        event.preventDefault();
+        return false;
+    });
+
     $(document).on("click", "#send_otp_button", function(event) {
         event.preventDefault();
+        user_otp_form_submit();
+    });
 
+    function user_otp_form_submit(){
         var options = {
             theme: "sk-cube-grid",
             message: 'Please wait while sending email.....',
@@ -192,7 +200,7 @@
             $("#error_message").show();
             $("#error_message").html(validate);
         }
-    });
+    }
 
     function separate_user(user_id){
         $('#otp').val('');
@@ -200,9 +208,16 @@
         $('#separate_user_modal').modal('show');
     }
 
+    $(document).on("submit", "#separate_user_form", function(event) {
+        event.preventDefault();
+        return false;
+    });
     $(document).on("click", "#separate_user_button", function(event) {
         event.preventDefault();
+        separate_user_form_submit();
+    });
 
+    function separate_user_form_submit(){
         var options = {
             theme: "sk-cube-grid",
             message: 'Please wait while exporting and saving all data.....',
@@ -260,7 +275,7 @@
             $("#separate_error_message").show();
             $("#separate_error_message").html(validate);
         }
-    });
+    }
 
     /*
     * User edit js
