@@ -30,6 +30,10 @@
         }
     }
 
+    function set_teliphone(telephone){
+        $(".telephone").intlTelInput("setNumber", telephone);
+    }
+
     /*
     * Create new user js
     * */

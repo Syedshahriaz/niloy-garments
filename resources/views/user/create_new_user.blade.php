@@ -45,6 +45,7 @@
                             <div class="portlet-body">
                                 <form id="registration_form" class="register-form" action="index.html" method="post">
                                 {{csrf_field()}}
+                                <input type="hidden" name="" id="existing_phone" value="{{$user->country_code.$user->phone}}">
 
                                 <div class="alert alert-success" id="success_message" style="display:none"></div>
                                 <div class="alert alert-danger" id="error_message" style="display: none"></div>
@@ -59,7 +60,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-                                            <input class="form-control placeholder-no-fix telephone" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value=""/>
+                                            <input class="form-control placeholder-no-fix telephone" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->phone}}"/>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -108,7 +109,9 @@
 
 @section('js')
     <script>
-
+        $(document).ready(function(){
+            $(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
+        });
     </script>
 @endsection
 
