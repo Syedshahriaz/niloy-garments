@@ -167,15 +167,8 @@
             $("#telephone").intlTelInput("setNumber", "");
             re_initialize_data_table(3);
         }
-        if(item_name=='add_user'){
-            $("#telephone").intlTelInput("setNumber", "");
-            re_initialize_data_table(3);
-        }
-        if(item_name=='item_activity'){
-            re_initialize_data_table(3);
-        }
-        if(item_name=='borrowing_activities'){
-            re_initialize_data_table(12);
+        if(item_name=='user_list'){
+            re_initialize_data_table(1);
         }
     }
 

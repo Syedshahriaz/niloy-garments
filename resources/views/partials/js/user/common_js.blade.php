@@ -7,6 +7,13 @@
             "searching": false,
             //"responsive": true
         });
+        $('#user_manage_table').DataTable({
+            //"paging":   false,
+            //"ordering": false,
+            //"info":     false,
+            //"searching": false,
+            //"responsive": true
+        });
     }
 
     function re_initiate_date_picker(){
