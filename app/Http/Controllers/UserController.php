@@ -42,61 +42,61 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
-        //try {
-        $lastUser = User::orderBy('id','DESC')->first();
-        if(!empty($lastUser)){
-            $unique_id = Common::generateUniqueNumber($lastUser->id+1);
-        }
-        else{
-            $unique_id = Common::generateUniqueNumber(1);
-        }
+        try {
+            $lastUser = User::orderBy('id','DESC')->first();
+            if(!empty($lastUser)){
+                $unique_id = Common::generateUniqueNumber($lastUser->id+1);
+            }
+            else{
+                $unique_id = Common::generateUniqueNumber(1);
+            }
 
-        $user = new User();
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->country_code = $request->country_code;
-        $user->password = bcrypt($request->password);
-        $user->unique_id = $unique_id;
-        $user->role = 3;
-        $user->status = 'pending';
-        $user->save();
+            $user = new User();
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->country_code = $request->country_code;
+            $user->password = bcrypt($request->password);
+            $user->unique_id = $unique_id;
+            $user->role = 3;
+            $user->status = 'pending';
+            $user->save();
 
-        $token = base64_encode($user->id."#".$user->email);
-        $userDetails = User::where('id',$user->id)->first();
-        $userDetails->verification_token = $token;
-        $userDetails->save();
+            $token = base64_encode($user->id."#".$user->email);
+            $userDetails = User::where('id',$user->id)->first();
+            $userDetails->verification_token = $token;
+            $userDetails->save();
 
-        $verification_link = url('verify_email').'?token='.$token;
+            $verification_link = url('verify_email').'?token='.$token;
 
-        /*
-         * Send confirmation email
-         */
-        $email_to = [$request->email];
-        $email_cc = [];
-        $email_bcc = [];
+            /*
+             * Send confirmation email
+             */
+            $email_to = [$request->email];
+            $email_cc = [];
+            $email_bcc = [];
 
-        $emailData['from_email'] = Common::FROM_EMAIL;
-        $emailData['from_name'] = Common::FROM_NAME;
-        $emailData['email'] = $email_to;
-        $emailData['email_cc'] = $email_cc;
-        $emailData['email_bcc'] = $email_bcc;
-        $emailData['verification_link'] = $verification_link;
-        $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['verification_link'] = $verification_link;
+            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
 
-        $emailData['bodyMessage'] = '';
+            $emailData['bodyMessage'] = '';
 
-        $view = 'emails.registration_confirmation_email';
+            $view = 'emails.registration_confirmation_email';
 
-        $result = SendMails::sendMail($emailData, $view);
+            $result = SendMails::sendMail($emailData, $view);
 
-        return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
-        /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'store', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'store', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function verifyEmail(Request $request){

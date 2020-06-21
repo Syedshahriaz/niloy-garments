@@ -11,7 +11,7 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a class=" ajax_item item-1" href="{{url('dashboard')}}" data-name="dashboard" data-item="1">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>

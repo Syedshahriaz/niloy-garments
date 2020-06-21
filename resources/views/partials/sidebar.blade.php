@@ -11,7 +11,7 @@
     <div class="page-header-inner ">
         <!-- BEGIN LOGO -->
         <div class="page-logo">
-            <a href="index.html">
+            <a href="{{url('dashboard')}}" class="nav-item ajax_item item-1  @if($page=='dashboard') active @endif" data-name="dashboard" data-item="1">
                 <img src="{{asset('assets/layouts/layout/img/logo.png')}}" alt="logo" class="logo-default" /> </a>
             <div class="menu-toggler sidebar-toggler">
                 <span></span>

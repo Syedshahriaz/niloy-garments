@@ -66,7 +66,7 @@ Route::post('save_buyer', 'UserDashboardController@saveBuyer')->name('buyer.save
 Route::get('select_shipment/{id}', 'UserProjectController@selectShipment')->name('user.select_shipment');
 Route::post('store_shipment', 'UserProjectController@storeShipment')->name('user.store_shipment');
 Route::get('all_project', 'UserProjectController@allProject')->name('user.all_project');
-Route::post('add_project', 'UserProjectController@addProject')->name('user.add_project');
+Route::post('update_project_special_date', 'UserProjectController@updateProjectSpecialDate')->name('user.update_project_special_date');
 Route::get('my_project', 'UserProjectController@myProject')->name('user.my_project');
 Route::get('my_project_task/{id}', 'UserProjectController@myProjectTask')->name('user.my_project_details');
 Route::post('update_task_delivery_status', 'UserProjectController@updateProjectTaskDeliveryStatus')->name('user.update_task_delivery_status');

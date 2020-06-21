@@ -10,11 +10,15 @@
         show_loader();
 
         var shipment_date = $("#shipment_date").val();
+        var offer = $("input[name='offer']:checked").val();
 
         var validate = "";
 
         if (shipment_date.trim() == "") {
             validate = validate + "Shipment date is required</br>";
+        }
+        if (offer ===undefined || offer.trim() == "") {
+            validate = validate + "Offer is required</br>";
         }
 
         if (validate == "") {
@@ -63,59 +67,68 @@
     /*
     **********  All project js
     * */
-    $(document).on("submit", "#project_form", function(event) {
-        event.preventDefault();
-        var options = {
-            theme: "sk-cube-grid",
-            message: 'Please wait while saving all data.....',
-            backgroundColor: "#1847B1",
-            textColor: "white"
-        };
 
-        HoldOn.open(options);
+    function show_special_date_modal(user_project_id){
+        $('#user_project_id').val(user_project_id);
+        $('#special_date_modal').modal('show');
+    }
+
+    $(document).on("submit", "#special_date_form", function(event) {
+        event.preventDefault();
+
+        show_loader();
+
+        var special_date = $("#sp_date").val();
+        var user_project_id = $("#user_project_id").val();
 
         var validate = "";
 
+        if (special_date.trim() == "") {
+            validate = validate + "Special date is required</br>";
+        }
+
         if (validate == "") {
-            var formData = new FormData($("#project_form")[0]);
-            var url = "{{ url('add_project') }}";
+            var formData = new FormData($("#special_date_form")[0]);
+            var url = "{{ url('update_project_special_date') }}";
 
             $.ajax({
                 type: "POST",
                 url: url,
                 data: formData,
                 success: function(data) {
-                    HoldOn.close();
+                    hide_loader();
                     if (data.status == 200) {
-                        $("#success_message").show();
-                        $("#error_message").hide();
-                        $("#success_message").html(data.reason);
+                        $('#special_date_modal').modal('hide');
+
                         setTimeout(function(){
-                            window.location.href = "{{ url('my_project') }}";
-                        },2000)
+                            var item_name = 'my_project_task/'+user_project_id;
+                            var browser_title = 'My Project Task';
+                            var uri_string = '/'+item_name;
+                            var url = "{{url('/')}}"+uri_string;
+                            load_new_page_content(url,item_name,browser_title);
+                        },200)
+
                     } else {
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data.reason);
+                        show_error_message(data.reason);
                     }
                 },
                 error: function(data) {
-                    HoldOn.close();
-                    $("#success_message").hide();
-                    $("#error_message").show();
-                    $("#error_message").html(data);
+                    hide_loader();
+                    show_error_message(data);
                 },
                 cache: false,
                 contentType: false,
                 processData: false
             });
         } else {
-            HoldOn.close();
+            hide_loader();
             $("#success_message").hide();
             $("#error_message").show();
             $("#error_message").html(validate);
         }
     });
+
+
 
     /*
     * ********** my project task js
