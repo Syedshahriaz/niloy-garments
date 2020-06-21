@@ -11,11 +11,15 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a class=" ajax_item item-1" href="{{url('dashboard')}}" data-name="dashboard" data-item="1">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>Profile Update</span>
+                        <a class=" ajax_item item-3" href="{{url('user_list')}}" data-name="user_list" data-item="3">Users</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>User Update</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">

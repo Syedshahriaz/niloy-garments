@@ -20,36 +20,43 @@ use View;
 class UserProjectController extends Controller
 {
     public function selectShipment(Request $request){
-        //try{
-        if (Auth::check()) {
-            $user = User::where('users.id', $request->id)->first();
-            $shipment = UserShipment::where('user_id', $user->id)->first();
-            if (!empty($shipment)) {
-                return redirect('all_project');
+        try{
+            if (Auth::check()) {
+                $user = User::where('users.id', $request->id)->first();
+                $shipment = UserShipment::where('user_id', $user->id)->first();
+                if (!empty($shipment)) {
+                    return redirect('all_project');
+                }
+                if ($request->ajax()) {
+                    $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('user.project.select_shipment', compact('user'));
             }
-            if ($request->ajax()) {
-                $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            else{
+                return redirect('login');
             }
-            return view('user.project.select_shipment', compact('user'));
         }
-        else{
-            return redirect('login');
-        }
-        /* }
          catch (\Exception $e) {
              SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'selectShipment', $e->getLine(),
                  $e->getFile(), '', '', '', '');
              // message, view file, controller, method name, Line number, file,  object, type, argument, email.
              return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-         }*/
+         }
     }
 
     public function storeShipment(Request $request){
-        //try{
-            $user = User::where('users.id',$request->user_id)->first();
+        try{
+            $user = User::where('users.id',$request->user_id)
+                ->select('users.*','user_payments.created_at as purchase_date')
+                ->join('user_payments','user_payments.user_id','=','users.id')
+                ->first();
             $user->gender = $request->gender;
             $user->save();
+
+            $purchase_date = $user->purchase_date;
+            $offer = $request->offer;
+            $gender = $request->gender;
 
             /*
              * Save shipment date
@@ -57,23 +64,57 @@ class UserProjectController extends Controller
             $shipment = NEW UserShipment();
             $shipment->user_id = $request->user_id;
             $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
+            if($request->offer == 1){
+                $shipment->has_ofer_1 = 1;
+                $shipment->has_ofer_2 = 0;
+            }
+            else{
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 1;
+            }
+            if($request->gender == 'Female'){
+                $shipment->has_ofer_3 = 1;
+            }
+
             $shipment->save();
+
+            //@todo Add project based on selected offer
 
             /*
              * Add user project
              * */
-            $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id')
-                ->leftJoin('tasks','tasks.project_id','=','projects.id')
-                ->leftJoin('user_projects','user_projects.project_id','=','projects.id')
-                ->where('projects.status','active')
-                ->groupBy('projects.id')
-                ->get();
+            $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id');
+            $projects = $projects->leftJoin('tasks','tasks.project_id','=','projects.id');
+            $projects = $projects->leftJoin('user_projects','user_projects.project_id','=','projects.id');
+            $projects = $projects->where('projects.status','active');
+            $projects = $projects->where(function ($query) use ($offer,$gender) {
+                if($offer==1){
+                    $query->orWhere('has_offer_1', 1);
+                }
+                else{
+                    $query->orWhere('has_offer_2', 1);
+                }
+                
+                if($gender == 'Female'){
+                    $query->orWhere('has_offer_3', 1);
+                }
+            });
+            $projects = $projects->groupBy('projects.id');
+            $projects = $projects->get();
 
             foreach($projects as $key=>$project){
                 $userProject = NEW UserProject();
                 $userProject->user_id = $user->id;
                 $userProject->project_id = $project->id;
-                $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
+                if($project->day_add_with=='shipment_date'){
+                    $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
+                }
+                else if($project->day_add_with=='purchase_date'){
+                    $userProject->start_date = date('Y-m-d', strtotime($purchase_date. ' + '.$project->days_to_add.' days'));
+                }
+                else{
+                    $userProject->has_special_date = 1;
+                }
                 $userProject->save();
 
                 $tasks = Task::where('project_id',$project->id)
@@ -88,8 +129,21 @@ class UserProjectController extends Controller
                     $projectTask->user_project_id = $userProject->id;
                     $projectTask->task_id = $task->id;
                     if($task->status =='active'){
-                        $projectTask->due_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$task->days_to_add.' days'));
+                        if($project->day_add_with=='shipment_date') {
+                            $projectTask->due_date = date('Y-m-d',
+                                strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                            $projectTask->original_delivery_date = date('Y-m-d',
+                                strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                        }
+                        else if($project->day_add_with=='purchase_date'){
+                            $projectTask->due_date = date('Y-m-d',
+                                strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                            $projectTask->original_delivery_date = date('Y-m-d',
+                                strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                        }
+                        else{
+                            // keep due_date and original_delivery_date NULL
+                        }
                     }
                     if($key==0){
                         $projectTask->status = 'processing';
@@ -104,13 +158,13 @@ class UserProjectController extends Controller
             DB::commit();
 
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
-        /*}
+        }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function allProject(Request $request){
@@ -124,17 +178,19 @@ class UserProjectController extends Controller
 
                 $user = User::where('users.id', $user_id)->first();
                 $setting = Setting::select('message_to_user')->first();
+
+                $shipment = UserShipment::where('user_id', $user_id)->first();
+                if (empty($shipment)) {
+                    return redirect('select_shipment/'.$user_id);
+                }
+
                 $child_users = User::where('users.email', Session::get('user_email'))
                     ->select('users.*', 'user_shipments.shipment_date')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                     ->orderBy('parent_id','ASC')
                     ->get();
-                $shipment = UserShipment::where('user_id', $user_id)->first();
-                if (empty($shipment)) {
-                    return redirect('select_shipment/'.$user_id);
-                }
                 $projects = UserProject::with('running_task','last_task')
-                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id')
+                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date')
                     ->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id')
                     ->leftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
                     ->where('user_projects.user_id', $user_id)
@@ -163,60 +219,50 @@ class UserProjectController extends Controller
         }
     }
 
-    public function addProject(Request $request){
-        //try{
+    public function updateProjectSpecialDate(Request $request){
+        try{
             DB::beginTransaction();
 
-            $user = User::where('users.id',Session::get('user_id'))->first();
-            $project_checks = $request->project_check;
-            $projects = $request->project_id;
-            $startDates = $request->start_dates;
+            $user_id = Session::get('user_id');
 
-            foreach($project_checks as $key=>$check){
-                if($project_checks[$key]==1){
-                    $userProject = NEW UserProject();
-                    $userProject->user_id = $user->id;
-                    $userProject->project_id = $projects[$key];
-                    $userProject->start_date = $startDates[$key];
-                    $userProject->save();
+            $user_projects = UserProject::where('user_id',$user_id)
+                    ->where('has_special_date',1)
+                    ->get();
 
-                    $tasks = Task::where('project_id',$projects[$key])->get();
+            foreach($user_projects as $key=>$u_project){
+                $u_project->special_date = date('Y-m-d', strtotime($request->special_date));
+                $u_project->save();
 
-                    /*
-                     * Saving user project tasks
-                     * */
-                    foreach($tasks as $key=>$task){
-                        $projectTask = NEW UserProjectTask();
-                        $projectTask->user_project_id = $userProject->id;
-                        $projectTask->task_id = $task->id;
-                        $projectTask->due_date = date('Y-m-d', strtotime($startDates[$key]. ' + '.$task->days_to_add.' days'));
-                        $projectTask->original_delivery_date = date('Y-m-d', strtotime($startDates[$key]. ' + '.$task->days_to_add.' days'));
-                        if($key==0){
-                            $projectTask->status = 'processing';
-                        }
-                        else{
-                            $projectTask->status = 'not initiate';
-                        }
-                        $projectTask->save();
-                    }
+                $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
+                    ->select('user_project_tasks.*','tasks.days_to_add')
+                    ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                    ->get();
+
+                /*
+                 * Add user project tasks due date
+                 * */
+                foreach($project_tasks as $key=>$p_task){
+                    $p_task->due_date = date('Y-m-d', strtotime($request->special_date. ' + '.$p_task->days_to_add.' days'));
+                    $p_task->original_delivery_date = date('Y-m-d', strtotime($request->special_date. ' + '.$p_task->days_to_add.' days'));
+                    $p_task->save();
                 }
             }
 
             DB::commit();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
-        /*}
+        }
         catch (\Exception $e) {
             DB::rollback();
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'addProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'updateProjectSpecialDate', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function myProjectTask(Request $request){
-        //try{
+        try{
             if (Auth::check()) {
                 $user_project_id = $request->id;
                 $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id')
@@ -245,17 +291,17 @@ class UserProjectController extends Controller
             else{
                 return redirect('login');
             }
-        /*}
+        }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){
-        //try{
+        try{
             $date_updated = 0;
             $date_increased = 0;
             $daysAdded = 0;
@@ -308,13 +354,13 @@ class UserProjectController extends Controller
             }
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
-        /*}
+        }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     private function makePreviousTaskNotEditable($project_task_id,$user_project_id){

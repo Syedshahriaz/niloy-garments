@@ -11,7 +11,7 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="{{url('/home')}}">Home</a>
+                        <a class=" ajax_item item-1" href="{{url('dashboard')}}" data-name="dashboard" data-item="1">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
@@ -83,10 +83,17 @@
                                     <div class="col-md-10 col-md-offset-1">
                                         <div class="form-group">
                                             <label for=""><b>Gender</b></label>
-                                            <select name="gender" id="gender" name="user-info-gender" class="form-control">
+                                            <select name="gender" id="gender" class="form-control">
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="form-group">
+                                            <input type="radio" name="offer" value="1"> Offer 1 <br>
+                                            <input type="radio" name="offer" value="2"> Offer 2 <br>
+                                            <input type="radio" name="offer_3" value="3" disabled> Offer 3
                                         </div>
                                     </div>
                                 </div>

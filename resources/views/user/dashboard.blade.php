@@ -11,11 +11,8 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a class=" ajax_item item-1" href="{{url('dashboard')}}" data-name="dashboard" data-item="1">Home</a>
                         <i class="fa fa-circle"></i>
-                    </li>
-                    <li>
-                        <span>Dashboard</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -34,21 +31,21 @@
                                 <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Save buyer" onclick="open_buyer_modal()">Add/Update Buyer</button>
                             </div>
                             <div class="row">
-                                @if(!empty($buyer))
+                                <div class="@if(empty($buyer)) hidden @endif" id="buyer_section">
                                     <div class="col-md-4">
-                                        <p class="mb-0"><b>Buyer Name:</b> <span id="view_buyer_name">{{$buyer->buyer_name}}</span></p>
-                                        <p class="mb-0"><b>Email:</b> <span id="view_buyer_email">{{$buyer->buyer_email}}</span></p>
-                                        <p class="mb-0"><b>Phone:</b> <span id="view_buyer_phone">{{$buyer->buyer_phone}}</span></p>
+                                        <p class="mb-0"><b>Buyer Name:</b> <span id="view_buyer_name">@if(!empty($buyer)){{$buyer->buyer_name}}@endif</span></p>
+                                        <p class="mb-0"><b>Email:</b> <span id="view_buyer_email">@if(!empty($buyer)){{$buyer->buyer_email}}@endif</span></p>
+                                        <p class="mb-0"><b>Phone:</b> <span id="view_buyer_phone">@if(!empty($buyer)){{$buyer->buyer_phone}}@endif</span></p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-0"><b>Buying Agent Name:</b> <span id="view_buying_agent_name">{{$buyer->buying_agent_name}}</span></p>
-                                        <p class="mb-0"><b>Email:</b> <span id="view_buying_agent_email">{{$buyer->buying_agent_email}}</span></p>
-                                        <p class="mb-0"><b>Phone:</b> <span id="view_buying_agent_phone">{{$buyer->buying_agent_phone}}</span></p>
+                                        <p class="mb-0"><b>Buying Agent Name:</b> <span id="view_buying_agent_name">@if(!empty($buyer)){{$buyer->buying_agent_name}}@endif</span></p>
+                                        <p class="mb-0"><b>Email:</b> <span id="view_buying_agent_email">@if(!empty($buyer)){{$buyer->buying_agent_email}}@endif</span></p>
+                                        <p class="mb-0"><b>Phone:</b> <span id="view_buying_agent_phone">@if(!empty($buyer)){{$buyer->buying_agent_phone}}@endif</span></p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-0"><b>Address:</b><br> <span id="view_address">{{$buyer->address}}</span></p>
+                                        <p class="mb-0"><b>Address:</b><br> <span id="view_address">@if(!empty($buyer)){{$buyer->address}}@endif</span></p>
                                     </div>
-                                @endif
+                                </div>
                             </div>
                         </div>
                     </div>

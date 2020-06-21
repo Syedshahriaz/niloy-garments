@@ -474,6 +474,8 @@
     });
 
     function populate_buyer_information(buyer){
+        $('#buyer_section').removeClass('hidden');
+        
         $('#view_buyer_name').text((buyer.buyer_name === null) ? '' : buyer.buyer_name);
         $('#view_buyer_email').text((buyer.buyer_email === null) ? '' : buyer.buyer_email);
         $('#view_buyer_phone').text((buyer.buyer_phone === null) ? '' : buyer.buyer_phone);

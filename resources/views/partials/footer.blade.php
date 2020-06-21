@@ -88,7 +88,8 @@
             var browser_title = 'Home';
         }
         else{
-            var browser_title = item_name.substr(0,1).toUpperCase()+item_name.substr(1);
+            var browser_title = item_name.replace('_',' ');
+            var browser_title = 'Niloy Garments::setti'+browser_title.substr(0,1).toUpperCase()+browser_title.substr(1);
         }
         var uri_string = '/'+item_name;
         if(item_name=='/'){
