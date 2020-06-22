@@ -207,7 +207,7 @@
                                                     <div class="edit-table-date">
                                                         @if($task->task_status =='active')
                                                             {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if(($task->status == 'processing' || $task->status == 'completed') && $task->delivery_date_update_count < 2)
+                                                            @if(($task->status == 'processing' || $task->status == 'completed') && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
                                                                 <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif
@@ -228,6 +228,22 @@
         <!-- END CONTENT BODY -->
     </div>
     <!-- END CONTENT -->
+
+    <?php
+    function task_in_date_range($shipment_date,$days_range_start,$days_range_end){
+        if($days_range_end == ''){
+            return 1;
+        }
+        $today = date('Y-m-d');
+        $nsd_start = date('Y-m-d', strtotime($shipment_date. ' + '.$days_range_start.' days'));
+        $nsd_end = date('Y-m-d', strtotime($shipment_date. ' + '.$days_range_end.' days'));
+
+        if($today>=$nsd_start && $today<=$nsd_end){
+            return 1;
+        }
+        return 0;
+    }
+    ?>
 
     <!-- START TASK SUMMERY MODAL -->
     <div class="modal fade" id="task_summery_modal" tabindex="-1" role="task_summery_modal" aria-hidden="true">

@@ -78,8 +78,6 @@ class UserProjectController extends Controller
 
             $shipment->save();
 
-            //@todo Add project based on selected offer
-
             /*
              * Add user project
              * */
@@ -94,7 +92,7 @@ class UserProjectController extends Controller
                 else{
                     $query->orWhere('has_offer_2', 1);
                 }
-                
+
                 if($gender == 'Female'){
                     $query->orWhere('has_offer_3', 1);
                 }
@@ -190,9 +188,9 @@ class UserProjectController extends Controller
                     ->orderBy('parent_id','ASC')
                     ->get();
                 $projects = UserProject::with('running_task','last_task')
-                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date')
-                    ->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id')
-                    ->leftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
+                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.user_id')
+                    ->join('projects', 'projects.id', '=', 'user_projects.project_id')
+                    ->join('tasks', 'tasks.project_id', '=', 'projects.id')
                     ->where('user_projects.user_id', $user_id)
                     ->where('projects.status', 'active')
                     ->groupBy('projects.id')
@@ -212,8 +210,8 @@ class UserProjectController extends Controller
             }
         }
         catch (\Exception $e) {
-            /*SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');*/
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
@@ -262,10 +260,10 @@ class UserProjectController extends Controller
     }
 
     public function myProjectTask(Request $request){
-        try{
+        //try{
             if (Auth::check()) {
                 $user_project_id = $request->id;
-                $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id')
+                $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_end')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->where('user_project_id', $user_project_id)
                     ->get();
@@ -278,26 +276,29 @@ class UserProjectController extends Controller
                     $project = array();
                 }
 
-
+                $shipment = UserProject::select('user_shipments.*')
+                    ->join('user_shipments','user_shipments.user_id','user_projects.user_id')
+                    ->where('user_projects.id',$user_project_id)
+                    ->first();
                 //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
 
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.my_project_task',
-                        compact('user_project_id','project', 'tasks'))->renderSections()['content'];
+                        compact('user_project_id','project', 'tasks','shipment'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('user.project.my_project_task', compact('user_project_id','project', 'tasks'));
+                return view('user.project.my_project_task', compact('user_project_id','project', 'tasks', 'shipment'));
             }
             else{
                 return redirect('login');
             }
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){

@@ -128,13 +128,6 @@
                                                     <input type="email" class="form-control" name="email" id="email" value="{{$user->email}}" disabled>
                                                 </div>
                                             </div>
-                                            {{--<div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for=""><b>Shipping Date</b></label>
-                                                    <input class="form-control date-picker" size="16" type="text" value="" />
-                                                </div>
-                                            </div>--}}
-
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -147,6 +140,17 @@
                                                     </select>
                                                 </div>
                                             </div>
+
+                                            @if($user->shipment_date_update_count==0)
+                                                <div class="col-md-6" id="shipping_date_area">
+                                                    <div class="form-group">
+                                                        <label for=""><b>Shipping Date</b></label>
+                                                        <input class="form-control date-picker" size="16" type="text" name="" id="ship_date" value="" />
+                                                        <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
+                                                        <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
 
                                         <div class="form-group text-right">
