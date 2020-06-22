@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use App\Models\UserProjectTask;
 use Illuminate\Http\Request;
 use App\Models\UserShipment;
 use App\Models\UserProject;
@@ -20,7 +22,7 @@ use View;
 class UserController extends Controller
 {
     public function registration(Request $request){
-        //try {
+        try {
             if($request->token !=''){
                 $email = base64_decode($request->token);
                 $reffer_user = User::where('email',$email)->first();
@@ -33,12 +35,12 @@ class UserController extends Controller
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
             return view('registration', compact('reffer_user'));
-        /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'create', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'create', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function store(Request $request){
@@ -100,7 +102,7 @@ class UserController extends Controller
     }
 
     public function verifyEmail(Request $request){
-        //try {
+        try {
             $user = User::where('verification_token', $request->token)->where('status','pending')->first();
             if (empty($user)) {
                 return redirect('error_404'); // Token not matched
@@ -120,23 +122,23 @@ class UserController extends Controller
 
             return view('registration_confirmation');
 
-        /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyEmail', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyEmail', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function registrationThankYou(Request $request){
-        //try {
+        try {
             return view('registration_thankyou');
-        /*} catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'registrationThankYou', 'verifyEmail', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'registrationThankYou', 'verifyEmail', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function multiTinent(Request $request){
@@ -166,7 +168,7 @@ class UserController extends Controller
     }
 
     public function promotion(Request $request){
-        //try {
+        try {
             if (Auth::check()) {
                 $user = user::where('id', $request->id)->first();
 
@@ -188,17 +190,17 @@ class UserController extends Controller
             else{
                 return redirect('login');
             }
-        // }
-        // catch (\Exception $e) {
-        //     SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
-        //         $e->getFile(), '', '', '', '');
-        //     // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-        //     return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        // }
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
     }
 
     public function profile(Request $request){
-        //try {
+        try {
             if (Auth::check()) {
                 $user = User::where('users.id', Session::get('user_id'))
                     ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
@@ -214,22 +216,23 @@ class UserController extends Controller
             else{
                 return redirect('login');
             }
-        /*}
+        }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'profile', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'profile', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function userEdit(Request $request)
     {
         if (Auth::check()) {
             $user = User::where('users.id', $request->id)
-                ->select('users.*', 'user_shipments.shipment_date')
+                ->select('users.*', 'user_shipments.shipment_date','user_shipments.shipment_date_update_count')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                 ->first();
+
             $professions = Profession::where('status', 'active')->get();
             if ($request->ajax()) {
                 $returnHTML = View::make('user.user_edit',
@@ -259,8 +262,12 @@ class UserController extends Controller
     }
 
     public function userUpdate(Request $request){
-        //try {
-            $user = User::where('id',$request->user_id)->first();
+        try {
+            DB::beginTransaction();
+
+            $user_id = $request->user_id;
+
+            $user = User::where('id',$user_id)->first();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->country_code = $request->country_code;
@@ -286,15 +293,53 @@ class UserController extends Controller
 
             $user->save();
 
+            /*
+             * Update shipping date
+             * */
+            if($request->shipment_date !='' && $request->shipment_date != $request->old_shipment_date){
+                /*
+                 * Update shipment date
+                 * */
+                $shipment = UserShipment::where('user_id',$user_id)->first();
+                $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
+                $shipment->shipment_date_update_count = $shipment->shipment_date_update_count+1;
+                $shipment->save();
+
+                /*
+                 * Update project task due date
+                 * */
+                $user_projects = UserProject::where('user_id',$user_id)->get();
+
+                foreach($user_projects as $key=>$u_project){
+                    $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
+                        ->select('user_project_tasks.*','tasks.days_to_add')
+                        ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                        ->whereIn('user_project_tasks.status',['not initiate','processing'])
+                        ->get();
+
+                    /*
+                     * Add user project tasks due date
+                     * */
+                    foreach($project_tasks as $key=>$p_task){
+                        $p_task->due_date = date('Y-m-d', strtotime($request->shipment_date. ' + '.$p_task->days_to_add.' days'));
+                        $p_task->original_delivery_date = date('Y-m-d', strtotime($request->shipment_date. ' + '.$p_task->days_to_add.' days'));
+                        $p_task->save();
+                    }
+                }
+
+                DB::commit();
+            }
+
 
             return ['status' => 200, 'reason' => 'User successfully updated'];
-        /*}
+        }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updateUser', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updateUser', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function updatePassword(Request $request){

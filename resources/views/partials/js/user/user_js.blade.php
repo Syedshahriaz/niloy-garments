@@ -286,6 +286,8 @@
         var first_name = $("#first_name").val();
         var email = $("#email").val();
         var country_code = $(".iti__selected-dial-code").text();
+        var shipment_date = $("#shipment_date").val();
+        var old_shipment_date = $('#old_shipment_date').val();
 
         var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
@@ -314,6 +316,11 @@
                 data: formData,
                 success: function(data) {
                     if (data.status == 200) {
+                        $('#old_shipment_date').val(shipment_date);
+                        if(shipment_date!=old_shipment_date){
+                            $('#shipping_date_area').hide();
+                        }
+
                         $("#success_message").show();
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
@@ -475,7 +482,7 @@
 
     function populate_buyer_information(buyer){
         $('#buyer_section').removeClass('hidden');
-        
+
         $('#view_buyer_name').text((buyer.buyer_name === null) ? '' : buyer.buyer_name);
         $('#view_buyer_email').text((buyer.buyer_email === null) ? '' : buyer.buyer_email);
         $('#view_buyer_phone').text((buyer.buyer_phone === null) ? '' : buyer.buyer_phone);
