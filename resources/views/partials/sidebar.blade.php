@@ -29,9 +29,9 @@
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle">
                         @if(Session::get('user_photo') !='')
-                            <img alt="" class="img-circle" src="{{asset(Session::get('user_photo'))}}">
+                            <img alt="" class="img-circle profile_image" src="{{asset(Session::get('user_photo'))}}">
                         @else
-                            <img alt="" class="img-circle" src="{{asset('assets/layouts/layout/img/emptyuserphoto.jpg')}}">
+                            <img alt="" class="img-circle profile_image" src="{{asset('assets/layouts/layout/img/emptyuserphoto.jpg')}}">
                         @endif
                         <span class="username username-hide-on-mobile"> {{Session::get('username')}} (ID: {{Session::get('unique_id')}})</span>
                     </a>

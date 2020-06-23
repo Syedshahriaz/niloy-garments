@@ -160,16 +160,19 @@
     function library_re_initialization(item_name){
         re_initiate_date_picker();
         re_initiate_teliphone_plugin();
+        re_initialize_data_table(1);
         var telephone = $('#existing_phone').val();
         if(telephone!==undefined){
             set_teliphone(telephone);
         }
         if(item_name=='add_user'){
             $("#telephone").intlTelInput("setNumber", "");
-            re_initialize_data_table(3);
         }
         if(item_name=='user_list'){
-            re_initialize_data_table(1);
+            //
+        }
+        if(item_name=='user_list'){
+            //
         }
     }
 

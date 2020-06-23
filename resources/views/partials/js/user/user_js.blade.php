@@ -283,11 +283,13 @@
     $(document).on("submit", "#profile_form", function(event) {
         event.preventDefault();
 
+        var user_id = $("#user_id").val();
         var first_name = $("#first_name").val();
         var email = $("#email").val();
         var country_code = $(".iti__selected-dial-code").text();
         var shipment_date = $("#shipment_date").val();
         var old_shipment_date = $('#old_shipment_date').val();
+        var from = $('#from').val();
 
         var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
@@ -325,8 +327,21 @@
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
                         setTimeout(function(){
-                            $("#success_message").hide();
-                        },2000)
+                            if(from=='profile'){
+                                if(data.photo_path !=''){
+                                    var photo_url = "{{url('/')}}/"+data.photo_path;
+                                    $( ".profile_image" ).attr( 'src', photo_url);
+                                }
+                                $( ".item-5" ).trigger( "click" );
+                            }
+                            else{
+                                var item_name = 'user_details/'+user_id;
+                                var browser_title = 'Niloy Garments: User details/'+user_id;
+                                var uri_string = '/'+item_name;
+                                var url = "{{url('/')}}"+uri_string;
+                                load_new_page_content(url,item_name,browser_title);
+                            }
+                        },1000)
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
@@ -357,6 +372,7 @@
 
         var password = $("#password").val();
         var confirm_password = $("#confirm_password").val();
+        var from = $('#from').val();
 
         var validate = "";
 
@@ -382,8 +398,8 @@
                         $("#success_message").html(data.reason);
                         $('#reset_password_form')[0].reset();
                         setTimeout(function(){
-                            $("#success_message").hide();
-                        },2000)
+                            $( ".item-5" ).trigger( "click" );
+                        },1000)
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();

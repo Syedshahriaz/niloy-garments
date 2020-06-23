@@ -267,6 +267,8 @@ class UserController extends Controller
 
             $user_id = $request->user_id;
 
+            //echo "<pre>"; print_r($request->all()); echo "</pre>"; exit();
+
             $user = User::where('id',$user_id)->first();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
@@ -279,6 +281,7 @@ class UserController extends Controller
             /*
              * Update profile photo
              * */
+            $photo_path = '';
             if($request->hasFile('photo')){
                 $file = $request->File('photo');
                 $extension = $file->getClientOriginalExtension();
@@ -327,11 +330,11 @@ class UserController extends Controller
                     }
                 }
 
-                DB::commit();
             }
 
+            DB::commit();
 
-            return ['status' => 200, 'reason' => 'User successfully updated'];
+            return ['status' => 200, 'reason' => 'User successfully updated','photo_path'=>$photo_path];
         }
         catch (\Exception $e) {
             DB::rollback();

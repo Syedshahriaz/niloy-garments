@@ -47,6 +47,8 @@ class UserProjectController extends Controller
 
     public function storeShipment(Request $request){
         try{
+            DB::beginTransaction();
+
             $user = User::where('users.id',$request->user_id)
                 ->select('users.*','user_payments.created_at as purchase_date')
                 ->join('user_payments','user_payments.user_id','=','users.id')
@@ -115,9 +117,7 @@ class UserProjectController extends Controller
                 }
                 $userProject->save();
 
-                $tasks = Task::where('project_id',$project->id)
-                    //->where('status','active')
-                    ->get();
+                $tasks = Task::where('project_id',$project->id)->get();
 
                 /*
                  * Saving user project tasks
@@ -158,6 +158,7 @@ class UserProjectController extends Controller
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
         }
         catch (\Exception $e) {
+            DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
@@ -221,7 +222,7 @@ class UserProjectController extends Controller
         try{
             DB::beginTransaction();
 
-            $user_id = Session::get('user_id');
+            $user_id = $request->user_id;
 
             $user_projects = UserProject::where('user_id',$user_id)
                     ->where('has_special_date',1)
@@ -402,6 +403,7 @@ class UserProjectController extends Controller
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
+            ->where('tasks.update_date_with','self_task')
             ->get();
 
 
