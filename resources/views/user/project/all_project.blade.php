@@ -85,7 +85,10 @@
                                         $bg_class = 'bg-success';
                                     }
                                     else{
-                                        if(strtotime($task->due_date) < time()) {
+                                        if($task->due_date==''){
+                                            $bg_class = '';
+                                        }
+                                        else if(strtotime($task->due_date) < time()) {
                                             $bg_class = 'bg-danger';
                                         }
                                         else if($day_left<=7){
@@ -123,8 +126,14 @@
                                                 </div>
                                                 <div class="status">
                                                     <div class="status-title"> Due Date </div>
-                                                    <div class="status-number"> {{date('l M d, Y', strtotime($task->original_delivery_date))}}</div>
-                                                    <input type="hidden" name="start_dates[]" value="{{date('Y-m-d', strtotime($task->original_delivery_date))}}">
+                                                    <div class="status-number">
+                                                        @if($task->original_delivery_date !='')
+                                                            {{date('l M d, Y', strtotime($task->original_delivery_date))}}
+                                                        @else
+                                                            Special Date
+                                                        @endif
+                                                    </div>
+                                                    <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
                                                 </div>
                                             </div>
                                             <input type="hidden" class="project-item-check" name="project_check[]" value="0">
@@ -162,6 +171,7 @@
                 <form id="special_date_form" method="post" action="">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_project_id" id="user_project_id" value="">
+                    <input type="hidden" name="user_id" id="user_id" value="{{$user_id}}">
 
                     <div class="modal-body">
                         <div class="row">

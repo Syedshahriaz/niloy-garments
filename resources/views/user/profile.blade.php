@@ -53,7 +53,7 @@
                             <!-- END SIDEBAR USER TITLE -->
                             <!-- SIDEBAR BUTTONS -->
                             <div class="profile-userbuttons">
-                                <a href="{{url('user_edit',$user->id)}}" class="btn blue btn-sm ajax_item item-5" data-name="user_edit/{{$user->id}}" data-item="5">Update Info</a>
+                                <a href="{{url('user_edit',$user->id).'?frm=profile'}}" class="btn blue btn-sm ajax_item item-5" data-name="user_edit/{{$user->id.'?frm=profile'}}" data-item="5">Update Info</a>
                                 <a href="{{url('reset-password')}}" class="btn red btn-sm ajax_item item-5" data-name="reset-password" data-item="5">Reset password</a>
                             </div>
                             <!-- END SIDEBAR BUTTONS -->
