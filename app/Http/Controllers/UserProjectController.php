@@ -149,6 +149,7 @@ class UserProjectController extends Controller
                     else{
                         $projectTask->status = 'not initiate';
                     }
+                    $projectTask->freeze_forever = $task->freeze_forever;
                     $projectTask->save();
                 }
             }
@@ -261,7 +262,7 @@ class UserProjectController extends Controller
     }
 
     public function myProjectTask(Request $request){
-        //try{
+        try{
             if (Auth::check()) {
                 $user_project_id = $request->id;
                 $tasks = UserProjectTask::select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_end')
@@ -293,21 +294,24 @@ class UserProjectController extends Controller
             else{
                 return redirect('login');
             }
-        /*}
+        }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){
-        try{
+        //try{
             $date_updated = 0;
             $date_increased = 0;
             $daysAdded = 0;
-            $task = UserProjectTask::where('id',$request->project_task_id)->first();
+            $task = UserProjectTask::where('user_project_tasks.id',$request->project_task_id)
+                ->select('user_project_tasks.*','tasks.has_freeze_rule')
+                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->first();
 
             /*
              * Check if original delivery date updated and then update next tasks original delivery date
@@ -316,9 +320,7 @@ class UserProjectController extends Controller
                 $date_updated = 1;
                 $delivery_date_update_count  = $task->delivery_date_update_count+1;
 
-                $timeDiff = strtotime($request->original_delivery_date) - strtotime($request->old_delivery_date);
-                $daysAdded = $timeDiff/86400;  // 86400 seconds in one day
-                if($daysAdded>0) { // If date increased
+                if(Common::getDateDiffDays($request->original_delivery_date,$request->old_delivery_date)>0) { // If date increased
                     $date_increased = 1;
                 }
             }
@@ -353,16 +355,19 @@ class UserProjectController extends Controller
              * */
             if($date_updated==1){
                 $this->updateNextTaskOriginalDeliveryDate($request->project_task_id,$task->user_project_id,$date_increased,$daysAdded);
+                if($task->has_freeze_rule==1){
+                    $this->disableNextTaskOriginalDeliveryDateEdit($request->project_task_id,$task->user_project_id);
+                }
             }
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     private function makePreviousTaskNotEditable($project_task_id,$user_project_id){
@@ -386,6 +391,7 @@ class UserProjectController extends Controller
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
+            ->where('user_project_tasks.freeze_forever',0)
             ->orderBy('user_project_tasks.id','ASC')
             ->first();
         if(!empty($next_task)){
@@ -403,6 +409,7 @@ class UserProjectController extends Controller
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
+            ->whereIn('user_project_tasks.status',['not initiate','processing'])
             ->where('tasks.update_date_with','self_task')
             ->get();
 
@@ -417,6 +424,25 @@ class UserProjectController extends Controller
                 $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs($daysAdded).' days'));
                 $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs($daysAdded).' days'));
             }
+            $taskData->save();
+        }
+    }
+
+    private function disableNextTaskOriginalDeliveryDateEdit($project_task_id,$user_project_id){
+        /*
+         * Get all next task of this user project
+         * */
+        $project_tasks = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
+            ->select('user_project_tasks.*')
+            ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+            ->where('user_project_id',$user_project_id)
+            ->where('tasks.status','active')
+            ->where('user_project_tasks.freeze_forever',2)
+            ->get();
+
+        foreach($project_tasks as $key=>$p_task){
+            $taskData = UserProjectTask::where('id',$p_task->id)->first();
+            $taskData->freeze_forever = 1;
             $taskData->save();
         }
     }
