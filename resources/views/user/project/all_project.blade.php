@@ -88,7 +88,10 @@
                                         if($task->due_date==''){
                                             $bg_class = '';
                                         }
-                                        else if(strtotime($task->due_date) < time()) {
+                                        else if($task->has_freeze_rule == 1){
+                                            $bg_class = '';
+                                        }
+                                        else if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
                                             $bg_class = 'bg-danger';
                                         }
                                         else if($day_left<=7){
