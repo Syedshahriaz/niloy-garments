@@ -120,22 +120,24 @@
                                                 $bg_class = 'bg-success';
                                             }
                                             else{
-                                                if(strtotime($task->due_date) < time()) {
-                                                    $bg_class = 'bg-danger';
-                                                }
-                                                else if($day_left<=7){
-                                                    $bg_class = 'bg-warning';
+                                                if($task->has_freeze_rule != 1){
+                                                    if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
+                                                        $bg_class = 'bg-danger';
+                                                    }
+                                                    else if($day_left<=7){
+                                                        $bg_class = 'bg-warning';
+                                                    }
                                                 }
                                             }
                                             ?>
 
                                             @if($task->task_status !='deleted')
-                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
+                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!task_editable($task) || !task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end)) background-color: #efefef;cursor: not-allowed; @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                 <div class="edit-table-date">
                                                     @if($task->task_status =='active')
                                                         {{date('D', strtotime($task->original_delivery_date))}},<br>
                                                         {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
-                                                        @if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
+                                                        @if(task_editable($task) && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
                                                             <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                         @endif
                                                     @endif
@@ -187,11 +189,13 @@
                                                 $bg_class = 'bg-success';
                                             }
                                             else{
-                                                if(strtotime($task->due_date) < time()) {
-                                                    $bg_class = 'bg-danger';
-                                                }
-                                                else if($day_left<=7){
-                                                    $bg_class = 'bg-warning';
+                                                if($task->has_freeze_rule != 1){
+                                                    if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
+                                                        $bg_class = 'bg-danger';
+                                                    }
+                                                    else if($day_left<=7){
+                                                        $bg_class = 'bg-warning';
+                                                    }
                                                 }
                                             }
                                         ?>
@@ -203,11 +207,11 @@
                                                         {{date('D, F d, Y', strtotime($task->due_date))}}
                                                     @endif
                                                 </td>
-                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif">
+                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!task_editable($task) || !task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end)) background-color: #efefef;cursor: not-allowed; @endif">
                                                     <div class="edit-table-date">
                                                         @if($task->task_status =='active')
                                                             {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
+                                                            @if(task_editable($task) && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
                                                                 <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif
@@ -296,8 +300,17 @@
     <!-- END TASK SUMMERY MODAL -->
 
     <?php
+    function task_editable($task){
+        if($task->has_freeze_rule==1 && $task->update_date_with !='self_task'){
+            return 1;
+        }
+        else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
+            return 1;
+        }
+        return 0;
+    }
+
     function task_in_date_range($shipment_date,$days_range_start,$days_range_end){
-        return 1;
         if($days_range_end == ''){
             return 1;
         }

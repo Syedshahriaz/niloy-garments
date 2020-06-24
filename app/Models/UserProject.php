@@ -15,7 +15,7 @@ class UserProject extends Model
     public function tasks()
     {
         $instance = $this->hasMany('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id');
+        $instance = $instance->select('user_project_tasks.*', 'tasks.title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.has_freeze_rule');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->where('tasks.status','active');
         return $instance;
@@ -24,7 +24,7 @@ class UserProject extends Model
     public function running_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*','tasks.title');
+        $instance = $instance->select('user_project_tasks.*','tasks.title','tasks.has_freeze_rule');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->where('tasks.status','active');
         $instance = $instance->where('user_project_tasks.status','processing');
@@ -36,7 +36,7 @@ class UserProject extends Model
     public function last_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*','tasks.title');
+        $instance = $instance->select('user_project_tasks.*','tasks.title','tasks.has_freeze_rule');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->where('tasks.status','active');
         $instance = $instance->orderBy('user_project_tasks.id','DESC');
