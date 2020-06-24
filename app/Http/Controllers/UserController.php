@@ -299,7 +299,12 @@ class UserController extends Controller
             /*
              * Update shipping date
              * */
+            $date_increased = 0;
             if($request->shipment_date !='' && $request->shipment_date != $request->old_shipment_date){
+                if(Common::getDateDiffDays($request->shipment_date,$request->old_shipment_date)>0) { // If date increased
+                    $date_increased = 1;
+                }
+
                 /*
                  * Update shipment date
                  * */
@@ -324,8 +329,18 @@ class UserController extends Controller
                      * Add user project tasks due date
                      * */
                     foreach($project_tasks as $key=>$p_task){
-                        $p_task->due_date = date('Y-m-d', strtotime($request->shipment_date. ' + '.$p_task->days_to_add.' days'));
-                        $p_task->original_delivery_date = date('Y-m-d', strtotime($request->shipment_date. ' + '.$p_task->days_to_add.' days'));
+                        if($date_increased==1) { // If date increased
+                            $p_task->due_date = date('Y-m-d',
+                                strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                            $p_task->original_delivery_date = date('Y-m-d',
+                                strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                        }
+                        else{
+                            $p_task->due_date = date('Y-m-d',
+                                strtotime($request->shipment_date . ' - ' . abs($p_task->days_to_add) . ' days'));
+                            $p_task->original_delivery_date = date('Y-m-d',
+                                strtotime($request->shipment_date . ' - ' . abs($p_task->days_to_add) . ' days'));
+                        }
                         $p_task->save();
                     }
                 }

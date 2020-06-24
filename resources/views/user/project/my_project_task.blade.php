@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <a class=" ajax_item item-2" href="{{url('dashboard')}}" data-name="dashboard" data-item="2">Projects</a>
+                        <a class=" ajax_item item-2" href="{{url('all_project')}}" data-name="all_project" data-item="2">Projects</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
@@ -135,7 +135,7 @@
                                                     @if($task->task_status =='active')
                                                         {{date('D', strtotime($task->original_delivery_date))}},<br>
                                                         {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
-                                                        @if(($task->status == 'processing' || $task->status == 'completed') && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
+                                                        @if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
                                                             <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                         @endif
                                                     @endif
@@ -207,7 +207,7 @@
                                                     <div class="edit-table-date">
                                                         @if($task->task_status =='active')
                                                             {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if(($task->status == 'processing' || $task->status == 'completed') && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
+                                                            @if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2 && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
                                                                 <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif
@@ -297,6 +297,7 @@
 
     <?php
     function task_in_date_range($shipment_date,$days_range_start,$days_range_end){
+        return 1;
         if($days_range_end == ''){
             return 1;
         }

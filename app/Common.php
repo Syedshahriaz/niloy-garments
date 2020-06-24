@@ -109,6 +109,20 @@ class Common
     }
 
     /*
+    | Get two Date difference in days
+    */
+    public static function getDateDiffDays($date1, $date2)
+    {
+        try{
+            $timeDiff = strtotime($date1) - strtotime($date2);
+            $daysDiff = $timeDiff/86400;  // 86400 seconds in one day
+            return $daysDiff;
+        }catch (\Exception $exception){
+            echo $exception->getMessage();
+        }
+    }
+
+    /*
     | Get Month From Date
     */
     public static function getMonth($time)
