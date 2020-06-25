@@ -320,7 +320,8 @@ class UserProjectController extends Controller
                 $date_updated = 1;
                 $delivery_date_update_count  = $task->delivery_date_update_count+1;
 
-                if(Common::getDateDiffDays($request->original_delivery_date,$request->old_delivery_date)>0) { // If date increased
+                $daysAdded = Common::getDateDiffDays($request->original_delivery_date,$request->old_delivery_date);
+                if($daysAdded>0) { // If date increased
                     $date_increased = 1;
                 }
             }
@@ -359,6 +360,7 @@ class UserProjectController extends Controller
                     $this->disableNextTaskOriginalDeliveryDateEdit($request->project_task_id,$task->user_project_id);
                 }
             }
+
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
         /*}
