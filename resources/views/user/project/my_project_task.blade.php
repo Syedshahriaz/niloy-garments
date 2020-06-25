@@ -301,11 +301,11 @@
 
     <?php
     function task_editable($task){
-        if($task->has_freeze_rule==1 && $task->update_date_with !='self_task'){
+        if($task->has_freeze_rule==1 && $task->update_date_with !='self_task' && $task->status != 'completed' && $task->delivery_date_update_count < 2){
             return 1;
         }
         else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
-            return 1;
+            return 2;
         }
         return 0;
     }
