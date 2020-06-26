@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use app\Models\Project;
+use App\Models\UserProjectTask;
 use app\Common;
 use app\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -114,6 +116,23 @@ class ProjectController extends Controller
         }
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'updateStatus', $e->getLine(),
+                $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function unlockProjectTask(Request $request){
+        try{
+            $project_task = UserProjectTask::where('id',$request->project_task_id)->first();
+            if($project_task->delivery_date_update_count != 0){
+                $project_task->delivery_date_update_count = 1;
+            }
+            $project_task->save();
+            return ['status'=>200, 'reason'=>'Project task unlocked successfully'];
+        }
+        catch (\Exception $e) {
+            SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'unlockProjectTask', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
