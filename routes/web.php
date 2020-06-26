@@ -84,6 +84,7 @@ Route::post('admin/send_user_email', 'Admin\UserController@sendUserEmail');
 
 Route::post('admin/unlock_project_task', 'Admin\ProjectController@unlockProjectTask');
 
+Route::get('admin/promotion', 'Admin\SettingController@promotion');
 Route::get('admin/settings', 'Admin\SettingController@index');
 Route::post('admin/update_settings', 'Admin\SettingController@update');
 

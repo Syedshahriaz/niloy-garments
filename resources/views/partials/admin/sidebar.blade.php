@@ -84,7 +84,7 @@
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
 
-            <li class="nav-item  @if($page=='dashboard') active @endif">
+            <!-- <li class="nav-item  @if($page=='dashboard') active @endif">
                 <a href="#" class="nav-link">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
@@ -97,12 +97,12 @@
                     <span class="title">All Projects</span>
                     <span class="selected"></span>
                 </a>
-            </li>
+            </li> -->
 
             <li class="nav-item @if($page=='users') active @endif">
                 <a href="{{url('admin/users')}}" class="nav-link">
                     <i class="icon-users"></i>
-                    <span class="title">Users</span>
+                    <span class="title">All Users</span>
                     <span class="selected"></span>
                 </a>
             </li>
@@ -115,11 +115,28 @@
                 </a>
             </li>
             <li class="nav-item @if($page=='settings') active @endif">
-                <a href="{{url('admin/settings')}}" class="nav-link">
+                <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-settings"></i>
                     <span class="title">Settings</span>
-                    <span class="selected"></span>
+                    <span class="arrow"></span>
                 </a>
+                <ul class="sub-menu" style="display: none;">
+                    <li class="nav-item start ">
+                        <a href="{{url('admin/promotion')}}" class="nav-link">
+                            <span class="title">Promotio Page</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start ">
+                        <a href="{{url('#')}}" class="nav-link">
+                            <span class="title">Project & Tasks</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start ">
+                        <a href="{{url('admin/settings')}}" class="nav-link">
+                            <span class="title">Common</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a  href="{{ url('admin/logout') }}" class="nav-link">

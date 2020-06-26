@@ -10,6 +10,9 @@
     .mt-1{
         margin-top: 1rem;
     }
+    .mt-2{
+        margin-top: 2rem;
+    }
     .mt-3{
         margin-top: 3rem;
     }
@@ -172,6 +175,22 @@ body {
  
 .dataTables_wrapper  .dataTables_paginate{
     float: right !important;
+}
+.page-sidebar .page-sidebar-menu li > a > .arrow::before{
+    content: '\25BC' !important;
+}
+.page-sidebar .page-sidebar-menu > li.active.open + li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open + li > a {
+    border-top-color: #0c0c0c;
+}
+.page-sidebar .page-sidebar-menu .sub-menu > li.active > a, .page-sidebar .page-sidebar-menu .sub-menu > li.open > a, .page-sidebar .page-sidebar-menu .sub-menu > li:hover > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.active > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.open > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li:hover > a{
+    background: #2D323C !important;
+}
+.note-editable {
+    line-height: 1.0;
+}
+.note-editable p {
+    margin-top: 10px;
+    margin-bottom: 8px;
 }
 /*phone plugin Edit START*/
 .iti{
@@ -431,6 +450,49 @@ div#user_horizontal_task_wrapper .col-sm-12 {
 }
 .offer-item.selected-offer{
     border-color: black !important;
+}
+.unlock-task{
+    position: relative;
+}
+.unlock-task:hover a{
+    display: block;
+}
+.unlock-task-td{
+    position: relative;
+}
+
+.unlock-task {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.61);
+    color: #fff;
+    left: 0;
+    top: 0;
+    text-align: center;
+}
+.unlock-task-td:hover .unlock-task{
+    display: block;
+}
+.unlock-task>a>i {
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.admin-common-message {
+    background-color: #fff8dd;
+    padding: 10px;
+    border: 1px solid #e8e1c5;
+}
+.admin-common-message p {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0;
 }
 /*Admin part END*/
 /*Rewrite layout END*/

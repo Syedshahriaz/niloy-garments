@@ -7,6 +7,24 @@ $(".telephone").intlTelInput({
 //$('#iti-0__item-bd').find('.iti__dial-code').text('+88');
 //$('.iti__selected-dial-code').text('+88');
 
+
+//summernote
+$(document).ready(function() {
+    $('.summernote').summernote({
+        height: 100,
+        toolbar: [
+            // [groupName, [list of button]]
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
+            //['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']]
+        ]
+    });
+});
+
+
 //User registration show password
 $('.show-password').click(function(){
     if($(this).is(":checked") == true){

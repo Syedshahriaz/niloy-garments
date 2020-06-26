@@ -122,7 +122,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="send_email_modal" tabindex="-1" role="send_email_modal" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
@@ -131,14 +131,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <form id="email_form" method="post" action="">
-                            <div class="col-md-10 col-md-offset-1">
+                            <div class="col-md-12">
                                 <div class="alert alert-success" id="success_message" style="display:none"></div>
                                 <div class="alert alert-danger" id="error_message" style="display: none"></div>
                             </div>
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="user_id" value="">
 
-                            <div class="col-md-10 col-md-offset-1">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Subject</label>
                                     <input class="form-control placeholder-no-fix" type="text" placeholder="Enter email subject*" name="subject" id="subject" value=""  autocomplete="off"/>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center">
-                        <button type="submit" class="btn theme-btn" id="send_email">Send</button>
+                        <button type="submit" class="btn theme-btn pull-right" id="send_email">Send Email</button>
                     </div>
                 </div>
             </div>
@@ -175,6 +175,21 @@
                 //"ordering": true,
                 //"info":     true,
                 //"searching": true
+            });
+        });
+
+        $(document).ready(function() {
+            $('#message').summernote({
+                height: 130,
+                toolbar: [
+                    // [groupName, [list of button]]
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    //['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
             });
         });
 
