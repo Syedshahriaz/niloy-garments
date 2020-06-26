@@ -114,6 +114,13 @@
                     <span class="selected"></span>
                 </a>
             </li>
+            <li class="nav-item @if($page=='settings') active @endif">
+                <a href="{{url('admin/settings')}}" class="nav-link">
+                    <i class="icon-settings"></i>
+                    <span class="title">Settings</span>
+                    <span class="selected"></span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a  href="{{ url('admin/logout') }}" class="nav-link">
                     <i class="icon-logout"></i>

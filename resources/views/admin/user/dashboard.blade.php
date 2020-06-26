@@ -158,6 +158,7 @@
                                                                     @if($task->task_status =='active')
                                                                         {{date('D', strtotime($task->original_delivery_date))}},
                                                                         {{date('M d, Y', strtotime($task->original_delivery_date))}}
+                                                                        <a class="" title="Edit" onclick="open_unlock_modal({{$task->id}})"><i class="icons icon-note"></i></a>
                                                                     @endif
                                                                 </div>
                                                             </td>
@@ -233,6 +234,7 @@
                                                                 <div class="edit-table-date">
                                                                     @if($task->task_status =='active')
                                                                         {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
+                                                                        <a class="" title="Edit" onclick="open_unlock_modal({{$task->id}})"><i class="icons icon-note"></i></a>
                                                                     @endif
                                                                 </div>
                                                             </td>
@@ -254,6 +256,39 @@
         </div>
         <!-- END CONTENT BODY -->
     </div>
+
+
+    <!-- START TASK Delivery date MODAL -->
+    <div class="modal fade" id="task_unlock_modal" tabindex="-1" role="select_delivery_modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock task</h4>
+                </div>
+                <h4>Are you sure you want to unlock this task?</h4>
+                <form id="unlock_form" method="post" action="">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="project_task_id" id="project_task_id" value="">
+
+                    <div class="alert alert-success" id="unlock_success_message" style="display:none"></div>
+                    <div class="alert alert-danger" id="unlock_error_message" style="display: none"></div>
+
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn theme-btn" id="delivery_submit_button">Submit</button>
+                        <button type="button" class="btn btn-danger" id="" data-dismiss="modal" >Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- END TASK SUMMERY MODAL -->
 
     <!-- Modal -->
     <div class="modal fade" id="create_buyer_modal" tabindex="-1" role="create_buyer_modal" aria-hidden="true">
@@ -328,97 +363,60 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            // $('#user_dash_horizontal_task, #user_vertical_task').DataTable({
-            //     "paging":   false,
-            //     "ordering": false,
-            //     "info":     false,
-            //     "searching": false,
-            //     "responsive": true,
-            //     "scrollY": "200px",
-            //     "scrollCollapse": true,
-            //     "paging": false
-            // });
+
         });
 
-        function open_buyer_modal(){
-            $('#create_buyer_modal').modal('show');
+        function open_unlock_modal(id){
+            $('#project_task_id').val(id);
+            $('#task_unlock_modal').modal('show');
         }
 
-        $(document).on("click", "#save_buyer_button", function(event) {
+        $(document).on("submit", "#unlock_form", function(event) {
             event.preventDefault();
-
-            var options = {
-                theme: "sk-cube-grid",
-                message: 'Please wait while saving all data.....',
-                backgroundColor: "#1847B1",
-                textColor: "white"
-            };
-
-            HoldOn.open(options);
-
-            var buyer_name = $("#buyer_name").val();
-            var buyer_email = $("#buyer_email").val();
-            var buying_agent_name = $("#buying_agent_name").val();
-            var buying_agent_email = $("#buying_agent_email").val();
-            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            //show_loader();
 
             var validate = "";
 
-            if (buyer_name.trim() == "") {
-                validate = validate + "Buyer name is required</br>";
-            }
-            /*if (phone.trim() == "") {
-                validate = validate + "Phone is required</br>";
-            }*/
-            if(buyer_email.trim()!=''){
-                if(!re.test(buyer_email)){
-                    validate = validate+'Buyer email is invalid<br>';
-                }
-            }
-            if(buying_agent_email.trim()!=''){
-                if(!re.test(buying_agent_email)){
-                    validate = validate+'Buying agent email is invalid<br>';
-                }
-            }
-
             if (validate == "") {
-                var formData = new FormData($("#buyer_form")[0]);
-                var url = "{{ url('save_buyer') }}";
+                var formData = new FormData($("#unlock_form")[0]);
+                var url = "{{ url('admin/unlock_project_task') }}";
 
                 $.ajax({
                     type: "POST",
                     url: url,
                     data: formData,
                     success: function(data) {
-                        HoldOn.close();
+                        //hide_loader();
                         if (data.status == 200) {
-                            $("#success_message").show();
-                            $("#error_message").hide();
-                            $("#success_message").html(data.reason);
+
+                            $('#project_task_id').val('');
+                            $('#task_unlock_modal').modal('hide');
+
+                            $("#unlock_success_message").show();
+                            $("#unlock_error_message").hide();
+                            $("#unlock_success_message").html(data.reason);
+
                             setTimeout(function(){
-                                location.reload();
+                                $("#unlock_success_message").hide();
                             },2000)
+
                         } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
+                            show_error_message(data.reason);
                         }
                     },
                     error: function(data) {
-                        HoldOn.close();
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
+                        //hide_loader();
+                        show_error_message(data);
                     },
                     cache: false,
                     contentType: false,
                     processData: false
                 });
             } else {
-                HoldOn.close();
-                $("#success_message").hide();
-                $("#error_message").show();
-                $("#error_message").html(validate);
+                //hide_loader();
+                $("#unlock_success_message").hide();
+                $("#unlock_error_message").show();
+                $("#unlock_error_message").html(validate);
             }
         });
     </script>

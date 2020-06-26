@@ -316,31 +316,28 @@ class UserController extends Controller
                 /*
                  * Update project task due date
                  * */
-                $user_projects = UserProject::where('user_id',$user_id)->get();
+                $user_projects = UserProject::where('user_id',$user_id)
+                    ->select('user_projects.*')
+                    ->join('projects','projects.id','=','user_projects.project_id')
+                    ->where('projects.day_add_with','shipment_date')
+                    ->get();
 
                 foreach($user_projects as $key=>$u_project){
                     $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
-                        ->select('user_project_tasks.*','tasks.days_to_add')
+                        ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
                         ->join('tasks','tasks.id','=','user_project_tasks.task_id')
                         ->whereIn('user_project_tasks.status',['not initiate','processing'])
+                        //->where('tasks.update_date_with','shipment_date')
                         ->get();
 
                     /*
                      * Add user project tasks due date
                      * */
                     foreach($project_tasks as $key=>$p_task){
-                        if($date_increased==1) { // If date increased
-                            $p_task->due_date = date('Y-m-d',
-                                strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
-                            $p_task->original_delivery_date = date('Y-m-d',
-                                strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
-                        }
-                        else{
-                            $p_task->due_date = date('Y-m-d',
-                                strtotime($request->shipment_date . ' - ' . abs($p_task->days_to_add) . ' days'));
-                            $p_task->original_delivery_date = date('Y-m-d',
-                                strtotime($request->shipment_date . ' - ' . abs($p_task->days_to_add) . ' days'));
-                        }
+                        $p_task->due_date = date('Y-m-d',
+                            strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                        $p_task->original_delivery_date = date('Y-m-d',
+                            strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
                         $p_task->save();
                     }
                 }

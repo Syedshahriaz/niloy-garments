@@ -19,9 +19,9 @@ Route::get('cron/send_task_warning_email', 'CronController@sendTaskWarningEmail'
  * Admin auth route
  * */
 
-Route::get('admin/login', 'AdminController@login');
-Route::post('admin/post_login', 'AdminController@postLogin');
-Route::get('admin/logout', 'AdminController@logout');
+Route::get('admin/login', 'Admin\AdminController@login');
+Route::post('admin/post_login', 'Admin\AdminController@postLogin');
+Route::get('admin/logout', 'Admin\AdminController@logout');
 
 /*
  * User auth route
@@ -75,12 +75,17 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 Route::get('message', 'MessageController@message');
 
 /*Admin routes*/
-Route::get('admin', 'AdminController@index');
+Route::get('admin', 'Admin\AdminController@index');
 
 Route::get('admin/users', 'Admin\UserController@userList');
 Route::get('admin/user_dashboard', 'Admin\UserController@dashboard');
 Route::post('admin/update_user_status', 'Admin\UserController@updateStatus');
 Route::post('admin/send_user_email', 'Admin\UserController@sendUserEmail');
+
+Route::post('admin/unlock_project_task', 'Admin\ProjectController@unlockProjectTask');
+
+Route::get('admin/settings', 'Admin\SettingController@index');
+Route::post('admin/update_settings', 'Admin\SettingController@update');
 
 
 
