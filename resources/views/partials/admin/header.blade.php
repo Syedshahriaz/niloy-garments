@@ -38,6 +38,10 @@
         <link href="{{asset('assets/global/plugins/datatables/dataTables.bootstrap.min.csss')}}" rel="stylesheet" type="text/css" />
         <!-- END DATA TABLE STYLES-->
 
+        <!-- Summernote -->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+        <!-- Summernote -->
+
         <!-- BEGIN THEME LAYOUT STYLES -->
         <link href="{{asset('assets/layouts/layout/css/layout.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/layouts/layout/css/themes/blue.min.css')}}" rel="stylesheet" type="text/css" id="style_color" />

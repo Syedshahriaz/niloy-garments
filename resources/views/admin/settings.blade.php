@@ -39,8 +39,8 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label">Message to user</label>
-                                            <textarea class="form-control placeholder-no-fix" name="message_to_user" id="message_to_user" >{{$settings->message_to_user}}</textarea>
+                                            <label class="control-label">Common message to all user</label>
+                                            <textarea rows="4" class="form-control placeholder-no-fix summernote" name="message_to_user" id="message_to_user" >{{$settings->message_to_user}}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">

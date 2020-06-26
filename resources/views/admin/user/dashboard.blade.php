@@ -60,9 +60,9 @@
                             </div>
 
                             <div class="actions">
-                                <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_dash_view_btn">
-                                    <!--i class="icon-list icons"></i-->Vertical View
-                                </a>
+                                <!-- <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_dash_view_btn">
+                                    Vertical View
+                                </a> -->
                                 <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_dash_view_btn">
                                     <!--i class="icon-grid icons"></i-->Horizontal View
                                 </a>
@@ -153,14 +153,15 @@
                                                         ?>
 
                                                         @if($task->task_status !='deleted')
-                                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
-                                                                <div class="edit-table-date">
+                                                            <td class="unlock-task-td @if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
+                                                                
                                                                     @if($task->task_status =='active')
                                                                         {{date('D', strtotime($task->original_delivery_date))}},
                                                                         {{date('M d, Y', strtotime($task->original_delivery_date))}}
-                                                                        <a class="" title="Edit" onclick="open_unlock_modal({{$task->id}})"><i class="icons icon-note"></i></a>
+                                                                        <div class="unlock-task">
+                                                                            <a class="unlock-task" title="Edit" onclick="open_unlock_modal({{$task->id}})"><i class="icons icon-lock-open"></i></a>
+                                                                        </div>
                                                                     @endif
-                                                                </div>
                                                             </td>
                                                         @endif
                                                         <?php } ?>
@@ -266,20 +267,21 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                     <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock task</h4>
                 </div>
-                <h4>Are you sure you want to unlock this task?</h4>
+                
                 <form id="unlock_form" method="post" action="">
                     {{ csrf_field() }}
                     <input type="hidden" name="project_task_id" id="project_task_id" value="">
 
-                    <div class="alert alert-success" id="unlock_success_message" style="display:none"></div>
-                    <div class="alert alert-danger" id="unlock_error_message" style="display: none"></div>
-
                     <div class="modal-body">
-
+                        <div class="alert alert-success text-center" id="unlock_success_message" style="display:none"></div>
+                        <div class="alert alert-danger text-center" id="unlock_error_message" style="display: none"></div>
+                        <h4 class="text-center">
+                            Are you sure you want to unlock this task?
+                        </h4>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn theme-btn" id="delivery_submit_button">Submit</button>
-                        <button type="button" class="btn btn-danger" id="" data-dismiss="modal" >Cancel</button>
+                    <div class="modal-footer" style="text-align: center;">
+                        <button type="submit" class="btn theme-btn" id="delivery_submit_button">Yes</button>
+                        <button type="button" class="btn btn-danger" id="" data-dismiss="modal" >No</button>
                     </div>
                 </form>
 
@@ -390,7 +392,10 @@
                         if (data.status == 200) {
 
                             $('#project_task_id').val('');
-                            $('#task_unlock_modal').modal('hide');
+                            setTimeout(function(){
+                                $('#task_unlock_modal').modal('hide');
+                            }, 2000);
+                            
 
                             $("#unlock_success_message").show();
                             $("#unlock_error_message").hide();

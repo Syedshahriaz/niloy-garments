@@ -44,4 +44,7 @@ class SettingController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+    public function promotion(){
+        return view('admin.promotion');
+    } 
 }

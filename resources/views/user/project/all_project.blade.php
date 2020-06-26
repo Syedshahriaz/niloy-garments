@@ -30,14 +30,19 @@
             <!-- END PAGE BAR -->
             <!-- END PAGE HEADER-->
 
-            <div class="row mt-3">
+            <div class="row mt-1">
+                <div class="col-md-12 col-sm-12">
+                    <div class="admin-common-message">
+                        <p>{{$setting->message_to_user}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-1">
                 <div class="col-md-12 col-sm-12">
                     <!-- BEGIN PORTLET-->
                     <div class="portlet light bordered">
                         <div class="portlet-title">
-                            <div class="">
-                                {{$setting->message_to_user}}
-                            </div>
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
                                 <span class="caption-subject font-dark bold uppercase">All projects</span>
