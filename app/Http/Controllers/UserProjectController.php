@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Offer;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Project;
@@ -22,16 +23,17 @@ class UserProjectController extends Controller
     public function selectShipment(Request $request){
         try{
             if (Auth::check()) {
+                $offer = Offer::first();
                 $user = User::where('users.id', $request->id)->first();
                 $shipment = UserShipment::where('user_id', $user->id)->first();
                 if (!empty($shipment)) {
                     return redirect('all_project');
                 }
                 if ($request->ajax()) {
-                    $returnHTML = View::make('user.project.select_shipment', compact('user'))->renderSections()['content'];
+                    $returnHTML = View::make('user.project.select_shipment', compact('user','offer'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('user.project.select_shipment', compact('user'));
+                return view('user.project.select_shipment', compact('user','offer'));
             }
             else{
                 return redirect('login');

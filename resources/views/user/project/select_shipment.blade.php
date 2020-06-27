@@ -94,15 +94,15 @@
                                             <label for=""><b>Choose Offer</b></label>
                                             <div class="offer-itemlist">
                                                 <div class="offer-item">
-                                                    <p>Green Offer</p>
+                                                    <p>{{$offer->offer1_name}}</p>
                                                     <input type="radio" name="offer" value="1" hidden>
                                                 </div>
                                                 <div class="offer-item">
-                                                    <p>Red Offer</p>
+                                                    <p>{{$offer->offer2_name}}</p>
                                                     <input type="radio" name="offer" value="2" hidden>
                                                 </div>
                                                 <div class="offer-item">
-                                                    <p>Pink Offer</p>
+                                                    <p>{{$offer->offer3_name}}</p>
                                                     <input type="radio" name="offer_3" value="3" disabled hidden>
                                                 </div>
                                             </div>
