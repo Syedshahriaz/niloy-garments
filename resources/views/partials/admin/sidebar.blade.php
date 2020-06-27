@@ -127,7 +127,7 @@
                         </a>
                     </li>
                     <li class="nav-item start ">
-                        <a href="{{url('#')}}" class="nav-link">
+                        <a href="{{url('admin/project_settings')}}" class="nav-link">
                             <span class="title">Project & Tasks</span>
                         </a>
                     </li>

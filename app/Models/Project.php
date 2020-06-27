@@ -11,4 +11,11 @@ class Project extends Model
     public $primaryKey = 'id';
 
     public $timestamps = false;
+
+    public function tasks()
+    {
+        $instance = $this->hasMany('App\Models\Task','project_id','id');
+        $instance = $instance->where('tasks.status','!=','active');
+        return $instance;
+    }
 }
