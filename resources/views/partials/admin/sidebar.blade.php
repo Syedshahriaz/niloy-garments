@@ -114,7 +114,7 @@
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='settings') active @endif">
+            <li class="nav-item @if($page=='promotion_settings' || $page=='common_settings') active @endif">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-settings"></i>
                     <span class="title">Settings</span>
@@ -122,7 +122,7 @@
                 </a>
                 <ul class="sub-menu" style="display: none;">
                     <li class="nav-item start ">
-                        <a href="{{url('admin/promotion')}}" class="nav-link">
+                        <a href="{{url('admin/promotion_settings')}}" class="nav-link">
                             <span class="title">Promotio Page</span>
                         </a>
                     </li>
@@ -132,7 +132,7 @@
                         </a>
                     </li>
                     <li class="nav-item start ">
-                        <a href="{{url('admin/settings')}}" class="nav-link">
+                        <a href="{{url('admin/common_settings')}}" class="nav-link">
                             <span class="title">Common</span>
                         </a>
                     </li>

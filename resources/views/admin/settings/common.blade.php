@@ -1,5 +1,5 @@
 @extends('layouts.admin_master')
-@section('title', 'Niloy Garments::Settings')
+@section('title', 'Niloy Garments::Common Settings')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -89,7 +89,7 @@
 
             if (validate == "") {
                 var formData = new FormData($("#setting_form")[0]);
-                var url = "{{ url('admin/update_settings') }}";
+                var url = "{{ url('admin/update_common_settings') }}";
 
                 $.ajax({
                     type: "POST",
