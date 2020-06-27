@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
-    public function index(Request $request){
+    public function commonSetting(Request $request){
         try{
             $settings = Setting::first();
             if($request->ajax()) {
-                $returnHTML = View::make('admin.settings',compact('settings'))->renderSections()['content'];
+                $returnHTML = View::make('admin.settings.common',compact('settings'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.settings',compact('settings'));
+            return view('admin.settings.common',compact('settings'));
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'index', $e->getLine(),
@@ -28,7 +28,7 @@ class SettingController extends Controller
         }
     }
 
-    public function update(Request $request){
+    public function updateCommonSetting(Request $request){
         try{
             $user = Auth::user();
             $setting = Setting::first();
@@ -44,7 +44,7 @@ class SettingController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
-    public function promotion(){
-        return view('admin.promotion');
-    } 
+    public function promotionSettings(Request $request){
+        return view('admin.settings.promotion');
+    }
 }
