@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\Offer;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class SettingController extends Controller
             return view('admin.settings.common',compact('settings'));
         }
         catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'index', $e->getLine(),
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'commonSetting', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -38,13 +39,52 @@ class SettingController extends Controller
             return ['status'=>200, 'reason'=>'Successfully updated'];
         }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'update', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateCommonSetting', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+
     public function promotionSettings(Request $request){
-        return view('admin.settings.promotion');
+        try{
+            $offer = Offer::first();
+            if($request->ajax()) {
+                $returnHTML = View::make('admin.settings.common',compact('offer'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('admin.settings.promotion',compact('offer'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'promotionSettings', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateOffer(Request $request){
+        try{
+            $names = $request->name;
+            $details = $request->details;
+
+            $offer = Offer::first();
+            $offer->offer1_name = $request->offer1_name;
+            $offer->offer1_description = $request->offer1_description;
+            $offer->offer2_name = $request->offer2_name;
+            $offer->offer2_description = $request->offer2_description;
+            $offer->offer3_name = $request->offer3_name;
+            $offer->offer3_description = $request->offer3_description;
+            $offer->updated_at = date('Y-m-d h:i:s');
+            $offer->save();
+
+            return ['status'=>200, 'reason'=>'Successfully updated'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
     }
 }
