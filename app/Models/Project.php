@@ -15,7 +15,7 @@ class Project extends Model
     public function tasks()
     {
         $instance = $this->hasMany('App\Models\Task','project_id','id');
-        $instance = $instance->where('tasks.status','!=','active');
+        $instance = $instance->where('tasks.status','active');
         return $instance;
     }
 }

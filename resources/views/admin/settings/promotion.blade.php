@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Yellow Offer</label>
+                                            <label>Pink Offer</label>
                                             <input type="text" class="form-control" name="offer3_name" id="offer3_name" value="{{$offer->offer3_name}}">
                                         </div>
                                         <div class="form-group">

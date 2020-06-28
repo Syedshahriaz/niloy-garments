@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Offer;
+use App\Models\TaskTitle;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Project;
@@ -272,6 +273,9 @@ class UserProjectController extends Controller
                     ->where('user_project_id', $user_project_id)
                     ->get();
 
+                $task_titles = TaskTitle::where('status','!=','deleted')
+                    ->get();
+
                 if (!empty($tasks)) {
                     $project = Project::select('projects.*')
                         ->where('id', $tasks[0]->project_id)
@@ -288,10 +292,10 @@ class UserProjectController extends Controller
 
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.my_project_task',
-                        compact('user_project_id','project', 'tasks','shipment'))->renderSections()['content'];
+                        compact('user_project_id','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('user.project.my_project_task', compact('user_project_id','project', 'tasks', 'shipment'));
+                return view('user.project.my_project_task', compact('user_project_id','project', 'tasks', 'shipment','task_titles'));
             }
             else{
                 return redirect('login');

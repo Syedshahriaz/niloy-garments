@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Task;
+use App\Models\TaskTitle;
 use App\Models\UserProjectTask;
 use App\Common;
 use App\SendMails;
@@ -17,11 +19,13 @@ class ProjectController extends Controller
             $projects = Project::with('tasks')
                 ->where('status','!=','deleted')
                 ->get();
+            $task_titles = TaskTitle::where('status','!=','deleted')
+                ->get();
             if($request->ajax()) {
-                $returnHTML = View::make('admin.project.all_project',compact('projects'))->renderSections()['content'];
+                $returnHTML = View::make('admin.project.all_project',compact('projects','task_titles'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.settings.project',compact('projects'));
+            return view('admin.settings.project',compact('projects','task_titles'));
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'index', $e->getLine(),
@@ -68,18 +72,13 @@ class ProjectController extends Controller
         }
     }
 
-    public function edit(Request $request){
+    public function getProjectAjax(Request $request){
         try{
-            $user = Auth::user();
             $project = Project::where('id',$request->project_id)->first();
-            if($request->ajax()) {
-                $returnHTML = View::make('admin.project.edit_project',compact('project'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
-            }
-            return view('admin.project.edit_project',compact('project'));
+            return ['status'=>200, 'reason'=>'', 'project'=>$project];
         }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'edit', $e->getLine(),
+            SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'getProjectAjax', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -91,6 +90,7 @@ class ProjectController extends Controller
             $user = Auth::user();
             $project = Project::where('id',$request->project_id)->first();
             $project->name = $request->name;
+            $project->sub_title = $request->sub_title;
             $project->fabrication = $request->fabrication;
             $project->color = $request->color;
             $project->quantity = $request->quantity;
@@ -101,8 +101,8 @@ class ProjectController extends Controller
             return ['status'=>200, 'reason'=>'Successfully updated'];
         }
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'updateProject', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'updateProject', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
@@ -124,22 +124,34 @@ class ProjectController extends Controller
         }
     }
 
-    public function updateTask(Request $request){
+    public function updateTaskTitle(Request $request){
         try{
             $user = Auth::user();
-            $project = Task::where('id',$request->task_id)->first();
-            $project->title = $request->title;
-            $project->rule = $request->rule;
-            $project->description = $request->description;
-            $project->quantity = $request->quantity;
-            $project->size_range = $request->size_range;
-            $project->updated_by = $user->id;
-            $project->updated_at = date('Y-m-d');
-            $project->save();
+            $task = Task::where('id',$request->task_id)->first();
+            $task->rule = $request->rule_name;
+            $task->updated_at = date('Y-m-d');
+            $task->save();
             return ['status'=>200, 'reason'=>'Successfully updated'];
         }
         catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'updateTask', $e->getLine(),
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'updateTaskTitle', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateTaskRule(Request $request){
+        try{
+            $user = Auth::user();
+            $task = Task::where('id',$request->task_id)->first();
+            $task->rule = $request->rule_name;
+            $task->updated_at = date('Y-m-d');
+            $task->save();
+            return ['status'=>200, 'reason'=>'Successfully updated'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'updateTaskRule', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
