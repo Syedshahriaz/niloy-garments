@@ -70,11 +70,11 @@ class SettingController extends Controller
 
             $offer = Offer::first();
             $offer->offer1_name = $request->offer1_name;
-            $offer->offer1_description = $request->offer1_description;
+            $offer->offer1_details = $request->offer1_details;
             $offer->offer2_name = $request->offer2_name;
-            $offer->offer2_description = $request->offer2_description;
+            $offer->offer2_details = $request->offer2_details;
             $offer->offer3_name = $request->offer3_name;
-            $offer->offer3_description = $request->offer3_description;
+            $offer->offer3_details = $request->offer3_details;
             $offer->updated_at = date('Y-m-d h:i:s');
             $offer->save();
 

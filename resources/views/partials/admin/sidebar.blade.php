@@ -123,7 +123,7 @@
                 <ul class="sub-menu" style="display: none;">
                     <li class="nav-item start ">
                         <a href="{{url('admin/promotion_settings')}}" class="nav-link">
-                            <span class="title">Promotio Page</span>
+                            <span class="title">Promotion Page</span>
                         </a>
                     </li>
                     <li class="nav-item start ">
