@@ -114,24 +114,24 @@
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='promotion_settings' || $page=='common_settings') active @endif">
+            <li class="nav-item @if($page=='promotion_settings' || $page=='project_settings' || $page=='common_settings') active open @endif">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-settings"></i>
                     <span class="title">Settings</span>
                     <span class="arrow"></span>
                 </a>
-                <ul class="sub-menu" style="display: none;">
-                    <li class="nav-item start ">
+                <ul class="sub-menu" @if($page=='promotion_settings' || $page=='project_settings' || $page=='common_settings') style="display: block;" @endif>
+                    <li class="nav-item start @if($page=='promotion_settings') active @endif">
                         <a href="{{url('admin/promotion_settings')}}" class="nav-link">
                             <span class="title">Promotion Page</span>
                         </a>
                     </li>
-                    <li class="nav-item start ">
+                    <li class="nav-item start @if($page=='project_settings') active @endif">
                         <a href="{{url('admin/project_settings')}}" class="nav-link">
                             <span class="title">Project & Tasks</span>
                         </a>
                     </li>
-                    <li class="nav-item start ">
+                    <li class="nav-item start @if($page=='common_settings') active @endif">
                         <a href="{{url('admin/common_settings')}}" class="nav-link">
                             <span class="title">Common</span>
                         </a>

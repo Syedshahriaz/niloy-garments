@@ -374,59 +374,60 @@ class UserController extends Controller
     }
 
     public function userList(Request $request){
-        //try {
-        if (Auth::check()) {
-            $users = User::where('users.email', Session::get('user_email'))
-                ->select('users.*', 'user_shipments.shipment_date','separate_user_logs.otp','separate_user_logs.created_at as otp_sent_at')
-                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
-                ->leftJoin('separate_user_logs', 'separate_user_logs.user_id', '=', 'users.id')
-                ->where('users.id','!=',Session::get('user_id'))
-                ->orderBy('users.id', 'ASC')
-                ->get();
-            if ($request->ajax()) {
-                $returnHTML = View::make('user.user_list', compact('users'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+        try {
+            if (Auth::check()) {
+                $users = User::where('users.email', Session::get('user_email'))
+                    ->select('users.*', 'user_shipments.shipment_date','separate_user_logs.otp','separate_user_logs.created_at as otp_sent_at')
+                    ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                    ->leftJoin('separate_user_logs', 'separate_user_logs.user_id', '=', 'users.id')
+                    ->where('users.id','!=',Session::get('user_id'))
+                    ->where('users.status','active')
+                    ->orderBy('users.id', 'ASC')
+                    ->get();
+                if ($request->ajax()) {
+                    $returnHTML = View::make('user.user_list', compact('users'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('user.user_list', compact('users'));
             }
-            return view('user.user_list', compact('users'));
+            else{
+                return redirect('login');
+            }
+            //echo "<pre>"; print_r($users); echo "</pre>";
         }
-        else{
-            return redirect('login');
-        }
-        //echo "<pre>"; print_r($users); echo "</pre>";
-        /*}
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function userDetails(Request $request){
-        //try {
-        if (Auth::check()) {
-            $user = User::where('users.id', $request->id)
-                ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
-                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
-                ->leftJoin('professions', 'professions.id', '=', 'users.profession')
-                ->first();
-            if ($request->ajax()) {
-                $returnHTML = View::make('user.user_details', compact('user'))->renderSections()['content'];
-                return response()->json(array('status' => 200, 'html' => $returnHTML));
+        try {
+            if (Auth::check()) {
+                $user = User::where('users.id', $request->id)
+                    ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
+                    ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                    ->leftJoin('professions', 'professions.id', '=', 'users.profession')
+                    ->first();
+                if ($request->ajax()) {
+                    $returnHTML = View::make('user.user_details', compact('user'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('user.user_details', compact('user'));
             }
-            return view('user.user_details', compact('user'));
+            else{
+                return redirect('login');
+            }
+            //echo "<pre>"; print_r($users); echo "</pre>";
         }
-        else{
-            return redirect('login');
-        }
-        //echo "<pre>"; print_r($users); echo "</pre>";
-        /*}
         catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userDetails', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userDetails', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function addUser(Request $request)
