@@ -57,6 +57,10 @@
                         </div>
                         <div class="portlet-body">
 
+                            <?php
+                            $total_task = count($tasks);
+                            ?>
+
                             <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_horizontal_task">
                                 <thead>
                                     <tr>

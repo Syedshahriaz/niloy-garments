@@ -33,7 +33,7 @@
             <div class="row mt-1">
                 <div class="col-md-12 col-sm-12">
                     <div class="admin-common-message">
-                        <p>{{$setting->message_to_user}}</p>
+                        <p><?php echo htmlspecialchars_decode($setting->message_to_user); ?></p>
                     </div>
                 </div>
             </div>

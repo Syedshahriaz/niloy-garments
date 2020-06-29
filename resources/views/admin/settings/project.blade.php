@@ -141,7 +141,6 @@
                                 <div class="form-group">
                                     <label for="">Title name</label>
                                     <input type="text" class="form-control" name="title_name" id="title_name">
-                                    <input type="hidden" class="form-control" name="old_title_name" id="old_title_name">
                                 </div>
                             </div>
                         </div>
@@ -309,9 +308,7 @@
 
         function edit_task_title(id,title){
             $('#title_id').val(id);
-            alert(title);
             $('#title_name').val(title);
-            $('#old_title_name').val(title);
             $('#title_edit_modal').modal('show');
         }
 
@@ -460,13 +457,13 @@
 
             HoldOn.open(options);
 
-            var project_name = $("#project_name").val();
-            var project_id = $("#project_id").val();
+            var title_name = $("#title_name").val();
+            var title_id = $("#title_id").val();
 
             var validate = "";
 
-            if (project_name.trim() == "") {
-                validate = validate + "Project name is required</br>";
+            if (title_name.trim() == "") {
+                validate = validate + "Title name is required</br>";
             }
 
             if (validate == "") {
@@ -480,27 +477,29 @@
                     success: function(data) {
                         HoldOn.close();
                         if (data.status == 200) {
-                            $("#project_"+project_id).html('<b>'+project_name+'</b>');
-                            $('#project_edit_modal').modal('hide');
+                            $("#title_"+title_id).text(title_name);
+                            var title = "'"+title_name+"'";
+                            $("#title_"+title_id).attr('onclick','edit_task_title('+title_id+','+title+')');
+                            $('#title_edit_modal').modal('hide');
 
-                            $("#project_success_message").show();
-                            $("#project_error_message").hide();
-                            $("#project_success_message").html(data.reason);
+                            $("#title_success_message").show();
+                            $("#title_error_message").hide();
+                            $("#title_success_message").html(data.reason);
 
                             setTimeout(function(){
-                                $("#project_success_message").hide();
+                                $("#title_success_message").hide();
                             },2000);
                         } else {
-                            $("#project_success_message").hide();
-                            $("#project_error_message").show();
-                            $("#project_error_message").html(data.reason);
+                            $("#title_success_message").hide();
+                            $("#title_error_message").show();
+                            $("#title_error_message").html(data.reason);
                         }
                     },
                     error: function(data) {
                         HoldOn.close();
-                        $("#project_success_message").hide();
-                        $("#project_error_message").show();
-                        $("#project_error_message").html(data);
+                        $("#title_success_message").hide();
+                        $("#title_error_message").show();
+                        $("#title_error_message").html(data);
                     },
                     cache: false,
                     contentType: false,
@@ -508,9 +507,9 @@
                 });
             } else {
                 HoldOn.close();
-                $("#project_success_message").hide();
-                $("#project_error_message").show();
-                $("#project_error_message").html(validate);
+                $("#title_success_message").hide();
+                $("#title_error_message").show();
+                $("#title_error_message").html(validate);
             }
         });
     </script>
