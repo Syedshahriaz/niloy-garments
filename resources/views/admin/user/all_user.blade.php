@@ -285,10 +285,8 @@
 
                     if(data.status == 200){
                         $('#warning_modal').modal('hide');
-                        show_success_message('User Successfully '+status);
-                        setTimeout(function(){
-                            location.reload();
-                        },2000);
+                        //show_success_message('User Successfully '+status);
+                        location.reload();
                     }
                     else if(data.status == 402){
                         show_error_message(data.reason);
