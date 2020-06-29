@@ -126,10 +126,8 @@ class ProjectController extends Controller
 
     public function updateTaskTitle(Request $request){
         try{
-            $user = Auth::user();
-            $task = Task::where('id',$request->task_id)->first();
-            $task->rule = $request->rule_name;
-            $task->updated_at = date('Y-m-d');
+            $task = TaskTitle::where('id',$request->title_id)->first();
+            $task->name = $request->title_name;
             $task->save();
             return ['status'=>200, 'reason'=>'Successfully updated'];
         }
