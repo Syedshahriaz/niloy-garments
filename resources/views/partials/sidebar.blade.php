@@ -186,13 +186,13 @@
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
 
-            <li class="nav-item ajax_item item-1  @if($page=='dashboard') active @endif" data-name="dashboard" data-item="1">
+            {{--<li class="nav-item ajax_item item-1  @if($page=='dashboard') active @endif" data-name="dashboard" data-item="1">
                 <a href="{{url('dashboard')}}" class="nav-link">
                     <i class="icon-home"></i>
                     <span class="title">Dashboard</span>
                     <span class="selected"></span>
                 </a>
-            </li>
+            </li>--}}
             <li class="nav-item ajax_item item-2 @if($page=='all_project') active @endif" data-name="all_project" data-item="2">
                 <a href="{{url('all_project')}}" class="nav-link">
                     <i class="icon-layers"></i>
