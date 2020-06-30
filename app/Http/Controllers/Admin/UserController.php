@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\TaskTitle;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserShipment;
@@ -24,12 +25,15 @@ class UserController extends Controller
                 return redirect('admin/login');
             }
 
-            $users = User::select('users.*', 'user_shipments.shipment_date')
+            $users = User::with('running_task','last_task')
+                ->select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                 ->where('users.role',3)
                 ->where('users.status', '!=', 'deleted')
                 ->orderBy('users.id', 'ASC')
                 ->get();
+
+            echo "<pre>"; print_r($users); echo "</pre>"; exit();
 
             if ($request->ajax()) {
                 $returnHTML = View::make('admin.user.all_user', compact('users'))->renderSections()['content'];
@@ -66,14 +70,17 @@ class UserController extends Controller
                 ->groupBy('projects.id')
                 ->get();
 
+            $task_titles = TaskTitle::where('status','!=','deleted')
+                ->get();
+
             $buyer = Buyer::where('user_id',$user_id)->first();
 
             if ($request->ajax()) {
                 $returnHTML = View::make('admin.user.dashboard',
-                    compact('user_id','projects','buyer'))->renderSections()['content'];
+                    compact('user_id','projects','task_titles','buyer'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.user.dashboard',compact('user_id','projects','buyer'));
+            return view('admin.user.dashboard',compact('user_id','projects','task_titles','buyer'));
             //echo "<pre>"; print_r($projects); echo "</pre>";
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'dashboard', $e->getLine(),

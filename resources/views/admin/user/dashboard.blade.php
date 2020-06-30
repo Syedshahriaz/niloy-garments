@@ -77,12 +77,9 @@
                                                 <tr>
                                                     <th>Project</th>
                                                     <th>Title</th>
-                                                    <th>Cotton</th>
-                                                    <th>Spinning</th>
-                                                    <th>Knitting</th>
-                                                    <th>Dying</th>
-                                                    <th>Finising </th>
-                                                    <th>Test</th>
+                                                    @foreach($task_titles as $title)
+                                                    <th>{{$title->name}}</th>
+                                                    @endforeach
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -154,7 +151,7 @@
 
                                                         @if($task->task_status !='deleted')
                                                             <td class="unlock-task-td @if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
-                                                                
+
                                                                     @if($task->task_status =='active')
                                                                         {{date('D', strtotime($task->original_delivery_date))}},
                                                                         {{date('M d, Y', strtotime($task->original_delivery_date))}}
@@ -267,7 +264,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                     <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock task</h4>
                 </div>
-                
+
                 <form id="unlock_form" method="post" action="">
                     {{ csrf_field() }}
                     <input type="hidden" name="project_task_id" id="project_task_id" value="">
@@ -395,7 +392,7 @@
                             setTimeout(function(){
                                 $('#task_unlock_modal').modal('hide');
                             }, 2000);
-                            
+
 
                             $("#unlock_success_message").show();
                             $("#unlock_error_message").hide();
