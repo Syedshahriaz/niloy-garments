@@ -33,8 +33,6 @@ class UserController extends Controller
                 ->orderBy('users.id', 'ASC')
                 ->get();
 
-            echo "<pre>"; print_r($users); echo "</pre>"; exit();
-
             if ($request->ajax()) {
                 $returnHTML = View::make('admin.user.all_user', compact('users'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
