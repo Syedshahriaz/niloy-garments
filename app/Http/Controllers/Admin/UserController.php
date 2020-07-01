@@ -25,7 +25,7 @@ class UserController extends Controller
                 return redirect('admin/login');
             }
 
-            $users = User::with('running_task','last_task')
+            $users = User::with('projects.passed_task','projects.recent_due_task')
                 ->select('users.*', 'user_shipments.shipment_date')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                 ->where('users.role',3)

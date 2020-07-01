@@ -67,7 +67,27 @@
                                 </thead>
                                 <tbody>
                                 <?php
-                                foreach($users as $user){ ?>
+                                foreach($users as $user){
+                                    $user_projects = $user->projects;
+                                    $status = '';
+                                    $test = '';
+                                    $last = '';
+                                    if(!empty($user_projects)){
+                                        foreach($user_projects as $u_project){
+                                            if(!empty($u_project->passed_task)){
+                                                $status = 'danger';
+                                            }
+                                        }
+
+                                        if($status ==''){
+                                            foreach($user_projects as $u_project){
+                                                if(!empty($u_project->recent_due_task)){
+                                                    $status = 'warning';
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ?>
                                     <tr>
                                         <td style="width: 50px;">
                                             <div class="form-group">
@@ -77,7 +97,7 @@
                                                 </label>
                                             </div>
                                         </td>
-                                        <td>{{$user->unique_id}}</td>
+                                        <td>{{$user->unique_id}}-{{$status}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>
@@ -86,14 +106,18 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <!-- If Task 7days before-->
-                                            <div class="user-status bg-warning">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="SMS Sent">
-                                            </div>
                                             <!-- If Task done-->
-                                            <div class="user-status bg-success"></div>
+                                            {{--<div class="user-status bg-success"></div>--}}
                                             <!-- If Task not done-->
-                                            <div class="user-status bg-danger"></div>
+                                            @if($status=='danger')
+                                                <div class="user-status bg-danger"></div>
+                                            @endif
+                                            @if($status=='warning')
+                                                <!-- If Task 7days before-->
+                                                <div class="user-status bg-warning">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="SMS Sent">
+                                                </div>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
