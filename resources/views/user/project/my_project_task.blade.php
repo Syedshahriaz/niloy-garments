@@ -246,11 +246,8 @@
                     <h4 class="modal-title">Summery of product</h4>
                 </div>
                 <div class="modal-body">
-                    <p class="mt-0 mb-0">Description: {{$project->description}}<br>
-                    Fabrication: {{$project->fabrication}}<br>
-                    Colour: {{$project->color}} <br>
-                    Quantity: {{$project->quantity}}<br>
-                    Size range: {{$project->size_range}}<br>
+                    <p class="mt-0 mb-0">
+                        <?php echo htmlspecialchars_decode($project->description); ?>
                     </p>
                 </div>
                 <div class="modal-footer">

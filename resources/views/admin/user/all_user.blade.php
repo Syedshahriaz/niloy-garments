@@ -97,7 +97,7 @@
                                                 </label>
                                             </div>
                                         </td>
-                                        <td>{{$user->unique_id}}-{{$status}}</td>
+                                        <td>{{$user->unique_id}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>

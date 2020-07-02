@@ -226,23 +226,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="">Fabrication</label>
-                                    <input type="text" class="form-control" name="fabrication" id="project_fabrication">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Color</label>
-                                    <input type="text" class="form-control" name="color" id="project_color">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Quantity</label>
-                                    <input type="text" class="form-control" name="quantity" id="project_quantity">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Size Range</label>
-                                    <input type="text" class="form-control" name="size_range" id="project_size_range">
+                                    <label class="control-label">Description</label>
+                                    <textarea rows="4" class="form-control placeholder-no-fix summernote" name="description" id="project_description" ></textarea>
                                 </div>
                             </div>
                         </div>
@@ -287,10 +272,7 @@
                         $('#project_id').val(project.id);
                         $('#project_name').val(project.name);
                         $('#project_sub_title').val(project.sub_title);
-                        $('#project_fabrication').val(project.fabrication);
-                        $('#project_color').val(project.color);
-                        $('#project_quantity').val(project.quantity);
-                        $('#project_size_range').val(project.size_range);
+                        $("#project_description").summernote("code", project.description);
                         $('#project_edit_modal').modal('show');
                     }
                     else{
