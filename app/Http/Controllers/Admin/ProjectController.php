@@ -87,14 +87,12 @@ class ProjectController extends Controller
 
     public function updateProject(Request $request){
         try{
+            //echo "<pre>"; print_r($request->all()); echo "</pre>"; exit();
             $user = Auth::user();
             $project = Project::where('id',$request->project_id)->first();
             $project->name = $request->name;
             $project->sub_title = $request->sub_title;
-            $project->fabrication = $request->fabrication;
-            $project->color = $request->color;
-            $project->quantity = $request->quantity;
-            $project->size_range = $request->size_range;
+            $project->description = $request->description;
             $project->updated_by = $user->id;
             $project->updated_at = date('Y-m-d');
             $project->save();
