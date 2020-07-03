@@ -69,21 +69,20 @@
                                 <?php
                                 foreach($users as $user){
                                     $user_projects = $user->projects;
-                                    $status = '';
+                                    $passed = 0;
+                                    $upcoming = 0;
                                     $test = '';
                                     $last = '';
                                     if(!empty($user_projects)){
                                         foreach($user_projects as $u_project){
                                             if(!empty($u_project->passed_task)){
-                                                $status = 'danger';
+                                                $passed = 1;
                                             }
                                         }
 
-                                        if($status ==''){
-                                            foreach($user_projects as $u_project){
-                                                if(!empty($u_project->recent_due_task)){
-                                                    $status = 'warning';
-                                                }
+                                        foreach($user_projects as $u_project){
+                                            if(!empty($u_project->recent_due_task)){
+                                                $upcoming = 1;
                                             }
                                         }
                                     }
@@ -109,10 +108,10 @@
                                             <!-- If Task done-->
                                             {{--<div class="user-status bg-success"></div>--}}
                                             <!-- If Task not done-->
-                                            @if($status=='danger')
+                                            @if($passed==1)
                                                 <div class="user-status bg-danger"></div>
                                             @endif
-                                            @if($status=='warning')
+                                            @if($upcoming==1)
                                                 <!-- If Task 7days before-->
                                                 <div class="user-status bg-warning">
                                                     <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="SMS Sent">
@@ -126,9 +125,9 @@
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
-                                            <a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
+                                            {{--<a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
-                                            </a>
+                                            </a>--}}
                                         </td>
                                     </tr>
                                 <?php } ?>

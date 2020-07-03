@@ -68,13 +68,9 @@
                                         <!-- <li><a class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle" href="javascript:;">Purchase</a></li> -->
 
                                         <div class="content">
-                                            <form id="select_user_form" class="login-form" action="{{url('payment_success',$user->id)}}" method="post">
-                                                {{csrf_field()}}
-
-                                                <div class="form-actions">
-                                                    <button type="submit" class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle">Pay Now</button>
-                                                </div>
-                                            </form>
+                                            <div class="form-actions">
+                                                <button type="submit" class="purchase-btn flash-button butn style-two margin-15px-right vertical-align-middle" id="pay_now_button">Pay Now</button>
+                                            </div>
                                         </div>
                                     </ul>
                                     <!-- end menu area -->
@@ -105,6 +101,32 @@
                         </div>
                     </div>
                     <!-- end banner text -->
+                    <div class="col-md-10 col-md-offset-1">
+                        <form id="payment_form" class="login-form" action="{{url('payment_success',$user->id)}}" method="post">
+                            {{csrf_field()}}
+                            <div class="form-group">
+                                <label for=""><b>Choose Offer</b></label>
+                                <div class="offer-itemlist">
+                                    <div class="offer-item">
+                                        <p>{{$offer->offer1_name}}</p>
+                                        <input type="radio" name="offer" value="1" hidden>
+                                    </div>
+                                    <div class="offer-item">
+                                        <p>{{$offer->offer2_name}}</p>
+                                        <input type="radio" name="offer" value="2" hidden>
+                                    </div>
+                                    <div class="offer-item">
+                                        <p>{{$offer->offer3_name}}</p>
+                                        <input type="radio" name="offer_3" value="3" disabled hidden>
+                                    </div>
+                                </div>
+                                <!-- <input type="radio" name="offer" value="1"> Offer 1 <br>
+                                <input type="radio" name="offer" value="2"> Offer 2 <br>
+                                <input type="radio" name="offer_3" value="3" disabled> Offer 3 -->
+                            </div>
+                        </form>
+                    </div>
+
 
                 </div>
             </div>
@@ -454,7 +476,12 @@
 
     <!-- all js include end -->
 
+    <script>
+        $(document).on('click','#pay_now_button', function(){
+            $('#payment_form').submit();
+        })
+    </script>
 
-
-</body></html>
+</body>
+</html>
 

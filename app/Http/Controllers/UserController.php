@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Offer;
 use App\Models\Task;
 use App\Models\UserProjectTask;
 use Illuminate\Http\Request;
@@ -171,6 +172,7 @@ class UserController extends Controller
         try {
             if (Auth::check()) {
                 $user = user::where('id', $request->id)->first();
+                $offer = Offer::first();
 
                 $payment = Payment::where('user_id', $user->id)->first();
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
@@ -182,10 +184,10 @@ class UserController extends Controller
                     return redirect('all_project');
                 }
                 if ($request->ajax()) {
-                    $returnHTML = View::make('promotion', compact('user'))->renderSections()['content'];
+                    $returnHTML = View::make('promotion', compact('user','offer'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('promotion', compact('user'));
+                return view('promotion', compact('user','offer'));
             }
             else{
                 return redirect('login');

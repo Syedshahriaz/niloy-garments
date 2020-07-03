@@ -27,7 +27,7 @@ class UserProjectController extends Controller
                 $offer = Offer::first();
                 $user = User::where('users.id', $request->id)->first();
                 $shipment = UserShipment::where('user_id', $user->id)->first();
-                if (!empty($shipment)) {
+                if (!empty($shipment) && $shipment->shipment_date != '') {
                     return redirect('all_project');
                 }
                 if ($request->ajax()) {
@@ -49,9 +49,12 @@ class UserProjectController extends Controller
     }
 
     public function storeShipment(Request $request){
-        try{
+        //try{
             DB::beginTransaction();
 
+            /*
+             * Update user
+             * */
             $user = User::where('users.id',$request->user_id)
                 ->select('users.*','user_payments.created_at as purchase_date')
                 ->join('user_payments','user_payments.user_id','=','users.id')
@@ -59,119 +62,136 @@ class UserProjectController extends Controller
             $user->gender = $request->gender;
             $user->save();
 
+            $user_id = $user->id;
             $purchase_date = $user->purchase_date;
-            $offer = $request->offer;
             $gender = $request->gender;
+            $shipment_date = $request->shipment_date;
 
             /*
              * Save shipment date
              * */
-            $shipment = NEW UserShipment();
-            $shipment->user_id = $request->user_id;
-            $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
-            if($request->offer == 1){
-                $shipment->has_ofer_1 = 1;
-                $shipment->has_ofer_2 = 0;
-            }
-            else{
-                $shipment->has_ofer_1 = 0;
-                $shipment->has_ofer_2 = 1;
-            }
-            if($request->gender == 'Female'){
-                $shipment->has_ofer_3 = 1;
-            }
+            $shipment = $this->saveShipmentDetails($user_id,$gender,$shipment_date);
 
-            $shipment->save();
+            $has_offer_1 = $shipment->has_ofer_1;
+            $has_offer_2 = $shipment->has_ofer_2;
 
             /*
-             * Add user project
+             * Get user project based on selected offer
              * */
-            $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id');
-            $projects = $projects->leftJoin('tasks','tasks.project_id','=','projects.id');
-            $projects = $projects->leftJoin('user_projects','user_projects.project_id','=','projects.id');
-            $projects = $projects->where('projects.status','active');
-            $projects = $projects->where(function ($query) use ($offer,$gender) {
-                if($offer==1){
-                    $query->orWhere('has_offer_1', 1);
-                }
-                else{
-                    $query->orWhere('has_offer_2', 1);
-                }
+            $projects = $this->getOfferedProject($gender,$has_offer_1,$has_offer_2);
 
-                if($gender == 'Female'){
-                    $query->orWhere('has_offer_3', 1);
-                }
-            });
-            $projects = $projects->groupBy('projects.id');
-            $projects = $projects->get();
-
-            foreach($projects as $key=>$project){
-                $userProject = NEW UserProject();
-                $userProject->user_id = $user->id;
-                $userProject->project_id = $project->id;
-                if($project->day_add_with=='shipment_date'){
-                    $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
-                }
-                else if($project->day_add_with=='purchase_date'){
-                    $userProject->start_date = date('Y-m-d', strtotime($purchase_date. ' + '.$project->days_to_add.' days'));
-                }
-                else{
-                    $userProject->has_special_date = 1;
-                }
-                $userProject->save();
-
-                $tasks = Task::where('project_id',$project->id)->get();
-
-                /*
-                 * Saving user project tasks
-                 * */
-                foreach($tasks as $key=>$task){
-                    $projectTask = NEW UserProjectTask();
-                    $projectTask->user_project_id = $userProject->id;
-                    $projectTask->task_id = $task->id;
-                    if($task->status =='active'){
-                        if($project->day_add_with=='shipment_date') {
-                            $projectTask->due_date = date('Y-m-d',
-                                strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
-                            $projectTask->original_delivery_date = date('Y-m-d',
-                                strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
-                        }
-                        else if($project->day_add_with=='purchase_date'){
-                            $projectTask->due_date = date('Y-m-d',
-                                strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
-                            $projectTask->original_delivery_date = date('Y-m-d',
-                                strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
-                        }
-                        else{
-                            // keep due_date and original_delivery_date NULL
-                        }
-                    }
-                    if($key==0){
-                        $projectTask->status = 'processing';
-                    }
-                    else{
-                        $projectTask->status = 'not initiate';
-                    }
-                    $projectTask->freeze_forever = $task->freeze_forever;
-                    $projectTask->save();
-                }
-            }
+            /*
+             * Save user project
+             * */
+            $result = $this->saveUserProject($projects,$user_id,$shipment,$purchase_date);
 
             DB::commit();
 
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
-        }
+        /*}
         catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'storeShipment', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
+    private function saveShipmentDetails($user_id,$gender,$shipment_date){
+        $shipment = UserShipment::where('user_id',$user_id)->first();
+        $shipment->shipment_date = date('Y-m-d',strtotime($shipment_date));
+        if($gender == 'Female'){
+            $shipment->has_ofer_3 = 1;
+        }
+        $shipment->save();
+
+        return $shipment;
+    }
+
+    private function getOfferedProject($gender,$has_offer_1,$has_offer_2){
+        $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id');
+        $projects = $projects->leftJoin('tasks','tasks.project_id','=','projects.id');
+        $projects = $projects->leftJoin('user_projects','user_projects.project_id','=','projects.id');
+        $projects = $projects->where('projects.status','active');
+        $projects = $projects->where(function ($query) use ($gender,$has_offer_1,$has_offer_2) {
+            if($has_offer_1==1){
+                $query->orWhere('has_offer_1', 1);
+            }
+            if($has_offer_2==1){
+                $query->orWhere('has_offer_2', 1);
+            }
+
+            if($gender == 'Female'){
+                $query->orWhere('has_offer_3', 1);
+            }
+        });
+        $projects = $projects->groupBy('projects.id');
+        $projects = $projects->get();
+
+        return $projects;
+    }
+
+    private function saveUserProject($projects,$user_id,$shipment,$purchase_date){
+        foreach($projects as $key=>$project){
+            $userProject = NEW UserProject();
+            $userProject->user_id = $user_id;
+            $userProject->project_id = $project->id;
+            if($project->day_add_with=='shipment_date'){
+                $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
+            }
+            else if($project->day_add_with=='purchase_date'){
+                $userProject->start_date = date('Y-m-d', strtotime($purchase_date. ' + '.$project->days_to_add.' days'));
+            }
+            else{
+                $userProject->has_special_date = 1;
+            }
+            $userProject->save();
+
+            $tasks = Task::where('project_id',$project->id)->get();
+
+            /*
+             * Saving user project tasks
+             * */
+            $result = $this->saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date);
+        }
+    }
+
+    private function saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date){
+        foreach($tasks as $key=>$task){
+            $projectTask = NEW UserProjectTask();
+            $projectTask->user_project_id = $userProject->id;
+            $projectTask->task_id = $task->id;
+            if($task->status =='active'){
+                if($project->day_add_with=='shipment_date') {
+                    $projectTask->due_date = date('Y-m-d',
+                        strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d',
+                        strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                }
+                else if($project->day_add_with=='purchase_date'){
+                    $projectTask->due_date = date('Y-m-d',
+                        strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d',
+                        strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                }
+                else{
+                    // keep due_date and original_delivery_date NULL
+                }
+            }
+            if($key==0){
+                $projectTask->status = 'processing';
+            }
+            else{
+                $projectTask->status = 'not initiate';
+            }
+            $projectTask->freeze_forever = $task->freeze_forever;
+            $projectTask->save();
         }
     }
 
     public function allProject(Request $request){
-        try{
+        //try{
             if (Auth::check()) {
                 if ($request->u_id == '') {
                     $user_id = Session::get('user_id');
@@ -184,6 +204,9 @@ class UserProjectController extends Controller
 
                 $shipment = UserShipment::where('user_id', $user_id)->first();
                 if (empty($shipment)) {
+                    return redirect('select_shipment/'.$user_id);
+                }
+                if ($shipment->shipment_date == '') {
                     return redirect('select_shipment/'.$user_id);
                 }
 
@@ -214,13 +237,13 @@ class UserProjectController extends Controller
             else{
                 return redirect('login');
             }
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'allProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function updateProjectSpecialDate(Request $request){
