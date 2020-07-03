@@ -89,7 +89,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-10 col-md-offset-1">
+                                    {{--<div class="col-md-10 col-md-offset-1">
                                         <div class="form-group">
                                             <label for=""><b>Choose Offer</b></label>
                                             <div class="offer-itemlist">
@@ -106,11 +106,8 @@
                                                     <input type="radio" name="offer_3" value="3" disabled hidden>
                                                 </div>
                                             </div>
-                                            <!-- <input type="radio" name="offer" value="1"> Offer 1 <br>
-                                            <input type="radio" name="offer" value="2"> Offer 2 <br>
-                                            <input type="radio" name="offer_3" value="3" disabled> Offer 3 -->
                                         </div>
-                                    </div>
+                                    </div>--}}
                                 </div>
                         </div>
                         <div class="modal-footer">

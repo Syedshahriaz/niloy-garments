@@ -10,16 +10,16 @@
         show_loader();
 
         var shipment_date = $("#shipment_date").val();
-        var offer = $("input[name='offer']:checked").val();
+        //var offer = $("input[name='offer']:checked").val();
 
         var validate = "";
 
         if (shipment_date.trim() == "") {
             validate = validate + "Shipment date is required</br>";
         }
-        if (offer ===undefined || offer.trim() == "") {
+        /*if (offer ===undefined || offer.trim() == "") {
             validate = validate + "Offer is required</br>";
-        }
+        }*/
 
         if (validate == "") {
             var formData = new FormData($("#shipment_form")[0]);

@@ -43,7 +43,7 @@
                     <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger ajax_item item-3" data-name="add_user" data-item="3">Add New User</a>
                 </li>
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                {{--<li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <i class="icon-bell"></i>
                         <span class="badge badge-default"> 7 </span>
@@ -140,7 +140,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>--}}
+                </li>
                 <!-- END NOTIFICATION DROPDOWN -->
                 <!-- BEGIN INBOX DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
