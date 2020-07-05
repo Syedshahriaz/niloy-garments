@@ -482,7 +482,7 @@ class UserController extends Controller
     }
 
     public function sendUserOtp(Request $request){
-        //try {
+        try {
             /*
              * Authenticate user
              * */
@@ -550,16 +550,16 @@ class UserController extends Controller
 
 
             return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'sendUserOtp', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function separateUser(Request $request){
-        //try {
+        try {
             DB::beginTransaction();
 
             $s_user = SeparateUserLog::where('otp',$request->otp)
@@ -647,12 +647,12 @@ class UserController extends Controller
             DB::commit();
 
             return ['status' => 200, 'reason' => 'User separated successfully'];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'separateUser', $e->getLine(),
-                $e->getFile(), '', '', '', '');
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'separateUser', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 }

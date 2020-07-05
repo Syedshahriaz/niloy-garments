@@ -37,20 +37,20 @@
                     <h2 class="text-center mt-5">Choose your offer</h2>
 
                     <div class="offer-option mb-5 animate__animated animate__fadeInUp">
-                        <form id="payment_form" class="login-form" action="https://tna.ownenterprise.com/payment_success/121" method="post">
-                            <input type="hidden" name="_token" value="Pjh3n94StcubFNXx7tDe3R0f2rKIuSJ43UUSVqtz">
+                        <form id="payment_form" class="login-form" action="{{url('payment_success',$user->id)}}" method="post">
+                            {{csrf_field()}}
                             <div class="form-group">
                                 <div class="offer-itemlist">
-                                    <div class="offer-option-item green-offer-option">
-                                        <p>Green</p>
+                                    <div class="offer-option-item green-offer-option active_offer_option">
+                                        <p>{{$offer->offer1_name}}</p>
                                         <input type="radio" name="offer" value="1" hidden="">
                                     </div>
-                                    <div class="offer-option-item red-offer-option">
-                                        <p>Red</p>
+                                    <div class="offer-option-item red-offer-option active_offer_option">
+                                        <p>{{$offer->offer2_name}}</p>
                                         <input type="radio" name="offer" value="2" hidden="">
                                     </div>
                                     <div class="offer-option-item pink-offer-option">
-                                        <p>Pink</p>
+                                        <p>{{$offer->offer3_name}}</p>
                                         <input type="radio" name="offer_3" value="3" disabled="" hidden="">
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -75,10 +75,10 @@
             $(this).addClass('selected-offer');
             $(this).children('input[type="radio"]').prop('checked',true);
         });
-        
-        // $(document).on('click','#pay_now_button', function(){
-        //     $('#payment_form').submit();
-        // })
+
+         $(document).on('click','.active_offer_option', function(){
+             $('#payment_form').submit();
+         })
     </script>
 </body>
 

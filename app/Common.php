@@ -1,6 +1,10 @@
 <?php
 
 namespace App;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\UserProject;
+use App\Models\UserProjectTask;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\ErrorLog;
@@ -30,6 +34,106 @@ class Common
             return 1;
         }
         return 0;
+    }
+
+    public static function removeUserProject($user_id){
+        $user_project_ids = UserProject::select('id')
+            ->where('user_id',$user_id)
+            ->pluck('id')
+            ->toArray();
+
+        /*
+         * Removing user tasks
+         * */
+        UserProjectTask::whereIn('user_project_id',$user_project_ids)->delete();
+
+        /*
+         * Removing user project
+         * */
+        UserProject::where('user_id',$user_id)->delete();
+
+        return 'ok';
+    }
+
+    public static function getOfferedProject($gender,$has_offer_1,$has_offer_2){
+        $projects = Project::select('projects.*','tasks.title','tasks.days_to_add','user_projects.id as user_project_id');
+        $projects = $projects->leftJoin('tasks','tasks.project_id','=','projects.id');
+        $projects = $projects->leftJoin('user_projects','user_projects.project_id','=','projects.id');
+        $projects = $projects->where('projects.status','active');
+        $projects = $projects->where(function ($query) use ($gender,$has_offer_1,$has_offer_2) {
+            if($has_offer_1==1){
+                $query->orWhere('has_offer_1', 1);
+            }
+            if($has_offer_2==1){
+                $query->orWhere('has_offer_2', 1);
+            }
+
+            if($gender == 'Female'){
+                $query->orWhere('has_offer_3', 1);
+            }
+        });
+        $projects = $projects->groupBy('projects.id');
+        $projects = $projects->get();
+
+        return $projects;
+    }
+
+    public static function saveUserProject($projects,$user_id,$shipment,$purchase_date){
+        foreach($projects as $key=>$project){
+            $userProject = NEW UserProject();
+            $userProject->user_id = $user_id;
+            $userProject->project_id = $project->id;
+            if($project->day_add_with=='shipment_date'){
+                $userProject->start_date = date('Y-m-d', strtotime($shipment->shipment_date. ' + '.$project->days_to_add.' days'));
+            }
+            else if($project->day_add_with=='purchase_date'){
+                $userProject->start_date = date('Y-m-d', strtotime($purchase_date. ' + '.$project->days_to_add.' days'));
+            }
+            else{
+                $userProject->has_special_date = 1;
+            }
+            $userProject->save();
+
+            $tasks = Task::where('project_id',$project->id)->get();
+
+            /*
+             * Saving user project tasks
+             * */
+            $result = self::saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date);
+        }
+    }
+
+    public static function saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date){
+        foreach($tasks as $key=>$task){
+            $projectTask = NEW UserProjectTask();
+            $projectTask->user_project_id = $userProject->id;
+            $projectTask->task_id = $task->id;
+            if($task->status =='active'){
+                if($project->day_add_with=='shipment_date') {
+                    $projectTask->due_date = date('Y-m-d',
+                        strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d',
+                        strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                }
+                else if($project->day_add_with=='purchase_date'){
+                    $projectTask->due_date = date('Y-m-d',
+                        strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d',
+                        strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                }
+                else{
+                    // keep due_date and original_delivery_date NULL
+                }
+            }
+            if($key==0){
+                $projectTask->status = 'processing';
+            }
+            else{
+                $projectTask->status = 'not initiate';
+            }
+            $projectTask->freeze_forever = $task->freeze_forever;
+            $projectTask->save();
+        }
     }
 
     public static function send7dayWarningEmail($email,$task){

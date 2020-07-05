@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Offer;
 use App\Models\TaskTitle;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,7 @@ class UserController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            $offer = Offer::first();
 
             $users = User::with('projects.passed_task','projects.recent_due_task')
                 ->select('users.*', 'user_shipments.shipment_date')
@@ -34,11 +36,11 @@ class UserController extends Controller
                 ->get();
 
             if ($request->ajax()) {
-                $returnHTML = View::make('admin.user.all_user', compact('users'))->renderSections()['content'];
+                $returnHTML = View::make('admin.user.all_user', compact('offer','users'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
 
-            return view('admin.user.all_user', compact('users'));
+            return view('admin.user.all_user', compact('offer','users'));
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
@@ -119,6 +121,71 @@ class UserController extends Controller
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
+    }
+
+    public function updateUserOffer(Request $request)
+    {
+        //try {
+            DB::beginTransaction();
+
+            $admin_user = Auth::user();
+            $user_id  = $request->user_id;
+
+            /*
+             * Save offer details
+             * */
+            $user = User::select('users.*','user_payments.created_at as payment_date')
+                ->where('users.id',$user_id)
+                ->leftJoin('user_payments','user_payments.user_id','=','users.id')
+                ->first();
+
+            $shipment = UserShipment::where('user_id',$user_id)->first();
+            $gender = $user->gender;
+            $purchase_date = $user->payment_date;
+
+
+            if($request->offer == 1){
+                $shipment->has_ofer_1 = 1;
+                $shipment->has_ofer_2 = 0;
+            }
+            else{
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 1;
+            }
+            if($gender == 'Female'){
+                $shipment->has_ofer_3 = 1;
+            }
+
+            $shipment->save();
+
+            $has_offer_1 = $shipment->has_ofer_1;
+            $has_offer_2 = $shipment->has_ofer_2;
+
+            /*
+             * Remove previous projects and tasks of this user
+             * */
+            $result = Common::removeUserProject($user_id);
+
+            /*
+             * Get user project based on selected offer
+             * */
+            $projects = Common::getOfferedProject($gender,$has_offer_1,$has_offer_2);
+
+            /*
+             * Save user project
+             * */
+            $result = Common::saveUserProject($projects,$user_id,$shipment,$purchase_date);
+
+            DB::commit();
+
+            return ['status'=>200, 'reason'=>'Ofer Successfully updated'];
+        /*} catch (\Exception $e) {
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
     }
 
     public function sendUserEmail(Request $request)
