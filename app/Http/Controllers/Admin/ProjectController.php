@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\UserProject;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskTitle;
 use App\Models\UserProjectTask;
+use App\Models\Notification;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -170,19 +172,47 @@ class ProjectController extends Controller
     }
 
     public function unlockProjectTask(Request $request){
-        try{
+        //try{
             $project_task = UserProjectTask::where('id',$request->project_task_id)->first();
             if($project_task->delivery_date_update_count != 0){
                 $project_task->delivery_date_update_count = 1;
             }
             $project_task->save();
+
+            $user_project = UserProject::select('user_projects.user_id','projects.name','users.parent_id','users.unique_id')
+                ->join('projects','projects.id','=','user_projects.project_id')
+                ->join('users','users.id','=','user_projects.user_id')
+                ->where('user_projects.id',$project_task->user_project_id)
+                ->first();
+
+            $project_task_details = UserProjectTask::select('user_project_tasks.id','tasks.rule')
+                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->where('user_project_tasks.id',$request->project_task_id)
+                ->first();
+
+            $message = "User ".$user_project->unique_id.": Task ".$project_task_details->rule." of project ".$user_project->name." have been unlocked";
+
+            /*
+             * Save notification
+             * */
+            $notification = NEW Notification();
+            $notification->user_id = $user_project->user_id;
+            if($user_project->parent_id==0){
+                $notification->parent_id = $user_project->user_id;
+            }
+            else{
+                $notification->parent_id = $user_project->parent_id;
+            }
+            $notification->message = $message;
+            $notification->save();
+
             return ['status'=>200, 'reason'=>'Project task unlocked successfully'];
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'unlockProjectTask', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 }

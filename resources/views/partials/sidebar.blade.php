@@ -44,99 +44,34 @@
                 </li>
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                    <?php
+                    $all_notification = \App\Common::getNotifications();
+                    $unread_notification = \App\Common::getUnreadNotifications();
+                    ?>
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <i class="icon-bell"></i>
-                        <span class="badge badge-default"> 7 </span>
+                        <span class="badge badge-default"> {{(count($unread_notification)>0 ? count($unread_notification) : '')}} </span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="external">
                             <h3>
-                                <span class="bold">12 pending</span> notifications</h3>
+                                <span class="bold">{{(count($unread_notification)>0 ? count($unread_notification) : '')}} pending</span> notifications</h3>
                             <a href="page_user_profile_1.html">view all</a>
                         </li>
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                                @foreach($unread_notification as $notification)
                                 <li>
                                     <a href="javascript:;">
-                                        <span class="time">just now</span>
+                                        <span class="time">{{date('d/m/Y h:i a', strtotime($notification->created_at))}}</span>
                                         <span class="details">
                                                     <span class="label label-sm label-icon label-warning">
                                                         <i class="icon-bell"></i>
-                                                    </span> New user registered. </span>
+                                                    </span> {{substr($notification->message, 0, 44)}} </span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">3 mins</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> Server #12 overloaded. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">10 mins</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> Server #2 not responding. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">14 hrs</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> Application error. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">2 days</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> Database overloaded 68%. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">3 days</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> A user IP blocked. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">4 days</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> Storage Server #4 not responding dfdfdfd. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">5 days</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> System Error. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">9 days</span>
-                                        <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> Storage server failed. </span>
-                                    </a>
-                                </li>
+                                @endforeach
+
                             </ul>
                         </li>
                     </ul>
