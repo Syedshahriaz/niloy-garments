@@ -5,6 +5,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\UserProject;
 use App\Models\UserProjectTask;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\ErrorLog;
@@ -34,6 +35,30 @@ class Common
             return 1;
         }
         return 0;
+    }
+
+    public static function getNotifications($user_id=''){
+        if($user_id == ''){
+            $user = Auth::user();
+            $user_id = $user->id;
+        }
+
+        $notifications = Notification::where('user_id',$user_id)
+            ->orWhere('parent_id',$user_id)
+            ->get();
+        return $notifications;
+    }
+
+    public static function getUnreadNotifications($user_id=''){
+        if($user_id == ''){
+            $user = Auth::user();
+            $user_id = $user->id;
+        }
+        $notifications = Notification::where('user_id',$user_id)
+            ->orWhere('parent_id',$user_id)
+            ->where('is_read',0)
+            ->get();
+        return $notifications;
     }
 
     public static function removeUserProject($user_id){

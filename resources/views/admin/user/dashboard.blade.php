@@ -150,7 +150,7 @@
                                                         ?>
 
                                                         @if($task->task_status !='deleted')
-                                                            <td class="unlock-task-td @if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
+                                                            <td class="@if($task->delivery_date_update_count > 1) unlock-task-td @endif @if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
 
                                                                     @if($task->task_status =='active')
                                                                         {{date('D', strtotime($task->original_delivery_date))}},
