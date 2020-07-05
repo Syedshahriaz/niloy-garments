@@ -122,6 +122,9 @@
                                             <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/meter.png')}}" alt="Dashboard">
                                             </a>
+                                            <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="Change Offer">
+                                            </a>
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
@@ -188,6 +191,63 @@
 
     <!-- END CONTENT -->
 
+    <!-- Modal -->
+    <div class="modal fade" id="change_offer_modal" tabindex="-1" role="change_offer_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Change offer</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="offer_form" method="post" action="">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="offer_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="offer_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="offer_user_id" value="">
+
+                            <div class="col-md-12">
+                                <label for=""><b>Choose Offer</b></label>
+                                <div class="offer-itemlist">
+                                    <div class="offer-item">
+                                        <div class="offer-option-item green-offer-option">
+                                            <p>Green</p>
+                                            <input type="radio" name="offer" value="1" hidden="">
+                                        </div>
+                                    </div>
+                                    <div class="offer-item">
+                                        <div class="offer-option-item red-offer-option">
+                                            <p>Red</p>
+                                            <input type="radio" name="offer" value="2" hidden="">
+                                        </div>
+                                    </div>
+                                    <div class="offer-item">
+                                        <div class="offer-option-item pink-offer-option">
+                                            <p>{{$offer->offer3_name}}</p>
+                                            <input type="radio" name="offer_3" value="3" disabled="" hidden="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn pull-right" id="update_offer">Update</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- END CONTENT -->
+
 @endsection
 
 @section('js')
@@ -199,6 +259,12 @@
                 //"info":     true,
                 //"searching": true
             });
+        });
+
+        $(document).on('click','.offer-option-item',function(){
+            $('.offer-option-item').removeClass('selected-offer')
+            $(this).addClass('selected-offer');
+            $(this).children('input[type="radio"]').prop('checked',true);
         });
 
         $(document).ready(function() {
@@ -336,6 +402,7 @@
             $('#user_id').val(user_id);
             $("#send_email_modal").modal('show');
         }
+
         $(document).on("click", "#send_email", function(event) {
             event.preventDefault();
 
@@ -399,6 +466,72 @@
                 $("#success_message").hide();
                 $("#error_message").show();
                 $("#error_message").html(validate);
+            }
+        });
+
+        function change_offer(user_id){
+            $('#offer_user_id').val(user_id);
+            $("#change_offer_modal").modal('show');
+        }
+
+        $(document).on("click", "#update_offer", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending email.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var offer = $("input[name='offer']:checked").val();
+
+            var validate = "";
+
+            if (offer ===undefined || offer.trim() == "") {
+                validate = validate + "Offer is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#offer_form")[0]);
+                var url = "{{ url('admin/update_user_offer') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#offer_success_message").show();
+                            $("#offer_error_message").hide();
+                            $("#offer_success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#offer_success_message").hide();
+                            $("#offer_error_message").show();
+                            $("#offer_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#offer_success_message").hide();
+                        $("#offer_error_message").show();
+                        $("#offer_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#offer_success_message").hide();
+                $("#offer_error_message").show();
+                $("#offer_error_message").html(validate);
             }
         });
 
