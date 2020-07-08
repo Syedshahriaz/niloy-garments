@@ -136,12 +136,12 @@
                                             ?>
 
                                             @if($task->task_status !='deleted')
-                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!task_editable($task) || !task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end)) background-color: #efefef;cursor: not-allowed; @endif">{{--bg-success, bg-warning, bg-danger--}}
+                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task) || !\App\Common::task_in_date_range($shipment->shipment_date,$task->days_range_start,$task->days_range_end)) background-color: #efefef;cursor: not-allowed; @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                 <div class="edit-table-date">
                                                     @if($task->task_status =='active')
                                                         {{date('D', strtotime($task->original_delivery_date))}},<br>
                                                         {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
-                                                        @if(task_editable($task) && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
+                                                        @if(\App\Common::task_editable($task) && \App\Common::task_in_date_range($shipment->shipment_date,$task->days_range_start,$task->days_range_end))
                                                             <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                         @endif
                                                     @endif
@@ -211,11 +211,11 @@
                                                         {{date('D, F d, Y', strtotime($task->due_date))}}
                                                     @endif
                                                 </td>
-                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!task_editable($task) || !task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end)) background-color: #efefef;cursor: not-allowed; @endif">
+                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task) || !\App\Common::task_in_date_range($shipment->shipment_date,$task->days_range_start,$task->days_range_end)) background-color: #efefef;cursor: not-allowed; @endif">
                                                     <div class="edit-table-date">
                                                         @if($task->task_status =='active')
                                                             {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if(task_editable($task) && task_in_date_range($shipment->shipment_date,$task->days_to_add,$task->days_range_end))
+                                                            @if(\App\Common::task_editable($task) && \App\Common::task_in_date_range($shipment->shipment_date,$task->days_range_start,$task->days_range_end))
                                                                 <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif
@@ -299,32 +299,6 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- END TASK SUMMERY MODAL -->
-
-    <?php
-    function task_editable($task){
-        if($task->has_freeze_rule==1 && $task->update_date_with !='self_task' && $task->status != 'completed' && $task->delivery_date_update_count < 2){
-            return 1;
-        }
-        else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
-            return 2;
-        }
-        return 0;
-    }
-
-    function task_in_date_range($shipment_date,$days_range_start,$days_range_end){
-        if($days_range_end == ''){
-            return 1;
-        }
-        $today = date('Y-m-d');
-        $nsd_start = date('Y-m-d', strtotime($shipment_date. ' + '.$days_range_start.' days'));
-        $nsd_end = date('Y-m-d', strtotime($shipment_date. ' + '.$days_range_end.' days'));
-
-        if($today>=$nsd_start && $today<=$nsd_end){
-            return 1;
-        }
-        return 0;
-    }
-    ?>
 @endsection
 
 @section('js')

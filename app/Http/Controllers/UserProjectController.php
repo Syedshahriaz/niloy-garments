@@ -211,7 +211,7 @@ class UserProjectController extends Controller
         try{
             if (Auth::check()) {
                 $user_project_id = $request->id;
-                $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule')
+                $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
                     ->where('user_project_id', $user_project_id)
