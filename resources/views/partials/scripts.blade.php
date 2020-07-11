@@ -49,6 +49,7 @@
 <!-- END PAGE LEVEL PLUGINS -->
 
 <script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <!-- BEGIN GLOABL CUSTOM SCRIPTS -->
 <script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>
