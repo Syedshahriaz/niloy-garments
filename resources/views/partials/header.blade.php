@@ -35,7 +35,7 @@
         <!-- END GLOBAL PAGE STYLES-->
 
         <!-- START DATA TABLE STYLES-->
-        <link href="{{asset('assets/global/plugins/datatables/dataTables.bootstrap.min.csss')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('assets/global/plugins/datatables/dataTables.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- END DATA TABLE STYLES-->
 
         <!-- BEGIN THEME LAYOUT STYLES -->

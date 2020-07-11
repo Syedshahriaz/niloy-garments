@@ -120,10 +120,10 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/meter.png')}}" alt="Dashboard">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/speed.png')}}" alt="Dashboard">
                                             </a>
                                             <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="Change Offer">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
                                             </a>
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
