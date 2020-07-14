@@ -215,6 +215,7 @@ class UserProjectController extends Controller
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
                     ->where('user_project_id', $user_project_id)
+                    ->where('tasks.status', 'active')
                     ->get();
 
                 $task_titles = TaskTitle::where('status','!=','deleted')

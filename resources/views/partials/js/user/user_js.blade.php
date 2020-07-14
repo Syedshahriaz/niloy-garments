@@ -507,4 +507,56 @@
         $('#view_buying_agent_phone').text((buyer.buying_agent_phone === null) ? '' : buyer.buying_agent_phone);
         $('#view_address').text((buyer.address === null) ? '' : buyer.address);
     }
+
+    /*
+    * Message js
+    * */
+    $(document).on("click", "#send_btn", function(event) {
+        event.preventDefault();
+
+        var user_id = $("#user_id").val();
+        var message = $("#message").val();
+        var message_file = $("#message_file").val();
+
+        var validate = "";
+
+        /*if (first_name.trim() == "") {
+            validate = validate + "First name is required</br>";
+        }*/
+        if (message.trim() == "" && message_file=='') {
+            return false;
+        }
+
+        if (validate == "") {
+            var formData = new FormData($("#message_form")[0]);
+            var url = "{{ url('store_message') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                success: function(data) {
+                    if (data.status == 200) {
+
+                    } else {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data.reason);
+                    }
+                },
+                error: function(data) {
+                    $("#success_message").hide();
+                    $("#error_message").show();
+                    $("#error_message").html(data);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        } else {
+            $("#success_message").hide();
+            $("#error_message").show();
+            $("#error_message").html(validate);
+        }
+    });
 </script>

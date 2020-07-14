@@ -84,7 +84,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            
+
                             <div id="char_body">
                                 <div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
                                     <ul class="chats">
@@ -172,20 +172,23 @@
                                     </ul>
                                 </div>
                                 <div class="chat-form">
-                                    <div class="input-cont">
-                                        <input class="form-control" id="message_input" type="text" placeholder="Type a message here..." /> 
-                                        <input class="hidden" type="file" id="image_upload_input">
-                                        <img id="uploaded_img" src="" class="">
-                                        <div class="" id="upload_btn">
-                                            <i class="icon-paper-clip icons"></i>
+                                    <form id="message_form" method="post" action="" enctype="multipart/form-data">
+                                        <div class="input-cont">
+                                            <input class="form-control" name="message" id="message_input" type="text" placeholder="Type a message here..." />
+                                            <input class="hidden" type="file" name="message_file" id="image_upload_input">
+                                            <img id="uploaded_img" src="" class="">
+                                            <div class="" id="upload_btn">
+                                                <i class="icon-paper-clip icons"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="btn-cont">
-                                        <span class="arrow"> </span>
-                                        <a href="" class="btn blue icn-only" id="sent_btn">
-                                            <i class="icon-paper-plane icons"></i>
-                                        </a>
-                                    </div>
+                                        <div class="btn-cont">
+                                            <span class="arrow"> </span>
+                                            <a href="javascript:void(0)" class="btn blue icn-only" id="send_btn">
+                                                <i class="icon-paper-plane icons"></i>
+                                            </a>
+                                        </div>
+                                    </form>
+
                                 </div>
                             </div>
                         </div>
@@ -203,7 +206,7 @@
 @section('js')
     <script>
         jQuery(document).ready(function() {
-            
+
             var cont = $('#chats');
             var list = $('.chats', cont);
             var form = $('.chat-form', cont);
@@ -265,7 +268,7 @@
             input.keypress(function(e) {
                 if (e.which == 13) {
                     handleClick(e);
-                    return false; 
+                    return false;
                 }
             });
 

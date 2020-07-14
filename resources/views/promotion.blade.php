@@ -20,18 +20,18 @@
             <div class="col">
                 <div class="Offer-info mt-5">
                     <div class="offer-item green-offer animate__animated animate__fadeInLeft">
-                        <h3>Green Offer</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex non quibusdam dolore? Error fuga, in cum qui veritatis sunt! Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex non quibusdam dolore? Error fuga, in cum qui veritatis sunt!</p>
+                        <h3>{{$offer->offer1_name}}</h3>
+                        <p><?php echo htmlspecialchars_decode($offer->offer1_details); ?></p>
                     </div>
 
                     <div class="offer-item red-offer  animate__animated animate__fadeInRight">
-                        <h3>Red Offer</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex non quibusdam dolore? Error fuga, in cum qui veritatis sunt! Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex non quibusdam dolore? Error fuga, in cum qui veritatis sunt!</p>
+                        <h3>{{$offer->offer2_name}}</h3>
+                        <p><?php echo htmlspecialchars_decode($offer->offer2_details); ?></p>
                     </div>
 
                     <div class="offer-item pink-offer animate__animated animate__fadeInLeft">
-                        <h3>Pink Offer</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex non quibusdam dolore? Error fuga, in cum qui veritatis sunt! Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci ex non quibusdam dolore? Error fuga, in cum qui veritatis sunt!</p>
+                        <h3>{{$offer->offer3_name}}</h3>
+                        <p><?php echo htmlspecialchars_decode($offer->offer3_details); ?></p>
                     </div>
 
                     <h2 class="text-center mt-5">Choose your offer</h2>
