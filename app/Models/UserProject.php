@@ -15,7 +15,7 @@ class UserProject extends Model
     public function tasks()
     {
         $instance = $this->hasMany('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.has_freeze_rule');
+        $instance = $instance->select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->join('task_title', 'task_title.id', '=', 'tasks.title_id');
         $instance = $instance->where('tasks.status','active');
@@ -25,7 +25,7 @@ class UserProject extends Model
     public function running_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
-        //$instance = $instance->select('user_project_tasks.*', 'task_title.name as title','tasks.has_freeze_rule');
+        $instance = $instance->select('user_project_tasks.*', 'task_title.name as title','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->join('task_title', 'task_title.id', '=', 'tasks.title_id');
         $instance = $instance->where('tasks.status','active');
@@ -39,7 +39,7 @@ class UserProject extends Model
     public function last_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*', 'task_title.name as title','tasks.has_freeze_rule');
+        $instance = $instance->select('user_project_tasks.*', 'task_title.name as title','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule');
         $instance = $instance->join('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->join('task_title', 'task_title.id', '=', 'tasks.title_id');
         $instance = $instance->where('tasks.status','active');

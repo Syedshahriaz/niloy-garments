@@ -73,6 +73,7 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 
 /*User massage routs*/
 Route::get('message', 'MessageController@message');
+Route::post('store_message', 'MessageController@store');
 
 /*Admin routes*/
 Route::get('admin', 'Admin\AdminController@index');
