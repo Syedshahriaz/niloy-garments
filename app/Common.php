@@ -61,14 +61,56 @@ class Common
         return $notifications;
     }
 
-    public static function task_editable($task){
+    public static function task_editable($task,$shipment_date){
+        $result = 0;
+
+        /*
+         * Check if task freeze rule is dependent with other task or not
+         * */
+        if($task->freeze_dependent_with ==''){
+            /*
+             * Check if self task is editable
+             * */
+            $result = self::isTaskEditable($task,$shipment_date);
+        }
+        else{
+            /*
+             * Get the dependent task
+             * */
+            $dependent_task = Task::where('id',$task->freeze_dependent_with)->first();
+            /*
+             * Check if dependent task is editable
+             * */
+            $dependent_editable = self::isTaskEditable($dependent_task,$shipment_date);
+            if($dependent_editable==1){
+                /*
+                 * Check if self task is editable
+                 * */
+                $result = self::isTaskEditable($task);
+            }
+
+        }
+
+        return $result;
+    }
+
+    public static function isTaskEditable($task,$shipment_date){
+        $result = 0;
         if($task->has_freeze_rule==1 && $task->status != 'completed' && $task->delivery_date_update_count < 2){
-            return 1;
+            $result = 1;
         }
         else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
-            return 2;
+            $result = 1;
         }
-        return 0;
+
+        /*
+         * Now check if task is in date range
+         * */
+        if($result==1){
+            $result = self::task_in_date_range($shipment_date,$task->days_range_start,$task->days_range_end);
+        }
+
+        return $result;
     }
 
     public static function task_in_date_range($shipment_date,$days_range_start,$days_range_end){

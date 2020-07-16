@@ -515,8 +515,9 @@
         event.preventDefault();
 
         var user_id = $("#user_id").val();
-        var message = $("#message").val();
+        var message = $("#message_input").val();
         var message_file = $("#message_file").val();
+        alert(message);
 
         var validate = "";
 

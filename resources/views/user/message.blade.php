@@ -173,6 +173,8 @@
                                 </div>
                                 <div class="chat-form">
                                     <form id="message_form" method="post" action="" enctype="multipart/form-data">
+                                        {{csrf_field()}}
+                                        <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
                                         <div class="input-cont">
                                             <input class="form-control" name="message" id="message_input" type="text" placeholder="Type a message here..." />
                                             <input class="hidden" type="file" name="message_file" id="image_upload_input">
