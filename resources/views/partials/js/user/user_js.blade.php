@@ -511,13 +511,20 @@
     /*
     * Message js
     * */
-    $(document).on("click", "#send_btn", function(event) {
+    $(document).on('submit','#message_form', function(){
+        submit_message();
+    });
+
+    $(document).on('click','#send_btn', function(){
+        submit_message();
+    });
+
+    function submit_message(){
         event.preventDefault();
 
         var user_id = $("#user_id").val();
         var message = $("#message_input").val();
         var message_file = $("#message_file").val();
-        alert(message);
 
         var validate = "";
 
@@ -538,7 +545,7 @@
                 data: formData,
                 success: function(data) {
                     if (data.status == 200) {
-
+                        appendMessage(message);
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
@@ -559,5 +566,44 @@
             $("#error_message").show();
             $("#error_message").html(validate);
         }
-    });
+    }
+
+    function appendMessage(message) {
+        var cont = $('#chats');
+        var list = $('.chats', cont);
+
+        $('#uploaded_img').removeClass('visible');
+        $('#message_input').removeClass('img-added');
+
+        var time = new Date();
+        var time_str = (time.getHours() + ':' + time.getMinutes());
+        var tpl = '';
+        tpl += '<li class="out">';
+        tpl += '<img class="avatar" alt="" src="' + Layout.getLayoutImgPath() + 'avatar1.jpg"/>';
+        tpl += '<div class="message">';
+        tpl += '<span class="arrow"></span>';
+        tpl += '<a href="#" class="name">Bob Nilson</a>&nbsp;';
+        tpl += '<span class="datetime">at ' + time_str + '</span>';
+        tpl += '<span class="body">';
+        tpl += message;
+        tpl += '</span>';
+        tpl += '</div>';
+        tpl += '</li>';
+
+        var msg = list.append(tpl);
+        $('#message_input').val("");
+
+        var getLastPostPos = function() {
+            var height = 0;
+            cont.find("li.out, li.in").each(function() {
+                height = height + $(this).outerHeight();
+            });
+
+            return height;
+        }
+
+        cont.find('.scroller').slimScroll({
+            scrollTo: getLastPostPos()
+        });
+    }
 </script>

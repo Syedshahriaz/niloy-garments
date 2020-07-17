@@ -32,18 +32,23 @@ class MessageController extends Controller
                 $message = NEW Message();
                 $message->user_id = $request->user_id;
                 $message->admin_id = $admin_id;
-                $message->save;
+                $message->save();
 
                 $message_id = $message->id;
+            }
+            else{
+                $message = Message::where('id',$message_id)->first();
+                $message->has_new_message = 1;
+                $message->save();
             }
             /*
              * Store message details
              * */
-            if($request->messsage !=''){
+            if($request->message !=''){
                 $messageDetails = NEW MessageDetails();
                 $messageDetails->message_id = $message_id;
                 $messageDetails->type = 'sent';
-                $messageDetails->description = $request->messsage;
+                $messageDetails->description = $request->message;
                 $messageDetails->save();
             }
 

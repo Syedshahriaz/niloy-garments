@@ -86,7 +86,7 @@ class Common
                 /*
                  * Check if self task is editable
                  * */
-                $result = self::isTaskEditable($task);
+                $result = self::isTaskEditable($task,$shipment_date);
             }
 
         }
@@ -208,17 +208,19 @@ class Common
             $projectTask->user_project_id = $userProject->id;
             $projectTask->task_id = $task->id;
             if($task->status =='active'){
+                $days_to_add = self::calculateDaysToAdd($task,$shipment->shipment_date);
+
                 if($project->day_add_with=='shipment_date') {
                     $projectTask->due_date = date('Y-m-d',
-                        strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                        strtotime($shipment->shipment_date . ' + ' . $days_to_add. ' days'));
                     $projectTask->original_delivery_date = date('Y-m-d',
-                        strtotime($shipment->shipment_date . ' + ' . $task->days_to_add . ' days'));
+                        strtotime($shipment->shipment_date . ' + ' . $days_to_add . ' days'));
                 }
                 else if($project->day_add_with=='purchase_date'){
                     $projectTask->due_date = date('Y-m-d',
-                        strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                        strtotime($purchase_date . ' + ' . $days_to_add . ' days'));
                     $projectTask->original_delivery_date = date('Y-m-d',
-                        strtotime($purchase_date . ' + ' . $task->days_to_add . ' days'));
+                        strtotime($purchase_date . ' + ' . $days_to_add . ' days'));
                 }
                 else{
                     // keep due_date and original_delivery_date NULL
@@ -233,6 +235,27 @@ class Common
             $projectTask->freeze_forever = $task->freeze_forever;
             $projectTask->save();
         }
+    }
+
+    public static function calculateDaysToAdd($task,$shipment_date){
+        if($task->alternet_days_to_add==''){
+            $days_to_add = $task->days_to_add;
+        }
+        else{
+            /*
+             * Check if dependent task freeze or active
+             * */
+            $dependentTask = Task::where('id',$task->alternet_days_add_with)->first();
+            $in_date_range = self::task_in_date_range($shipment_date,$dependentTask->days_range_start,$dependentTask->days_range_end);
+            if($in_date_range==0){ // The dependent task is freezed
+                $days_to_add = $task->alternet_days_to_add;
+            }
+            else{
+                $days_to_add = $task->days_to_add;
+            }
+        }
+
+        return $days_to_add;
     }
 
     public static function send7dayWarningEmail($email,$task){
