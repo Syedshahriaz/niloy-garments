@@ -255,7 +255,7 @@ class UserProjectController extends Controller
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){
-        //try{
+        try{
             $date_updated = 0;
             $date_increased = 0;
             $daysAdded = 0;
@@ -314,13 +314,13 @@ class UserProjectController extends Controller
 
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
-        /*}
+        }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     private function makePreviousTaskNotEditable($project_task_id,$user_project_id){
