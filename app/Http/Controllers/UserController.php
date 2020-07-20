@@ -54,7 +54,12 @@ class UserController extends Controller
                 $unique_id = Common::generateUniqueNumber(1);
             }
 
+            $parentUser = User::where('email',$request->email)->where('parent_id',0)->first();
+
             $user = new User();
+            if(!empty($parentUser)){
+                $user->parent_id = $parentUser->id;
+            }
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $request->phone;
