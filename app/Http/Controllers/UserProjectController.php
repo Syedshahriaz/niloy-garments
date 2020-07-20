@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Offer;
+use App\Models\Payments;
 use App\Models\TaskTitle;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\Payment;
 use App\Models\UserShipment;
 use App\Models\UserProject;
 use App\Models\UserProjectTask;
@@ -26,7 +28,23 @@ class UserProjectController extends Controller
             if (Auth::check()) {
                 $offer = Offer::first();
                 $user = User::where('users.id', $request->id)->first();
+
+                /*
+                 * Check if payment done for this user
+                 * */
+                $payment = Payment::where('user_id', $user->id)->first();
+                if (empty($payment)) {
+                    return redirect('promotion/'.$user->id);
+                }
+                if ($payment->payment_status != 'Completed') {
+                    return redirect('promotion/'.$user->id);
+                }
+
+                /*
+                 * Check if shipment date selected already
+                 * */
                 $shipment = UserShipment::where('user_id', $user->id)->first();
+
                 if (!empty($shipment) && $shipment->shipment_date != '') {
                     return redirect('all_project');
                 }
@@ -87,6 +105,8 @@ class UserProjectController extends Controller
 
             DB::commit();
 
+            Session::put('selected_user',$user_id);
+
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
         }
         catch (\Exception $e) {
@@ -113,10 +133,17 @@ class UserProjectController extends Controller
         try{
             if (Auth::check()) {
                 if ($request->u_id == '') {
-                    $user_id = Session::get('user_id');
+                    if(Session::get('selected_user') != ''){
+                        $user_id = Session::get('selected_user');
+                    }
+                    else{
+                        $user_id = Session::get('user_id');
+                    }
                 } else {
                     $user_id = $request->u_id;
                 }
+
+                Session::put('selected_user',$user_id);
 
                 $user = User::where('users.id', $user_id)->first();
                 $setting = Setting::select('message_to_user')->first();
@@ -133,7 +160,7 @@ class UserProjectController extends Controller
                     ->select('users.*', 'user_shipments.shipment_date')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                     ->where('users.status','active')
-                    ->orderBy('parent_id','ASC')
+                    //->orderBy('parent_id','ASC')
                     ->get();
                 $projects = UserProject::with('running_task','last_task','completed_tasks')
                     ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.user_id')
