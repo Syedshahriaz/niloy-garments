@@ -17,11 +17,17 @@ class MessageController extends Controller
     public function message(Request $request)
     {
         $user = Auth::user();
+        $message = Message::with('message_details')
+            ->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+            ->join('users as user','user.id','=','messages.user_id')
+            ->join('users as admin','admin.id','=','messages.admin_id')
+            ->where('user_id',$user->id)
+            ->first();
         if($request->ajax()) {
-            $returnHTML = View::make('user.message',compact('user'))->renderSections()['content'];
+            $returnHTML = View::make('user.message',compact('user','message'))->renderSections()['content'];
             return response()->json(array('status' => 200, 'html' => $returnHTML));
         }
-        return view('user.message',compact('user'));
+        return view('user.message',compact('user','message'));
     }
     public function store(Request $request)
     {
@@ -41,15 +47,17 @@ class MessageController extends Controller
                 $message->has_new_message = 1;
                 $message->save();
             }
+
+            $photo_path = '';
+
             /*
              * Store message details
              * */
+            $messageDetails = NEW MessageDetails();
+            $messageDetails->message_id = $message_id;
+            $messageDetails->type = 'sent';
             if($request->message !=''){
-                $messageDetails = NEW MessageDetails();
-                $messageDetails->message_id = $message_id;
-                $messageDetails->type = 'sent';
-                $messageDetails->description = $request->message;
-                $messageDetails->save();
+                $messageDetails->message = $request->message;
             }
 
             if($request->hasFile('message_file')){
@@ -61,14 +69,11 @@ class MessageController extends Controller
 
                 $photo_path = 'uploads/messages/'.$file_name;
 
-                $messageDetails = NEW MessageDetails();
-                $messageDetails->message_id = $message_id;
-                $messageDetails->type = 'sent';
                 $messageDetails->file_path = $photo_path;
-                $messageDetails->save();
             }
+            $messageDetails->save();
 
-            return [ 'status' => 200, 'reason' => 'Message stored successfully'];
+            return [ 'status' => 200, 'reason' => 'Message stored successfully','photo_path'=>$photo_path];
 
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'MessageController', 'store', $e->getLine(),

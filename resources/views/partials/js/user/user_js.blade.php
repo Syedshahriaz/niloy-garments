@@ -512,6 +512,7 @@
     * Message js
     * */
     $(document).on('submit','#message_form', function(){
+        alert(11);
         submit_message();
     });
 
@@ -525,6 +526,7 @@
         var user_id = $("#user_id").val();
         var message = $("#message_input").val();
         var message_file = $("#message_file").val();
+        alert(message);
 
         var validate = "";
 
@@ -545,7 +547,8 @@
                 data: formData,
                 success: function(data) {
                     if (data.status == 200) {
-                        appendMessage(message);
+                        alert(data.status);
+                        appendMessage(message,data.photo_path);
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
@@ -568,24 +571,40 @@
         }
     }
 
-    function appendMessage(message) {
+    function appendMessage(message,photo_path) {
         var cont = $('#chats');
         var list = $('.chats', cont);
+        var user_name = $('#user_name').val();
 
         $('#uploaded_img').removeClass('visible');
         $('#message_input').removeClass('img-added');
 
         var time = new Date();
-        var time_str = (time.getHours() + ':' + time.getMinutes());
+        var d = time.getDate();
+        var m =  time.getMonth();
+        m += 1;  // JavaScript months are 0-11
+        var y = time.getFullYear();
+        var hours = time.getHours();
+        var minutes = time.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+
+        var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
         var tpl = '';
         tpl += '<li class="out">';
-        tpl += '<img class="avatar" alt="" src="' + Layout.getLayoutImgPath() + 'avatar1.jpg"/>';
+        tpl += '<img class="avatar" alt="" src="{{asset(Session::get('user_photo'))}}"/>';
         tpl += '<div class="message">';
         tpl += '<span class="arrow"></span>';
-        tpl += '<a href="#" class="name">Bob Nilson</a>&nbsp;';
+        tpl += '<a href="#" class="name">{{Session::get('username')}}</a>&nbsp;';
         tpl += '<span class="datetime">at ' + time_str + '</span>';
         tpl += '<span class="body">';
-        tpl += message;
+        if(photo_path !=''){
+            var file_path = "{{url('/')}}/"+photo_path;
+            tpl += '<img style="float: right;width: 330px;" class="body" src="'+file_path+'">';
+        }
+        tpl += '<p style="clear: both">'+message+'</p>';
         tpl += '</span>';
         tpl += '</div>';
         tpl += '</li>';
