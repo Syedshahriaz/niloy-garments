@@ -96,10 +96,11 @@ class Common
 
     public static function isTaskEditable($task,$shipment_date){
         $result = 0;
-        if($task->has_freeze_rule==1 && $task->status != 'completed' && $task->delivery_date_update_count < 2){
+        /*if($task->has_freeze_rule==1 && $task->status != 'completed' && $task->delivery_date_update_count < 2){
             $result = 1;
-        }
-        else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
+        }*/
+        //else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
+        if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1 && $task->delivery_date_update_count < 2){
             $result = 1;
         }
 
