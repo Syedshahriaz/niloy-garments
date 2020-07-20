@@ -135,7 +135,7 @@ class UserProjectController extends Controller
                     ->where('users.status','active')
                     ->orderBy('parent_id','ASC')
                     ->get();
-                $projects = UserProject::with('running_task','last_task')
+                $projects = UserProject::with('running_task','last_task','completed_tasks')
                     ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.user_id')
                     ->join('projects', 'projects.id', '=', 'user_projects.project_id')
                     ->join('tasks', 'tasks.project_id', '=', 'projects.id')
@@ -324,17 +324,18 @@ class UserProjectController extends Controller
     }
 
     private function makePreviousTaskNotEditable($project_task_id,$user_project_id){
-        $next_task = UserProjectTask::where('user_project_tasks.id','<',$project_task_id)
-            ->select('user_project_tasks.*')
+        $prev_tasks = UserProjectTask::select('user_project_tasks.*')
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+            ->where('user_project_tasks.id','<',$project_task_id)
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
             ->where('delivery_date_update_count','<',2)
             ->orderBy('user_project_tasks.id','ASC')
-            ->first();
-        if(!empty($next_task)){
-            $next_task->delivery_date_update_count = 2;
-            $next_task->save();
+            ->get();
+        foreach($prev_tasks as $task){
+            $taskData = UserProjectTask::where('id',$task->id)->first();
+            $taskData->delivery_date_update_count = 2;
+            $taskData->save();
         }
     }
 

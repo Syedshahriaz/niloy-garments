@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="portlet-body" id="chats">
-                            <div id="char_user_list" class="inbox">
+                            {{--<div id="char_user_list" class="inbox">
                                 <ul class="inbox-contacts">
                                     <li class="active">
                                         <a href="javascript:;">
@@ -58,123 +58,72 @@
                                             <span class="contact-name">Adam Stone</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <img class="contact-pic" src="{{asset('assets/layouts/layout/img/avatar3.jpg')}}">
-                                            <span class="contact-name">Lisa Wong</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <img class="contact-pic" src="{{asset('assets/layouts/layout/img/avatar4.jpg')}}">
-                                            <span class="contact-name">Nick Strong</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <img class="contact-pic" src="{{asset('assets/layouts/layout/img/avatar6.jpg')}}">
-                                            <span class="contact-name">Anna Bold</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <img class="contact-pic" src="{{asset('assets/layouts/layout/img/avatar7.jpg')}}">
-                                            <span class="contact-name">Richard Nilson</span>
-                                        </a>
-                                    </li>
                                 </ul>
-                            </div>
+                            </div>--}}
 
                             <div id="char_body">
                                 <div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
                                     <ul class="chats">
-                                        <li class="out">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar2.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Lisa Wong </a>
-                                                <span class="datetime"> at 20:11 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="out">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar2.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Lisa Wong </a>
-                                                <span class="datetime"> at 20:11 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="in">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar1.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                                <span class="datetime"> at 20:30 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="in">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar1.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                                <span class="datetime"> at 20:30 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="out">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar3.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Richard Doe </a>
-                                                <span class="datetime"> at 20:33 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="in">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar3.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Richard Doe </a>
-                                                <span class="datetime"> at 20:35 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="out">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar1.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                                <span class="datetime"> at 20:40 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="in">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar3.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Richard Doe </a>
-                                                <span class="datetime"> at 20:40 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
-                                        <li class="out">
-                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/avatar1.jpg')}}" />
-                                            <div class="message">
-                                                <span class="arrow"> </span>
-                                                <a href="javascript:;" class="name"> Bob Nilson </a>
-                                                <span class="datetime"> at 20:54 </span>
-                                                <span class="body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. sed diam nonummy nibh euismod tincidunt ut laoreet. </span>
-                                            </div>
-                                        </li>
+                                        @if(!empty($message->message_details))
+                                        @foreach($message->message_details as $m_details)
+                                            @if($m_details->type=='received')
+                                                <li class="in">
+                                                    @if($message->admin_photo !='')
+                                                        <img class="avatar" alt="" src="{{asset($message->admin_photo)}}" />
+                                                    @else
+                                                        <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
+                                                    @endif
+                                                    <div class="message">
+                                                        <span class="arrow"> </span>
+                                                        <a href="javascript:;" class="name"> {{$message->admin_name}} </a>
+                                                        <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+                                                        <span class="body">
+                                                            @if($m_details->file_path !='')
+                                                                <img style="width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                            @endif
+                                                            @if($m_details->message !='')
+                                                                {{$m_details->message}}
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            @else
+                                                <li class="out">
+                                                    @if($message->user_photo !='')
+                                                        <img class="avatar" alt="" src="{{asset($message->user_photo)}}" />
+                                                    @else
+                                                        <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
+                                                    @endif
+                                                    <div class="message">
+                                                        <span class="arrow"> </span>
+                                                        <a href="javascript:;" class="name"> {{$message->user_name}} </a>
+                                                        <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+                                                        <span class="body">
+                                                            @if($m_details->file_path !='')
+                                                                <span>
+                                                                    <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                </span>
+                                                            @endif
+                                                            @if($m_details->message !='')
+                                                                <p style="clear: both">
+                                                                {{$m_details->message}}
+                                                                </p>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                        @endif
                                     </ul>
                                 </div>
-                                <div class="chat-form">
-                                    <form id="message_form" method="post" action="" enctype="multipart/form-data">
-                                        {{csrf_field()}}
-                                        <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+
+                                <form id="message_form" method="post" action="" enctype="multipart/form-data">
+                                    {{csrf_field()}}
+                                    <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+                                    <input type="hidden" name="message_id" id="message_id" value="@if(!empty($message)){{$message->id}}@endif">
+                                    <input type="hidden" name="user_name" id="user_name" value="{{$user->first_name." ".$user->last_name}}">
+                                    <div class="chat-form">
                                         <div class="input-cont">
                                             <input class="form-control" name="message" id="message_input" type="text" placeholder="Type a message here..." />
                                             <input class="hidden" type="file" name="message_file" id="image_upload_input">
@@ -189,9 +138,8 @@
                                                 <i class="icon-paper-plane icons"></i>
                                             </a>
                                         </div>
-                                    </form>
-
-                                </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -209,7 +157,22 @@
     <script>
         jQuery(document).ready(function() {
 
+            var getLastPostPos = function() {
+                var height = 0;
+                cont.find("li.out, li.in").each(function() {
+                    height = height + $(this).outerHeight();
+                });
+
+                return height;
+            }
+
             var cont = $('#chats');
+
+            cont.find('.scroller').slimScroll({
+                scrollTo: getLastPostPos()
+            });
+
+            /*var cont = $('#chats');
             var list = $('.chats', cont);
             var form = $('.chat-form', cont);
             var input = $('input', form);
@@ -272,7 +235,7 @@
                     handleClick(e);
                     return false;
                 }
-            });
+            });*/
 
             //image upload
             $(document).on('click','#upload_btn', function(e){
