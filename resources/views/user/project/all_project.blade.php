@@ -67,20 +67,16 @@
                                 <?php
                                 foreach($projects as $project){
 
-                                    $type='';
                                     if(!empty($project->running_task)){
                                         $task = $project->running_task;
-                                        $type = 'running_task';
                                     }
                                     else{
                                         $task = $project->last_task;
-                                        $type = 'last_task';
                                     }
 
                                     // If last task is completed then use this task
                                     if(!empty($project->last_task) && $project->last_task->status=='completed'){
                                         $task = $project->last_task;
-                                        $type = 'last_completed_task';
                                     }
 
                                     $bg_class = '';
@@ -95,7 +91,7 @@
                                     /*
                                      * Create bg class
                                      * */
-                                    if(empty($project->completed_task)){
+                                    if(empty($project->completed_tasks)){
 
                                     }
                                     if($task->status == 'completed'){
@@ -105,12 +101,12 @@
                                         if($task->due_date==''){ // If no due date found
                                             $bg_class = '';
                                         }
-                                        else if(!\App\Common::task_editable($task,$shipment->shipment_date) && !empty($project->completed_task)){ // If task is freezed and any previous task completed
+                                        else if(!\App\Common::task_editable($task,$shipment->shipment_date) && count($project->completed_tasks) !=0){ // If task is freezed and any previous task completed
                                             $bg_class = 'bg-success';
                                         }
-                                        else if($task->has_freeze_rule == 1 && $task->skip_background_rule==0){ // If has freeze rule and background rule not skipped
+                                        /*else if($task->has_freeze_rule == 1 && $task->skip_background_rule==0){ // If has freeze rule and background rule not skipped
                                             $bg_class = '';
-                                        }
+                                        }*/
                                         else if($task->has_freeze_rule == 1 && $task->skip_background_rule==1){ // If has freeze rule and background rule skipped
                                             $bg_class = 'bg-success';
                                         }
