@@ -306,50 +306,8 @@ class UserController extends Controller
             /*
              * Update shipping date
              * */
-            $date_increased = 0;
-            if($request->shipment_date !='' && $request->shipment_date != $request->old_shipment_date){
-                if(Common::getDateDiffDays($request->shipment_date,$request->old_shipment_date)>0) { // If date increased
-                    $date_increased = 1;
-                }
 
-                /*
-                 * Update shipment date
-                 * */
-                $shipment = UserShipment::where('user_id',$user_id)->first();
-                $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
-                $shipment->shipment_date_update_count = $shipment->shipment_date_update_count+1;
-                $shipment->save();
-
-                /*
-                 * Update project task due date
-                 * */
-                $user_projects = UserProject::where('user_id',$user_id)
-                    ->select('user_projects.*')
-                    ->join('projects','projects.id','=','user_projects.project_id')
-                    ->where('projects.day_add_with','shipment_date')
-                    ->get();
-
-                foreach($user_projects as $key=>$u_project){
-                    $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
-                        ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
-                        ->join('tasks','tasks.id','=','user_project_tasks.task_id')
-                        ->whereIn('user_project_tasks.status',['not initiate','processing'])
-                        //->where('tasks.update_date_with','shipment_date')
-                        ->get();
-
-                    /*
-                     * Add user project tasks due date
-                     * */
-                    foreach($project_tasks as $key=>$p_task){
-                        $p_task->due_date = date('Y-m-d',
-                            strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
-                        $p_task->original_delivery_date = date('Y-m-d',
-                            strtotime($request->shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
-                        $p_task->save();
-                    }
-                }
-
-            }
+            $result = $this->updateShipingDate($request,$user_id);
 
             DB::commit();
 
@@ -364,20 +322,104 @@ class UserController extends Controller
         }
     }
 
+    private function updateShipingDate($request,$user_id){
+        $date_increased = 0;
+        if($request->shipment_date !='' && $request->shipment_date != $request->old_shipment_date){
+            if(Common::getDateDiffDays($request->shipment_date,$request->old_shipment_date)>0) { // If date increased
+                $date_increased = 1;
+            }
+
+            /*
+             * Update shipment date
+             * */
+            $shipment = UserShipment::where('user_id',$user_id)->first();
+            $shipment->shipment_date = date('Y-m-d',strtotime($request->shipment_date));
+            $shipment->shipment_date_update_count = $shipment->shipment_date_update_count+1;
+            $shipment->save();
+
+            /*
+             * Update project task due date
+             * */
+            $result = $this->updateProjectTaskDueDate($user_id,$request->shipment_date);
+
+            return 'Date updated';
+        }
+        return 'Date not updated';
+    }
+
+    private function updateProjectTaskDueDate($user_id,$shipment_date){
+        $user_projects = UserProject::where('user_id',$user_id)
+            ->select('user_projects.*')
+            ->join('projects','projects.id','=','user_projects.project_id')
+            //->where('projects.day_add_with','shipment_date')
+            ->get();
+
+        foreach($user_projects as $key=>$u_project){
+            $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
+                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
+                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->whereIn('user_project_tasks.status',['not initiate','processing'])
+                //->where('tasks.update_date_with','shipment_date')
+                ->get();
+
+            /*
+             * Add user project tasks due date
+             * */
+            if($u_project->day_add_with=='shipment_date'){
+                foreach($project_tasks as $key=>$p_task){
+                    $p_task->due_date = date('Y-m-d',
+                        strtotime($shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                    $p_task->original_delivery_date = date('Y-m-d',
+                        strtotime($shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                    $p_task->save();
+
+                    /*
+                     * Making correct task editable
+                     * */
+                    $result = $this->makeCorrectTaskEditable($p_task,$shipment_date);
+                }
+            }
+            else{
+                foreach($project_tasks as $key=>$p_task){
+                    $result = $this->makeCorrectTaskEditable($p_task,$shipment_date);
+                    if($result==1){
+                        break 1; // Break this foreach loop
+                    }
+                }
+            }
+        }
+    }
+
+    private function makeCorrectTaskEditable($task,$shipment_date){
+        $project_task = UserProjectTask::where('id',$task->id)->first();
+        $taskData = Task::where('id',$task->task_id)->first();
+
+        $in_date_range = Common::task_in_date_range($shipment_date,$taskData->days_range_start,$taskData->days_range_end);
+        if($in_date_range==1){ // The dependent task not freezed
+            $project_task->status = 'processing';
+        }
+        else{ // Dependent task is active
+            $project_task->status = 'not initiate';
+        }
+        $project_task->save();
+
+        return $in_date_range;
+    }
+
     public function updatePassword(Request $request){
-        //try {
+        try {
             $user = User::where('id',$request->user_id)->first();
             $user->password = bcrypt($request->password);
             $user->save();
 
             return ['status' => 200, 'reason' => 'Password successfully updated'];
-        /*}
+        }
         catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updatePassword', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function userList(Request $request){
