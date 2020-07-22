@@ -246,12 +246,12 @@ class Common
             /*
              * Check if dependent task freeze or active
              * */
-            $dependentTask = Task::where('id',$task->alternet_days_add_with)->first();
+            $dependentTask = Task::where('id',$task->dependent_task_to_add_days)->first();
             $in_date_range = self::task_in_date_range($shipment_date,$dependentTask->days_range_start,$dependentTask->days_range_end);
             if($in_date_range==0){ // The dependent task is freezed
                 $days_to_add = $task->alternet_days_to_add;
             }
-            else{
+            else{ // Dependent task is active
                 $days_to_add = $task->days_to_add;
             }
         }

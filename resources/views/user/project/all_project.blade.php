@@ -107,9 +107,9 @@
                                         /*else if($task->has_freeze_rule == 1 && $task->skip_background_rule==0){ // If has freeze rule and background rule not skipped
                                             $bg_class = '';
                                         }*/
-                                        else if($task->has_freeze_rule == 1 && $task->skip_background_rule==1){ // If has freeze rule and background rule skipped
+                                        /*else if($task->has_freeze_rule == 1 && $task->skip_background_rule==1){ // If has freeze rule and background rule skipped
                                             $bg_class = 'bg-success';
-                                        }
+                                        }*/
                                         else if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
                                             $bg_class = 'bg-danger';
                                         }

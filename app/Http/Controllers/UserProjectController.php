@@ -282,14 +282,17 @@ class UserProjectController extends Controller
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){
-        try{
+        //try{
             $date_updated = 0;
             $date_increased = 0;
             $daysAdded = 0;
             $task = UserProjectTask::where('user_project_tasks.id',$request->project_task_id)
-                ->select('user_project_tasks.*','tasks.has_freeze_rule')
+                ->select('user_project_tasks.*','tasks.has_freeze_rule','user_projects.user_id')
                 ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
                 ->first();
+
+            $shipment = UserShipment::where('user_id', $task->user_id)->first();
 
             /*
              * Check if original delivery date updated and then update next tasks original delivery date
@@ -326,7 +329,10 @@ class UserProjectController extends Controller
              * Make immediate next task to processing
              * */
             if($delivery_date_update_count < 2 ){
-                $this->makeImmediateNextTaskProcessing($request->project_task_id,$task->user_project_id);
+                $next_task = $this->makeImmediateNextTaskProcessing($request->project_task_id,$task->user_project_id,$shipment->shipment_date);
+                if(!empty($next_task)){
+                    $result = $this->makePreviousNotInitiateTaskForeverFreeze($task->user_project_id);
+                }
             }
 
             /*
@@ -341,13 +347,13 @@ class UserProjectController extends Controller
 
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     private function makePreviousTaskNotEditable($project_task_id,$user_project_id){
@@ -366,19 +372,35 @@ class UserProjectController extends Controller
         }
     }
 
-    private function makeImmediateNextTaskProcessing($project_task_id,$user_project_id){
+    private function makeImmediateNextTaskProcessing($project_task_id,$user_project_id,$shipment_date){
+        $next_task = $this->getNextTask($project_task_id,$user_project_id);
+        if(!empty($next_task)){
+            $task_in_date_range = Common::task_in_date_range($shipment_date,$next_task->days_range_start,$next_task->days_range_end);
+            if($task_in_date_range==0){
+                /*$next_task->freeze_forever = 1;
+                $next_task->save();*/
+
+                $result = $this->makeImmediateNextTaskProcessing($next_task->id,$user_project_id,$shipment_date);
+            }
+            else{
+                $next_task->status = 'processing';
+                $next_task->save();
+                return 1;
+            }
+        }
+        return 1;
+    }
+
+    private function getNextTask($project_task_id,$user_project_id){
         $next_task = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
-            ->select('user_project_tasks.*')
+            ->select('user_project_tasks.*', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule')
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
             ->where('user_project_tasks.freeze_forever',0)
             ->orderBy('user_project_tasks.id','ASC')
             ->first();
-        if(!empty($next_task)){
-            $next_task->status = 'processing';
-            $next_task->save();
-        }
+        return $next_task;
     }
 
     private function updateNextTaskOriginalDeliveryDate($project_task_id,$user_project_id,$date_increased,$daysAdded){
@@ -425,6 +447,32 @@ class UserProjectController extends Controller
             $taskData = UserProjectTask::where('id',$p_task->id)->first();
             $taskData->freeze_forever = 1;
             $taskData->save();
+        }
+    }
+
+    private function makePreviousNotInitiateTaskForeverFreeze($user_project_id){
+        /*
+         * Get all previous not initiate task of this user project
+         * */
+        $processing_task = UserProjectTask::select('user_project_tasks.*')
+            ->where('user_project_id',$user_project_id)
+            ->where('user_project_tasks.status','processing')
+            ->first();
+
+        if(!empty($processing_task)){
+            $project_tasks = UserProjectTask::where('user_project_tasks.id','<',$processing_task->id)
+                ->select('user_project_tasks.*')
+                ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+                ->where('user_project_id',$user_project_id)
+                ->where('tasks.status','active')
+                ->where('user_project_tasks.status','not initiate')
+                ->get();
+
+            foreach($project_tasks as $key=>$p_task){
+                $taskData = UserProjectTask::where('id',$p_task->id)->first();
+                $taskData->freeze_forever = 1;
+                $taskData->save();
+            }
         }
     }
 }
