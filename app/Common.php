@@ -194,16 +194,19 @@ class Common
             }
             $userProject->save();
 
-            $tasks = Task::where('project_id',$project->id)->get();
+            $tasks = Task::select('tasks.*','tasks.id as task_id')
+                ->where('project_id',$project->id)
+                ->get();
 
             /*
              * Saving user project tasks
              * */
             $result = self::saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date);
+            return $result;
         }
     }
 
-    public static function saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date){
+    public static function saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date,$user_id=''){
         foreach($tasks as $key=>$task){
             $projectTask = NEW UserProjectTask();
             $projectTask->user_project_id = $userProject->id;
@@ -238,6 +241,36 @@ class Common
         }
     }
 
+    /*
+     * This method will check if task is editable and then make it's status processing
+     * */
+    public static function checkAndPrepareForTaskProcessing($user_id,$shipment_date){
+        $user_projects = UserProject::where('user_id',$user_id)
+            ->select('user_projects.*')
+            ->join('projects','projects.id','=','user_projects.project_id')
+            ->get();
+
+        foreach($user_projects as $key=>$u_project){
+            $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
+                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
+                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->whereIn('user_project_tasks.status',['not initiate','processing'])
+                //->where('tasks.update_date_with','shipment_date')
+                ->get();
+
+            /*
+             * Add user project tasks due date
+             * */
+            foreach($project_tasks as $key=>$p_task){
+                $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                if($result==1){
+                    return $p_task->id;
+                    break 1; // Break this foreach loop
+                }
+            }
+        }
+    }
+
     public static function calculateDaysToAdd($task,$shipment_date){
         if($task->alternet_days_to_add==''){
             $days_to_add = $task->days_to_add;
@@ -257,6 +290,59 @@ class Common
         }
 
         return $days_to_add;
+    }
+
+    public static function updateUserProjectTaskDueDate($user_projects,$shipment_date){
+        foreach($user_projects as $key=>$u_project){
+            $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
+                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
+                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->whereIn('user_project_tasks.status',['not initiate','processing'])
+                //->where('tasks.update_date_with','shipment_date')
+                ->get();
+
+            /*
+             * Add user project tasks due date
+             * */
+            if($u_project->day_add_with=='shipment_date'){
+                foreach($project_tasks as $key=>$p_task){
+                    $p_task->due_date = date('Y-m-d',
+                        strtotime($shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                    $p_task->original_delivery_date = date('Y-m-d',
+                        strtotime($shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
+                    $p_task->save();
+
+                    /*
+                     * Making correct task editable
+                     * */
+                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                }
+            }
+            else{
+                foreach($project_tasks as $key=>$p_task){
+                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                    if($result==1){
+                        break 1; // Break this foreach loop
+                    }
+                }
+            }
+        }
+    }
+
+    public static function makeCorrectTaskEditable($task,$shipment_date){
+        $project_task = UserProjectTask::where('id',$task->id)->first();
+        $taskData = Task::where('id',$task->task_id)->first();
+
+        $in_date_range = Common::task_in_date_range($shipment_date,$taskData->days_range_start,$taskData->days_range_end);
+        if($in_date_range==1){ // The dependent task not freezed
+            $project_task->status = 'processing';
+        }
+        else{ // Dependent task is active
+            $project_task->status = 'not initiate';
+        }
+        $project_task->save();
+
+        return $in_date_range;
     }
 
     public static function send7dayWarningEmail($email,$task){
