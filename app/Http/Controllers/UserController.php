@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Offer;
 use App\Models\Task;
 use App\Models\UserProjectTask;
+use App\SMS;
 use Illuminate\Http\Request;
 use App\Models\UserShipment;
 use App\Models\UserProject;
@@ -549,6 +550,12 @@ class UserController extends Controller
             $view = 'emails.user_separation_otp_email';
 
             $result = SendMails::sendMail($emailData, $view);
+
+            /*
+             * Send OTP confirmation message
+             * */
+            $message_body = 'Use '.$otp.' as OTP to separate user  Niloy Garments';
+            $response = SMS::sendOtpSms($thisUser->phone,$message_body);
 
 
             return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
