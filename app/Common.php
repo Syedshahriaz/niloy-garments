@@ -261,11 +261,21 @@ class Common
              * Add user project tasks due date
              * */
             foreach($project_tasks as $key=>$p_task){
-                $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
-                if($result==1){
+                $user_project_task_id = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                /*
+                 * If one editable task found
+                 * then make the previous non editable task status 'not initiate'
+                 * */
+                if($user_project_task_id!=0){ // If editable task found
+                    DB::table('user_project_tasks')
+                        ->where('id', '<' ,$user_project_task_id)
+                        ->where('user_project_id', $u_project->id)
+                        ->update(['status' => 'not initiate']);
+
                     break 1; // Break this foreach loop
                 }
             }
+
         }
     }
 
@@ -334,13 +344,15 @@ class Common
         $in_date_range = Common::task_in_date_range($shipment_date,$taskData->days_range_start,$taskData->days_range_end);
         if($in_date_range==1){ // The dependent task not freezed
             $project_task->status = 'processing';
-        }
-        else{ // Dependent task is active
-            $project_task->status = 'not initiate';
-        }
-        $project_task->save();
+            $project_task->save();
 
-        return $in_date_range;
+            return $project_task->id;
+        }
+        /*else{ // Dependent task is active
+            $project_task->status = 'not initiate';
+        }*/
+        //$project_task->save();
+        return 0;
     }
 
     public static function send7dayWarningEmail($email,$task){
