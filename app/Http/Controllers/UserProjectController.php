@@ -108,10 +108,10 @@ class UserProjectController extends Controller
             /*
              * check and prepare for task editable
              * */
-            //$result = Common::checkAndPrepareForTaskProcessing($user_id,$shipment_date);
+            $result = Common::checkAndPrepareForTaskProcessing($user_id,$shipment_date);
 
             Session::put('selected_user',$user_id);
-            echo "<pre>"; print_r($result); echo "</pre>"; exit();
+            //echo "<pre>"; print_r($result); echo "</pre>"; exit();
 
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
         }

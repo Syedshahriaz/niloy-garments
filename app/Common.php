@@ -202,7 +202,6 @@ class Common
              * Saving user project tasks
              * */
             $result = self::saveUserTask($project,$tasks,$userProject,$shipment,$purchase_date);
-            return $result;
         }
     }
 
@@ -255,7 +254,7 @@ class Common
                 ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
                 ->join('tasks','tasks.id','=','user_project_tasks.task_id')
                 ->whereIn('user_project_tasks.status',['not initiate','processing'])
-                //->where('tasks.update_date_with','shipment_date')
+                ->where('tasks.update_date_with', '!=','self_task')
                 ->get();
 
             /*
@@ -264,7 +263,6 @@ class Common
             foreach($project_tasks as $key=>$p_task){
                 $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
                 if($result==1){
-                    return $p_task->id;
                     break 1; // Break this foreach loop
                 }
             }
@@ -371,6 +369,16 @@ class Common
         return $result;
     }
 
+    public static function send7dayWarningSms($phone,$task){
+        $message_body = 'Dear '.$task->username.',';
+        $message_body .= 'Your task '.$task->title.' has 7 days left to complete';
+        $message_body .= 'Please complete the task in due date';
+        $message_body .= 'Niloy Garments';
+        $response = SMS::sendSingleSms($phone,$message_body);
+
+        return $response;
+    }
+
     public static function sendPastDayWarningEmail($email,$task){
         /*
          * Send task past day complete warning email
@@ -395,6 +403,16 @@ class Common
 
         $result = SendMails::sendMail($emailData, $view);
         return $result;
+    }
+
+    public static function sendPastDayWarningSms($phone,$task){
+        $message_body = 'Dear '.$task->username.',';
+        $message_body .= 'The original due date of your task '.$task->title.' have been past';
+        $message_body .= 'Complete your task or contact with admin';
+        $message_body .= 'Niloy Garments';
+        $response = SMS::sendSingleSms($phone,$message_body);
+
+        return $response;
     }
 
     public static function saveErrorLog($method,$line_number,$file_path,$message,$object,$type,$screenshot,$page_url,$argument,$prefix,$domain){
