@@ -299,6 +299,7 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- END TASK SUMMERY MODAL -->
+
 @endsection
 
 @section('js')
@@ -306,12 +307,23 @@
     <script src="https://cdn.datatables.net/responsive/2.2.4/js/responsive.bootstrap.min.js"></script> -->
     <script>
         $(document).ready(function() {
-            $('#user_horizontal_task, #user_vertical_task').DataTable({
+            $('#user_horizontal_task').DataTable({
                 "paging":   false,
                 "ordering": false,
                 "info":     false,
                 "searching": false,
-                //"responsive": true
+                scrollX:        true,
+                fixedColumns:   true
+            });
+
+            $('#user_vertical_task').DataTable({
+                "paging":   false,
+                "ordering": false,
+                "info":     false,
+                "searching": false,
+                // scrollCollapse: true,
+                // scrollY:        200,
+                // scroller:       true
             });
         });
     </script>
