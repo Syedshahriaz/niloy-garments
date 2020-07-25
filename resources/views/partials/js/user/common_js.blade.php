@@ -1,11 +1,21 @@
 <script>
     function re_initialize_data_table(column_number){
-        $('#user_horizontal_task, #user_vertical_task').DataTable({
+        $('#user_horizontal_task').DataTable({
             "paging":   false,
             "ordering": false,
             "info":     false,
             "searching": false,
-            //"responsive": true
+            scrollX:        true,
+            fixedColumns:   true
+        });
+        $('#user_vertical_task').DataTable({
+            "paging":   false,
+            "ordering": false,
+            "info":     false,
+            "searching": false,
+            // scrollCollapse: true,
+            // scrollY:        200,
+            // scroller:       true
         });
         $('#user_manage_table').DataTable({
             "paging":   true,
