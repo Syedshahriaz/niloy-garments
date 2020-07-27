@@ -46,7 +46,9 @@
 <!-- <script src="{{asset('assets/global/scripts/datatable.js')}}" type="text/javascript"></script> -->
 <script src="{{asset('assets/global/plugins/datatables/jquery.dataTables.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('assets/global/plugins/datatables/dataTables.bootstrap.min.js')}}" type="text/javascript"></script>
-<!-- END PAGE LEVEL PLUGINS -->
+<script src="https://cdn.datatables.net/fixedcolumns/3.3.1/js/dataTables.fixedColumns.min.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/scroller/2.0.2/css/scroller.dataTables.min.css" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS --> 
 
 <script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
