@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\MessageDetails;
 use App\Common;
@@ -17,24 +18,39 @@ class MessageController extends Controller
     public function message(Request $request)
     {
         $user = Auth::user();
-        $message = Message::with('message_details')
+        $messages = Message::select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+            ->join('users as user','user.id','=','messages.user_id')
+            ->join('users as admin','admin.id','=','messages.admin_id')
+            //->where('user_id',$user->id)
+            ->orderBy('messages.updated_at','DESC')
+            ->get();
+
+        //echo "<pre>"; print_r($messages); echo "</pre>"; exit();
+
+        $last_message = Message::with('message_details')
             ->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
             ->join('users as user','user.id','=','messages.user_id')
             ->join('users as admin','admin.id','=','messages.admin_id')
-            ->where('user_id',$user->id)
+            //->where('user_id',$user->id)
+            ->orderBy('messages.updated_at','DESC')
             ->first();
+
+        //echo "<pre>"; print_r($last_message); echo "</pre>"; exit();
+
         if($request->ajax()) {
-            $returnHTML = View::make('user.message',compact('user','message'))->renderSections()['content'];
+            $returnHTML = View::make('admin.message.index',compact('user','messages','last_message'))->renderSections()['content'];
             return response()->json(array('status' => 200, 'html' => $returnHTML));
         }
-        return view('user.message',compact('user','message'));
+        return view('admin.message.index',compact('user','messages','last_message'));
     }
 
     public function store(Request $request)
     {
         try{
+            $user = Auth::user();
+
             $message_id = $request->message_id;
-            $admin_id = 3;
+            $admin_id = $user->id;
             if($message_id==''){
                 $message = NEW Message();
                 $message->user_id = $request->user_id;
@@ -58,7 +74,7 @@ class MessageController extends Controller
              * */
             $messageDetails = NEW MessageDetails();
             $messageDetails->message_id = $message_id;
-            $messageDetails->type = 'sent';
+            $messageDetails->type = 'received';
             if($request->message !=''){
                 $messageDetails->message = $request->message;
             }
@@ -79,7 +95,7 @@ class MessageController extends Controller
             return [ 'status' => 200, 'reason' => 'Message stored successfully','photo_path'=>$photo_path];
 
         } catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'MessageController', 'store', $e->getLine(),
+            //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'store', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -100,7 +116,26 @@ class MessageController extends Controller
 
             return ['status'=>200, 'reason'=>'','messages'=>$messages];
         } catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'MessageController', 'store', $e->getLine(),
+            //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'getUnreadMessage', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getMessageDetails(Request $request)
+    {
+        try{
+            $message = Message::with('message_details')
+                //->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+                //->join('users as user','user.id','=','messages.user_id')
+                //->join('users as admin','admin.id','=','messages.admin_id')
+                ->where('messages.id',$request->message_id)
+                ->first();
+
+            return ['status'=>200, 'reason'=>'','message'=>$message];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'getMessageDetails', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

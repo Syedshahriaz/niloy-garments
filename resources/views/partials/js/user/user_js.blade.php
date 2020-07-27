@@ -512,7 +512,6 @@
     * Message js
     * */
     $(document).on('submit','#message_form', function(){
-        alert(11);
         submit_message();
     });
 
@@ -526,7 +525,6 @@
         var user_id = $("#user_id").val();
         var message = $("#message_input").val();
         var message_file = $("#message_file").val();
-        alert(message);
 
         var validate = "";
 
@@ -547,7 +545,6 @@
                 data: formData,
                 success: function(data) {
                     if (data.status == 200) {
-                        alert(data.status);
                         appendMessage(message,data.photo_path);
                     } else {
                         $("#success_message").hide();
@@ -592,9 +589,17 @@
         minutes = minutes < 10 ? '0'+minutes : minutes;
 
         var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
+
+        var profile_photo = "{{Session::get('user_photo')}}";
+
         var tpl = '';
         tpl += '<li class="out">';
-        tpl += '<img class="avatar" alt="" src="{{asset(Session::get('user_photo'))}}"/>';
+        if(profile_photo !=''){
+            tpl += '<img class="avatar" alt="" src="{{asset(Session::get('user_photo'))}}"/>';
+        }
+        else{
+            tpl += '<img class="avatar" alt="" src="http://127.0.0.1:8000/assets/layouts/layout/img/emptyuserphoto.png"/>';
+        }
         tpl += '<div class="message">';
         tpl += '<span class="arrow"></span>';
         tpl += '<a href="#" class="name">{{Session::get('username')}}</a>&nbsp;';

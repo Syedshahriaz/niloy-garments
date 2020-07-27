@@ -33,6 +33,8 @@ Route::get('/promotion/{id}', 'UserController@promotion');
 Route::post('user/store', 'UserController@store');
 Route::get('verify_email', 'UserController@verifyEmail');
 
+Route::get('send_sms', 'HomeController@sendSms');
+
 Route::get('error_404', 'ErrorController@error404');
 
 
@@ -74,6 +76,7 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 /*User massage routs*/
 Route::get('message', 'MessageController@message');
 Route::post('store_message', 'MessageController@store');
+Route::post('get_unread_message', 'MessageController@getUnreadMessage');
 
 /*Admin routes*/
 Route::get('admin', 'Admin\AdminController@index');
@@ -95,6 +98,11 @@ Route::post('admin/get_project_ajax', 'Admin\ProjectController@getProjectAjax');
 Route::post('admin/update_project', 'Admin\ProjectController@updateProject');
 Route::post('admin/update_task_rule', 'Admin\ProjectController@updateTaskRule');
 Route::post('admin/update_task_title', 'Admin\ProjectController@updateTaskTitle');
+
+Route::get('admin/message', 'Admin\MessageController@message');
+Route::post('admin/store_message', 'Admin\MessageController@store');
+Route::post('admin/get_unread_message', 'Admin\MessageController@getUnreadMessage');
+Route::post('admin/get_message_details', 'Admin\MessageController@getMessageDetails');
 
 
 

@@ -147,7 +147,7 @@
                 <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
-                    <span class="badge badge-danger">2</span>
+                    <span class="badge new_message_count badge-danger">2</span>
                     <span class="selected"></span>
                 </a>
             </li>
