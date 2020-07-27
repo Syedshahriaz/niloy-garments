@@ -380,6 +380,26 @@ div#user_horizontal_task_wrapper .col-sm-12 {
         overflow-x: auto;
     }
 }
+#user_horizontal_task_wrapper .DTFC_LeftBodyLiner>table {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    background-color: #fff;
+}
+#user_horizontal_task_wrapper .DTFC_LeftHeadWrapper>table {
+    margin-bottom: 0 !important;
+}
+#user_horizontal_task_wrapper .dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+#user_horizontal_task_wrapper .dataTables_scrollHeadInner>table {
+    width: 100% !important;
+}
+#user_horizontal_task_wrapper table#user_horizontal_task {
+    width: 100% !important;
+}
+#user_horizontal_task_wrapper .DTFC_ScrollWrapper {
+    height: auto !important;
+}
 /*Data table style END*/
 
 

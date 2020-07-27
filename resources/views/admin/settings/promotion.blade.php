@@ -100,6 +100,7 @@
                     ['fontsize', ['fontsize']],
                     //['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
                     //['height', ['height']]
                 ]
             });

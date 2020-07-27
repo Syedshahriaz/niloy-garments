@@ -137,14 +137,14 @@
     $(document).on('click','#vertical_view_btn', function(){
         $(this).removeClass('btn-outline');
         $('#horzon_view_btn').addClass('btn-outline');
-        $('#user_horizontal_task').addClass('hidden');
+        $('#user_horizontal_task,.DTFC_ScrollWrapper').addClass('hidden');
         $('#user_vertical_task').removeClass('hidden');
     });
     $(document).on('click','#horzon_view_btn', function(){
         $(this).removeClass('btn-outline');
         $('#vertical_view_btn').addClass('btn-outline');
         $('#user_vertical_task').addClass('hidden');
-        $('#user_horizontal_task').removeClass('hidden');
+        $('#user_horizontal_task,.DTFC_ScrollWrapper').removeClass('hidden');
     });
 
     //User dashboard task page
