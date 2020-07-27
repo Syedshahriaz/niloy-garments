@@ -59,6 +59,28 @@
 @include('partials.scripts')
 <!-- END FOOTER scripts-->
 <script>
+    $(document).ready(function(){
+        
+        var user_id = "{{Session::get('user_id')}}";
+        var url = "{{url('get_unread_message')}}";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {user_id:user_id,'_token':'{{ csrf_token() }}'},
+            success: function (data) {
+                HoldOn.close();
+                if(data.status == 200){
+
+                }
+                else{
+                    //show_error_message(data);
+                }
+            },
+            error: function (data) {
+                //show_error_message(data);
+            }
+        });
+    });
     function show_success_message($message){
         $('#alert-modal').modal('show');
         $('#alert-error-msg').hide();

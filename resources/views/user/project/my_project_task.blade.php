@@ -136,12 +136,12 @@
                                             ?>
 
                                             @if($task->task_status !='deleted')
-                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date)) background-color: #efefef;cursor: not-allowed; @endif">{{--bg-success, bg-warning, bg-danger--}}
+                                            <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date) || $task->delivery_date_update_count > 1) background-color: #efefef;cursor: not-allowed; @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                 <div class="edit-table-date">
                                                     @if($task->task_status =='active')
                                                         {{date('D', strtotime($task->original_delivery_date))}},<br>
                                                         {{date('F d, Y', strtotime($task->original_delivery_date))}}<br>
-                                                        @if(\App\Common::task_editable($task,$shipment->shipment_date))
+                                                        @if(\App\Common::task_editable($task,$shipment->shipment_date) && $task->delivery_date_update_count < 2)
                                                             <a class="" title="Edit" onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                         @endif
                                                     @endif
@@ -211,11 +211,11 @@
                                                         {{date('D, F d, Y', strtotime($task->due_date))}}
                                                     @endif
                                                 </td>
-                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date)) background-color: #efefef;cursor: not-allowed; @endif">
+                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date) || $task->delivery_date_update_count > 1) background-color: #efefef;cursor: not-allowed; @endif">
                                                     <div class="edit-table-date">
                                                         @if($task->task_status =='active')
                                                             {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if(\App\Common::task_editable($task,$shipment->shipment_date))
+                                                            @if(\App\Common::task_editable($task,$shipment->shipment_date) && $task->delivery_date_update_count < 2)
                                                                 <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                             @endif
                                                         @endif

@@ -29,6 +29,7 @@ class MessageController extends Controller
         }
         return view('user.message',compact('user','message'));
     }
+
     public function store(Request $request)
     {
         try{
@@ -38,6 +39,7 @@ class MessageController extends Controller
                 $message = NEW Message();
                 $message->user_id = $request->user_id;
                 $message->admin_id = $admin_id;
+                $message->updated_at = date('Y-m-d h:i:s');
                 $message->save();
 
                 $message_id = $message->id;
@@ -45,6 +47,7 @@ class MessageController extends Controller
             else{
                 $message = Message::where('id',$message_id)->first();
                 $message->has_new_message = 1;
+                $message->updated_at = date('Y-m-d h:i:s');
                 $message->save();
             }
 
@@ -75,6 +78,27 @@ class MessageController extends Controller
 
             return [ 'status' => 200, 'reason' => 'Message stored successfully','photo_path'=>$photo_path];
 
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'MessageController', 'store', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getUnreadMessage(Request $request)
+    {
+        try{
+            $messages = MessageDetails::select('message_details.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+                ->join('messages','messages.id','=','message_details.message_id')
+                ->join('users as user','user.id','=','messages.user_id')
+                ->join('users as admin','admin.id','=','messages.admin_id')
+                ->where('messages.user_id',$request->user_id)
+                ->where('type','received')
+                ->where('is_read',0)
+                ->get();
+
+            return ['status'=>200, 'reason'=>'','messages'=>$messages];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'MessageController', 'store', $e->getLine(),
             //$e->getFile(), '', '', '', '');

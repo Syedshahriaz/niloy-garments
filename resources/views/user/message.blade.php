@@ -64,56 +64,56 @@
                             <div id="char_body">
                                 <div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
                                     <ul class="chats">
-                                        @if(!empty($message->message_details))
-                                        @foreach($message->message_details as $m_details)
-                                            @if($m_details->type=='received')
-                                                <li class="in">
-                                                    @if($message->admin_photo !='')
-                                                        <img class="avatar" alt="" src="{{asset($message->admin_photo)}}" />
-                                                    @else
-                                                        <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
-                                                    @endif
-                                                    <div class="message">
-                                                        <span class="arrow"> </span>
-                                                        <a href="javascript:;" class="name"> {{$message->admin_name}} </a>
-                                                        <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
-                                                        <span class="body">
-                                                            @if($m_details->file_path !='')
-                                                                <img style="width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
-                                                            @endif
-                                                            @if($m_details->message !='')
-                                                                {{$m_details->message}}
-                                                            @endif
-                                                        </span>
-                                                    </div>
-                                                </li>
-                                            @else
-                                                <li class="out">
-                                                    @if($message->user_photo !='')
-                                                        <img class="avatar" alt="" src="{{asset($message->user_photo)}}" />
-                                                    @else
-                                                        <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
-                                                    @endif
-                                                    <div class="message">
-                                                        <span class="arrow"> </span>
-                                                        <a href="javascript:;" class="name"> {{$message->user_name}} </a>
-                                                        <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
-                                                        <span class="body">
-                                                            @if($m_details->file_path !='')
-                                                                <span>
-                                                                    <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
-                                                                </span>
-                                                            @endif
-                                                            @if($m_details->message !='')
-                                                                <p style="clear: both">
-                                                                {{$m_details->message}}
-                                                                </p>
-                                                            @endif
-                                                        </span>
-                                                    </div>
-                                                </li>
-                                            @endif
-                                        @endforeach
+                                        @if(!empty($message))
+                                            @foreach($message->message_details as $m_details)
+                                                @if($m_details->type=='received')
+                                                    <li class="in">
+                                                        @if($message->admin_photo !='')
+                                                            <img class="avatar" alt="" src="{{asset($message->admin_photo)}}" />
+                                                        @else
+                                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
+                                                        @endif
+                                                        <div class="message">
+                                                            <span class="arrow"> </span>
+                                                            <a href="javascript:;" class="name"> {{$message->admin_name}} </a>
+                                                            <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+                                                            <span class="body">
+                                                                @if($m_details->file_path !='')
+                                                                    <img style="width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                @endif
+                                                                @if($m_details->message !='')
+                                                                    {{$m_details->message}}
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                @else
+                                                    <li class="out">
+                                                        @if($message->user_photo !='')
+                                                            <img class="avatar" alt="" src="{{asset($message->user_photo)}}" />
+                                                        @else
+                                                            <img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
+                                                        @endif
+                                                        <div class="message">
+                                                            <span class="arrow"> </span>
+                                                            <a href="javascript:;" class="name"> {{$message->user_name}} </a>
+                                                            <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+                                                            <span class="body">
+                                                                @if($m_details->file_path !='')
+                                                                    <span>
+                                                                        <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    </span>
+                                                                @endif
+                                                                @if($m_details->message !='')
+                                                                    <p style="clear: both">
+                                                                    {{$m_details->message}}
+                                                                    </p>
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                @endif
+                                            @endforeach
                                         @endif
                                     </ul>
                                 </div>
@@ -122,7 +122,7 @@
                                     {{csrf_field()}}
                                     <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
                                     <input type="hidden" name="message_id" id="message_id" value="@if(!empty($message)){{$message->id}}@endif">
-                                    <input type="hidden" name="user_name" id="user_name" value="{{$user->first_name." ".$user->last_name}}">
+                                    <input type="hidden" name="user_name" id="user_name" value="{{$user->username}}">
                                     <div class="chat-form">
                                         <div class="input-cont">
                                             <input class="form-control" name="message" id="message_input" type="text" placeholder="Type a message here..." />

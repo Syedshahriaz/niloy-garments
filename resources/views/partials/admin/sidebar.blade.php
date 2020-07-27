@@ -107,10 +107,10 @@
                 </a>
             </li>
             <li class="nav-item @if($page=='messages') active @endif">
-                <a href="#" class="nav-link">
+                <a href="{{url('admin/message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
-                    <span class="badge badge-danger">2</span>
+                    <span class="badge badge-danger new_message_count">2</span>
                     <span class="selected"></span>
                 </a>
             </li>
