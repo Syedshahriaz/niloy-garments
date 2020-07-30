@@ -59,6 +59,10 @@
 @include('partials.admin.scripts')
 <!-- END FOOTER scripts-->
 <script>
+    $(document).ready(function(){
+        getAndShowUnreadMessageCount();
+    })
+    
     function show_success_message($message){
         $('#alert-modal').modal('show');
         $('#alert-error-msg').hide();
@@ -71,6 +75,34 @@
         $('#alert-success-msg').hide();
         $('#alert-error-msg p').html(message);
     }
+
+    function getAndShowUnreadMessageCount(){
+        var url = "{{url('admin/get_unread_message') }}";
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {'_token':'<?php echo e(csrf_token()); ?>'},
+            success: function(data) {
+                if (data.status == 200) {
+                    var message_count = data.messages.length;
+                    if(message_count>0){
+                        $('.new_message_count').removeClass('hidden');
+                        $('.new_message_count').text(data.messages.length);
+                    }
+                    else{
+                        $('.new_message_count').addClass('hidden');
+                    }
+                } else {
+                    //Nothing to do now;
+                }
+            },
+            error: function(data) {
+                //Nothing to do now;
+            }
+        });
+    }
+
 </script>
 @yield('js')
 </body>

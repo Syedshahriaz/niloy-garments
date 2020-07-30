@@ -82,7 +82,7 @@
                 <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                     <a href="javascript:;" class="dropdown-toggle">
                         <i class="icon-envelope-open"></i>
-                        <span class="badge badge-default"> 4 </span>
+                        <span class="badge new_message_count badge-default hidden"> 0 </span>
                     </a>
                 </li>
                 <!-- END INBOX DROPDOWN -->
@@ -147,7 +147,7 @@
                 <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
-                    <span class="badge new_message_count badge-danger">2</span>
+                    <span class="badge new_message_count badge-danger hidden">0</span>
                     <span class="selected"></span>
                 </a>
             </li>

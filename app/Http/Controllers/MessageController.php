@@ -23,6 +23,14 @@ class MessageController extends Controller
             ->join('users as admin','admin.id','=','messages.admin_id')
             ->where('user_id',$user->id)
             ->first();
+
+        /*
+         * mark message as read
+         * */
+        MessageDetails::where('message_id',$message->id)
+            ->where('type','received')
+            ->update(['is_read' => 1]);
+
         if($request->ajax()) {
             $returnHTML = View::make('user.message',compact('user','message'))->renderSections()['content'];
             return response()->json(array('status' => 200, 'html' => $returnHTML));
@@ -76,7 +84,7 @@ class MessageController extends Controller
             }
             $messageDetails->save();
 
-            return [ 'status' => 200, 'reason' => 'Message stored successfully','photo_path'=>$photo_path];
+            return [ 'status' => 200, 'reason' => 'Message stored successfully','message_id'=>$message->id,'photo_path'=>$photo_path];
 
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'MessageController', 'store', $e->getLine(),
@@ -88,12 +96,14 @@ class MessageController extends Controller
 
     public function getUnreadMessage(Request $request)
     {
+        $user = Auth::user();
+        $user_id = $user->id;
         try{
             $messages = MessageDetails::select('message_details.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
                 ->join('messages','messages.id','=','message_details.message_id')
                 ->join('users as user','user.id','=','messages.user_id')
                 ->join('users as admin','admin.id','=','messages.admin_id')
-                ->where('messages.user_id',$request->user_id)
+                ->where('messages.user_id',$user_id)
                 ->where('type','received')
                 ->where('is_read',0)
                 ->get();
