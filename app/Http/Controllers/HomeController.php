@@ -32,9 +32,6 @@ class HomeController extends Controller
     public function sendSms(Request $request)
     {
         try {
-            $balance = SMS::checkRemainingSmsBalance();
-            echo "<pre>"; print_r($balance); echo "</pre>"; exit();
-
             $postdata = array(
                 'api_key' => env('SMS_API_KEY'),
                 'api_secret' => env('SMS_API_SECRET'),

@@ -35,6 +35,13 @@ class MessageController extends Controller
             ->orderBy('messages.updated_at','DESC')
             ->first();
 
+        /*
+         * mark message as read
+         * */
+        MessageDetails::where('message_id',$last_message->id)
+            ->where('type','sent')
+            ->update(['is_read' => 1]);
+
         //echo "<pre>"; print_r($last_message); echo "</pre>"; exit();
 
         if($request->ajax()) {
@@ -109,8 +116,7 @@ class MessageController extends Controller
                 ->join('messages','messages.id','=','message_details.message_id')
                 ->join('users as user','user.id','=','messages.user_id')
                 ->join('users as admin','admin.id','=','messages.admin_id')
-                ->where('messages.user_id',$request->user_id)
-                ->where('type','received')
+                ->where('type','sent')
                 ->where('is_read',0)
                 ->get();
 
@@ -127,11 +133,18 @@ class MessageController extends Controller
     {
         try{
             $message = Message::with('message_details')
-                //->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
-                //->join('users as user','user.id','=','messages.user_id')
-                //->join('users as admin','admin.id','=','messages.admin_id')
+                ->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+                ->join('users as user','user.id','=','messages.user_id')
+                ->join('users as admin','admin.id','=','messages.admin_id')
                 ->where('messages.id',$request->message_id)
                 ->first();
+
+            /*
+             * mark message as read
+             * */
+            MessageDetails::where('message_id',$message->id)
+                ->where('type','sent')
+                ->update(['is_read' => 1]);
 
             return ['status'=>200, 'reason'=>'','message'=>$message];
         } catch (\Exception $e) {
