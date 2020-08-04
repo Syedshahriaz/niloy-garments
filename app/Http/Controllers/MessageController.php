@@ -27,9 +27,11 @@ class MessageController extends Controller
         /*
          * mark message as read
          * */
-        MessageDetails::where('message_id',$message->id)
-            ->where('type','received')
-            ->update(['is_read' => 1]);
+        if(!empty($message)){
+            MessageDetails::where('message_id',$message->id)
+                ->where('type','received')
+                ->update(['is_read' => 1]);
+        }
 
         if($request->ajax()) {
             $returnHTML = View::make('user.message',compact('user','message'))->renderSections()['content'];

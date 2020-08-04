@@ -99,6 +99,12 @@ class UserController extends Controller
 
             $result = SendMails::sendMail($emailData, $view);
 
+            /*
+             * Send registration confirmation message
+             * */
+            $message_body = 'Your registration to Niloy Garments have been completed.';
+            $response = SMS::sendSingleSms($request->phone,$message_body);
+
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'store', $e->getLine(),
@@ -475,6 +481,12 @@ class UserController extends Controller
             $user->role = 3;
             $user->save();
 
+            /*
+             * Send registration confirmation message
+             * */
+            $message_body = 'You have been added to Niloy Garments as a child user of '.$parentUser->username.' .';
+            $response = SMS::sendSingleSms($request->phone,$message_body);
+
             return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
@@ -556,7 +568,6 @@ class UserController extends Controller
              * */
             $message_body = 'Use '.$otp.' as OTP to separate user  Niloy Garments';
             $response = SMS::sendOtpSms($thisUser->phone,$message_body);
-
 
             return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
         } catch (\Exception $e) {

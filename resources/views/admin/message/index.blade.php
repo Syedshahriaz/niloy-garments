@@ -286,13 +286,10 @@
 
             var user_id = $("#user_id").val();
             var message = $("#message_input").val();
-            var message_file = $("#message_file").val();
+            var message_file = $("#image_upload_input").val();
 
             var validate = "";
 
-            /*if (first_name.trim() == "") {
-                validate = validate + "First name is required</br>";
-            }*/
             if (message.trim() == "" && message_file=='') {
                 return false;
             }
@@ -406,7 +403,9 @@
                 var file_path = "{{url('/')}}/"+photo_path;
                 tpl += '<img style="float: right;width: 330px;" class="body" src="'+file_path+'">';
             }
-            tpl += '<p style="clear: both">'+message+'</p>';
+            if(message !='') {
+                tpl += '<p style="clear: both">' + message + '</p>';
+            }
             tpl += '</span>';
             tpl += '</div>';
             tpl += '</li>';
@@ -431,9 +430,6 @@
         function populateMessage(message) {
             var cont = $('#chats');
             var list = $('.chats', cont);
-
-            $('#uploaded_img').removeClass('visible');
-            $('#message_input').removeClass('img-added');
 
             $('#user_id').val(message.user_id);
             $('#message_id').val(message.id);
@@ -473,7 +469,9 @@
                     var file_path = "{{url('/')}}/" + photo_path;
                     tpl += '<img style="float: right;width: 330px;" class="body" src="' + file_path + '">';
                 }
-                tpl += '<p style="clear: both">' + msg.message + '</p>';
+                if(msg.message !==null) {
+                    tpl += '<p style="clear: both">' + msg.message + '</p>';
+                }
                 tpl += '</span>';
                 tpl += '</div>';
                 tpl += '</li>';
@@ -490,9 +488,9 @@
                 return height;
             }
 
-            cont.find('.scroller').slimScroll({
+            /*cont.find('.scroller').slimScroll({
                 scrollTo: getLastPostPos()
-            });
+            });*/
         }
     </script>
 @endsection
