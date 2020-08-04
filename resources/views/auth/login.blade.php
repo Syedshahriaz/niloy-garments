@@ -41,15 +41,22 @@
 
 <body class=" login">
 
+<div class="login-header">
+    <div class="page-logo">
+        <a href="#" class="nav-item ajax_item item-1  " data-name="dashboard" data-item="1">
+            <img src="../../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default"> </a>
+    </div>
+</div>
+
 <!-- BEGIN LOGIN -->
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
     <form id="login_form" class="login-form" action="{{ url('login') }}" method="post">
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
-        <div class="logo">
+        <!-- <div class="logo">
             <img src="../../assets/global/img/logo-invert.png" alt="" />
-        </div>
+        </div> -->
         <!-- END LOGO -->
         <h3 class="form-title font-theme">Sign In</h3>
 
@@ -74,6 +81,10 @@
         <div class="create-account theme-bg">
             <p>
                 <a href="{{ route('password.request') }}" id="register-btn" class="uppercase">Forgot Password?</a>
+            </p>
+
+            <p>
+                <a href="#" id="" class="uppercase">Sign Up</a>
             </p>
         </div>
     </form>

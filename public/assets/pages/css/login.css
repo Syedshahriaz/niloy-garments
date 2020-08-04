@@ -181,6 +181,26 @@ body.login {
   display: inline-block;
   margin-top: 5px; }
 
+.login .login-header{
+  min-height: 50px;
+  position: fixed;
+  top: 0;
+  left:0;
+  width:100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(45deg, #7030a0, #151b26);
+}
+.redirect-text{
+  clear: both;
+  text-align: center;
+  margin-top: 20px;
+  display: block;
+}
+.redirect-text p{
+  margin-bottom: 0;
+}
 /* footer copyright */
 .login .copyright {
   text-align: center;
