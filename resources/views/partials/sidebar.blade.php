@@ -158,6 +158,15 @@
                     <span class="selected"></span>
                 </a>
             </li>
+
+            <li class="nav-item ajax_item item-6" data-item="6">
+                <a href="javascript:;" class="nav-link" data-toggle="modal" data-target="#GuideModal">
+                    <i class="icon-user"></i>
+                    <span class="title">User Guide</span>
+                    <span class="selected"></span>
+                </a>
+            </li>
+
             <li class="nav-item">
                 <a  href="{{ route('logout') }}"
                     onclick="event.preventDefault();

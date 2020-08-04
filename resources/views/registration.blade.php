@@ -43,6 +43,13 @@
 
 <body class=" login">
 
+<div class="login-header">
+    <div class="page-logo">
+        <a href="#" class="nav-item ajax_item item-1  " data-name="dashboard" data-item="1">
+            <img src="../../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default"> </a>
+    </div>
+</div>
+
 <!-- BEGIN LOGIN -->
 <div class="content">
     <?php
@@ -59,9 +66,9 @@
     <form id="registration_form" class="register-form" action="index.html" method="post">
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
-        <div class="logo">
+        <!-- <div class="logo">
             <img src="../../assets/global/img/logo-invert.png" alt="" />
-        </div>
+        </div> -->
         <!-- END LOGO -->
         <h3 class="font-theme">Sign Up</h3>
 
@@ -97,11 +104,15 @@
             </label>
             <div id="register_tnc_error"> </div>
         </div>
-        <div class="form-actions">
-            <button type="submit" id="register-submit-btn" class="btn theme-btn uppercase pull-right">Submit</button>
+        <div class="form-actions text-center">
+            <button type="submit" id="register-submit-btn" class="btn theme-btn uppercase">Submit</button>
         </div>
     </form>
     <!-- END REGISTRATION FORM -->
+
+    <div class="redirect-text">
+        <p>Already have an account? <a href=""><b>Login</b></a></p>
+    </div>
 </div>
 
 <!--[if lt IE 9]>
