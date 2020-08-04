@@ -111,7 +111,7 @@
     <!-- END REGISTRATION FORM -->
 
     <div class="redirect-text">
-        <p>Already have an account? <a href=""><b>Login</b></a></p>
+        <p>Already have an account? <a href="{{url('login')}}"><b>Login</b></a></p>
     </div>
 </div>
 
