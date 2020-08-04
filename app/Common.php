@@ -362,6 +362,59 @@ class Common
         return 0;
     }
 
+    public static function sendTaskWarningEmail($user_id=''){
+        $today = date('Y-m-d');
+        $allow_date = date('Y-m-d', strtotime('+7 days'));
+
+        $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title', 'tasks.rule',
+            'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
+        $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+        $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
+        $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
+        $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+        if($user_id !=''){
+            $tasks = $tasks->where('users.id', $user_id);
+        }
+        $tasks = $tasks->where('user_project_tasks.status', 'processing');
+        $tasks = $tasks->where('user_project_tasks.warning_sent',0);
+        $tasks = $tasks->where(function ($query) use ($today,$allow_date) {
+            $query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
+            $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
+        });
+        $tasks = $tasks->get();
+
+        //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
+
+        foreach($tasks as $task){
+            $email = [$task->email];
+
+            if($task->original_delivery_date<$today){ // Due date have been past
+                $result = self::sendPastDayWarningEmail($email,$task);
+
+                /*
+                 * Send past warning sms
+                 * */
+                $result = self::sendPastDayWarningSms($tasks->phone,$task);
+
+            }
+            else{
+                $result = self::send7dayWarningEmail($email,$task);
+
+                /*
+                 * Send 7 day before warning sms
+                 * */
+                $result = self::send7dayWarningSms($tasks->phone,$task);
+            }
+
+            if($task->original_delivery_date<$today && $result=='ok'){
+                $task->warning_sent = 1;
+                $task->save();
+            }
+        }
+
+        return count($tasks).' Email sent.';
+    }
+
     public static function send7dayWarningEmail($email,$task){
         /*
          * Send task 7 day before complete warning email
