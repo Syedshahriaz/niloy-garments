@@ -84,7 +84,7 @@
             </p>
 
             <p>
-                <a href="#" id="" class="uppercase">Sign Up</a>
+                <a href="{{url('registration')}}" id="" class="uppercase">Sign Up</a>
             </p>
         </div>
     </form>
