@@ -111,7 +111,11 @@ class UserProjectController extends Controller
             $result = Common::checkAndPrepareForTaskProcessing($user_id,$shipment_date);
 
             Session::put('selected_user',$user_id);
-            //echo "<pre>"; print_r($result); echo "</pre>"; exit();
+
+            /*
+             * Check and send task warning email and sms
+             * */
+            $result = Common::sendTaskWarningEmail($user_id);
 
             return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
         }
