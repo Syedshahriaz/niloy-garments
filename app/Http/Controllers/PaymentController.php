@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserShipment;
+use App\SMS;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Payment;
@@ -17,6 +18,8 @@ class PaymentController extends Controller
     public function success(Request $request){
         try {
             $user_id = $request->id;
+            $user = User::where('id',$user_id)->first();
+
             $payment = Payment::where('user_id', $user_id)->first();
             if(empty($payment)){
                 $payment = NEW Payment();
@@ -45,6 +48,12 @@ class PaymentController extends Controller
             }*/
 
             $shipment->save();
+
+            /*
+             * Send registration confirmation message
+             * */
+            $message_body = 'Your payment to Niloy Garments have been done successfully.';
+            $response = SMS::sendSingleSms($user->phone,$message_body);
 
             return redirect('select_shipment/'.$user_id);
         } catch (\Exception $e) {
