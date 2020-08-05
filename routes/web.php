@@ -63,6 +63,7 @@ Route::post('separate_user', 'UserController@separateUser')->name('user.separate
 
 Route::get('dashboard', 'UserDashboardController@dashboard');
 Route::post('save_buyer', 'UserDashboardController@saveBuyer')->name('buyer.save');
+Route::post('update_user_guide_seen_status', 'UserController@updateUserGuideSeenStatus');
 
 /*User project routs*/
 Route::get('select_shipment/{id}', 'UserProjectController@selectShipment')->name('user.select_shipment');
@@ -77,6 +78,8 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 Route::get('message', 'MessageController@message');
 Route::post('store_message', 'MessageController@store');
 Route::post('get_unread_message', 'MessageController@getUnreadMessage');
+
+Route::post('notifications', 'NotificationController@notifications');
 
 /*Admin routes*/
 Route::get('admin', 'Admin\AdminController@index');

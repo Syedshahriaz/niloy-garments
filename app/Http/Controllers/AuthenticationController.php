@@ -59,6 +59,7 @@ class AuthenticationController extends Controller
         Session::put('first_name', $user->first_name);
         Session::put('last_name', $user->last_name);
         Session::put('user_photo', $user->photo);
+        Session::put('user_guide_seen', $user->user_guide_seen);
     }
 
     public function forgotPassword()
