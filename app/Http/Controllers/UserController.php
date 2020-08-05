@@ -169,6 +169,17 @@ class UserController extends Controller
         }*/
     }
 
+    public function updateUserGuideSeenStatus(Request $request){
+        $user = Auth::user();
+        $user = User::where('id',$user->id)->first();
+        $user->user_guide_seen = 1;
+        $user->save();
+
+        Session::put('user_guide_seen', $user->user_guide_seen);
+
+        return ['status' => 200, 'reason' => 'User guide seen status successfully updated'];
+    }
+
     private function createUserSession($user){
         Session::put('user_id', $user->id);
         Session::put('unique_id', $user->unique_id);

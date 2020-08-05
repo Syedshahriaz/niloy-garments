@@ -46,4 +46,32 @@
             //dialCode: "+88",
         });
     }
+
+    function showUserGuide(){
+        var user_guide_seen = "{{Session::get('user_guide_seen')}}";
+        if(user_guide_seen == 0){
+            setTimeout(function(){
+                $('#GuideModal').modal('show');
+            },2000);
+
+            var url = "{{ url('update_user_guide_seen_status') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {'_token':'{{ csrf_token() }}'},
+                success: function (data) {
+
+                    if(data.status == 200){
+                        //
+                    }
+                    else{
+                        //
+                    }
+                },
+                error: function (data) {
+                    //show_error_message(data);
+                }
+            });
+        }
+    }
 </script>
