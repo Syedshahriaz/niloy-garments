@@ -100,6 +100,7 @@
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>
+                                            <span class="hidden">{{$user->status}}</span>
                                             @if($user->shipment_date !='')
                                                 {{date('l d, M, Y', strtotime($user->shipment_date))}}
                                             @endif
