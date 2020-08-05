@@ -56,13 +56,13 @@
                         <li class="external">
                             <h3>
                                 <span class="bold">{{(count($unread_notification)>0 ? count($unread_notification) : '')}} pending</span> notifications</h3>
-                            <a href="page_user_profile_1.html">view all</a>
+                            <a href="{{url('notifications')}}">view all</a>
                         </li>
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
                                 @foreach($unread_notification as $notification)
                                 <li>
-                                    <a href="javascript:;">
+                                    <a href="{{url('notifications').'?nid='.$notification->id}}">
                                         <span class="time">{{date('d/m/Y h:i a', strtotime($notification->created_at))}}</span>
                                         <span class="details">
                                                     <span class="label label-sm label-icon label-warning">

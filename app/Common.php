@@ -49,6 +49,13 @@ class Common
         return $notifications;
     }
 
+    public static function getNotificationDetails($notification_id=''){
+
+        $notifications = Notification::where('id',$notification_id)
+            ->get();
+        return $notifications;
+    }
+
     public static function getUnreadNotifications($user_id=''){
         if($user_id == ''){
             $user = Auth::user();
