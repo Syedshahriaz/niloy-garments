@@ -18,8 +18,6 @@
                         <span>Dashboard</span>
                     </li>
                 </ul>
-                <div class="page-toolbar">
-                </div>
             </div>
             <!-- END PAGE BAR -->
 
@@ -28,7 +26,7 @@
             <div class="row mt-3">
                 <div class="col-md-12 col-sm-12">
                     <!-- BEGIN PORTLET-->
-                    <div class="portlet light ">
+                    <div class="portlet light " style="display: none;">
                         <div class="portlet-body" style="padding-top: 0;">
                             <div class="row">
                                 @if(!empty($buyer))
@@ -63,9 +61,9 @@
                                 <!-- <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_dash_view_btn">
                                     Vertical View
                                 </a> -->
-                                <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_dash_view_btn">
-                                    <!--i class="icon-grid icons"></i-->Horizontal View
-                                </a>
+                                <!-- <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_dash_view_btn">
+                                   Horizontal View
+                                </a> -->
                             </div>
                         </div>
                         <div class="portlet-body">
@@ -361,10 +359,6 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-
-        });
-
         function open_unlock_modal(id){
             $('#project_task_id').val(id);
             $('#task_unlock_modal').modal('show');
