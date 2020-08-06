@@ -38,6 +38,9 @@ Route::get('send_sms', 'HomeController@sendSms');
 Route::get('error_404', 'ErrorController@error404');
 
 
+Route::post('email_password_link', 'PublicController@emailPasswordLink');
+Route::get('reset_password', 'PublicController@resetPassword');
+Route::post('reset_password', 'PublicController@updatePassword');
 
 Auth::routes();
 
