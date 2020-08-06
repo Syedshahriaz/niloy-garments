@@ -445,7 +445,7 @@ class Common
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
         $emailData['task'] = $task;
-        $emailData['day_left'] = $day_left;
+        $emailData['day_left'] = abs($day_left);
         $emailData['subject'] = 'Niloy Garments- Project task completion warning';
 
         $emailData['bodyMessage'] = '';

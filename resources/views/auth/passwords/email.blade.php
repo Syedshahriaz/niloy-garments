@@ -99,8 +99,8 @@
         </div>
     @endif
 
-    <form method="POST" class="login-form"  action="{{ route('password.email') }}">
-        @csrf
+    <form id="forget_password_form" method="POST" class="login-form"  action="{{ url('email_password_link') }}">
+        {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
             <img src="../../assets/global/img/logo-invert.png" alt="" />
@@ -109,10 +109,14 @@
 
         <h3 class="form-title font-theme">Recover Password</h3>
 
+            <div class="alert alert-success" id="success_message" style="display:none"></div>
+            <div class="alert alert-danger" id="error_message" style="display: none"></div>
+
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
             <label class="control-label visible-ie8 visible-ie9">Email Address</label>
-            <input class="form-control form-control-solid placeholder-no-fix @error('email') is-invalid @enderror" type="email" autocomplete="off" placeholder="Email Address" name="email" id="email" value="{{ old('email') }}" required autofocus/>                </div>
+            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Email Address" name="email" id="email" value="" autofocus/>
+        </div>
 
 
         <div class="form-group row mb-0">
@@ -168,9 +172,63 @@
 <!-- END GLOABL CUSTOM SCRIPTS -->
 
 <script type="text/javascript">
-    
+
 </script>
 
 </body>
+
+<script>
+    $(document).on("submit", "#forget_password_form", function(event) {
+        event.preventDefault();
+
+        var email = $("#email").val();
+        var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+        var validate = "";
+
+        if (email.trim() == "") {
+            validate = validate + "Email is required</br>";
+        }
+        if(email.trim()!=''){
+            if(!re.test(email)){
+                validate = validate+'Email is invalid<br>';
+            }
+        }
+
+        if (validate == "") {
+            var formData = new FormData($("#forget_password_form")[0]);
+            var url = "{{ url('email_password_link') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                success: function(data) {
+                    if (data.status == 200) {
+                        $("#success_message").show();
+                        $("#error_message").hide();
+                        $("#success_message").html(data.reason);
+                    } else {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data.reason);
+                    }
+                },
+                error: function(data) {
+                    $("#success_message").hide();
+                    $("#error_message").show();
+                    $("#error_message").html(data.reason);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        } else {
+            $("#success_message").hide();
+            $("#error_message").show();
+            $("#error_message").html(validate);
+        }
+    });
+</script>
 
 </html>
