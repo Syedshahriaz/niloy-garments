@@ -45,7 +45,14 @@
                                {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>--}}
                             </div>
                         </div>
-                        <div class="portlet-body">
+                        <div class="portlet-body p-relative">
+                            <div class="all_user_sort">
+                                <select class="form-control" id="payment_check">
+                                    <option value="">Sort by payment Status</option>
+                                    <option value="active">Paid</option>
+                                    <option value="pending">Unpaid</option>
+                                </select>
+                            </div>
                             <table id="user_list_table" class="table table-striped table-bordered table-hover data-table focus-table">
                                 <thead>
                                     <tr>
@@ -60,6 +67,7 @@
                                         <th>User ID</th>
                                         <th>Username</th>
                                         <th>User Email</th>
+                                        <th>Payment Status</th>
                                         <th>Shipment Date</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Action</th>
@@ -99,8 +107,8 @@
                                         <td>{{$user->unique_id}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
+                                        <td>{{$user->status}}</td>
                                         <td>
-                                            <span class="hidden">{{$user->status}}</span>
                                             @if($user->shipment_date !='')
                                                 {{date('l d, M, Y', strtotime($user->shipment_date))}}
                                             @endif
@@ -211,24 +219,26 @@
                             <input type="hidden" name="user_id" id="offer_user_id" value="">
 
                             <div class="col-md-12">
-                                <label for=""><b>Choose Offer</b></label>
-                                <div class="offer-itemlist">
-                                    <div class="offer-item">
-                                        <div class="offer-option-item green-offer-option">
-                                            <p>Green</p>
-                                            <input type="radio" name="offer" value="1" hidden="">
+                                <div class="admin_offer_change">
+                                    <label class="text-center" for=""><b>Choose Offer</b></label>
+                                    <div class="offer-itemlist">
+                                        <div class="offer-item">
+                                            <div class="offer-option-item green-offer-option">
+                                                <p>Green</p>
+                                                <input type="radio" name="offer" value="1" hidden="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="offer-item">
-                                        <div class="offer-option-item red-offer-option">
-                                            <p>Red</p>
-                                            <input type="radio" name="offer" value="2" hidden="">
+                                        <div class="offer-item">
+                                            <div class="offer-option-item red-offer-option">
+                                                <p>Red</p>
+                                                <input type="radio" name="offer" value="2" hidden="">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="offer-item">
-                                        <div class="offer-option-item pink-offer-option">
-                                            <p>{{$offer->offer3_name}}</p>
-                                            <input type="radio" name="offer_3" value="3" disabled="" hidden="">
+                                        <div class="offer-item">
+                                            <div class="offer-option-item pink-offer-option">
+                                                <p>{{$offer->offer3_name}}</p>
+                                                <input type="radio" name="offer_3" value="3" disabled="" hidden="">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +248,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center">
-                        <button type="submit" class="btn theme-btn pull-right" id="update_offer">Update</button>
+                        <button type="submit" class="btn theme-btn" id="update_offer">Update</button>
                     </div>
                 </div>
             </div>
@@ -254,17 +264,34 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#user_list_table').DataTable({
-                //"paging":   true,
-                //"ordering": true,
-                //"info":     true,
-                //"searching": true
+            // $('#user_list_table').DataTable({
+            //     //"paging":   true,
+            //     //"ordering": true,
+            //     //"info":     true,
+            //     //"searching": true
+            // });
+            $(function() {
+                var table = $('#user_list_table').DataTable({
+                    "columnDefs": [
+                        {
+                            "targets": [ 4 ],
+                            "visible": false
+                        }
+                    ]
+                });
+                $('#payment_check').on( 'change', function () {
+                    var select_val = $(this).val();
+                    table
+                        .columns(4)
+                        .search(select_val)
+                        .draw();
+                });
             });
         });
 
         $(document).on('click','.offer-option-item',function(){
-            $('.offer-option-item').removeClass('selected-offer')
-            $(this).addClass('selected-offer');
+            $('.offer-item').removeClass('selected-offer')
+            $(this).parent('.offer-item').addClass('selected-offer');
             $(this).children('input[type="radio"]').prop('checked',true);
         });
 
