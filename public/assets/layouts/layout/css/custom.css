@@ -43,6 +43,9 @@
         font-weight: 600;
     }
 
+    .p-relative{
+        position: relative;
+    }
     /*Color css START*/
     .font-theme{
         color: var(--primary-theme-color) !important;
@@ -563,6 +566,7 @@ div#user_horizontal_task_wrapper .col-sm-12 {
     border-right: 1px solid #dadada;
 }
 #char_body {
+    flex: 1;
     padding-left: 10px;
 }
 .chat-form .input-cont{
@@ -597,6 +601,51 @@ div#user_horizontal_task_wrapper .col-sm-12 {
 }
 .img-added{
     padding-left: 40px;
+}
+.all_user_sort {
+    max-width: 200px;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    top: 4px;
+}
+.admin_offer_change label {
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+.admin_offer_change .offer-item {
+    margin: 0 10px;
+}
+@media only screen and (max-width: 767px){
+    .all_user_sort {
+        max-width: 100%;
+        position: relative;
+        margin-bottom: 15px;
+    }
+    #user_list_table_length label, #user_list_table_filter, #user_list_table_filter label{
+        width: 100%;
+    }
+    #chats {
+        flex-direction: column;
+    }
+    #char_body {
+        padding: 0;
+        border: 2px solid #ddd;
+    }
+    #char_user_list{
+        border: 2px solid #ddd;
+        margin-bottom: 15px;
+    }
+    .admin_offer_change .offer-itemlist {
+        width: 300px;
+        flex-direction: column;
+    }
+    .admin_offer_change .offer-item {
+        margin-bottom: 15px;
+    }
 }
 /*inbox END*/
 /*Admin part END*/
