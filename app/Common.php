@@ -371,6 +371,7 @@ class Common
 
     public static function sendTaskWarningEmail($user_id=''){
         $today = date('Y-m-d');
+        $next_day = date('Y-m-d', strtotime('+1 days'));
         $allow_date = date('Y-m-d', strtotime('+7 days'));
 
         $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title', 'tasks.rule',
@@ -384,8 +385,9 @@ class Common
         }
         $tasks = $tasks->where('user_project_tasks.status', 'processing');
         $tasks = $tasks->where('user_project_tasks.warning_sent',0);
-        $tasks = $tasks->where(function ($query) use ($today,$allow_date) {
-            $query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
+        $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
+            //$query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
+            $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
             $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
         });
         $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
@@ -414,7 +416,7 @@ class Common
                 $sms_response = self::send7dayWarningSms($task->phone,$task);
             }
 
-            if($task->original_delivery_date<$today && $email_response=='ok'){
+            if($email_response=='ok'){
                 $task->warning_sent = 1;
                 $task->save();
             }
@@ -427,7 +429,11 @@ class Common
         /*
          * Send task 7 day before complete warning email
          */
-        $today = date('Y-m-d');
+        $now = time(); // or your date as well
+        $original_delivery_date = strtotime($task->original_delivery_date);
+        $datediff = $now - $original_delivery_date;
+
+        $day_left = round($datediff / (60 * 60 * 24));
 
         $email_to = $email;
         $email_cc = [];
@@ -439,6 +445,7 @@ class Common
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
         $emailData['task'] = $task;
+        $emailData['day_left'] = $day_left;
         $emailData['subject'] = 'Niloy Garments- Project task completion warning';
 
         $emailData['bodyMessage'] = '';
@@ -450,8 +457,15 @@ class Common
     }
 
     public static function send7dayWarningSms($phone,$task){
+
+        $now = time(); // or your date as well
+        $original_delivery_date = strtotime($task->original_delivery_date);
+        $datediff = $now - $original_delivery_date;
+
+        $day_left = round($datediff / (60 * 60 * 24));
+
         $message_body = 'Dear '.$task->username.',';
-        $message_body .= 'Your task '.$task->title.' of project '.$task->project_name.' has 7 days left to complete. ';
+        $message_body .= 'Your task '.$task->title.' of project '.$task->project_name.' has '.abs($day_left).' days left to complete. ';
         $message_body .= 'Please complete the task in due date. ';
         $message_body .= 'Niloy Garments';
         $response = SMS::sendSingleSms($phone,$message_body);

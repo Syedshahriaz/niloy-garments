@@ -27,15 +27,15 @@ class CronController extends Controller
     }
 
     public function sendTaskWarningEmail(Request $request){
-        try{
+        //try{
             $result = Common::sendTaskWarningEmail();
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'CronController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
 }
