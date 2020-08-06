@@ -1,6 +1,6 @@
 <h2>Niloy Garments</h2>
 Dear {{$task->username}}: <br>
-Your task has 7 days left to complete <br>
+Your task has {{$day_left}} days left to complete <br>
 Please complete the task in due date <br>
 Task Details <br>
 
