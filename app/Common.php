@@ -388,6 +388,7 @@ class Common
             $query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
             $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
         });
+        $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
         $tasks = $tasks->get();
 
         //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
@@ -396,24 +397,24 @@ class Common
             $email = [$task->email];
 
             if($task->original_delivery_date<$today){ // Due date have been past
-                $result = self::sendPastDayWarningEmail($email,$task);
+                $email_response = self::sendPastDayWarningEmail($email,$task);
 
                 /*
                  * Send past warning sms
                  * */
-                $result = self::sendPastDayWarningSms($tasks->phone,$task);
+                $sms_response = self::sendPastDayWarningSms($task->phone,$task);
 
             }
             else{
-                $result = self::send7dayWarningEmail($email,$task);
+                $email_response = self::send7dayWarningEmail($email,$task);
 
                 /*
                  * Send 7 day before warning sms
                  * */
-                $result = self::send7dayWarningSms($tasks->phone,$task);
+                $sms_response = self::send7dayWarningSms($task->phone,$task);
             }
 
-            if($task->original_delivery_date<$today && $result=='ok'){
+            if($task->original_delivery_date<$today && $email_response=='ok'){
                 $task->warning_sent = 1;
                 $task->save();
             }
@@ -450,8 +451,8 @@ class Common
 
     public static function send7dayWarningSms($phone,$task){
         $message_body = 'Dear '.$task->username.',';
-        $message_body .= 'Your task '.$task->title.' has 7 days left to complete';
-        $message_body .= 'Please complete the task in due date';
+        $message_body .= 'Your task '.$task->title.' of project '.$task->project_name.' has 7 days left to complete. ';
+        $message_body .= 'Please complete the task in due date. ';
         $message_body .= 'Niloy Garments';
         $response = SMS::sendSingleSms($phone,$message_body);
 
@@ -486,8 +487,8 @@ class Common
 
     public static function sendPastDayWarningSms($phone,$task){
         $message_body = 'Dear '.$task->username.',';
-        $message_body .= 'The original due date of your task '.$task->title.' have been past';
-        $message_body .= 'Complete your task or contact with admin';
+        $message_body .= 'The original due date of your task '.$task->title.' of project '.$task->project_name.' have been past. ';
+        $message_body .= 'Complete your task or contact with admin. ';
         $message_body .= 'Niloy Garments';
         $response = SMS::sendSingleSms($phone,$message_body);
 
