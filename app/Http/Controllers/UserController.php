@@ -490,6 +490,7 @@ class UserController extends Controller
             $user->country_code = $request->country_code;
             $user->password = $parentUser->password;
             $user->role = 3;
+            $user->status = 'pending';
             $user->save();
 
             /*
