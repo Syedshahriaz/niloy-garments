@@ -571,6 +571,9 @@
                     if (data.status == 200) {
                         $("#message_id").val(data.message_id);
                         appendMessage(message,data.photo_path);
+
+                        $('#uploaded_img').removeClass('visible');
+                        $('#message_input').removeClass('img-added');
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();
@@ -594,7 +597,7 @@
     }
 
     function getAndPopulateSelectedMessage(id){
-        var url = "<?php echo e(url('admin/get_message_details')); ?>";
+        var url = "{{url('get_message_details')}}";
 
         $.ajax({
             type: "POST",
@@ -617,9 +620,6 @@
         var cont = $('#chats');
         var list = $('.chats', cont);
         var user_name = $('#user_name').val();
-
-        $('#uploaded_img').removeClass('visible');
-        $('#message_input').removeClass('img-added');
 
         var time = new Date();
         var d = time.getDate();

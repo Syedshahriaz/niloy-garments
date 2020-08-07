@@ -118,4 +118,30 @@ class MessageController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+
+    public function getMessageDetails(Request $request)
+    {
+        try{
+            $message = Message::with('message_details')
+                ->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+                ->join('users as user','user.id','=','messages.user_id')
+                ->join('users as admin','admin.id','=','messages.admin_id')
+                ->where('messages.id',$request->message_id)
+                ->first();
+
+            /*
+             * mark message as read
+             * */
+            /*MessageDetails::where('message_id',$message->id)
+                ->where('type','received')
+                ->update(['is_read' => 1]);*/
+
+            return ['status'=>200, 'reason'=>'','message'=>$message];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'getMessageDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
 }

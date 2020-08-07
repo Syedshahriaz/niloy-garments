@@ -81,6 +81,7 @@ Route::post('update_task_delivery_status', 'UserProjectController@updateProjectT
 Route::get('message', 'MessageController@message');
 Route::post('store_message', 'MessageController@store');
 Route::post('get_unread_message', 'MessageController@getUnreadMessage');
+Route::post('get_message_details', 'MessageController@getMessageDetails');
 
 Route::get('notifications', 'NotificationController@notifications');
 
