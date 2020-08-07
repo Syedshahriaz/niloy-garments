@@ -143,7 +143,7 @@
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item ajax_item item-4 @if($page=='messages') active @endif" data-name="message" data-item="4">
+            <li class="nav-item item-4 @if($page=='messages') active @endif" data-name="message" data-item="4">
                 <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
                     <span class="title">Massage</span>
