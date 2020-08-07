@@ -47,6 +47,33 @@
         });
     }
 
+    //image upload
+    /*$(document).on('click','#upload_btn', function(e){
+        e.preventDefault();
+        $('#image_upload_input').click();
+    });
+
+    $(document).on('change','#image_upload_input', function(e){
+        alert(11);
+        readURL(this);
+    });
+
+    function readURL(input) {
+        alert(22);
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#uploaded_img').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+            alert(33);
+            $('#message_input').addClass('img-added')
+            $('#uploaded_img').addClass('visible')
+        }
+    }*/
+
     function showUserGuide(){
         var user_guide_seen = "{{Session::get('user_guide_seen')}}";
         if(user_guide_seen == 0){

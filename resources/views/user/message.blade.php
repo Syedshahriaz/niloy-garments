@@ -188,10 +188,12 @@
                 $('#image_upload_input').click();
             });
 
-            $("#image_upload_input").change(function(){
+            $(document).on('change','#image_upload_input', function(e){
                 readURL(this);
             });
+
             function readURL(input) {
+                alert(22);
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
 
@@ -200,6 +202,7 @@
                     }
 
                     reader.readAsDataURL(input.files[0]);
+                    alert(33);
                     $('#message_input').addClass('img-added')
                     $('#uploaded_img').addClass('visible')
                 }
