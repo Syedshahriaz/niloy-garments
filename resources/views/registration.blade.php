@@ -87,7 +87,9 @@
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
-            <input class="form-control placeholder-no-fix telephone" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$phone}}" />
+            <input class="form-control placeholder-no-fix telephone" id="telephone" type="text" name="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$phone}}" />
+            <span id="valid-msg" class="hide">✓ Valid</span>
+            <span id="error-msg" class="hide">Invalid</span>
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
@@ -143,7 +145,10 @@
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <script src="{{asset('assets/global/scripts/app.min.js')}}" type="text/javascript"></script>
 <!-- input with country flag & code-->
+<!-- input with country flag & code-->
+<!-- <script src="https://intl-tel-input.com/node_modules/intl-tel-input/build/js/intlTelInput.js"></script> -->
 <script src="{{asset('assets/global/plugins/intl-tel-input-master/js/intlTelInput-jquery.min.js')}}" type="text/javascript"></script>
+<!-- <script src="{{asset('assets/global/plugins/intl-tel-input-master/js/intlTelInput.js')}}" type="text/javascript"></script> -->
 <!-- For Documentation https://github.com/jackocnr/intl-tel-input#demo-and-examples-->
 <!-- END THEME GLOBAL SCRIPTS -->
 
@@ -156,6 +161,7 @@
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <!-- BEGIN GLOABL CUSTOM SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>
 <!-- END GLOABL CUSTOM SCRIPTS -->
 
@@ -249,6 +255,50 @@
             $("#error_message").html(validate);
         }
     });
+
+    // $(document).ready(function(){
+    //     // $('#telephone').blur(function(){
+    //     //     alert($(this).val());
+    //     // });
+
+    //     var input = document.querySelector("#telephone"),
+    //     errorMsg = document.querySelector("#error-msg"),
+    //     validMsg = document.querySelector("#valid-msg");
+
+    //     // here, the index maps to the error code returned from getValidationError - see readme
+    //     var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+    //     // initialise plugin
+    //     var iti = window.intlTelInput(input, {
+    //         utilsScript: "https://intl-tel-input.com/node_modules/intl-tel-input/build/js/utils.js"
+    //     });
+
+    //     var reset = function() {
+    //     input.classList.remove("error");
+    //     errorMsg.innerHTML = "";
+    //     errorMsg.classList.add("hide");
+    //     validMsg.classList.add("hide");
+    //     };
+
+    //     // on blur: validate
+    //     input.addEventListener('blur', function() {
+    //     reset();
+    //     if (input.value.trim()) {
+    //         if (iti.isValidNumber()) {
+    //         validMsg.classList.remove("hide");
+    //         } else {
+    //         input.classList.add("error");
+    //         var errorCode = iti.getValidationError();
+    //         errorMsg.innerHTML = errorMap[errorCode];
+    //         errorMsg.classList.remove("hide");
+    //         }
+    //     }
+    //     });
+
+    //     // on keyup / change flag: reset
+    //     input.addEventListener('change', reset);
+    //     input.addEventListener('keyup', reset);
+    // });
 </script>
 
 </body>

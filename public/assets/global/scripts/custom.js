@@ -4,6 +4,7 @@ $(".telephone").intlTelInput({
     separateDialCode: true
     //dialCode: "+88",
 });
+
 //$('#iti-0__item-bd').find('.iti__dial-code').text('+88');
 //$('.iti__selected-dial-code').text('+88');
 
