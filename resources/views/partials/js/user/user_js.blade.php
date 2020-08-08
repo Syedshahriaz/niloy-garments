@@ -605,7 +605,9 @@
             data: {message_id:id,'_token':'<?php echo e(csrf_token()); ?>'},
             success: function(data) {
                 if (data.status == 200) {
-                    populateMessage(data.message);
+                    if(data.message.length>0){
+                        populateMessage(data.message);
+                    }
                 } else {
                     //Nothing to do now;
                 }

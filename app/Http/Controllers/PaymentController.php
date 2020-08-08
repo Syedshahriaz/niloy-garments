@@ -19,6 +19,8 @@ class PaymentController extends Controller
         try {
             $user_id = $request->id;
             $user = User::where('id',$user_id)->first();
+            $user->status = 'active';
+            $user->save();
 
             $payment = Payment::where('user_id', $user_id)->first();
             if(empty($payment)){

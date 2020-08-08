@@ -202,6 +202,7 @@
     }
 
     function library_re_initialization(item_name){
+        adjust_page_height();
         /*
         * Get and show number of new message
         * */
@@ -226,6 +227,22 @@
                 getAndPopulateSelectedMessage(id);
             }, 2000);
         }
+    }
+
+    function adjust_page_height(){
+        var content = $('.page-content');
+        var sidebar = $('.page-sidebar');
+        var body = $('body');
+        var height;
+
+
+        var headerHeight = $('.page-header').outerHeight();
+        var footerHeight = $('.page-footer').outerHeight();
+
+
+        height = App.getViewPort().height - headerHeight - footerHeight;
+
+        content.attr('style', 'min-height:' + height + 'px');
     }
 
     /*
