@@ -52,7 +52,8 @@ class PaymentController extends Controller
             /*
              * Send registration confirmation message
              * */
-            $message_body = 'Your payment to Niloy Garments have been done successfully.';
+            $message_body = 'Your payment has been done successfully. ';
+            $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
             $response = SMS::sendSingleSms($user->phone,$message_body);
 
             return redirect('select_shipment/'.$user_id);

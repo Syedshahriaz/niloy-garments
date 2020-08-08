@@ -456,23 +456,6 @@ class Common
         return $result;
     }
 
-    public static function send7dayWarningSms($phone,$task){
-
-        $now = time(); // or your date as well
-        $original_delivery_date = strtotime($task->original_delivery_date);
-        $datediff = $now - $original_delivery_date;
-
-        $day_left = round($datediff / (60 * 60 * 24));
-
-        $message_body = 'Dear '.$task->username.',';
-        $message_body .= 'Your task '.$task->title.' of project '.$task->project_name.' has '.abs($day_left).' days left to complete. ';
-        $message_body .= 'Please complete the task in due date. ';
-        $message_body .= 'Niloy Garments';
-        $response = SMS::sendSingleSms($phone,$message_body);
-
-        return $response;
-    }
-
     public static function sendPastDayWarningEmail($email,$task){
         /*
          * Send task past day complete warning email
@@ -499,16 +482,44 @@ class Common
         return $result;
     }
 
-    public static function sendPastDayWarningSms($phone,$task){
-        $message_body = 'Dear '.$task->username.',';
-        $message_body .= 'The original due date of your task '.$task->title.' of project '.$task->project_name.' have been past. ';
-        $message_body .= 'Complete your task or contact with admin. ';
-        $message_body .= 'Niloy Garments';
+    /*
+     * SMS sending methods
+     * */
+
+    public static function sendRegistrationConfirmationSms($username,$phone){
+        $message_body = 'Dear '.$username.', Welcome to VUJADETEC. Your registration has been completed.';
+        //$message_body .='Please pay by clicking the link https://vujadetec to buy & get services.';
+        $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
+        $response = SMS::sendSingleSms($phone,$message_body);
+        return $response;
+    }
+
+    public static function send7dayWarningSms($phone,$task){
+
+        $now = time(); // or your date as well
+        $original_delivery_date = strtotime($task->original_delivery_date);
+        $datediff = $now - $original_delivery_date;
+
+        $day_left = round($datediff / (60 * 60 * 24));
+
+        $message_body = 'Dear '.$task->username.' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
+        $message_body .= 'Please visit www.vujadetec.com to get more information about our product & services';
         $response = SMS::sendSingleSms($phone,$message_body);
 
         return $response;
     }
 
+    public static function sendPastDayWarningSms($phone,$task){
+        $message_body = 'Dear '.$task->username.' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
+        $message_body .= 'Please visit www.vujadetec.com to get more information about our product & services';
+        $response = SMS::sendSingleSms($phone,$message_body);
+
+        return $response;
+    }
+
+    /*
+     * Saving error log
+     * */
     public static function saveErrorLog($method,$line_number,$file_path,$message,$object,$type,$screenshot,$page_url,$argument,$prefix,$domain){
 
         /*Save error to database*/
