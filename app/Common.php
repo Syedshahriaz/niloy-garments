@@ -374,53 +374,81 @@ class Common
         $next_day = date('Y-m-d', strtotime('+1 days'));
         $allow_date = date('Y-m-d', strtotime('+7 days'));
 
-        $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title', 'tasks.rule',
-            'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
-        $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
-        $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
-        $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
-        $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+        $users = User::where('status','active');
         if($user_id !=''){
-            $tasks = $tasks->where('users.id', $user_id);
+            $users = $users->where('users.id', $user_id);
         }
-        $tasks = $tasks->where('user_project_tasks.status', 'processing');
-        $tasks = $tasks->where('user_project_tasks.warning_sent',0);
-        $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
-            //$query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
-            $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
-            $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
-        });
-        $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
-        $tasks = $tasks->get();
+        $users = $users->get();
 
-        //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
+        foreach($users as $user){
+            $message_initiate = 'Dear '.$user->username;
 
-        foreach($tasks as $task){
-            $email = [$task->email];
+            $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title', 'tasks.rule',
+                'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
+            $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+            $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
+            $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
+            $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+            $tasks = $tasks->where('users.id', $user->id);
+            $tasks = $tasks->where('user_project_tasks.status', 'processing');
+            $tasks = $tasks->where('user_project_tasks.warning_sent',0);
+            $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
+                //$query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
+                $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
+                $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
+            });
+            $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
+            $tasks = $tasks->get();
 
-            if($task->original_delivery_date<$today){ // Due date have been past
-                $email_response = self::sendPastDayWarningEmail($email,$task);
+            //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
+            $past_message_body = '';
+            $warning_message_body = '';
 
-                /*
-                 * Send past warning sms
-                 * */
-                $sms_response = self::sendPastDayWarningSms($task->phone,$task);
+            foreach($tasks as $task){
+                $email = [$task->email];
 
+                if($task->original_delivery_date<$today){ // Due date have been past
+                    $email_response = self::sendPastDayWarningEmail($email,$task);
+
+                    /*
+                     * Send past warning sms
+                     * */
+                    $past_message_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
+                    //$sms_response = self::sendPastDayWarningSms($task->phone,$task);
+
+                }
+                else{
+                    $email_response = self::send7dayWarningEmail($email,$task);
+
+                    /*
+                     * Send 7 day before warning sms
+                     * */
+                    /*$now = time(); // or your date as well
+                    $original_delivery_date = strtotime($task->original_delivery_date);
+                    $datediff = $now - $original_delivery_date;
+
+                    $day_left = round($datediff / (60 * 60 * 24));*/
+
+                    $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
+                    //$sms_response = self::send7dayWarningSms($task->phone,$task);
+                }
+
+                if($email_response=='ok'){
+                    $task->warning_sent = 1;
+                    $task->save();
+                }
             }
-            else{
-                $email_response = self::send7dayWarningEmail($email,$task);
 
-                /*
-                 * Send 7 day before warning sms
-                 * */
-                $sms_response = self::send7dayWarningSms($task->phone,$task);
+            if($past_message_body !=''){
+                $past_message_body = $message_initiate.', '.$past_message_body.'Please visit www.vujadetec.com to get more information about our product & services';
+                $sms_response = self::sendPastDayWarningSms($user->phone,$past_message_body);
             }
-
-            if($email_response=='ok'){
-                $task->warning_sent = 1;
-                $task->save();
+            if($warning_message_body !=''){
+                $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services';
+                $sms_response = self::sendPastDayWarningSms($user->phone,$warning_message_body);
             }
         }
+
 
         return count($tasks).' Email sent.';
     }
@@ -494,26 +522,13 @@ class Common
         return $response;
     }
 
-    public static function send7dayWarningSms($phone,$task){
-
-        $now = time(); // or your date as well
-        $original_delivery_date = strtotime($task->original_delivery_date);
-        $datediff = $now - $original_delivery_date;
-
-        $day_left = round($datediff / (60 * 60 * 24));
-
-        $message_body = 'Dear '.$task->username.' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
-        $message_body .= 'Please visit www.vujadetec.com to get more information about our product & services';
+    public static function send7dayWarningSms($phone,$message_body){
         $response = SMS::sendSingleSms($phone,$message_body);
-
         return $response;
     }
 
-    public static function sendPastDayWarningSms($phone,$task){
-        $message_body = 'Dear '.$task->username.' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
-        $message_body .= 'Please visit www.vujadetec.com to get more information about our product & services';
+    public static function sendPastDayWarningSms($phone,$message_body){
         $response = SMS::sendSingleSms($phone,$message_body);
-
         return $response;
     }
 
