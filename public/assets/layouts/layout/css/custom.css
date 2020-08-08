@@ -561,6 +561,9 @@ div#user_horizontal_task_wrapper .col-sm-12 {
 #chats{
     display: flex;
 }
+.chats>li {
+    clear: both;
+}
 #char_user_list{
     min-width: 200px;
     border-right: 1px solid #dadada;
