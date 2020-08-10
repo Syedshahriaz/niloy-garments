@@ -366,11 +366,7 @@
 
         $(document).on("submit", "#unlock_form", function(event) {
             event.preventDefault();
-<<<<<<< HEAD
             show_loader();
-=======
-            //show_loader();
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             var validate = "";
 
@@ -383,21 +379,11 @@
                     url: url,
                     data: formData,
                     success: function(data) {
-<<<<<<< HEAD
                         hide_loader();
                         if (data.status == 200) {
 
                             $('#project_task_id').val('');
                             $('#task_unlock_modal').modal('hide');
-=======
-                        //hide_loader();
-                        if (data.status == 200) {
-
-                            $('#project_task_id').val('');
-                            setTimeout(function(){
-                                $('#task_unlock_modal').modal('hide');
-                            }, 2000);
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
 
                             $("#unlock_success_message").show();
@@ -413,11 +399,7 @@
                         }
                     },
                     error: function(data) {
-<<<<<<< HEAD
                         hide_loader();
-=======
-                        //hide_loader();
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                         show_error_message(data);
                     },
                     cache: false,
@@ -425,11 +407,7 @@
                     processData: false
                 });
             } else {
-<<<<<<< HEAD
                 hide_loader();
-=======
-                //hide_loader();
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 $("#unlock_success_message").hide();
                 $("#unlock_error_message").show();
                 $("#unlock_error_message").html(validate);

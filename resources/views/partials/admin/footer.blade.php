@@ -62,11 +62,7 @@
     $(document).ready(function(){
         getAndShowUnreadMessageCount();
     })
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     function show_success_message($message){
         $('#alert-modal').modal('show');
         $('#alert-error-msg').hide();
@@ -80,7 +76,6 @@
         $('#alert-error-msg p').html(message);
     }
 
-<<<<<<< HEAD
     function show_loader(message=''){
         if(message==''){
             message = 'Please wait while saving all data.....'; // Showing default message
@@ -99,8 +94,6 @@
         HoldOn.close();
     }
 
-=======
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     function getAndShowUnreadMessageCount(){
         var url = "{{url('admin/get_unread_message') }}";
 

@@ -91,11 +91,7 @@ class UserController extends Controller
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
             $emailData['verification_link'] = $verification_link;
-<<<<<<< HEAD
             $emailData['subject'] = Common::SITE_TITLE.'- Registration confirmation';
-=======
-            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             $emailData['bodyMessage'] = '';
 
@@ -106,13 +102,8 @@ class UserController extends Controller
             /*
              * Send registration confirmation message
              * */
-<<<<<<< HEAD
 
             $response = Common::sendRegistrationConfirmationSms($request->username,$request->phone);
-=======
-            $message_body = 'Your registration to Niloy Garments have been completed.';
-            $response = SMS::sendSingleSms($request->phone,$message_body);
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
         } catch (\Exception $e) {
@@ -503,7 +494,6 @@ class UserController extends Controller
             $user->save();
 
             /*
-<<<<<<< HEAD
              * Send confirmation email
              */
             $email_to = [Session::get('user_email')];
@@ -529,12 +519,6 @@ class UserController extends Controller
              * */
 
             $response = Common::sendRegistrationConfirmationSms($request->username,$request->phone);
-=======
-             * Send registration confirmation message
-             * */
-            $message_body = 'You have been added to Niloy Garments as a child user of '.$parentUser->username.' .';
-            $response = SMS::sendSingleSms($request->phone,$message_body);
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         } catch (\Exception $e) {
@@ -604,11 +588,7 @@ class UserController extends Controller
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
             $emailData['otp'] = $otp;
-<<<<<<< HEAD
             $emailData['subject'] = Common::SITE_TITLE.'- User separation request';
-=======
-            $emailData['subject'] = 'Niloy Garments- User separation request';
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             $emailData['bodyMessage'] = '';
 
@@ -619,11 +599,7 @@ class UserController extends Controller
             /*
              * Send OTP confirmation message
              * */
-<<<<<<< HEAD
             $message_body = 'Your One Time Password (OTP) to transfer the info is '.$otp.'. Validity for OTP is 24 hours. Please contact info@vujadetec.com if you need further assistance.';
-=======
-            $message_body = 'Use '.$otp.' as OTP to separate user  Niloy Garments';
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             $response = SMS::sendOtpSms($thisUser->phone,$message_body);
 
             return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
@@ -656,11 +632,8 @@ class UserController extends Controller
                 return [ 'status' => 401, 'reason' => 'OTP expired. Try again with valid OTP'];
             }
 
-<<<<<<< HEAD
             $childUserDetails = User::where('id',$request->user_id)->first();
             $oldParentUserDetails = User::where('id',$childUserDetails->parent_id)->first();
-=======
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             /*
              * Get new parent user
@@ -728,7 +701,6 @@ class UserController extends Controller
 
             DB::commit();
 
-<<<<<<< HEAD
             /*
              * Send separation confirmation message
              * */
@@ -736,8 +708,6 @@ class UserController extends Controller
             $message_body .= $oldParentUserDetails->username.' transferred all your records. Please read the user guide & visit www.vujadetec.com to get more information about our product & services.';
             $response = SMS::sendSingleSms($childUserDetails->phone,$message_body);
 
-=======
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             return ['status' => 200, 'reason' => 'User separated successfully'];
         } catch (\Exception $e) {
             DB::rollback();

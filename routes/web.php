@@ -47,14 +47,10 @@ Auth::routes();
 Route::get('select_user', 'UserController@selectUser');
 Route::post('multi_tinent', 'UserController@multiTinent');
 
-<<<<<<< HEAD
 Route::get('initiate_payment/{id}', 'PaymentController@initiatePayment');
 Route::post('payment_success', 'PaymentController@success');
 Route::post('payment_failed', 'PaymentController@failed');
 Route::post('payment_cancel', 'PaymentController@cancel');
-=======
-Route::post('payment_success/{id}', 'PaymentController@success');
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
@@ -102,10 +98,7 @@ Route::post('admin/update_user_offer', 'Admin\UserController@updateUserOffer');
 Route::post('admin/send_user_email', 'Admin\UserController@sendUserEmail');
 
 Route::post('admin/unlock_project_task', 'Admin\ProjectController@unlockProjectTask');
-<<<<<<< HEAD
 Route::post('admin/unlock_shipping_date', 'Admin\ProjectController@unlockShippingDate');
-=======
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
 Route::get('admin/promotion_settings', 'Admin\SettingController@promotionSettings');
 Route::post('admin/update_offer', 'Admin\SettingController@updateOffer');
@@ -121,6 +114,5 @@ Route::get('admin/message', 'Admin\MessageController@message');
 Route::post('admin/store_message', 'Admin\MessageController@store');
 Route::post('admin/get_unread_message', 'Admin\MessageController@getUnreadMessage');
 Route::post('admin/get_message_details', 'Admin\MessageController@getMessageDetails');
-
 
 

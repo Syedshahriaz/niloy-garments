@@ -82,11 +82,7 @@
                                                         @endif
                                                         <div class="message">
                                                             <span class="arrow"> </span>
-<<<<<<< HEAD
                                                             <a href="javascript:;" class="name"> Vujadetec </a>
-=======
-                                                            <a href="javascript:;" class="name"> {{$last_message->admin_name}} </a>
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                                             <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
@@ -331,7 +327,6 @@
             }
         }
 
-<<<<<<< HEAD
         function getFormattedDate(original_date,format=''){
             const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
                 "Sunday"
@@ -348,22 +343,11 @@
             var y = formattedDate.getFullYear();
             var hours = formattedDate.getHours();
             var minutes = formattedDate.getMinutes();
-=======
-        function getFormattedDate(date){
-            var time = new Date(date);
-            var d = time.getDate();
-            var m =  time.getMonth();
-            m += 1;  // JavaScript months are 0-11
-            var y = time.getFullYear();
-            var hours = time.getHours();
-            var minutes = time.getMinutes();
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
             minutes = minutes < 10 ? '0'+minutes : minutes;
 
-<<<<<<< HEAD
             if(original_date=='' || original_date===null){
                 return '';
             }
@@ -402,11 +386,6 @@
             else{
                 return monthNames[m] + " " + d + ", " + y;
             }
-=======
-            var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
-
-            return time_str;
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
         }
 
         $(document).on('click','.message_head', function(){
@@ -460,11 +439,7 @@
             }
             tpl += '<div class="message">';
             tpl += '<span class="arrow"></span>';
-<<<<<<< HEAD
             tpl += '<a href="#" class="name">Vujadetec</a>&nbsp;';
-=======
-            tpl += '<a href="#" class="name">{{Session::get('username')}}</a>&nbsp;';
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             tpl += '<span class="datetime">at ' + time_str + '</span>';
             tpl += '<span class="body">';
             if(photo_path !=''){
@@ -506,11 +481,7 @@
 
             $.each(message.message_details, function( index, msg ) {
 
-<<<<<<< HEAD
                 var time_str = getFormattedDate(msg.created_at,'l M d, Y h:i a');
-=======
-                var time_str = getFormattedDate(msg.created_at);
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
                 if(msg.type=='sent'){
                     var message_type = 'in';
@@ -520,11 +491,7 @@
                 else{
                     var message_type = 'out';
                     var profile_photo = message.admin_photo;
-<<<<<<< HEAD
                     var user_name = 'Vujadetec';
-=======
-                    var user_name = message.admin_name;
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 }
 
                 var photo_path = msg.file_path;

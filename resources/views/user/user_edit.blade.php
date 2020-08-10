@@ -146,7 +146,6 @@
                                                 </div>
                                             </div>
 
-<<<<<<< HEAD
                                             <div class="col-md-6" id="shipping_date_area">
                                                 <div class="form-group">
                                                     <label for=""><b>Shipping Date</b></label>
@@ -155,18 +154,6 @@
                                                     <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
                                                 </div>
                                             </div>
-=======
-                                            @if($user->shipment_date_update_count==0)
-                                                <div class="col-md-6" id="shipping_date_area">
-                                                    <div class="form-group">
-                                                        <label for=""><b>Shipping Date</b></label>
-                                                        <input class="form-control date-picker" size="16" type="text" name="" id="ship_date" value="" />
-                                                        <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
-                                                        <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
-                                                    </div>
-                                                </div>
-                                            @endif
->>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                         </div>
 
                                         <div class="form-group text-right">
