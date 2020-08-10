@@ -103,7 +103,7 @@ class UserController extends Controller
              * Send registration confirmation message
              * */
 
-            $response = Common::sendRegistrationConfirmationSms($request->phone);
+            $response = Common::sendRegistrationConfirmationSms($request->username,$request->phone);
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
         } catch (\Exception $e) {

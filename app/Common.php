@@ -27,6 +27,17 @@ class Common
     const FROM_EMAIL = 'mail2technerd@gmail.com';
     const FROM_NAME = 'Niloy Garments';
 
+    const SECUREPAY_MODE = 'sandbox';
+    const SECUREPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
+    const SECUREPAY_LIVE_URL = 'https://securepay.easypayway.com/payment/request.php';
+    const SECUREPAY_SANDBOX_STORE_ID = 'vujadetec';
+    const SECUREPAY_LIVE_STORE_ID = 'vujadetec';
+    const SECUREPAY_SIGNATURE_KEY = '8c6404963b81604381d5070e92fc4fcb';
+    const PAYMENT_SUCCESS_URL = Common::SITE_URL.'/payment_success';
+    const PAYMENT_FAILED_URL = Common::SITE_URL.'/payment_fail';
+    const PAYMENT_CANCEL_URL = Common::SITE_URL.'/payment_cancel';
+
+
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
 

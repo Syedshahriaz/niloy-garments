@@ -47,7 +47,10 @@ Auth::routes();
 Route::get('select_user', 'UserController@selectUser');
 Route::post('multi_tinent', 'UserController@multiTinent');
 
-Route::post('payment_success/{id}', 'PaymentController@success');
+Route::get('initiate_payment/{id}', 'PaymentController@initiatePayment');
+Route::post('payment_success', 'PaymentController@success');
+Route::post('payment_failed', 'PaymentController@failed');
+Route::post('payment_cancel', 'PaymentController@cancel');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');

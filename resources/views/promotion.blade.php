@@ -37,8 +37,7 @@
                     <h2 class="text-center mt-5">Choose your offer</h2>
 
                     <div class="offer-option mb-5 animate__animated animate__fadeInUp">
-                        <form id="payment_form" class="login-form" action="{{url('payment_success',$user->id)}}" method="post">
-                            {{csrf_field()}}
+                        <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
                             <div class="form-group">
                                 <div class="offer-itemlist">
                                     <div class="offer-option-item green-offer-option active_offer_option">
