@@ -62,7 +62,7 @@
     $(document).ready(function(){
         getAndShowUnreadMessageCount();
     })
-    
+
     function show_success_message($message){
         $('#alert-modal').modal('show');
         $('#alert-error-msg').hide();
@@ -74,6 +74,24 @@
         $('#alert-error-msg').show();
         $('#alert-success-msg').hide();
         $('#alert-error-msg p').html(message);
+    }
+
+    function show_loader(message=''){
+        if(message==''){
+            message = 'Please wait while saving all data.....'; // Showing default message
+        }
+        var options = {
+            theme: "sk-cube-grid",
+            message: message,
+            backgroundColor: "#1847B1",
+            textColor: "white"
+        };
+
+        HoldOn.open(options);
+    }
+
+    function hide_loader(){
+        HoldOn.close();
     }
 
     function getAndShowUnreadMessageCount(){

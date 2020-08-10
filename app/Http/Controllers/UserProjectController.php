@@ -248,6 +248,10 @@ class UserProjectController extends Controller
         try{
             if (Auth::check()) {
                 $user_project_id = $request->id;
+                $user = UserProject::select('users.id','users.username')
+                    ->join('users','users.id','=','user_projects.user_id')
+                    ->where('user_projects.id',$user_project_id)
+                    ->first();
                 $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
@@ -274,10 +278,10 @@ class UserProjectController extends Controller
 
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.my_project_task',
-                        compact('user_project_id','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
+                        compact('user_project_id','user','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('user.project.my_project_task', compact('user_project_id','project', 'tasks', 'shipment','task_titles'));
+                return view('user.project.my_project_task', compact('user_project_id','user','project', 'tasks', 'shipment','task_titles'));
             }
             else{
                 return redirect('login');

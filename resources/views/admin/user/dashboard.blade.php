@@ -366,7 +366,7 @@
 
         $(document).on("submit", "#unlock_form", function(event) {
             event.preventDefault();
-            //show_loader();
+            show_loader();
 
             var validate = "";
 
@@ -379,13 +379,11 @@
                     url: url,
                     data: formData,
                     success: function(data) {
-                        //hide_loader();
+                        hide_loader();
                         if (data.status == 200) {
 
                             $('#project_task_id').val('');
-                            setTimeout(function(){
-                                $('#task_unlock_modal').modal('hide');
-                            }, 2000);
+                            $('#task_unlock_modal').modal('hide');
 
 
                             $("#unlock_success_message").show();
@@ -401,7 +399,7 @@
                         }
                     },
                     error: function(data) {
-                        //hide_loader();
+                        hide_loader();
                         show_error_message(data);
                     },
                     cache: false,
@@ -409,7 +407,7 @@
                     processData: false
                 });
             } else {
-                //hide_loader();
+                hide_loader();
                 $("#unlock_success_message").hide();
                 $("#unlock_error_message").show();
                 $("#unlock_error_message").html(validate);
