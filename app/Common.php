@@ -21,12 +21,17 @@ use DB;
  */
 class Common
 {
+<<<<<<< HEAD
     const SITE_TITLE = 'Vujadetect';
+=======
+    const SITE_TITLE = 'Niloy Garments';
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     const DOMAIN_NAME = 'tna.ownenterprise.com';
     const SITE_URL = 'http://tna.ownenterprise.com';
     const FROM_EMAIL = 'mail2technerd@gmail.com';
     const FROM_NAME = 'Niloy Garments';
 
+<<<<<<< HEAD
     const SECUREPAY_MODE = 'sandbox';
     const SECUREPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
     const SECUREPAY_LIVE_URL = 'https://securepay.easypayway.com/payment/request.php';
@@ -38,6 +43,8 @@ class Common
     const PAYMENT_CANCEL_URL = Common::SITE_URL.'/payment_cancel';
 
 
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
 
@@ -54,8 +61,13 @@ class Common
             $user_id = $user->id;
         }
 
+<<<<<<< HEAD
         $notifications = Notification::where('parent_id',$user_id)
             //->orWhere('parent_id',$user_id)
+=======
+        $notifications = Notification::where('user_id',$user_id)
+            ->orWhere('parent_id',$user_id)
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             ->get();
         return $notifications;
     }
@@ -72,8 +84,13 @@ class Common
             $user = Auth::user();
             $user_id = $user->id;
         }
+<<<<<<< HEAD
         $notifications = Notification::where('parent_id',$user_id)
             //->orWhere('parent_id',$user_id)
+=======
+        $notifications = Notification::where('user_id',$user_id)
+            ->orWhere('parent_id',$user_id)
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             ->where('is_read',0)
             ->get();
         return $notifications;
@@ -385,6 +402,7 @@ class Common
         $next_day = date('Y-m-d', strtotime('+1 days'));
         $allow_date = date('Y-m-d', strtotime('+7 days'));
 
+<<<<<<< HEAD
         $users = User::where('status','active');
         if($user_id !=''){
             $users = $users->where('users.id', $user_id);
@@ -461,6 +479,56 @@ class Common
         }
 
 
+=======
+        $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title', 'tasks.rule',
+            'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
+        $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+        $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
+        $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
+        $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+        if($user_id !=''){
+            $tasks = $tasks->where('users.id', $user_id);
+        }
+        $tasks = $tasks->where('user_project_tasks.status', 'processing');
+        $tasks = $tasks->where('user_project_tasks.warning_sent',0);
+        $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
+            //$query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
+            $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
+            $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
+        });
+        $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
+        $tasks = $tasks->get();
+
+        //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
+
+        foreach($tasks as $task){
+            $email = [$task->email];
+
+            if($task->original_delivery_date<$today){ // Due date have been past
+                $email_response = self::sendPastDayWarningEmail($email,$task);
+
+                /*
+                 * Send past warning sms
+                 * */
+                $sms_response = self::sendPastDayWarningSms($task->phone,$task);
+
+            }
+            else{
+                $email_response = self::send7dayWarningEmail($email,$task);
+
+                /*
+                 * Send 7 day before warning sms
+                 * */
+                $sms_response = self::send7dayWarningSms($task->phone,$task);
+            }
+
+            if($email_response=='ok'){
+                $task->warning_sent = 1;
+                $task->save();
+            }
+        }
+
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
         return count($tasks).' Email sent.';
     }
 
@@ -495,6 +563,26 @@ class Common
         return $result;
     }
 
+<<<<<<< HEAD
+=======
+    public static function send7dayWarningSms($phone,$task){
+
+        $now = time(); // or your date as well
+        $original_delivery_date = strtotime($task->original_delivery_date);
+        $datediff = $now - $original_delivery_date;
+
+        $day_left = round($datediff / (60 * 60 * 24));
+
+        $message_body = 'Dear '.$task->username.',';
+        $message_body .= 'Your task '.$task->title.' of project '.$task->project_name.' has '.abs($day_left).' days left to complete. ';
+        $message_body .= 'Please complete the task in due date. ';
+        $message_body .= 'Niloy Garments';
+        $response = SMS::sendSingleSms($phone,$message_body);
+
+        return $response;
+    }
+
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     public static function sendPastDayWarningEmail($email,$task){
         /*
          * Send task past day complete warning email
@@ -521,6 +609,7 @@ class Common
         return $result;
     }
 
+<<<<<<< HEAD
     /*
      * SMS sending methods
      * */
@@ -546,6 +635,18 @@ class Common
     /*
      * Saving error log
      * */
+=======
+    public static function sendPastDayWarningSms($phone,$task){
+        $message_body = 'Dear '.$task->username.',';
+        $message_body .= 'The original due date of your task '.$task->title.' of project '.$task->project_name.' have been past. ';
+        $message_body .= 'Complete your task or contact with admin. ';
+        $message_body .= 'Niloy Garments';
+        $response = SMS::sendSingleSms($phone,$message_body);
+
+        return $response;
+    }
+
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     public static function saveErrorLog($method,$line_number,$file_path,$message,$object,$type,$screenshot,$page_url,$argument,$prefix,$domain){
 
         /*Save error to database*/

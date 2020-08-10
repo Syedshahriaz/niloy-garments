@@ -605,9 +605,13 @@
             data: {message_id:id,'_token':'<?php echo e(csrf_token()); ?>'},
             success: function(data) {
                 if (data.status == 200) {
+<<<<<<< HEAD
                     if(data.message.length>0){
                         populateMessage(data.message);
                     }
+=======
+                    populateMessage(data.message);
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 } else {
                     //Nothing to do now;
                 }
@@ -624,9 +628,24 @@
         var user_name = $('#user_name').val();
 
         var time = new Date();
+<<<<<<< HEAD
 
         var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
         var time_str = getFormattedDate(time,'l M d, Y h:i a');;
+=======
+        var d = time.getDate();
+        var m =  time.getMonth();
+        m += 1;  // JavaScript months are 0-11
+        var y = time.getFullYear();
+        var hours = time.getHours();
+        var minutes = time.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+
+        var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
         var profile_photo = "{{Session::get('user_photo')}}";
 
@@ -682,12 +701,20 @@
 
         $.each(message.message_details, function( index, msg ) {
 
+<<<<<<< HEAD
             var time_str = getFormattedDate(msg.created_at,'l M d, Y h:i a');
+=======
+            var time_str = getFormattedDate(msg.created_at);
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 
             if(msg.type=='received'){
                 var message_type = 'in';
                 var profile_photo = message.admin_photo;
+<<<<<<< HEAD
                 var user_name = 'Vujadetec';
+=======
+                var user_name = message.admin_name;
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             }
             else{
                 var message_type = 'out';
@@ -737,6 +764,7 @@
         });*/
     }
 
+<<<<<<< HEAD
     function getFormattedDate(original_date,format=''){
         const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
             "Sunday"
@@ -753,11 +781,22 @@
         var y = formattedDate.getFullYear();
         var hours = formattedDate.getHours();
         var minutes = formattedDate.getMinutes();
+=======
+    function getFormattedDate(date){
+        var time = new Date(date);
+        var d = time.getDate();
+        var m =  time.getMonth();
+        m += 1;  // JavaScript months are 0-11
+        var y = time.getFullYear();
+        var hours = time.getHours();
+        var minutes = time.getMinutes();
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
         var ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0'+minutes : minutes;
 
+<<<<<<< HEAD
         if(original_date=='' || original_date===null){
             return '';
         }
@@ -796,5 +835,10 @@
         else{
             return monthNames[m] + " " + d + ", " + y;
         }
+=======
+        var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
+
+        return time_str;
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     }
 </script>

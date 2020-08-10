@@ -60,11 +60,16 @@
                         </li>
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+<<<<<<< HEAD
                                 @foreach($all_notification as $notification)
+=======
+                                @foreach($unread_notification as $notification)
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                 <li>
                                     <a href="{{url('notifications').'?nid='.$notification->id}}">
                                         <span class="time">{{date('d/m/Y h:i a', strtotime($notification->created_at))}}</span>
                                         <span class="details">
+<<<<<<< HEAD
                                             <span class="label label-sm label-icon label-warning">
                                                 <i class="icon-bell"></i>
                                             </span>
@@ -74,6 +79,11 @@
                                                 {{substr($notification->message, 0, 44)}}
                                             @endif
                                         </span>
+=======
+                                                    <span class="label label-sm label-icon label-warning">
+                                                        <i class="icon-bell"></i>
+                                                    </span> {{substr($notification->message, 0, 44)}} </span>
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                     </a>
                                 </li>
                                 @endforeach

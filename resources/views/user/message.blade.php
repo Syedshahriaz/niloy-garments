@@ -75,8 +75,13 @@
                                                         @endif
                                                         <div class="message">
                                                             <span class="arrow"> </span>
+<<<<<<< HEAD
                                                             <a href="javascript:;" class="name"> Vujadetec </a>
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
+=======
+                                                            <a href="javascript:;" class="name"> {{$message->admin_name}} </a>
+                                                            <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <img style="width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
@@ -97,7 +102,11 @@
                                                         <div class="message">
                                                             <span class="arrow"> </span>
                                                             <a href="javascript:;" class="name"> {{$message->user_name}} </a>
+<<<<<<< HEAD
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
+=======
+                                                            <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>

@@ -15,6 +15,7 @@ use Spatie\PdfToImage\Pdf;
 
 class PaymentController extends Controller
 {
+<<<<<<< HEAD
     public function initiatePayment(Request $request){
         // Test update as payment getway not ready yet
         $user_id = $request->id;
@@ -328,11 +329,57 @@ class PaymentController extends Controller
             return redirect('promotion/'.$user_id);
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'PaymentController', 'cancel', $e->getLine(),
+=======
+    public function success(Request $request){
+        try {
+            $user_id = $request->id;
+            $user = User::where('id',$user_id)->first();
+
+            $payment = Payment::where('user_id', $user_id)->first();
+            if(empty($payment)){
+                $payment = NEW Payment();
+            }
+            $payment->user_id = $user_id;
+            $payment->amount = 50;
+            $payment->payment_status = 'Completed';
+            $payment->txn_id = 'Txn123456';
+            $payment->save();
+
+            /*
+             * Save offer details
+             * */
+            $shipment = NEW UserShipment();
+            $shipment->user_id = $user_id;
+            if($request->offer == 1){
+                $shipment->has_ofer_1 = 1;
+                $shipment->has_ofer_2 = 0;
+            }
+            else{
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 1;
+            }
+            /*if($request->gender == 'Female'){
+                $shipment->has_ofer_3 = 1;
+            }*/
+
+            $shipment->save();
+
+            /*
+             * Send registration confirmation message
+             * */
+            $message_body = 'Your payment to Niloy Garments have been done successfully.';
+            $response = SMS::sendSingleSms($user->phone,$message_body);
+
+            return redirect('select_shipment/'.$user_id);
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'PaymentController', 'success', $e->getLine(),
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+<<<<<<< HEAD
 
     private function createUserSession($user){
         Session::put('user_id', $user->id);
@@ -345,4 +392,6 @@ class PaymentController extends Controller
         Session::put('user_photo', $user->photo);
         Session::put('user_guide_seen', $user->user_guide_seen);
     }
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 }

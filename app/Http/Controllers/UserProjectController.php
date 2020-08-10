@@ -248,10 +248,13 @@ class UserProjectController extends Controller
         try{
             if (Auth::check()) {
                 $user_project_id = $request->id;
+<<<<<<< HEAD
                 $user = UserProject::select('users.id','users.username')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                     ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
@@ -278,10 +281,17 @@ class UserProjectController extends Controller
 
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.my_project_task',
+<<<<<<< HEAD
                         compact('user_project_id','user','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
                 return view('user.project.my_project_task', compact('user_project_id','user','project', 'tasks', 'shipment','task_titles'));
+=======
+                        compact('user_project_id','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('user.project.my_project_task', compact('user_project_id','project', 'tasks', 'shipment','task_titles'));
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             }
             else{
                 return redirect('login');
@@ -296,7 +306,11 @@ class UserProjectController extends Controller
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){
+<<<<<<< HEAD
         //try{
+=======
+        try{
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             $date_updated = 0;
             $date_increased = 0;
             $daysAdded = 0;
@@ -344,7 +358,10 @@ class UserProjectController extends Controller
              * */
             if($delivery_date_update_count < 2 ){
                 $next_task = $this->makeImmediateNextTaskProcessing($request->project_task_id,$task->user_project_id,$shipment->shipment_date);
+<<<<<<< HEAD
                 //return $next_task;
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 if(!empty($next_task)){
                     $result = $this->makePreviousNotInitiateTaskForeverFreeze($task->user_project_id);
                 }
@@ -362,13 +379,21 @@ class UserProjectController extends Controller
 
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
+<<<<<<< HEAD
         /*}
+=======
+        }
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+<<<<<<< HEAD
         }*/
+=======
+        }
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     }
 
     private function makePreviousTaskNotEditable($project_task_id,$user_project_id){
@@ -400,6 +425,7 @@ class UserProjectController extends Controller
             else{
                 $next_task->status = 'processing';
                 $next_task->save();
+<<<<<<< HEAD
 
                 $today = date('Y-m-d');
                 $next_day = date('Y-m-d', strtotime('+1 days'));
@@ -420,6 +446,8 @@ class UserProjectController extends Controller
                     $sms_response = Common::send7dayWarningSms($next_task->phone,$message_body);
                 }
 
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                 return 1;
             }
         }
@@ -428,12 +456,17 @@ class UserProjectController extends Controller
 
     private function getNextTask($project_task_id,$user_project_id){
         $next_task = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
+<<<<<<< HEAD
             ->select('user_project_tasks.*','projects.name as project_name','task_title.name as task_name', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','users.username','users.email','users.phone')
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
             ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
             ->join('projects','projects.id','=','user_projects.project_id')
             ->join('users','users.id','=','user_projects.user_id')
+=======
+            ->select('user_project_tasks.*', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule')
+            ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
             ->where('user_project_tasks.freeze_forever',0)

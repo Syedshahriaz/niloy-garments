@@ -41,7 +41,11 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
+<<<<<<< HEAD
                                 <span class="caption-subject font-dark bold uppercase">Tasks for {{$project->name}} of user {{$user->username}} </span>
+=======
+                                <span class="caption-subject font-dark bold uppercase">Tasks for {{$project->name}} </span>
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                 <span class="caption-helper"></span>
                             </div>
 

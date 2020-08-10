@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+<<<<<<< HEAD
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
+=======
+
+class User extends Model
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 {
     protected $table = 'users';
 

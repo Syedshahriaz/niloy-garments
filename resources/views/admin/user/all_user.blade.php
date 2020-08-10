@@ -134,9 +134,12 @@
                                             <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
                                             </a>
+<<<<<<< HEAD
                                             <a href="#" title="Unlock Shipping Date" onclick="unlock_shipping_date({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
                                             </a>
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
@@ -262,6 +265,7 @@
 
     <!-- END CONTENT -->
 
+<<<<<<< HEAD
     <!-- Modal -->
     <div class="modal fade" id="unlock_shipping_modal" tabindex="-1" role="unlock_shipping_modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -290,6 +294,8 @@
 
     <!-- END CONTENT -->
 
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
 @endsection
 
 @section('js')
@@ -595,6 +601,7 @@
             }
         });
 
+<<<<<<< HEAD
         function unlock_shipping_date(user_id){
             $('#unlock_user_id').val(user_id);
             $("#unlock_shipping_modal").modal('show');
@@ -643,6 +650,8 @@
             }
         });
 
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     </script>
 @endsection
 

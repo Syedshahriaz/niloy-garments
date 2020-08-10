@@ -202,7 +202,10 @@
     }
 
     function library_re_initialization(item_name){
+<<<<<<< HEAD
         adjust_page_height();
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
         /*
         * Get and show number of new message
         * */
@@ -229,6 +232,7 @@
         }
     }
 
+<<<<<<< HEAD
     function adjust_page_height(){
         var content = $('.page-content');
         var sidebar = $('.page-sidebar');
@@ -245,6 +249,8 @@
         content.attr('style', 'min-height:' + height + 'px');
     }
 
+=======
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
     /*
     * Reloading page on browser back and forth button click
     * */

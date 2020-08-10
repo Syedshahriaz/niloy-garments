@@ -19,6 +19,7 @@ class NotificationController extends Controller
             $user = Auth::user();
             if($request->nid !=''){
                 $notifications = Common::getNotificationDetails($request->nid);
+<<<<<<< HEAD
 
                 /*
                  * Update notification read status
@@ -37,6 +38,11 @@ class NotificationController extends Controller
                     ->where('user_id',$user->id)
                    ->orWhere('parent_id',$user->id)
                     ->update(['is_read' => 1]);
+=======
+            }
+            else{
+                $notifications = Common::getNotifications($user->id);
+>>>>>>> 876681c647cfc95683ddf2ed9cfe614d4d7d0bc8
             }
 
             if($request->ajax()) {
