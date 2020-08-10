@@ -54,8 +54,8 @@ class Common
             $user_id = $user->id;
         }
 
-        $notifications = Notification::where('user_id',$user_id)
-            ->orWhere('parent_id',$user_id)
+        $notifications = Notification::where('parent_id',$user_id)
+            //->orWhere('parent_id',$user_id)
             ->get();
         return $notifications;
     }
@@ -72,8 +72,8 @@ class Common
             $user = Auth::user();
             $user_id = $user->id;
         }
-        $notifications = Notification::where('user_id',$user_id)
-            ->orWhere('parent_id',$user_id)
+        $notifications = Notification::where('parent_id',$user_id)
+            //->orWhere('parent_id',$user_id)
             ->where('is_read',0)
             ->get();
         return $notifications;

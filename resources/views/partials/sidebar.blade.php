@@ -60,14 +60,20 @@
                         </li>
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                @foreach($unread_notification as $notification)
+                                @foreach($all_notification as $notification)
                                 <li>
                                     <a href="{{url('notifications').'?nid='.$notification->id}}">
                                         <span class="time">{{date('d/m/Y h:i a', strtotime($notification->created_at))}}</span>
                                         <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="icon-bell"></i>
-                                                    </span> {{substr($notification->message, 0, 44)}} </span>
+                                            <span class="label label-sm label-icon label-warning">
+                                                <i class="icon-bell"></i>
+                                            </span>
+                                            @if($notification->is_read==0)
+                                                <b>{{substr($notification->message, 0, 44)}}</b>
+                                            @else
+                                                {{substr($notification->message, 0, 44)}}
+                                            @endif
+                                        </span>
                                     </a>
                                 </li>
                                 @endforeach

@@ -19,9 +19,24 @@ class NotificationController extends Controller
             $user = Auth::user();
             if($request->nid !=''){
                 $notifications = Common::getNotificationDetails($request->nid);
+
+                /*
+                 * Update notification read status
+                 * */
+                $affected = DB::table('notifications')
+                        ->where('id', $request->nid)
+                        ->update(['is_read' => 1]);
             }
             else{
                 $notifications = Common::getNotifications($user->id);
+
+                /*
+                 * Update notification read status
+                 * */
+                $affected = DB::table('notifications')
+                    ->where('user_id',$user->id)
+                   ->orWhere('parent_id',$user->id)
+                    ->update(['is_read' => 1]);
             }
 
             if($request->ajax()) {

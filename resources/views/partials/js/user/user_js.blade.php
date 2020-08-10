@@ -624,16 +624,6 @@
         var user_name = $('#user_name').val();
 
         var time = new Date();
-        /*var d = time.getDate();
-        var m =  time.getMonth();
-        m += 1;  // JavaScript months are 0-11
-        var y = time.getFullYear();
-        var hours = time.getHours();
-        var minutes = time.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0'+minutes : minutes;
 
         var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);*/
         var time_str = getFormattedDate(time,'l M d, Y h:i a');;
