@@ -82,7 +82,7 @@
                                                         @endif
                                                         <div class="message">
                                                             <span class="arrow"> </span>
-                                                            <a href="javascript:;" class="name"> {{$last_message->admin_name}} </a>
+                                                            <a href="javascript:;" class="name"> Vujadetec </a>
                                                             <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
@@ -327,22 +327,65 @@
             }
         }
 
-        function getFormattedDate(date){
-            var time = new Date(date);
-            var d = time.getDate();
-            var m =  time.getMonth();
+        function getFormattedDate(original_date,format=''){
+            const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+                "Sunday"
+            ];
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+
+            var formattedDate = new Date(original_date);
+            var d = formattedDate.getDate();
+            var day = formattedDate.getDay();
+            var m =  formattedDate.getMonth();
             m += 1;  // JavaScript months are 0-11
-            var y = time.getFullYear();
-            var hours = time.getHours();
-            var minutes = time.getMinutes();
+            var y = formattedDate.getFullYear();
+            var hours = formattedDate.getHours();
+            var minutes = formattedDate.getMinutes();
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12; // the hour '0' should be '12'
             minutes = minutes < 10 ? '0'+minutes : minutes;
 
-            var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
-
-            return time_str;
+            if(original_date=='' || original_date===null){
+                return '';
+            }
+            if(format==''){
+                return (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
+            }
+            else if(format=='m/d/Y'){
+                if(d<10){
+                    d = '0'+d;
+                }
+                m = m+1;
+                if(m<10){
+                    m = '0'+m;
+                }
+                return m + "/" + d + "/" + y;
+            }
+            else if(format=='d/m/Y'){
+                if(d<10){
+                    d = '0'+d;
+                }
+                m = m+1;
+                if(m<10){
+                    m = '0'+m;
+                }
+                return d + "/" + m + "/" +  y;
+            }
+            else if(format=='M d'){
+                return monthNames[m] + " " + d;
+            }
+            else if(format=='M-d-y'){
+                return monthNames[m] + "-" + d + "-" + y;
+            }
+            else if(format=='l M d, Y h:i a'){
+                return (dayNames[day] + ' ' + monthNames[m] + ' ' + d +', ' + y + ' ' + hours + ':' + minutes +' '+ampm);
+            }
+            else{
+                return monthNames[m] + " " + d + ", " + y;
+            }
         }
 
         $(document).on('click','.message_head', function(){
@@ -396,7 +439,7 @@
             }
             tpl += '<div class="message">';
             tpl += '<span class="arrow"></span>';
-            tpl += '<a href="#" class="name">{{Session::get('username')}}</a>&nbsp;';
+            tpl += '<a href="#" class="name">Vujadetec</a>&nbsp;';
             tpl += '<span class="datetime">at ' + time_str + '</span>';
             tpl += '<span class="body">';
             if(photo_path !=''){
@@ -438,7 +481,7 @@
 
             $.each(message.message_details, function( index, msg ) {
 
-                var time_str = getFormattedDate(msg.created_at);
+                var time_str = getFormattedDate(msg.created_at,'l M d, Y h:i a');
 
                 if(msg.type=='sent'){
                     var message_type = 'in';
@@ -448,7 +491,7 @@
                 else{
                     var message_type = 'out';
                     var profile_photo = message.admin_photo;
-                    var user_name = message.admin_name;
+                    var user_name = 'Vujadetec';
                 }
 
                 var photo_path = msg.file_path;

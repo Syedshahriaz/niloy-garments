@@ -146,16 +146,14 @@
                                                 </div>
                                             </div>
 
-                                            @if($user->shipment_date_update_count==0)
-                                                <div class="col-md-6" id="shipping_date_area">
-                                                    <div class="form-group">
-                                                        <label for=""><b>Shipping Date</b></label>
-                                                        <input class="form-control date-picker" size="16" type="text" name="" id="ship_date" value="" />
-                                                        <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
-                                                        <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
-                                                    </div>
+                                            <div class="col-md-6" id="shipping_date_area">
+                                                <div class="form-group">
+                                                    <label for=""><b>Shipping Date</b></label>
+                                                    <input class="form-control date-picker" size="16" type="text" name="" id="ship_date" @if($user->shipment_date_update_count!=0) value="{{date('l d, M, Y', strtotime($user->shipment_date))}}" disabled @endif />
+                                                    <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
+                                                    <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
                                                 </div>
-                                            @endif
+                                            </div>
                                         </div>
 
                                         <div class="form-group text-right">
