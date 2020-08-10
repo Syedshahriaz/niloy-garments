@@ -134,6 +134,9 @@
                                             <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
                                             </a>
+                                            <a href="#" title="Unlock Shipping Date" onclick="unlock_shipping_date({{$user->id}})">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
+                                            </a>
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
@@ -249,6 +252,34 @@
                 <div class="modal-footer">
                     <div class="text-center">
                         <button type="submit" class="btn theme-btn" id="update_offer">Update</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- END CONTENT -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="unlock_shipping_modal" tabindex="-1" role="unlock_shipping_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock Shipping Date</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="text-align:center;">
+                        <input type="hidden" name="user_id" id="unlock_user_id" value="">
+                        <h4>Are you sure you want to unlock this user's shipping date update?</h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="btn theme-btn" id="unlock_shipping">Yes</button>
+                        <button type="button" class="btn" data-dismiss="modal">No</button>
                     </div>
                 </div>
             </div>
@@ -561,6 +592,54 @@
                 $("#offer_success_message").hide();
                 $("#offer_error_message").show();
                 $("#offer_error_message").html(validate);
+            }
+        });
+
+        function unlock_shipping_date(user_id){
+            $('#unlock_user_id').val(user_id);
+            $("#unlock_shipping_modal").modal('show');
+        }
+
+        $(document).on("click", "#unlock_shipping", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending email.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var user_id = $('#unlock_user_id').val();
+
+            var validate = "";
+
+            if (validate == "") {
+                var url = "{{ url('admin/unlock_shipping_date') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {user_id:user_id,'_token':'{{ csrf_token() }}'},
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#unlock_shipping_modal").modal('hide');
+                            //show_success_message(data.reason);
+                        } else {
+                            show_error_message('Something went wrong. TRy again later');
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        show_error_message('Something went wrong. TRy again later');
+                    }
+                });
+            } else {
+                HoldOn.close();
+                show_error_message('Something went wrong. TRy again later');
             }
         });
 
