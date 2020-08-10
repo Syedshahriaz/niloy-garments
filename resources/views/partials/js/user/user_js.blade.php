@@ -625,7 +625,7 @@
 
         var time = new Date();
 
-        var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);*/
+        var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
         var time_str = getFormattedDate(time,'l M d, Y h:i a');;
 
         var profile_photo = "{{Session::get('user_photo')}}";

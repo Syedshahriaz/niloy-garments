@@ -91,7 +91,7 @@ class UserController extends Controller
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
             $emailData['verification_link'] = $verification_link;
-            $emailData['subject'] = 'Niloy Garments- Registration confirmation';
+            $emailData['subject'] = Common::SITE_TITLE.'- Registration confirmation';
 
             $emailData['bodyMessage'] = '';
 
@@ -494,6 +494,27 @@ class UserController extends Controller
             $user->save();
 
             /*
+             * Send confirmation email
+             */
+            $email_to = [Session::get('user_email')];
+            $email_cc = [];
+            $email_bcc = [];
+
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['user'] = $user;
+            $emailData['subject'] = Common::SITE_TITLE.'- New User creation confirmation';
+
+            $emailData['bodyMessage'] = '';
+
+            $view = 'emails.new_user_creation_confirmation_email';
+
+            $result = SendMails::sendMail($emailData, $view);
+
+            /*
              * Send registration confirmation message
              * */
 
@@ -567,7 +588,7 @@ class UserController extends Controller
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
             $emailData['otp'] = $otp;
-            $emailData['subject'] = 'Niloy Garments- User separation request';
+            $emailData['subject'] = Common::SITE_TITLE.'- User separation request';
 
             $emailData['bodyMessage'] = '';
 

@@ -21,7 +21,7 @@ use DB;
  */
 class Common
 {
-    const SITE_TITLE = 'Niloy Garments';
+    const SITE_TITLE = 'Vujadetect';
     const DOMAIN_NAME = 'tna.ownenterprise.com';
     const SITE_URL = 'http://tna.ownenterprise.com';
     const FROM_EMAIL = 'mail2technerd@gmail.com';
@@ -451,11 +451,11 @@ class Common
             }
 
             if($past_message_body !=''){
-                $past_message_body = $message_initiate.', '.$past_message_body.'Please visit www.vujadetec.com to get more information about our product & services';
+                $past_message_body = $message_initiate.', '.$past_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $sms_response = self::sendPastDayWarningSms($user->phone,$past_message_body);
             }
             if($warning_message_body !=''){
-                $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services';
+                $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $sms_response = self::sendPastDayWarningSms($user->phone,$warning_message_body);
             }
         }

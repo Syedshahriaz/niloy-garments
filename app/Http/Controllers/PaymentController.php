@@ -277,7 +277,29 @@ class PaymentController extends Controller
         $shipment->save();
 
         /*
-         * Send registration confirmation message
+         * Send payment confirmation email
+         * */
+        $email_to = [$user->email];
+        $email_cc = [];
+        $email_bcc = [];
+
+        $emailData['from_email'] = Common::FROM_EMAIL;
+        $emailData['from_name'] = Common::FROM_NAME;
+        $emailData['email'] = $email_to;
+        $emailData['email_cc'] = $email_cc;
+        $emailData['email_bcc'] = $email_bcc;
+        $emailData['user'] = $user;
+        $emailData['amount'] = 50;
+        $emailData['subject'] = Common::SITE_TITLE.'- Payment confirmation';
+
+        $emailData['bodyMessage'] = '';
+
+        $view = 'emails.payment_confirmation_email';
+
+        $result = SendMails::sendMail($emailData, $view);
+
+        /*
+         * Send payment confirmation message
          * */
         $message_body = 'Your payment has been done successfully. ';
         $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
