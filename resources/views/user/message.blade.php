@@ -160,7 +160,7 @@
             /*
             * Get and show number of new message
             * */
-            getAndShowUnreadMessageCount();
+            //getAndShowUnreadMessageCount();
 
             setInterval(function(){
                 var id = $('#message_id').val();

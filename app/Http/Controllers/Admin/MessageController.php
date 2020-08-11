@@ -139,6 +139,13 @@ class MessageController extends Controller
                 ->where('messages.id',$request->message_id)
                 ->first();
 
+            $message_heads = Message::select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+                ->join('users as user','user.id','=','messages.user_id')
+                ->join('users as admin','admin.id','=','messages.admin_id')
+                //->where('user_id',$user->id)
+                ->orderBy('messages.updated_at','DESC')
+                ->get();
+
             /*
              * mark message as read
              * */
@@ -146,7 +153,14 @@ class MessageController extends Controller
                 ->where('type','sent')
                 ->update(['is_read' => 1]);
 
-            return ['status'=>200, 'reason'=>'','message'=>$message];
+            /*
+             * Mark new message as 0
+             * */
+            $msg = Message::where('id',$message->id)->first();
+            $msg->has_new_message = 0;
+            $msg->save();
+
+            return ['status'=>200, 'reason'=>'','message'=>$message, 'message_heads'=>$message_heads];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'getMessageDetails', $e->getLine(),
             //$e->getFile(), '', '', '', '');

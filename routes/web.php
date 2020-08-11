@@ -49,7 +49,7 @@ Route::post('multi_tinent', 'UserController@multiTinent');
 
 Route::get('initiate_payment/{id}', 'PaymentController@initiatePayment');
 Route::post('payment_success', 'PaymentController@success');
-Route::post('payment_failed', 'PaymentController@failed');
+Route::post('payment_fail', 'PaymentController@failed');
 Route::post('payment_cancel', 'PaymentController@cancel');
 
 Route::get('/', 'HomeController@index');

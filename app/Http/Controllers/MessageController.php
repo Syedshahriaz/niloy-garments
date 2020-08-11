@@ -122,6 +122,9 @@ class MessageController extends Controller
     public function getMessageDetails(Request $request)
     {
         try{
+            $user = Auth::user();
+            $user_id = $user->id;
+
             $message = Message::with('message_details')
                 ->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
                 ->join('users as user','user.id','=','messages.user_id')
@@ -129,14 +132,23 @@ class MessageController extends Controller
                 ->where('messages.id',$request->message_id)
                 ->first();
 
+            $unread_messages = MessageDetails::select('message_details.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
+                ->join('messages','messages.id','=','message_details.message_id')
+                ->join('users as user','user.id','=','messages.user_id')
+                ->join('users as admin','admin.id','=','messages.admin_id')
+                ->where('messages.user_id',$user_id)
+                ->where('type','received')
+                ->where('is_read',0)
+                ->get();
+
             /*
              * mark message as read
              * */
-            /*MessageDetails::where('message_id',$message->id)
+            MessageDetails::where('message_id',$message->id)
                 ->where('type','received')
-                ->update(['is_read' => 1]);*/
+                ->update(['is_read' => 1]);
 
-            return ['status'=>200, 'reason'=>'','message'=>$message];
+            return ['status'=>200, 'reason'=>'','message'=>$message,'unread_messages'=>$unread_messages];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'getMessageDetails', $e->getLine(),
             //$e->getFile(), '', '', '', '');

@@ -61,6 +61,9 @@
                                                     <img class="contact-pic" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}" />
                                                 @endif
                                                 <span class="contact-name">{{$message->user_name}}</span>
+                                                @if($message->has_new_message==1)
+                                                        <img style="width:15px;float: right;" class="action-icon" src="{{asset('assets/global/img/icons/new_message.png')}}" alt="New Message">
+                                                @endif
                                             </a>
                                         </li>
                                         @endforeach
@@ -163,7 +166,6 @@
 @section('js')
     <script>
         jQuery(document).ready(function() {
-
             setInterval(function(){
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
@@ -305,6 +307,11 @@
                     success: function(data) {
                         if (data.status == 200) {
                             appendMessage(message,data.photo_path);
+
+                            $("#image_upload_input").val('');
+                            $("#message_input").val('');
+                            $('#uploaded_img').removeClass('visible');
+                            $('#message_input').removeClass('img-added');
                         } else {
                             $("#success_message").hide();
                             $("#error_message").show();
@@ -406,6 +413,7 @@
                 success: function(data) {
                     if (data.status == 200) {
                         populateMessage(data.message);
+                        populateMessageHead(data.message_heads);
                     } else {
                         //Nothing to do now;
                     }
@@ -420,9 +428,6 @@
             var cont = $('#chats');
             var list = $('.chats', cont);
             var user_name = $('#user_name').val();
-
-            $('#uploaded_img').removeClass('visible');
-            $('#message_input').removeClass('img-added');
 
             var time = new Date();
             var time_str = getFormattedDate(time);
@@ -468,6 +473,34 @@
             cont.find('.scroller').slimScroll({
                 scrollTo: getLastPostPos()
             });
+        }
+
+        function populateMessageHead(message_heads){
+            var active_message = $('#message_id').val();
+            $message_heads = '';
+            $.each(message_heads, function( index, msg ) {
+                var active_class='';
+                if(msg.user_photo !=null){
+                   var photo_url = "{{url('/')}}/"+msg.user_photo;
+                }
+                else{
+                   var photo_url = "{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}";
+                }
+                if(msg.id==active_message){
+                   active_class='active';
+                }
+
+                $message_heads +='<li class="message_head '+active_class+' " data-id="'+msg.id+'">';
+                $message_heads +='<a href="javascript:;">';
+                $message_heads +='<img class="contact-pic" alt="" src="'+photo_url+'">'
+                $message_heads +='<span class="contact-name">'+msg.user_name+'</span>';
+                if(msg.has_new_message==1){
+                    $message_heads += '<img style="width:15px;float: right;" class="action-icon" src="{{asset('assets/global/img/icons/new_message.png')}}" alt="New Message">';
+                }
+                $message_heads +='</a>';
+                $message_heads +='</li>';
+            });
+            $('.inbox-contacts').html($message_heads);
         }
 
         function populateMessage(message) {

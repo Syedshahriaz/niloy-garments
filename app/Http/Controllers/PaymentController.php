@@ -17,9 +17,9 @@ class PaymentController extends Controller
 {
     public function initiatePayment(Request $request){
         // Test update as payment getway not ready yet
-        $user_id = $request->id;
+        /*$user_id = $request->id;
         $result = $this->updatePaymentInformationTest($request);
-        return redirect('select_shipment/'.$user_id);
+        return redirect('select_shipment/'.$user_id);*/
         // End of test update
 
         $user_id = $request->id;
@@ -27,13 +27,15 @@ class PaymentController extends Controller
 
         $user = User::where('id',$user_id)->first();
 
-        if(COMMON::SECUREPAY_MODE=='sandbox'){
-            $url = COMMON::SECUREPAY_SANDBOX_URL;
-            $store_id = Common::SECUREPAY_SANDBOX_STORE_ID;
+        if(COMMON::EASYPAY_MODE=='sandbox'){
+            $url = COMMON::EASYPAY_SANDBOX_URL;
+            $store_id = Common::EASYPAY_SANDBOX_STORE_ID;
+            $signature_key = Common::EASYPAY_SANDBOX_SIGNATURE_KEY;
         }
         else{
-            $url = COMMON::SECUREPAY_LIVE_URL;
-            $store_id = Common::SECUREPAY_LIVE_STORE_ID;
+            $url = COMMON::EASYPAY_LIVE_URL;
+            $store_id = Common::EASYPAY_LIVE_STORE_ID;
+            $signature_key = Common::EASYPAY_LIVE_SIGNATURE_KEY;
         }
         $fields = array(
             'store_id' => $store_id,
@@ -66,13 +68,15 @@ class PaymentController extends Controller
             'opt_b' => $request->offer,
             'opt_c' => '',
             'opt_d' => '',
-            'signature_key' => COMMON::SECUREPAY_SIGNATURE_KEY);
+            'signature_key' => $signature_key,
+        );
 
         $fields_string = '';
         foreach($fields as $key=>$value) {
             $fields_string .= $key.'='.$value.'&';
         }
         $fields_string = rtrim($fields_string, '&');
+        //$fields_string = 'store_id=epw&amount=50&payment_type=VISA&currency=BDT&tran_id=TRN_5f3253db34481&cus_name=mmm&cus_email=muhin.diu092@gmail.com&cus_add1=&cus_add2=&cus_city=&cus_state=&cus_postcode=&cus_country=&cus_phone=45745757&cus_fax=N/A&ship_name=&ship_add1=&ship_add2=&ship_city=&ship_state=&ship_postcode=&ship_country=&desc=Offer Payment&success_url=http://127.0.0.1:8000/payment_success&fail_url=http://127.0.0.1:8000/payment_fail&cancel_url=http://127.0.0.1:8000/payment_cancel&opt_a=17&opt_b=1&opt_c=&opt_d=&signature_key=dc0c2802bf04d2ab3336ec21491146a3';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -88,33 +92,27 @@ class PaymentController extends Controller
         if ($response !='"Invalid Store ID"') {
             $url_forward = str_replace('"', '', stripslashes($response));
             curl_close($ch);
-            echo $url_forward; exit();
-
-            # THERE ARE MANY WAYS TO REDIRECT - Javascript, Meta Tag or Php Header Redirect or Other
-            # echo "<script>window.location.href = '". $sslcz['GatewayPageURL'] ."';</script>";
             # echo "<meta http-equiv='refresh' content='0;url=".$url_forward."'>";
             header("Location: ". $url_forward);
             exit;
 
         } else {
             echo "API Error #:" . $response;
-            //echo "<br> My request url: ".$url;
-            //echo "<br> My request parameters";
-            //echo "<pre>"; print_r($fields); echo "</pre>";
         }
     }
 
     public function success(Request $request){
         try {
-
-            $user_id = $request->value_a;
-            $pay_status = $request->pay_status;
+            $data = $request->all();
+            //echo "<pre>"; print_r($data); echo "</pre>"; exit();
+            $user_id = $data['opt_a'];
+            $pay_status = $data['pay_status'];
 
             /*
              * Update user payment payment
              * */
             if($pay_status=='Successful'){
-                $status = $this->updatePaymentInformation($request);
+                $status = $this->updatePaymentInformation($data);
                 if($status=='INVALID_TRANSACTION'){
                     return redirect('promotion/'.$user_id);
                 }
@@ -123,7 +121,7 @@ class PaymentController extends Controller
                 return redirect('promotion/'.$user_id);
             }
 
-            /*$user = User::find($user_id);
+            $user = User::find($user_id);
             if($user->parent_id==0){
                 Auth::login($user);
             }
@@ -131,7 +129,7 @@ class PaymentController extends Controller
                 $user = User::find($user->parent_id);
                 Auth::login($user);
             }
-            $this->createUserSession($user);*/
+            $this->createUserSession($user);
 
             return redirect('select_shipment/'.$user_id);
         } catch (\Exception $e) {
@@ -189,8 +187,7 @@ class PaymentController extends Controller
 
     private function updatePaymentInformation($response){
         # TO CONVERT AS OBJECT
-        $result = json_decode($response);
-        $user_id = $result->value_a;
+        $user_id = $response['opt_a'];
 
         $user = User::where('id',$user_id)->first();
         $user->status = 'active';
@@ -201,12 +198,12 @@ class PaymentController extends Controller
             $payment = NEW Payment();
         }
         $payment->user_id = $user_id;
-        $payment->amount = $result->amount;
-        $payment->store_amount = $result->store_amount;
+        $payment->amount = $response['other_currency'];
+        $payment->store_amount = $response['store_amount'];
         $payment->payment_status = 'Completed';
-        $payment->txn_id = $result->epw_txnid;
+        $payment->txn_id = $response['epw_txnid'];
         $payment->validation_status = 'VALID';
-        $payment->response = $response;
+        $payment->response = json_encode($response);
         $payment->updated_at = date('Y-m-d h:i:s');
         $payment->save();
 
@@ -215,7 +212,7 @@ class PaymentController extends Controller
          * */
         $shipment = NEW UserShipment();
         $shipment->user_id = $user_id;
-        $offer = $result->value_b;
+        $offer = $response['opt_b'];
         if($offer == 1){
             $shipment->has_ofer_1 = 1;
             $shipment->has_ofer_2 = 0;
@@ -310,7 +307,7 @@ class PaymentController extends Controller
 
     public function failed(Request $request){
         try {
-            $user_id = $request->value_a;
+            $user_id = $request->opt_a;
 
             return redirect('promotion/'.$user_id);
         } catch (\Exception $e) {
@@ -323,7 +320,7 @@ class PaymentController extends Controller
 
     public function cancel(Request $request){
         try {
-            $user_id = $request->value_a;
+            $user_id = $request->opt_a;
 
             return redirect('promotion/'.$user_id);
         } catch (\Exception $e) {

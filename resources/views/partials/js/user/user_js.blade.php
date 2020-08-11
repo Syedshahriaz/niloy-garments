@@ -572,6 +572,8 @@
                         $("#message_id").val(data.message_id);
                         appendMessage(message,data.photo_path);
 
+                        $("#image_upload_input").val('');
+                        $("#message_input").val('');
                         $('#uploaded_img').removeClass('visible');
                         $('#message_input').removeClass('img-added');
                     } else {
@@ -605,8 +607,21 @@
             data: {message_id:id,'_token':'<?php echo e(csrf_token()); ?>'},
             success: function(data) {
                 if (data.status == 200) {
-                    if(data.message.length>0){
+                    if(!jQuery.isEmptyObject(data.message)){
                         populateMessage(data.message);
+                    }
+
+                    /*
+                    * Showing new message count
+                    * */
+                    var message_count = data.unread_messages.length;
+                    console.log(message_count);
+                    if(message_count>0){
+                        $('.new_message_count').removeClass('hidden');
+                        $('.new_message_count').text(data.unread_messages.length);
+                    }
+                    else{
+                        $('.new_message_count').addClass('hidden');
                     }
                 } else {
                     //Nothing to do now;
@@ -625,7 +640,6 @@
 
         var time = new Date();
 
-        var time_str = (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
         var time_str = getFormattedDate(time,'l M d, Y h:i a');;
 
         var profile_photo = "{{Session::get('user_photo')}}";

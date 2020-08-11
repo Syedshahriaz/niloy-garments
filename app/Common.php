@@ -23,16 +23,18 @@ class Common
 {
     const SITE_TITLE = 'Vujadetect';
     const DOMAIN_NAME = 'tna.ownenterprise.com';
-    const SITE_URL = 'http://tna.ownenterprise.com';
+    //const SITE_URL = 'http://tna.ownenterprise.com';
+    const SITE_URL = 'http://127.0.0.1:8000';
     const FROM_EMAIL = 'mail2technerd@gmail.com';
     const FROM_NAME = 'Vujadetect';
 
-    const SECUREPAY_MODE = 'sandbox';
-    const SECUREPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
-    const SECUREPAY_LIVE_URL = 'https://securepay.easypayway.com/payment/request.php';
-    const SECUREPAY_SANDBOX_STORE_ID = 'vujadetec';
-    const SECUREPAY_LIVE_STORE_ID = 'vujadetec';
-    const SECUREPAY_SIGNATURE_KEY = '8c6404963b81604381d5070e92fc4fcb';
+    const EASYPAY_MODE = 'sandbox';
+    const EASYPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
+    const EASYPAY_SANDBOX_STORE_ID = 'epw';
+    const EASYPAY_SANDBOX_SIGNATURE_KEY = 'dc0c2802bf04d2ab3336ec21491146a3';
+    const EASYPAY_LIVE_URL = 'https://securepay.easypayway.com/payment/request.php';
+    const EASYPAY_LIVE_STORE_ID = 'vujadetec';
+    const EASYPAY_LIVE_SIGNATURE_KEY = '8c6404963b81604381d5070e92fc4fcb';
     const PAYMENT_SUCCESS_URL = Common::SITE_URL.'/payment_success';
     const PAYMENT_FAILED_URL = Common::SITE_URL.'/payment_fail';
     const PAYMENT_CANCEL_URL = Common::SITE_URL.'/payment_cancel';

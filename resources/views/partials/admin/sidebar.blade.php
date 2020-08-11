@@ -43,7 +43,7 @@
                 <!-- BEGIN INBOX DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                    <a href="javascript:;" class="dropdown-toggle">
+                    <a href="{{url('admin/message')}}" class="dropdown-toggle">
                         <i class="icon-envelope-open"></i>
                         <span class="badge badge-default new_message_count hidden"> 0 </span>
                     </a>

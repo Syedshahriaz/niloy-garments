@@ -97,7 +97,11 @@
 <!-- END FOOTER scripts-->
 <script>
     $(document).ready(function(){
-        getAndShowUnreadMessageCount();
+        setInterval(function(){
+            var id = $('#message_id').val();
+            getAndPopulateSelectedMessage(id);
+            //getAndShowUnreadMessageCount();
+        }, 2000);
 
         showUserGuide();
 
@@ -206,7 +210,12 @@
         /*
         * Get and show number of new message
         * */
-        getAndShowUnreadMessageCount();
+        //getAndShowUnreadMessageCount();
+        /*setInterval(function(){
+            var id = $('#message_id').val();
+            getAndPopulateSelectedMessage(id);
+            //getAndShowUnreadMessageCount();
+        }, 2000);*/
 
         re_initiate_date_picker();
         re_initiate_teliphone_plugin();
@@ -222,10 +231,10 @@
             //
         }
         if(item_name=='message'){
-            setInterval(function(){
+            /*setInterval(function(){
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
-            }, 2000);
+            }, 2000);*/
         }
     }
 

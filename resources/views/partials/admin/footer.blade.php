@@ -60,7 +60,12 @@
 <!-- END FOOTER scripts-->
 <script>
     $(document).ready(function(){
-        getAndShowUnreadMessageCount();
+
+        setInterval(function(){
+            var id = $('#message_id').val();
+            getAndPopulateSelectedMessage(id);
+            getAndShowUnreadMessageCount();
+        }, 2000);
     })
 
     function show_success_message($message){
