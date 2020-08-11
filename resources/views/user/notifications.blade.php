@@ -47,15 +47,17 @@
                             <table id="user_manage_table" class="table table-striped table-bordered table-hover data-table focus-table">
                                 <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Description</th>
                                     <th>Date</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
-                                foreach($notifications as $notification){
+                                foreach($notifications as $key=>$notification){
                                 ?>
                                 <tr>
+                                    <td style="width:5%">{{$key+1}}</td>
                                     <td>{{$notification->message}}</td>
                                     <td>
                                         @if($notification->created_at !='')
