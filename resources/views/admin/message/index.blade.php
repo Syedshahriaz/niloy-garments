@@ -83,13 +83,13 @@
                                                         <div class="message">
                                                             <span class="arrow"> </span>
                                                             <a href="javascript:;" class="name"> Vujadetec </a>
-                                                            <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+                                                            <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
-                                                                    <img style="width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                 @endif
                                                                 @if($m_details->message !='')
-                                                                    {{$m_details->message}}
+                                                                    <p style="clear: both">{{$m_details->message}}</p>
                                                                 @endif
                                                             </span>
                                                         </div>
@@ -104,11 +104,11 @@
                                                         <div class="message">
                                                             <span class="arrow"> </span>
                                                             <a href="javascript:;" class="name"> {{$last_message->user_name}} </a>
-                                                            <span class="datetime"> at {{date('d/m/Y h:i a',strtotime($m_details->created_at))}}</span>
+                                                            <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>
-                                                                        <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                        <img style="float: right;float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                     </span>
                                                                 @endif
                                                                 @if($m_details->message !='')
@@ -328,8 +328,8 @@
         }
 
         function getFormattedDate(original_date,format=''){
-            const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
-                "Sunday"
+            const dayNames = ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+                "Saturday",
             ];
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -381,7 +381,7 @@
                 return monthNames[m] + "-" + d + "-" + y;
             }
             else if(format=='l M d, Y h:i a'){
-                return (dayNames[day] + ' ' + monthNames[m] + ' ' + d +', ' + y + ' ' + hours + ':' + minutes +' '+ampm);
+                return (dayNames[day] + ' ' + monthNames[(m-1)] + ' ' + d +', ' + y + ' ' + hours + ':' + minutes +' '+ampm);
             }
             else{
                 return monthNames[m] + " " + d + ", " + y;

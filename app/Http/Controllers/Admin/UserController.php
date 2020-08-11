@@ -28,8 +28,9 @@ class UserController extends Controller
             $offer = Offer::first();
 
             $users = User::with('projects.passed_task','projects.recent_due_task')
-                ->select('users.*', 'user_shipments.shipment_date')
+                ->select('users.*', 'user_shipments.shipment_date','messages.id as message_id')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->leftJoin('messages', 'messages.user_id', '=', 'users.id')
                 ->where('users.role',3)
                 ->where('users.status', '!=', 'deleted')
                 ->orderBy('users.id', 'ASC')

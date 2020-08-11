@@ -140,6 +140,9 @@
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
+                                            <a href="#" title="Send SMS" onclick="send_message({{$user->id}},{{$user->message_id}})">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/sms.png')}}" alt="Email">
+                                            </a>
                                             {{--<a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
                                             </a>--}}
@@ -184,7 +187,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Message</label>
-                                    <textarea class="form-control placeholder-no-fix" name="message" id="message"></textarea>
+                                    <textarea class="form-control placeholder-no-fix" name="message" id="email_message"></textarea>
                                 </div>
                             </div>
                         </form>
@@ -193,6 +196,50 @@
                 <div class="modal-footer">
                     <div class="text-center">
                         <button type="submit" class="btn theme-btn pull-right" id="send_email">Send Email</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="send_message_modal" tabindex="-1" role="send_sms_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send Message</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="message_form" method="post" action="" enctype="multipart/form-data">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="message_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="message_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="message_user_id" value="">
+                            <input type="hidden" name="message_id" id="message_id" value="">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Message</label>
+                                    <textarea class="form-control placeholder-no-fix" name="message" id="message"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">File</label>
+                                    <input class="form-control placeholder-no-fix" type="file" name="message_file" id="image_upload_input" value=""  autocomplete="off"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn pull-right" id="send_message">Send Message</button>
                     </div>
                 </div>
             </div>
@@ -327,7 +374,7 @@
         });
 
         $(document).ready(function() {
-            $('#message').summernote({
+            $('#email_message').summernote({
                 height: 130,
                 toolbar: [
                     // [groupName, [list of button]]
@@ -476,7 +523,7 @@
             HoldOn.open(options);
 
             var subject = $("#subject").val();
-            var message = $("#message").val();
+            var message = $("#email_message").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
             var validate = "";
@@ -526,6 +573,68 @@
                 $("#success_message").hide();
                 $("#error_message").show();
                 $("#error_message").html(validate);
+            }
+        });
+
+        function send_message(user_id,message_id){
+            $('#message_user_id').val(user_id);
+            $('#message_id').val(message_id);
+            $("#send_message_modal").modal('show');
+        }
+
+        $(document).on("click", "#send_message", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending email.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+            var user_id = $("#user_id").val();
+            var message = $("#message").val();
+            var message_file = $("#image_upload_input").val();
+
+            var validate = "";
+
+            if (message.trim() == "" && message_file=='') {
+                validate = validate + "You did not enter any message or file</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#message_form")[0]);
+                var url = "{{ url('admin/store_message') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            window.location.href="{{url('admin/message')}}";
+                        } else {
+                            $("#message_success_message").hide();
+                            $("#message_error_message").show();
+                            $("#message_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        $("#message_success_message").hide();
+                        $("#message_error_message").show();
+                        $("#message_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#message_success_message").hide();
+                $("#message_error_message").show();
+                $("#message_error_message").html(validate);
             }
         });
 
