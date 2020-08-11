@@ -590,6 +590,10 @@ div#user_horizontal_task_wrapper .col-sm-12 {
 .chat-form .input-cont .form-control{
     padding-right: 40px;
 }
+#char_body>div{
+    overflow: auto;
+    max-height: 300px;
+}
 #uploaded_img {
     max-height: 30px;
     max-width: 30px;

@@ -2,7 +2,27 @@
 @extends('layouts.master')
 @section('title', 'Message')
 @section('content')
+    <style>
+    /* width */
+    #char_body>div::-webkit-scrollbar {
+    width: 5px;
+    }
 
+    /* Track */
+    #char_body>div::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    }
+    
+    /* Handle */
+    #char_body>div::-webkit-scrollbar-thumb {
+    background: #888; 
+    }
+
+    /* Handle on hover */
+    #char_body>div::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+    }
+    </style>
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
@@ -62,7 +82,7 @@
                             </div>--}}
 
                             <div id="char_body">
-                                <div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
+                                <div>
                                     <ul class="chats">
                                         @if(!empty($message))
                                             @foreach($message->message_details as $m_details)
@@ -79,7 +99,7 @@
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
-                                                                    <img style="width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    <img style="max-width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                 @endif
                                                                 @if($m_details->message !='')
                                                                     {{$m_details->message}}
@@ -101,7 +121,7 @@
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>
-                                                                        <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                        <img style="float: right; max-width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                     </span>
                                                                 @endif
                                                                 @if($m_details->message !='')
@@ -165,22 +185,22 @@
             setInterval(function(){
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
-            }, 2000);
+            }, 1000);
 
-            var getLastPostPos = function() {
-                var height = 0;
-                cont.find("li.out, li.in").each(function() {
-                    height = height + $(this).outerHeight();
-                });
+            // var getLastPostPos = function() {
+            //     var height = 0;
+            //     cont.find("li.out, li.in").each(function() {
+            //         height = height + $(this).outerHeight();
+            //     });
 
-                return height;
-            }
+            //     return height;
+            // }
 
-            var cont = $('#chats');
+            // var cont = $('#chats');
 
-            cont.find('.scroller').slimScroll({
-                scrollTo: getLastPostPos()
-            });
+            // cont.find('.scroller').slimScroll({
+            //     scrollTo: getLastPostPos()
+            // });
 
             //image upload
             $(document).on('click','#upload_btn', function(e){
@@ -207,6 +227,29 @@
             }
         });
 
+        function scrollBottom(){
+            $('#char_body>div').stop().animate({
+                scrollTop: $('#char_body>div')[0].scrollHeight
+            },100);
+        }
+        $(document).ready(function(){
+            setTimeout(() => {
+                scrollBottom();
+            }, 2000);
+        })
+        $(document).on('click','#send_btn',function(){
+            if($('#uploaded_img').attr('src') == ''){
+                setTimeout(() => {
+                    scrollBottom();
+                }, 1500);
+            }
+            else{
+                setTimeout(() => {
+                    //alert();
+                    scrollBottom();
+                }, 5000);
+            }
+        })
     </script>
 @endsection
 
