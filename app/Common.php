@@ -25,7 +25,7 @@ class Common
     const DOMAIN_NAME = 'tna.ownenterprise.com';
     const SITE_URL = 'http://tna.ownenterprise.com';
     const FROM_EMAIL = 'mail2technerd@gmail.com';
-    const FROM_NAME = 'Niloy Garments';
+    const FROM_NAME = 'Vujadetect';
 
     const SECUREPAY_MODE = 'sandbox';
     const SECUREPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
@@ -485,7 +485,7 @@ class Common
         $emailData['email_bcc'] = $email_bcc;
         $emailData['task'] = $task;
         $emailData['day_left'] = abs($day_left);
-        $emailData['subject'] = 'Niloy Garments- Project task completion warning';
+        $emailData['subject'] = Common::SITE_TITLE.'- Project task completion warning';
 
         $emailData['bodyMessage'] = '';
 
@@ -511,7 +511,7 @@ class Common
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
         $emailData['task'] = $task;
-        $emailData['subject'] = 'Niloy Garments- Project task completion warning';
+        $emailData['subject'] = Common::SITE_TITLE.'- Project task completion warning';
 
         $emailData['bodyMessage'] = '';
 

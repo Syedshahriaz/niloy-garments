@@ -56,7 +56,7 @@ class PublicController extends Controller
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
             $emailData['reset_link'] = $reset_link;
-            $emailData['subject'] = 'Niloy Garments- Password reset request';
+            $emailData['subject'] = Common::SITE_TITLE.'- Password reset request';
 
             $emailData['bodyMessage'] = '';
 

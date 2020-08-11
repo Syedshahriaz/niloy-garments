@@ -207,7 +207,7 @@ class UserController extends Controller
             $emailData['email'] = $email_to;
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
-            $emailData['subject'] = 'Niloy Garments-'.$request->subject;
+            $emailData['subject'] = $request->subject;
 
             $emailData['bodyMessage'] = $request->message;;
 
