@@ -61,7 +61,7 @@
                                     <td>{{$notification->message}}</td>
                                     <td>
                                         @if($notification->created_at !='')
-                                            {{date('l d, M, Y', strtotime($user->created_at))}}
+                                            {{date('l d, M, Y', strtotime($notification->created_at))}}
                                         @endif
                                     </td>
                                 </tr>
