@@ -403,27 +403,6 @@
             getAndPopulateSelectedMessage(id);
         });
 
-        function getAndPopulateSelectedMessage(id){
-            var url = "{{ url('admin/get_message_details') }}";
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {message_id:id,'_token':'{{ csrf_token() }}'},
-                success: function(data) {
-                    if (data.status == 200) {
-                        populateMessage(data.message);
-                        populateMessageHead(data.message_heads);
-                    } else {
-                        //Nothing to do now;
-                    }
-                },
-                error: function(data) {
-                    //Nothing to do now;
-                }
-            });
-        }
-
         function appendMessage(message,photo_path) {
             var cont = $('#chats');
             var list = $('.chats', cont);
@@ -473,100 +452,6 @@
             cont.find('.scroller').slimScroll({
                 scrollTo: getLastPostPos()
             });
-        }
-
-        function populateMessageHead(message_heads){
-            var active_message = $('#message_id').val();
-            $message_heads = '';
-            $.each(message_heads, function( index, msg ) {
-                var active_class='';
-                if(msg.user_photo !=null){
-                   var photo_url = "{{url('/')}}/"+msg.user_photo;
-                }
-                else{
-                   var photo_url = "{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}";
-                }
-                if(msg.id==active_message){
-                   active_class='active';
-                }
-
-                $message_heads +='<li class="message_head '+active_class+' " data-id="'+msg.id+'">';
-                $message_heads +='<a href="javascript:;">';
-                $message_heads +='<img class="contact-pic" alt="" src="'+photo_url+'">'
-                $message_heads +='<span class="contact-name">'+msg.user_name+'</span>';
-                if(msg.has_new_message==1){
-                    $message_heads += '<img style="width:15px;float: right;" class="action-icon" src="{{asset('assets/global/img/icons/new_message.png')}}" alt="New Message">';
-                }
-                $message_heads +='</a>';
-                $message_heads +='</li>';
-            });
-            $('.inbox-contacts').html($message_heads);
-        }
-
-        function populateMessage(message) {
-            var cont = $('#chats');
-            var list = $('.chats', cont);
-
-            $('#user_id').val(message.user_id);
-            $('#message_id').val(message.id);
-
-            var tpl = '';
-
-            $.each(message.message_details, function( index, msg ) {
-
-                var time_str = getFormattedDate(msg.created_at,'l M d, Y h:i a');
-
-                if(msg.type=='sent'){
-                    var message_type = 'in';
-                    var profile_photo = message.user_photo;
-                    var user_name = message.user_name;
-                }
-                else{
-                    var message_type = 'out';
-                    var profile_photo = message.admin_photo;
-                    var user_name = 'Vujadetec';
-                }
-
-                var photo_path = msg.file_path;
-
-                tpl += '<li class="'+message_type+'">';
-                if (profile_photo != null) {
-                    var profile_photo_path = "{{url('/')}}/" + profile_photo;
-                    tpl += '<img class="avatar" alt="" src="'+profile_photo_path+'"/>';
-                } else {
-                    tpl += '<img class="avatar" alt="" src="{{url('/')}}/assets/layouts/layout/img/emptyuserphoto.png"/>';
-                }
-                tpl += '<div class="message">';
-                tpl += '<span class="arrow"></span>';
-                tpl += '<a href="#" class="name">'+user_name+'</a>&nbsp;';
-                tpl += '<span class="datetime">at ' + time_str + '</span>';
-                tpl += '<span class="body">';
-                if (photo_path != null) {
-                    var file_path = "{{url('/')}}/" + photo_path;
-                    tpl += '<img style="float: right;width: 330px;" class="body" src="' + file_path + '">';
-                }
-                if(msg.message !==null) {
-                    tpl += '<p style="clear: both">' + msg.message + '</p>';
-                }
-                tpl += '</span>';
-                tpl += '</div>';
-                tpl += '</li>';
-            });
-
-            var msg = list.html(tpl);
-
-            var getLastPostPos = function() {
-                var height = 0;
-                cont.find("li.out, li.in").each(function() {
-                    height = height + $(this).outerHeight();
-                });
-
-                return height;
-            }
-
-            /*cont.find('.scroller').slimScroll({
-                scrollTo: getLastPostPos()
-            });*/
         }
     </script>
 @endsection
