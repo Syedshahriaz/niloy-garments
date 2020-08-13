@@ -516,6 +516,7 @@
     });
 
     $(document).on('click','#send_btn', function(){
+        $('#send_btn').addClass("disable-click");
         submit_message();
     });
 
@@ -568,6 +569,7 @@
                 url: url,
                 data: formData,
                 success: function(data) {
+                    $('#send_btn').removeClass("disable-click");
                     if (data.status == 200) {
                         $("#message_id").val(data.message_id);
                         appendMessage(message,data.photo_path);
@@ -749,66 +751,5 @@
         /*cont.find('.scroller').slimScroll({
             scrollTo: getLastPostPos()
         });*/
-    }
-
-    function getFormattedDate(original_date,format=''){
-        const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
-            "Sunday"
-        ];
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
-
-        var formattedDate = new Date(original_date);
-        var d = formattedDate.getDate();
-        var day = formattedDate.getDay();
-        var m =  formattedDate.getMonth();
-        m += 1;  // JavaScript months are 0-11
-        var y = formattedDate.getFullYear();
-        var hours = formattedDate.getHours();
-        var minutes = formattedDate.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0'+minutes : minutes;
-
-        if(original_date=='' || original_date===null){
-            return '';
-        }
-        if(format==''){
-            return (d + '/' + m + '/' + y + ' ' + hours + ':' + minutes +' '+ampm);
-        }
-        else if(format=='m/d/Y'){
-            if(d<10){
-                d = '0'+d;
-            }
-            m = m+1;
-            if(m<10){
-                m = '0'+m;
-            }
-            return m + "/" + d + "/" + y;
-        }
-        else if(format=='d/m/Y'){
-            if(d<10){
-                d = '0'+d;
-            }
-            m = m+1;
-            if(m<10){
-                m = '0'+m;
-            }
-            return d + "/" + m + "/" +  y;
-        }
-        else if(format=='M d'){
-            return monthNames[m] + " " + d;
-        }
-        else if(format=='M-d-y'){
-            return monthNames[m] + "-" + d + "-" + y;
-        }
-        else if(format=='l M d, Y h:i a'){
-            return (dayNames[day] + ' ' + monthNames[m] + ' ' + d +', ' + y + ' ' + hours + ':' + minutes +' '+ampm);
-        }
-        else{
-            return monthNames[m] + " " + d + ", " + y;
-        }
     }
 </script>

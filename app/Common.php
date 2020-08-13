@@ -58,6 +58,7 @@ class Common
 
         $notifications = Notification::where('parent_id',$user_id)
             //->orWhere('parent_id',$user_id)
+                ->orderBy('id','DESC')
             ->get();
         return $notifications;
     }
@@ -65,6 +66,7 @@ class Common
     public static function getNotificationDetails($notification_id=''){
 
         $notifications = Notification::where('id',$notification_id)
+            ->orderBy('id','DESC')
             ->get();
         return $notifications;
     }
@@ -77,6 +79,7 @@ class Common
         $notifications = Notification::where('parent_id',$user_id)
             //->orWhere('parent_id',$user_id)
             ->where('is_read',0)
+            ->orderBy('id','DESC')
             ->get();
         return $notifications;
     }

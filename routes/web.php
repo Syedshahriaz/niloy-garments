@@ -87,6 +87,7 @@ Route::post('get_unread_message', 'MessageController@getUnreadMessage');
 Route::post('get_message_details', 'MessageController@getMessageDetails');
 
 Route::get('notifications', 'NotificationController@notifications');
+Route::post('get_notifications_ajax', 'NotificationController@getNotificationsAjax');
 
 /*Admin routes*/
 Route::get('admin', 'Admin\AdminController@index');

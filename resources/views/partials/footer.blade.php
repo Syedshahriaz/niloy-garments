@@ -94,7 +94,6 @@
 
 <!-- BEGIN FOOTER scripts-->
 @include('partials.scripts')
-<!-- END FOOTER scripts-->
 <script>
     $(document).ready(function(){
         setInterval(function(){
@@ -207,6 +206,7 @@
 
     function library_re_initialization(item_name){
         adjust_page_height();
+        show_notification();
         /*
         * Get and show number of new message
         * */
@@ -254,6 +254,57 @@
         content.attr('style', 'min-height:' + height + 'px');
     }
 
+    function show_notification(){
+        var url = "{{ url('get_notifications_ajax') }}";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {'_token':'{{ csrf_token() }}'},
+            success: function (data) {
+
+                if(data.status == 200){
+                    var notifications = data.notifications;
+                    var unread_notifications = data.unread_notifications.length;
+                    if(unread_notifications>0){
+                        $('.notification_count').removeClass('hidden');
+                        $('.notification_count').text(unread_notifications);
+                    }
+
+                    var notification_list = '';
+                    $.each(notifications, function( index, notification ) {
+                        var edit_url = "{{url('notifications')}}?nid="+notification.id;
+                        notification_list +='<li>';
+                        notification_list +='<a href="'+edit_url+'">';
+                        notification_list +='<span class="time">'+getFormattedDate(notification.created_at,"l M d, Y h:i a")+'</span>';
+                        notification_list +='<span class="details">';
+                        notification_list +='<span class="label label-sm label-icon label-warning">';
+                        notification_list +='<i class="icon-bell"></i>';
+                        notification_list +='</span>';
+                        if(notification.is_read==0) {
+                            notification_list += '<b>'+notification.message+'</b>';
+                        }
+                        else{
+                            notification_list +=notification.message;
+                        }
+                        notification_list +='</span>';
+                        notification_list +='</a>';
+                        notification_list +='</li>';
+                    });
+                    $('.notification_list').html(notification_list);
+                }
+                else{
+                    show_error_message(data.reason);
+                    setTimeout(function(){
+                        window.location.href="{{url('login')}}";
+                    },2000);
+                }
+            },
+            error: function (data) {
+                show_error_message(data);
+            }
+        });
+    }
+
     /*
     * Reloading page on browser back and forth button click
     * */
@@ -261,6 +312,7 @@
         window.location.reload();
     });
 </script>
+<!-- END FOOTER scripts-->
 @yield('js')
 
 @include('partials.js.user.common_js')

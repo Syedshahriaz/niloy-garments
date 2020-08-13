@@ -392,6 +392,7 @@
 
                             setTimeout(function(){
                                 $("#unlock_success_message").hide();
+                                locatn.reload();
                             },2000)
 
                         } else {

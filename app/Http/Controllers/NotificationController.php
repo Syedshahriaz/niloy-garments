@@ -51,4 +51,20 @@ class NotificationController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+
+    public function getNotificationsAjax(Request $request)
+    {
+        try{
+            $user = Auth::user();
+            $notifications = Common::getNotifications($user->id);
+            $unread_notifications = Common::getUnreadNotifications($user->id);
+
+            return ['status'=>200, 'notifications'=>$notifications, 'unread_notifications'=>$unread_notifications];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'NotificationController', 'getNotificationsAjax', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
 }

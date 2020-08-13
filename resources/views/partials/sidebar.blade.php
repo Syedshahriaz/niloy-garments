@@ -50,7 +50,7 @@
                     ?>
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <i class="icon-bell"></i>
-                        <span class="badge badge-default"> {{(count($unread_notification)>0 ? count($unread_notification) : '')}} </span>
+                        <span class="badge badge-default notification_count @if(count($unread_notification)==0) hidden @endif"> {{(count($unread_notification)>0 ? count($unread_notification) : '')}} </span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="external">
@@ -59,11 +59,11 @@
                             <a href="{{url('notifications')}}">view all</a>
                         </li>
                         <li>
-                            <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                            <ul class="dropdown-menu-list scroller notification_list" style="height: 250px;" data-handle-color="#637283">
                                 @foreach($all_notification as $notification)
                                 <li>
                                     <a href="{{url('notifications').'?nid='.$notification->id}}">
-                                        <span class="time">{{date('d/m/Y h:i a', strtotime($notification->created_at))}}</span>
+                                        <span class="time">{{date('l M d, Y h:i a', strtotime($notification->created_at))}}</span>
                                         <span class="details">
                                             <span class="label label-sm label-icon label-warning">
                                                 <i class="icon-bell"></i>
