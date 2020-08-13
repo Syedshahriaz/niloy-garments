@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OfferPrices;
 use App\Models\UserShipment;
 use App\SMS;
 use Illuminate\Http\Request;
@@ -23,9 +24,17 @@ class PaymentController extends Controller
         // End of test update
 
         $user_id = $request->id;
-        $tran_id = "TRN_".uniqid();
+        $tran_id = "TXN_".uniqid();
 
         $user = User::where('id',$user_id)->first();
+        $offer_price = OfferPrices::where('country_code',$user->country_code)->first();
+        $currency = $offer_price->currency;
+        if($request->offer==1){
+            $offer_amount = $offer_price->offer_1_price;
+        }
+        else{
+            $offer_amount = $offer_price->offer_2_price;
+        }
 
         if(COMMON::EASYPAY_MODE=='sandbox'){
             $url = COMMON::EASYPAY_SANDBOX_URL;
@@ -39,9 +48,9 @@ class PaymentController extends Controller
         }
         $fields = array(
             'store_id' => $store_id,
-            'amount' => 50,
+            'amount' => $offer_amount,
             'payment_type' => 'VISA',
-            'currency' => 'BDT',
+            'currency' => $currency,
             'tran_id' => $tran_id,
             'cus_name' => $user->username,
             'cus_email' => $user->email,
@@ -71,27 +80,33 @@ class PaymentController extends Controller
             'signature_key' => $signature_key,
         );
 
-        $fields_string = '';
+        /*$fields_string = '';
         foreach($fields as $key=>$value) {
             $fields_string .= $key.'='.$value.'&';
         }
-        $fields_string = rtrim($fields_string, '&');
-        //$fields_string = 'store_id=epw&amount=50&payment_type=VISA&currency=BDT&tran_id=TRN_5f3253db34481&cus_name=mmm&cus_email=muhin.diu092@gmail.com&cus_add1=&cus_add2=&cus_city=&cus_state=&cus_postcode=&cus_country=&cus_phone=45745757&cus_fax=N/A&ship_name=&ship_add1=&ship_add2=&ship_city=&ship_state=&ship_postcode=&ship_country=&desc=Offer Payment&success_url=http://127.0.0.1:8000/payment_success&fail_url=http://127.0.0.1:8000/payment_fail&cancel_url=http://127.0.0.1:8000/payment_cancel&opt_a=17&opt_b=1&opt_c=&opt_d=&signature_key=dc0c2802bf04d2ab3336ec21491146a3';
+        $fields_string = rtrim($fields_string, '&');*/
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $curl = curl_init();
 
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://sandbox.easypayway.com/payment/request.php",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $fields,
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
 
         //return $response;
         if ($response !='"Invalid Store ID"') {
             $url_forward = str_replace('"', '', stripslashes($response));
-            curl_close($ch);
             # echo "<meta http-equiv='refresh' content='0;url=".$url_forward."'>";
             header("Location: ". $url_forward);
             exit;

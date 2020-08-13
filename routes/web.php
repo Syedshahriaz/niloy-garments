@@ -48,9 +48,9 @@ Route::get('select_user', 'UserController@selectUser');
 Route::post('multi_tinent', 'UserController@multiTinent');
 
 Route::get('initiate_payment/{id}', 'PaymentController@initiatePayment');
-Route::post('payment_success', 'PaymentController@success');
-Route::post('payment_fail', 'PaymentController@failed');
-Route::post('payment_cancel', 'PaymentController@cancel');
+Route::any('payment_success', 'PaymentController@success');
+Route::any('payment_fail', 'PaymentController@failed');
+Route::any('payment_cancel', 'PaymentController@cancel');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
