@@ -104,6 +104,10 @@ Route::get('admin/promotion_settings', 'Admin\SettingController@promotionSetting
 Route::post('admin/update_offer', 'Admin\SettingController@updateOffer');
 Route::get('admin/common_settings', 'Admin\SettingController@commonSetting');
 Route::post('admin/update_common_settings', 'Admin\SettingController@updateCommonSetting');
+Route::get('admin/offer_price_setting', 'Admin\SettingController@offerPriceSetting');
+Route::post('admin/save_country_offer', 'Admin\SettingController@storeCountryOffer');
+Route::post('admin/get_country_offer', 'Admin\SettingController@getCountryOffer');
+Route::post('admin/update_country_offer', 'Admin\SettingController@updateCountryOffer');
 Route::get('admin/project_settings', 'Admin\ProjectController@index');
 Route::post('admin/get_project_ajax', 'Admin\ProjectController@getProjectAjax');
 Route::post('admin/update_project', 'Admin\ProjectController@updateProject');

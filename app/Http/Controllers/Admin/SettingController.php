@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\Offer;
+use App\Models\OfferPrices;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,82 @@ class SettingController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function offerPriceSetting(Request $request){
+        try{
+            $offer_prices = OfferPrices::orderBy('country_name','ASC')
+                ->get();
+            if($request->ajax()) {
+                $returnHTML = View::make('admin.settings.offer_prices',compact('offer_prices'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('admin.settings.offer_prices',compact('offer_prices'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'offerPriceSetting', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function storeCountryOffer(Request $request){
+        try{
+            $countryData = explode('#',$request->country);
+            $oldCountry = OfferPrices::where('country_code',$countryData[1])->first();
+            if(!empty($oldCountry)){
+                return ['status'=>401, 'reason'=>'This country already added'];
+            }
+
+            $offer_prices = NEW OfferPrices();
+            $offer_prices->country_name = $countryData[0];
+            $offer_prices->country_code = $countryData[1];
+            $offer_prices->currency = $request->currency;
+            $offer_prices->offer_1_price = $request->offer_1_price;
+            $offer_prices->offer_2_price = $request->offer_2_price;
+            $offer_prices->save();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'storeCountryOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getCountryOffer(Request $request){
+        try{
+            $offer_price = OfferPrices::where('id',$request->id)->first();
+
+            return ['status'=>200, 'offer_price'=>$offer_price];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getCountryOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateCountryOffer(Request $request){
+        try{
+            $offer_prices = OfferPrices::where('id',$request->country_id)->first();
+            $offer_prices->currency = $request->currency;
+            $offer_prices->offer_1_price = $request->offer_1_price;
+            $offer_prices->offer_2_price = $request->offer_2_price;
+            $offer_prices->save();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateCountryOffer', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
