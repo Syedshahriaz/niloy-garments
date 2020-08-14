@@ -143,44 +143,44 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item @if($page=='report_target' || $page=='report_location' || $page=='report_age' || $page=='report_gender' || $page=='report_profession' || $page=='report_merriege' || $page=='report_offer_purchased') active open @endif">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-settings"></i>
                     <span class="title">Report</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="nav-item start">
+                    <li class="nav-item start @if($page=='report_target') active @endif">
                         <a href="{{url('admin/report')}}" class="nav-link">
                             <span class="title">Target Basis Sell Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start">
+                    <li class="nav-item start @if($page=='report_location') active @endif">
                         <a href="{{url('admin/report')}}" class="nav-link">
                             <span class="title">By Location Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start">
+                    <li class="nav-item start @if($page=='report_age') active @endif">
                         <a href="{{url('admin/report')}}" class="nav-link">
                             <span class="title">By Age Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                    <li class="nav-item start @if($page=='report_gender') active @endif">
+                        <a href="{{url('admin/report_gender')}}" class="nav-link">
                             <span class="title">By Age Gender Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                    <li class="nav-item start @if($page=='report_profession') active @endif">
+                        <a href="{{url('admin/report_profession')}}" class="nav-link">
                             <span class="title">By profession Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start">
+                    <li class="nav-item start @if($page=='report_merriege') active @endif">
                         <a href="{{url('admin/report')}}" class="nav-link">
                             <span class="title">By Marriege Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start">
+                    <li class="nav-item start @if($page=='report_offer_purchased') active @endif">
                         <a href="{{url('admin/report')}}" class="nav-link">
                             <span class="title">By Offer Purchased Report</span>
                         </a>

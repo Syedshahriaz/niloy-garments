@@ -218,14 +218,15 @@
         }, 2000);*/
 
         re_initiate_date_picker();
-        re_initiate_teliphone_plugin();
+        re_init_phone_velidation();
         re_initialize_data_table(1);
+
         var telephone = $('#existing_phone').val();
         if(telephone!==undefined){
-            set_teliphone(telephone);
+            //set_teliphone(telephone);
         }
         if(item_name=='add_user'){
-            $("#telephone").intlTelInput("setNumber", "");
+            //$("#telephone").intlTelInput("setNumber", "");
         }
         if(item_name=='user_list'){
             //

@@ -182,7 +182,7 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
+            //$(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
         });
     </script>
 @endsection
