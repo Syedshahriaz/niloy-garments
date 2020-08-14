@@ -166,10 +166,10 @@
 @section('js')
     <script>
         jQuery(document).ready(function() {
-            setInterval(function(){
+            /*setInterval(function(){
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
-            }, 2000);
+            }, 2000);*/
 
             var getLastPostPos = function() {
                 var height = 0;

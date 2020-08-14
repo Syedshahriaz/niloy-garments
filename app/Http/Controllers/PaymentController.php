@@ -17,11 +17,6 @@ use Spatie\PdfToImage\Pdf;
 class PaymentController extends Controller
 {
     public function initiatePayment(Request $request){
-        // Test update as payment getway not ready yet
-        /*$user_id = $request->id;
-        $result = $this->updatePaymentInformationTest($request);
-        return redirect('select_shipment/'.$user_id);*/
-        // End of test update
 
         $user_id = $request->id;
         $tran_id = "TXN_".uniqid();
@@ -36,6 +31,8 @@ class PaymentController extends Controller
             $offer_amount = $offer_price->offer_2_price;
         }
 
+        $offer_amount = 10; // Only for sandbox mode.
+
         if(COMMON::EASYPAY_MODE=='sandbox'){
             $url = COMMON::EASYPAY_SANDBOX_URL;
             $store_id = Common::EASYPAY_SANDBOX_STORE_ID;
@@ -46,6 +43,18 @@ class PaymentController extends Controller
             $store_id = Common::EASYPAY_LIVE_STORE_ID;
             $signature_key = Common::EASYPAY_LIVE_SIGNATURE_KEY;
         }
+
+        if(env('APP_ENV') == 'local'){
+            $success_url = 'http://127.0.0.1:8000/payment_success';
+            $fail_url = 'http://127.0.0.1:8000/payment_fail';
+            $cancel_url = 'http://127.0.0.1:8000/payment_cancel';
+        }
+        else{
+            $success_url = COMMON::PAYMENT_SUCCESS_URL;
+            $fail_url = COMMON::PAYMENT_FAILED_URL;
+            $cancel_url = COMMON::PAYMENT_CANCEL_URL;
+        }
+
         $fields = array(
             'store_id' => $store_id,
             'amount' => $offer_amount,
@@ -70,9 +79,9 @@ class PaymentController extends Controller
             'ship_postcode' => '',
             'ship_country' => '',
             'desc' => 'Offer Payment',
-            'success_url' => COMMON::PAYMENT_SUCCESS_URL,
-            'fail_url' => COMMON::PAYMENT_FAILED_URL,
-            'cancel_url' => COMMON::PAYMENT_CANCEL_URL,
+            'success_url' => $success_url,
+            'fail_url' => $fail_url,
+            'cancel_url' => $cancel_url,
             'opt_a' => $user_id,
             'opt_b' => $request->offer,
             'opt_c' => '',
@@ -107,8 +116,8 @@ class PaymentController extends Controller
         //return $response;
         if ($response !='"Invalid Store ID"') {
             $url_forward = str_replace('"', '', stripslashes($response));
-            # echo "<meta http-equiv='refresh' content='0;url=".$url_forward."'>";
-            header("Location: ". $url_forward);
+            echo "<meta http-equiv='refresh' content='0;url=".$url_forward."'>";
+            # eader("Location: ". $url_forward);
             exit;
 
         } else {
@@ -119,7 +128,7 @@ class PaymentController extends Controller
     public function success(Request $request){
         try {
             $data = $request->all();
-            //echo "<pre>"; print_r($data); echo "</pre>"; exit();
+
             $user_id = $data['opt_a'];
             $pay_status = $data['pay_status'];
 
@@ -136,15 +145,10 @@ class PaymentController extends Controller
                 return redirect('promotion/'.$user_id);
             }
 
-            $user = User::find($user_id);
-            if($user->parent_id==0){
-                Auth::login($user);
-            }
-            else{
-                $user = User::find($user->parent_id);
-                Auth::login($user);
-            }
-            $this->createUserSession($user);
+            /*
+             * Re authenticate user
+             * */
+            $this->reAuthenticateUser($user_id);
 
             return redirect('select_shipment/'.$user_id);
         } catch (\Exception $e) {
@@ -173,30 +177,6 @@ class PaymentController extends Controller
         }
         catch(\Exception $e){
             //
-        }
-    }
-
-    private function validatePayment($request){
-        $val_id=urlencode($request->val_id);
-        $store_id=urlencode(env('SSL_COMMERZE_STORE_ID'));
-        $store_passwd=urlencode(env('SSL_COMMERZE_STORE_PASSWORD'));
-        $requested_url = (env('SSL_COMMERZE_PORTAL')."/validator/api/validationserverAPI.php?val_id=".$val_id."&store_id=".$store_id."&store_passwd=".$store_passwd."&v=1&format=json");
-
-        $handle = curl_init();
-        curl_setopt($handle, CURLOPT_URL, $requested_url);
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false); # IF YOU RUN FROM LOCAL PC
-        curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false); # IF YOU RUN FROM LOCAL PC
-
-        $response = curl_exec($handle);
-
-        $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-        if($code == 200 && !( curl_errno($handle)))
-        {
-            return $response;
-        }
-        else{
-            return 'error';
         }
     }
 
@@ -322,7 +302,13 @@ class PaymentController extends Controller
 
     public function failed(Request $request){
         try {
-            $user_id = $request->opt_a;
+            $data = $request->all();
+            $user_id = $data['opt_a'];
+
+            /*
+             * Re authenticate user
+             * */
+            $this->reAuthenticateUser($user_id);
 
             return redirect('promotion/'.$user_id);
         } catch (\Exception $e) {
@@ -335,7 +321,13 @@ class PaymentController extends Controller
 
     public function cancel(Request $request){
         try {
-            $user_id = $request->opt_a;
+            $data = $request->all();
+            $user_id = $data['opt_a'];
+
+            /*
+             * Re authenticate user
+             * */
+            $this->reAuthenticateUser($user_id);
 
             return redirect('promotion/'.$user_id);
         } catch (\Exception $e) {
@@ -344,6 +336,18 @@ class PaymentController extends Controller
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
+    }
+
+    private function reAuthenticateUser($user_id){
+        $user = User::find($user_id);
+        if($user->parent_id==0){
+            Auth::login($user);
+        }
+        else{
+            $user = User::find($user->parent_id);
+            Auth::login($user);
+        }
+        $this->createUserSession($user);
     }
 
     private function createUserSession($user){
@@ -356,5 +360,93 @@ class PaymentController extends Controller
         Session::put('last_name', $user->last_name);
         Session::put('user_photo', $user->photo);
         Session::put('user_guide_seen', $user->user_guide_seen);
+    }
+
+
+    public function testPayment(Request $request){
+
+        if(COMMON::EASYPAY_MODE=='sandbox'){
+            $url = COMMON::EASYPAY_SANDBOX_URL;
+            $store_id = Common::EASYPAY_SANDBOX_STORE_ID;
+            $signature_key = Common::EASYPAY_SANDBOX_SIGNATURE_KEY;
+        }
+        else{
+            $url = COMMON::EASYPAY_LIVE_URL;
+            $store_id = Common::EASYPAY_LIVE_STORE_ID;
+            $signature_key = Common::EASYPAY_LIVE_SIGNATURE_KEY;
+        }
+        if(env('APP_ENV') == 'local'){
+            $success_url = 'http://127.0.0.1:8000/payment_success';
+            $fail_url = 'http://127.0.0.1:8000/payment_fail';
+            $cancel_url = 'http://127.0.0.1:8000/payment_cancel';
+        }
+        else{
+            $success_url = COMMON::PAYMENT_SUCCESS_URL;
+            $fail_url = COMMON::PAYMENT_FAILED_URL;
+            $cancel_url = COMMON::PAYMENT_CANCEL_URL;
+        }
+
+        $fields = array(
+            'store_id' => $store_id,
+            'amount' => 10,
+            'payment_type' => 'VISA',
+            'currency' => 'BDT',
+            'tran_id' => "TXN_".uniqid(),
+            'cus_name' => 'Muhin',
+            'cus_email' => 'muhin.diu092@gmail.com',
+            'cus_add1' => '',
+            'cus_add2' => '',
+            'cus_city' => '',
+            'cus_state' => '',
+            'cus_postcode' => '',
+            'cus_country' => '',
+            'cus_phone' => '01749472736',
+            'cus_fax' => 'N/A',
+            'ship_name' => '',
+            'ship_add1' => '',
+            'ship_add2' => '',
+            'ship_city' => '',
+            'ship_state' => '',
+            'ship_postcode' => '',
+            'ship_country' => '',
+            'desc' => 'Offer Payment',
+            'success_url' => $success_url,
+            'fail_url' => $fail_url,
+            'cancel_url' => $cancel_url,
+            'opt_a' => 4,
+            'opt_b' => 1,
+            'opt_c' => '',
+            'opt_d' => '',
+            'signature_key' => $signature_key,
+        );
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://sandbox.easypayway.com/payment/request.php",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $fields,
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        //return $response;
+        if ($response !='"Invalid Store ID"') {
+            $url_forward = str_replace('"', '', stripslashes($response));
+            echo "<meta http-equiv='refresh' content='0;url=".$url_forward."'>";
+            # header("Location: ". $url_forward);
+            exit;
+
+        } else {
+            echo "API Error #:" . $response;
+        }
     }
 }

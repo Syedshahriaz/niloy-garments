@@ -42,15 +42,16 @@ Route::post('email_password_link', 'PublicController@emailPasswordLink');
 Route::get('reset_password', 'PublicController@resetPassword');
 Route::post('reset_password', 'PublicController@updatePassword');
 
-Auth::routes();
-
-Route::get('select_user', 'UserController@selectUser');
-Route::post('multi_tinent', 'UserController@multiTinent');
-
 Route::get('initiate_payment/{id}', 'PaymentController@initiatePayment');
 Route::any('payment_success', 'PaymentController@success');
 Route::any('payment_fail', 'PaymentController@failed');
 Route::any('payment_cancel', 'PaymentController@cancel');
+Route::get('test_payment', 'PaymentController@testPayment');
+
+Auth::routes();
+
+Route::get('select_user', 'UserController@selectUser');
+Route::post('multi_tinent', 'UserController@multiTinent');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
