@@ -152,7 +152,7 @@
             <li class="nav-item item-4 @if($page=='messages') active @endif" data-name="message" data-item="4">
                 <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
-                    <span class="title">Massage</span>
+                    <span class="title">Message</span>
                     <span class="badge new_message_count badge-danger hidden">0</span>
                     <span class="selected"></span>
                 </a>

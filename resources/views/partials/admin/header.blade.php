@@ -42,6 +42,10 @@
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
         <!-- Summernote -->
 
+        <!-- START FLAG STYLES-->
+        <!-- <link href="{{asset('assets/global/plugins/phoca/phoca-flags.css')}}" rel="stylesheet" type="text/css" /> -->
+        <!-- END FLAG STYLES-->
+
         <!-- BEGIN THEME LAYOUT STYLES -->
         <link href="{{asset('assets/layouts/layout/css/layout.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/layouts/layout/css/themes/blue.min.css')}}" rel="stylesheet" type="text/css" id="style_color" />

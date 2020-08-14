@@ -109,7 +109,7 @@
             <li class="nav-item @if($page=='messages') active @endif">
                 <a href="{{url('admin/message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
-                    <span class="title">Massage</span>
+                    <span class="title">Message</span>
                     <span class="badge badge-danger new_message_count hidden">0</span>
                     <span class="selected"></span>
                 </a>
@@ -139,6 +139,50 @@
                     <li class="nav-item start @if($page=='offer_price_setting') active @endif">
                         <a href="{{url('admin/offer_price_setting')}}" class="nav-link">
                             <span class="title">Offer Price</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="icon-settings"></i>
+                    <span class="title">Report</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">Target Basis Sell Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">By Location Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">By Age Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">By Age Gender Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">By profession Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">By Marriege Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{{url('admin/report')}}" class="nav-link">
+                            <span class="title">By Offer Purchased Report</span>
                         </a>
                     </li>
                 </ul>

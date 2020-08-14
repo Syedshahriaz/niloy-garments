@@ -86,7 +86,7 @@
 <!-- Guide modal END-->
 
 <div class="page-footer">
-    <div class="page-footer-inner"> 2020 &copy;</div>
+<div class="page-footer-inner text-center w-100"> © All rights reserved to <a target="_blank" href="https://vujadetec.com/"><strong>vujadetec</strong></a></div>
     <div class="scroll-to-top">
         <i class="icon-arrow-up"></i>
     </div>

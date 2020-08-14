@@ -115,6 +115,8 @@
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
                                                     <input type="text" class="form-control telephone" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
+                                                    <span id="valid-msg" class="hide">✓ Valid</span>
+                                                    <span id="error-msg" class="hide">Invalid</span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -182,9 +184,6 @@
         $(document).ready(function(){
             $(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
         });
-
-
-
     </script>
 @endsection
 

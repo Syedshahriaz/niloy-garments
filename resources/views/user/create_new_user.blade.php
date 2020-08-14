@@ -61,6 +61,8 @@
                                         <div class="form-group">
                                             <label class="control-label visible-ie8 visible-ie9">Phone*</label>
                                             <input class="form-control placeholder-no-fix telephone" id="telephone" type="text" name="phone" id="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->phone}}"/>
+                                            <span id="valid-msg" class="hide">✓ Valid</span>
+                                            <span id="error-msg" class="hide">Invalid</span>
                                         </div>
                                     </div>
                                     <div class="col-md-12">

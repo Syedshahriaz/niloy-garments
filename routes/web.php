@@ -121,3 +121,7 @@ Route::post('admin/get_unread_message', 'Admin\MessageController@getUnreadMessag
 Route::post('admin/get_message_details', 'Admin\MessageController@getMessageDetails');
 
 
+Route::get('admin/report', 'Admin\ReportController@allReport');
+
+
+

@@ -626,6 +626,29 @@ div#user_horizontal_task_wrapper .col-sm-12 {
 .admin_offer_change .offer-item {
     margin: 0 10px;
 }
+#error-msg {
+    color: red;
+}
+#valid-msg {
+    color: #00C900;
+}
+input.error {
+    border: 1px solid #FF7C7C;
+}
+.hide {
+    display: none;
+}
+.w-100{
+    width: 100%;
+}
+.page-header.navbar .top-menu .navbar-nav>li.dropdown-extended .dropdown-menu {
+    min-width: 550.9px;
+    max-width: 550px;
+    width: 550px;
+}
+.page-header.navbar .top-menu .navbar-nav>li.dropdown-notification .dropdown-menu .dropdown-menu-list>li a .time{
+    max-width: 195px;  
+}
 @media only screen and (max-width: 767px){
     .all_user_sort {
         max-width: 100%;
@@ -652,6 +675,14 @@ div#user_horizontal_task_wrapper .col-sm-12 {
     }
     .admin_offer_change .offer-item {
         margin-bottom: 15px;
+    }
+    .page-header.navbar .top-menu .navbar-nav>li.dropdown-extended .dropdown-menu {
+        min-width: initial;
+        max-width: 100%;
+        width: 100%;
+    }
+    .page-header.navbar .top-menu .navbar-nav>li.dropdown-notification .dropdown-menu .dropdown-menu-list>li a .time{
+        max-width: 100%; 
     }
 }
 /*inbox END*/
