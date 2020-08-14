@@ -72,7 +72,7 @@
                             </div>
 
                             <div id="char_body">
-                                <div class="scroller" style="height: 325px;" data-always-visible="1" data-rail-visible1="1">
+                                <div>
                                     <ul class="chats">
                                         @if(!empty($last_message))
                                             @foreach($last_message->message_details as $m_details)
@@ -453,6 +453,30 @@
                 scrollTo: getLastPostPos()
             });
         }
+
+        function scrollBottom(){
+            $('#char_body>div').stop().animate({
+                scrollTop: $('#char_body>div')[0].scrollHeight
+            },100);
+        }
+        $(document).ready(function(){
+            setTimeout(() => {
+                scrollBottom();
+            }, 2000);
+        })
+        $(document).on('click','#send_btn',function(){
+            if($('#uploaded_img').attr('src') == ''){
+                setTimeout(() => {
+                    scrollBottom();
+                }, 1500);
+            }
+            else{
+                setTimeout(() => {
+                    //alert();
+                    scrollBottom();
+                }, 5000);
+            }
+        })
     </script>
 @endsection
 

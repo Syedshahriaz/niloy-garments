@@ -33,7 +33,7 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">Report Name</span>
+                                <span class="caption-subject font-dark bold uppercase">Gender Report</span>
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions hidden" id="action_buttons">
