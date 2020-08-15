@@ -151,17 +151,17 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item start @if($page=='report_target') active @endif">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                        <a href="{{url('admin/report_target')}}" class="nav-link">
                             <span class="title">Target Basis Sell Report</span>
                         </a>
                     </li>
                     <li class="nav-item start @if($page=='report_location') active @endif">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                        <a href="{{url('admin/report_location')}}" class="nav-link">
                             <span class="title">By Location Report</span>
                         </a>
                     </li>
                     <li class="nav-item start @if($page=='report_age') active @endif">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                        <a href="{{url('admin/report_age')}}" class="nav-link">
                             <span class="title">By Age Report</span>
                         </a>
                     </li>
@@ -176,12 +176,12 @@
                         </a>
                     </li>
                     <li class="nav-item start @if($page=='report_merriege') active @endif">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                        <a href="#" class="nav-link">
                             <span class="title">By Marriege Report</span>
                         </a>
                     </li>
                     <li class="nav-item start @if($page=='report_offer_purchased') active @endif">
-                        <a href="{{url('admin/report')}}" class="nav-link">
+                        <a href="{{url('admin/report_offer_purchased')}}" class="nav-link">
                             <span class="title">By Offer Purchased Report</span>
                         </a>
                     </li>

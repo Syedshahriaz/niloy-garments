@@ -125,6 +125,7 @@ Route::post('admin/get_message_details', 'Admin\MessageController@getMessageDeta
 Route::get('admin/report', 'Admin\ReportController@allReport');
 Route::get('admin/report_gender', 'Admin\ReportController@genderReport');
 Route::get('admin/report_profession', 'Admin\ReportController@professionReport');
+Route::get('admin/report_offer_purchased', 'Admin\ReportController@offerPurchaseReport');
 
 
 
