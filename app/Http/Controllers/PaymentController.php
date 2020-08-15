@@ -197,6 +197,7 @@ class PaymentController extends Controller
         $payment->store_amount = $response['store_amount'];
         $payment->payment_status = 'Completed';
         $payment->txn_id = $response['epw_txnid'];
+        $payment->payment_date = $response['pay_time'];
         $payment->validation_status = 'VALID';
         $payment->response = json_encode($response);
         $payment->updated_at = date('Y-m-d h:i:s');
