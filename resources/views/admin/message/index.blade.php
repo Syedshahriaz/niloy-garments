@@ -165,22 +165,21 @@
 @endsection
 
 @section('js')
-    <script src="{{asset('assets/global/plugins/list-search/js/list-search-min.js')}}" type="text/javascript"></script>
+    <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script>
 
     <script>
         initializeListSearch({
-                toggleAnimationSpeed: 0,
-                openLinkWithEnterKey: true,
-                itemSelector: '.inbox-contacts',
-                searchTextBoxSelector: '#search-box',
-                noItemsFoundSelector: '.no-apps-found'
-            });
+            toggleAnimationSpeed: 0,
+            openLinkWithEnterKey: true,
+            itemSelector: '.inbox-contacts',
+            searchTextBoxSelector: '#search-box',
+            noItemsFoundSelector: '.no-apps-found'
+        });
         jQuery(document).ready(function() {
             /*setInterval(function(){
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
             }, 2000);*/
-        
             var getLastPostPos = function() {
                 var height = 0;
                 cont.find("li.out, li.in").each(function() {
