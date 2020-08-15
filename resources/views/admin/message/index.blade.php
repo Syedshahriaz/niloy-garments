@@ -400,6 +400,8 @@
             $(this).addClass('active');
 
             var id = $(this).attr('data-id');
+            $('#message_id').val(id);
+
             getAndPopulateSelectedMessage(id);
         });
 
@@ -459,11 +461,13 @@
                 scrollTop: $('#char_body>div')[0].scrollHeight
             },100);
         }
+
         $(document).ready(function(){
             setTimeout(() => {
                 scrollBottom();
             }, 2000);
         })
+
         $(document).on('click','#send_btn',function(){
             if($('#uploaded_img').attr('src') == ''){
                 setTimeout(() => {
