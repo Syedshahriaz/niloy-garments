@@ -167,7 +167,7 @@
                     </li>
                     <li class="nav-item start @if($page=='report_gender') active @endif">
                         <a href="{{url('admin/report_gender')}}" class="nav-link">
-                            <span class="title">By Age Gender Report</span>
+                            <span class="title">By Gender Report</span>
                         </a>
                     </li>
                     <li class="nav-item start @if($page=='report_profession') active @endif">
