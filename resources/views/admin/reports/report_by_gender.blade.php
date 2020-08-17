@@ -41,7 +41,7 @@
                                 {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>--}}
                             </div>
                         </div>
-                        <div class="portlet-body p-relative">
+                        {{--<div class="portlet-body p-relative">
                             <table id="report_table" class="table table-striped table-bordered table-hover data-table focus-table">
                                 <thead>
                                 <tr>
@@ -66,7 +66,7 @@
                                 </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div>--}}
                         <div class="portlet-body p-relative">
                             <table id="report_table" class="table table-striped table-bordered table-hover data-table focus-table">
                                 <thead>
