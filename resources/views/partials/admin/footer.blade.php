@@ -192,6 +192,7 @@
                 var message_type = 'in';
                 var profile_photo = message.user_photo;
                 var user_name = message.user_name;
+                var user_dashboard_link = "{{url('admin/user_dashboard')}}?u_id="+message.user_id;
             }
             else{
                 var message_type = 'out';
@@ -210,7 +211,7 @@
             }
             tpl += '<div class="message">';
             tpl += '<span class="arrow"></span>';
-            tpl += '<a href="#" class="name">'+user_name+'</a>&nbsp;';
+            tpl += '<a href="'+user_dashboard_link+'" class="name">'+user_name+'</a>&nbsp;';
             tpl += '<span class="datetime">at ' + time_str + '</span>';
             tpl += '<span class="body">';
             if (photo_path != null) {

@@ -107,7 +107,7 @@
                                                         @endif
                                                         <div class="message">
                                                             <span class="arrow"> </span>
-                                                            <a href="javascript:;" class="name"> {{$last_message->user_name}} </a>
+                                                            <a href="{{url('admin/user_dashboard').'?u_id='.$last_message->user_id}}" class="name"> {{$last_message->user_name}} </a>
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <span class="body">
                                                                 @if($m_details->file_path !='')
