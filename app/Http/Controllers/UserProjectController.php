@@ -252,8 +252,9 @@ class UserProjectController extends Controller
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
-                $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule')
+                $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','projects.has_offer_1')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+                    ->join('projects', 'projects.id', '=', 'tasks.project_id')
                     ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
                     ->where('user_project_id', $user_project_id)
                     ->where('tasks.status', 'active')

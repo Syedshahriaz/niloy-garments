@@ -133,6 +133,9 @@ class Common
         if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1){
             $result = 1;
         }
+        else if(isset($task->has_offer_1) && $task->has_offer_1==1){ // If task is for green offer(offer 1) and due date have been passed
+            $result = self::isTaskOriginalDueDatePassed($task);
+        }
 
         /*
          * Now check if task is in date range
@@ -164,6 +167,16 @@ class Common
         }
 
         return 0;
+    }
+
+    public static function isTaskOriginalDueDatePassed($task){
+        $today = date('Y-m-d');
+        if($task->original_delivery_date < $today){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public static function removeUserProject($user_id){
