@@ -96,7 +96,7 @@
                                     }
                                     ?>
                                     <tr>
-                                        <td style="width: 50px;">
+                                        <td>
                                             <div class="form-group">
                                                 <label class="mt-checkbox">
                                                     <input type="checkbox" class="show-password name user_checkbox" name="all_user" value="{{$user->id}}" id="checkbox-1-{{$user->id}}">
@@ -108,7 +108,7 @@
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>{{$user->status}}</td>
-                                        <td>
+                                        <td style="min-width: 170px;">
                                             @if($user->shipment_date !='')
                                                 {{date('l d, M, Y', strtotime($user->shipment_date))}}
                                             @endif
@@ -127,7 +127,7 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="min-width: 170px;">
                                             <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/speed.png')}}" alt="Dashboard">
                                             </a>

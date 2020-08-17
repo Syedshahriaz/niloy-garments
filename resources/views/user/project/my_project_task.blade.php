@@ -46,7 +46,7 @@
                             </div>
 
                             <div class="actions">
-                                <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summery</a>
+                                <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summary</a>
                                 <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
                                     <!--i class="icon-list icons"></i-->Vertical View
                                 </a>
@@ -243,7 +243,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Summery of product</h4>
+                    <h4 class="modal-title">Summary of product</h4>
                 </div>
                 <div class="modal-body">
                     <p class="mt-0 mb-0">
