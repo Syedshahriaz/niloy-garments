@@ -52,8 +52,7 @@
                                         <th>Country Name</th>
                                         <th>Country Code</th>
                                         <th>Currency</th>
-                                        <th>Offer 1 Price</th>
-                                        <th>Offer 2 Price</th>
+                                        <th>Offer Price</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -66,8 +65,7 @@
                                     <td>{{$offer_price->country_name}}</td>
                                     <td>{{$offer_price->country_code}}</td>
                                     <td>{{$offer_price->currency}}</td>
-                                    <td>{{$offer_price->offer_1_price}}</td>
-                                    <td>{{$offer_price->offer_2_price}}</td>
+                                    <td>{{$offer_price->offer_price}}</td>
                                     <td class="text-center">
                                         <a href="#" title="Edit Offer" onclick="edit_offer({{$offer_price->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Dashboard">
@@ -123,12 +121,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Offer 1 Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_1_price" id="offer_1_price" value=""  autocomplete="off"/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Offer 2 Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_2_price" id="offer_2_price" value=""  autocomplete="off"/>
+                                    <label class="control-label">Offer Price</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price" id="offer_price" value=""  autocomplete="off"/>
                                 </div>
                             </div>
                         </form>
@@ -184,12 +178,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Offer 1 Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_1_price" id="edit_offer_1_price" value=""  autocomplete="off"/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Offer 2 Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_2_price" id="edit_offer_2_price" value=""  autocomplete="off"/>
+                                    <label class="control-label">Offer Price</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price" id="edit_offer_price" value=""  autocomplete="off"/>
                                 </div>
                             </div>
                         </form>
@@ -239,8 +229,7 @@
 
             var country = $("#country").val();
             var currency = $("#currency").val();
-            var offer_1_price = $("#offer_1_price").val();
-            var offer_2_price = $("#offer_2_price").val();
+            var offer_price = $("#offer_price").val();
 
             var validate = "";
 
@@ -250,11 +239,8 @@
             if (currency.trim() == "") {
                 validate = validate + "Currency is required</br>";
             }
-            if (offer_1_price.trim() == "") {
-                validate = validate + "Offer 1 price is required</br>";
-            }
-            if (offer_2_price.trim() == "") {
-                validate = validate + "Offer 2 price is required</br>";
+            if (offer_price.trim() == "") {
+                validate = validate + "Offer price is required</br>";
             }
 
             if (validate == "") {
@@ -313,8 +299,7 @@
                         $('#country_id').val(id);
                         $('#edit_country').val(data.offer_price.country_name+'#'+data.offer_price.country_code);
                         $('#edit_currency').val(data.offer_price.currency);
-                        $('#edit_offer_1_price').val(data.offer_price.offer_1_price);
-                        $('#edit_offer_2_price').val(data.offer_price.offer_2_price);
+                        $('#edit_offer_price').val(data.offer_price.offer_price);
                         $("#edit_country_modal").modal('show');
                     }
                     else{
@@ -341,8 +326,7 @@
 
             var country = $("#edit_country").val();
             var currency = $("#edit_currency").val();
-            var offer_1_price = $("#edit_offer_1_price").val();
-            var offer_2_price = $("#edit_offer_2_price").val();
+            var offer_price = $("#edit_offer_price").val();
 
             var validate = "";
 
@@ -352,11 +336,8 @@
             if (currency.trim() == "") {
                 validate = validate + "Currency is required</br>";
             }
-            if (offer_1_price.trim() == "") {
-                validate = validate + "Offer 1 price is required</br>";
-            }
-            if (offer_2_price.trim() == "") {
-                validate = validate + "Offer 2 price is required</br>";
+            if (offer_price.trim() == "") {
+                validate = validate + "Offer price is required</br>";
             }
 
             if (validate == "") {

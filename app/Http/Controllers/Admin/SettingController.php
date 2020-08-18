@@ -119,8 +119,7 @@ class SettingController extends Controller
             $offer_prices->country_name = $countryData[0];
             $offer_prices->country_code = $countryData[1];
             $offer_prices->currency = $request->currency;
-            $offer_prices->offer_1_price = $request->offer_1_price;
-            $offer_prices->offer_2_price = $request->offer_2_price;
+            $offer_prices->offer_price = $request->offer_price;
             $offer_prices->save();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
@@ -151,8 +150,7 @@ class SettingController extends Controller
         try{
             $offer_prices = OfferPrices::where('id',$request->country_id)->first();
             $offer_prices->currency = $request->currency;
-            $offer_prices->offer_1_price = $request->offer_1_price;
-            $offer_prices->offer_2_price = $request->offer_2_price;
+            $offer_prices->offer_price = $request->offer_price;
             $offer_prices->save();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];

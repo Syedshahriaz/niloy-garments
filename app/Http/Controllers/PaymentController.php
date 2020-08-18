@@ -24,12 +24,7 @@ class PaymentController extends Controller
         $user = User::where('id',$user_id)->first();
         $offer_price = OfferPrices::where('country_code',$user->country_code)->first();
         $currency = $offer_price->currency;
-        if($request->offer==1){
-            $offer_amount = $offer_price->offer_1_price;
-        }
-        else{
-            $offer_amount = $offer_price->offer_2_price;
-        }
+        $offer_amount = $offer_price->offer_price;
 
         $offer_amount = 10; // Only for sandbox mode.
 
