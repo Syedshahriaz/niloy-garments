@@ -124,10 +124,15 @@ Route::post('admin/get_message_details', 'Admin\MessageController@getMessageDeta
 
 Route::get('admin/report', 'Admin\ReportController@allReport');
 Route::get('admin/report_gender', 'Admin\ReportController@genderReport');
+Route::get('admin/download_report_gender_excel', 'Admin\ReportController@downloadGenderReportExcel');
 Route::get('admin/report_age', 'Admin\ReportController@ageReport');
+Route::get('admin/download_report_age_excel', 'Admin\ReportController@downloadAgeReportExcel');
 Route::get('admin/report_location', 'Admin\ReportController@locationReport');
+Route::get('admin/download_report_location_excel', 'Admin\ReportController@downloadLocationReportExcel');
 Route::get('admin/report_profession', 'Admin\ReportController@professionReport');
+Route::get('admin/download_report_profession_excel', 'Admin\ReportController@downloadProfessionReportExcel');
 Route::get('admin/report_offer_purchased', 'Admin\ReportController@offerPurchaseReport');
+Route::get('admin/download_report_offer_purchased_excel', 'Admin\ReportController@downloadOfferPurchaseReportExcel');
 Route::get('admin/analytics_test', 'Admin\ReportController@analyticsTest');
 
 

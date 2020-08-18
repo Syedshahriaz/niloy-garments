@@ -34,7 +34,9 @@
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
                                 <span class="caption-subject font-dark bold uppercase">Age Report</span>
-                                <span class="caption-helper"></span>
+                                <span class="caption-helper font-dark bold uppercase">
+                                    <a class="btn btn-xs btn-success " id="summary_table_excel_button" onclick="download_visitor_by_age()"> <i class="fa fa-download"></i> Download Excel </a>
+                                </span>
                             </div>
                             <div class="actions hidden" id="action_buttons">
                                 <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send Email" id="send_email_all">Send Email</button>
@@ -77,6 +79,10 @@
 
 @section('js')
     <script>
+        function download_visitor_by_age() {
+            var url = "{{ url("admin/download_report_age_excel") }}";
+            window.open(url);
+        }
     </script>
 @endsection
 

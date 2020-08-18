@@ -34,7 +34,9 @@
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
                                 <span class="caption-subject font-dark bold uppercase">Profession Report</span>
-                                <span class="caption-helper"></span>
+                                <span class="caption-helper font-dark bold uppercase">
+                                    <a class="btn btn-xs btn-success " id="summary_table_excel_button" onclick="download_purchase_by_profession()"> <i class="fa fa-download"></i> Download Excel </a>
+                                </span>
                             </div>
                             <div class="actions hidden" id="action_buttons">
                                 <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send Email" id="send_email_all">Send Email</button>
@@ -50,7 +52,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($users as $key=>$user)
+                                    <?php
+                                    $grand_total_user = 0;
+                                    foreach($users as $key=>$user){
+                                        $grand_total_user = $grand_total_user+$user->total_user;
+                                    ?>
                                         <tr>
                                             <td class="text-center">
                                                 @if($user->profession != '')
@@ -63,8 +69,18 @@
                                                 {{$user->total_user}}
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    <?php } ?>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="text-center">
+                                            <b>Total</b>
+                                        </td>
+                                        <td class="text-center">
+                                            {{$grand_total_user}}
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -81,6 +97,10 @@
 
 @section('js')
     <script>
+        function download_purchase_by_profession() {
+            var url = "{{ url("admin/download_report_profession_excel") }}";
+            window.open(url);
+        }
     </script>
 @endsection
 

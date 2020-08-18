@@ -34,7 +34,9 @@
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
                                 <span class="caption-subject font-dark bold uppercase">Weekly Offer Purchase Report</span>
-                                <span class="caption-helper"></span>
+                                <span class="caption-helper font-dark bold uppercase">
+                                    <a class="btn btn-xs btn-success " id="summary_table_excel_button" onclick="download_offer_purchase()"> <i class="fa fa-download"></i> Download Excel </a>
+                                </span>
                             </div>
                             <div class="actions" id="action_buttons">
                                 <form id="filter_form">
@@ -114,6 +116,12 @@
         $(document).on('change','#year',function(){
             $('#filter_form').submit();
         })
+
+        function download_offer_purchase() {
+            var year = $('#year').val();
+            var url = "{{ url("admin/download_report_offer_purchased_excel") }}?year="+year;
+            window.open(url);
+        }
     </script>
 @endsection
 
