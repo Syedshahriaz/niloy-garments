@@ -35,6 +35,13 @@ class SettingController extends Controller
             $user = Auth::user();
             $setting = Setting::first();
             $setting->message_to_user = $request->message_to_user;
+            if($request->weekly_target==''){
+                $weekly_target = 0;
+            }
+            else{
+                $weekly_target = $request->weekly_target;
+            }
+            $setting->weekly_target = $weekly_target;
             $setting->updated_at = date('Y-m-d h:i:s');
             $setting->save();
             return ['status'=>200, 'reason'=>'Successfully updated'];

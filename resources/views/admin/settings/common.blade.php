@@ -44,6 +44,12 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Weekly Sale Target</label>
+                                            <input type="text" class="form-control" name="weekly_target" id="weekly_target" value="{{$settings->weekly_target}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
                                         <div class="form-actions">
                                             <button type="submit" id="register-submit-btn" class="btn theme-btn uppercase pull-right">Submit</button>
                                         </div>

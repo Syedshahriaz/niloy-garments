@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Payment;
+use App\Models\Setting;
 use Analytics;
 use Spatie\Analytics\Period;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -181,7 +182,7 @@ class ReportController extends Controller
             return view('admin.reports.report_by_location',compact('locations'));
         }
         catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'offerPurchaseReport', $e->getLine(),
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'locationREport', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return back();
@@ -329,7 +330,7 @@ class ReportController extends Controller
             return view('admin.reports.report_by_age',compact('ages'));
         }
         catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'offerPurchaseReport', $e->getLine(),
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'AgeREport', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return back();
@@ -638,10 +639,11 @@ class ReportController extends Controller
                 $week_array[$key]['offer_1_purchases'] = $offer_1_purchases;
                 $week_array[$key]['offer_2_purchases'] = $offer_2_purchases;
             }
+            $settings = Setting::first();
 
             //echo "<pre>"; print_r($week_array); echo "</pre>"; exit();
 
-            return view('admin.reports.report_by_offer_purchase',compact('year','week_array'));
+            return view('admin.reports.report_by_offer_purchase',compact('year','week_array','settings'));
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'offerPurchaseReport', $e->getLine(),
@@ -678,6 +680,7 @@ class ReportController extends Controller
                 $week_array[$key]['offer_1_purchases'] = $offer_1_purchases;
                 $week_array[$key]['offer_2_purchases'] = $offer_2_purchases;
             }
+            $settings = Setting::first();
 
             //object of the Spreadsheet class to create the excel data
             $spreadsheet = new Spreadsheet();
@@ -733,6 +736,8 @@ class ReportController extends Controller
                 ->setCellValue('C3', 'Red Offer Purchase');
             $spreadsheet->getActiveSheet()
                 ->setCellValue('D3', 'Total Purchase');
+            $spreadsheet->getActiveSheet()
+                ->setCellValue('E3', 'Missed Target');
 
             /**
              * Invoice data Array
@@ -740,6 +745,7 @@ class ReportController extends Controller
 
             $received_data_header_row_number = 4;
 
+            $target = $settings->weekly_target;
             $total_purchase = 0;
             $grant_total_purchase = 0;
             foreach($week_array as $key=>$week){
@@ -747,6 +753,10 @@ class ReportController extends Controller
 
                 $total_purchase = $week['offer_1_purchases']+$week['offer_2_purchases'];
                 $grant_total_purchase = $grant_total_purchase + $total_purchase;
+                $missed_target_purchase = $target-$total_purchase;
+                if($missed_target_purchase<0){
+                    $missed_target_purchase = 0;
+                }
 
                 $spreadsheet->getActiveSheet()
                     ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $key);
@@ -762,6 +772,10 @@ class ReportController extends Controller
                 $received_data_header_cell_number = $received_data_header_cell_number + 1;
                 $spreadsheet->getActiveSheet()
                     ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $total_purchase);
+
+                $received_data_header_cell_number = $received_data_header_cell_number + 1;
+                $spreadsheet->getActiveSheet()
+                    ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $missed_target_purchase);
 
                 $received_data_header_row_number++;
             }
@@ -784,6 +798,11 @@ class ReportController extends Controller
             $received_data_header_cell_number = $received_data_header_cell_number + 1;
             $spreadsheet->getActiveSheet()
                 ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $grant_total_purchase);
+
+            $received_data_header_cell_number = $received_data_header_cell_number + 1;
+            $spreadsheet->getActiveSheet()
+                ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, '');
+            
             /************************/
 
             // Making total purchase column bold

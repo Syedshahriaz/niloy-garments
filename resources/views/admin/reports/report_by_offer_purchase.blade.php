@@ -58,15 +58,21 @@
                                     <th class="text-center">Green Offer Purchase</th>
                                     <th class="text-center">Red Offer Purchase</th>
                                     <th class="text-center">Total Purchase</th>
+                                    <th class="text-center">Missed Target</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
+                                    $target = $settings->weekly_target;
                                     $total_purchase = 0;
                                     $grant_total_purchase = 0;
                                     foreach($week_array as $key=>$week){
-                                    $total_purchase = $week['offer_1_purchases']+$week['offer_2_purchases'];
-                                    $grant_total_purchase = $grant_total_purchase + $total_purchase;
+                                        $total_purchase = $week['offer_1_purchases']+$week['offer_2_purchases'];
+                                        $grant_total_purchase = $grant_total_purchase + $total_purchase;
+                                        $missed_target_purchase = $target-$total_purchase;
+                                        if($missed_target_purchase<0){
+                                            $missed_target_purchase = 0;
+                                        }
                                     ?>
                                     <tbody>
                                         <tr>
@@ -82,6 +88,9 @@
                                             <td class="text-center">
                                                 {{$total_purchase}}
                                             </td>
+                                            <td class="text-center">
+                                                {{$missed_target_purchase}}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 <?php } ?>
@@ -95,6 +104,7 @@
                                             <td class="text-center">
                                                 {{$grant_total_purchase}}
                                             </td>
+                                            <td></td>
                                         </tr>
                                     </tfoot>
                             </table>
