@@ -150,9 +150,14 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="nav-item start @if($page=='report_target') active @endif">
+                    {{--<li class="nav-item start @if($page=='report_target') active @endif">
                         <a href="{{url('admin/report_target')}}" class="nav-link">
                             <span class="title">Target Basis Sell Report</span>
+                        </a>
+                    </li>--}}
+                    <li class="nav-item start @if($page=='report_offer_purchased') active @endif">
+                        <a href="{{url('admin/report_offer_purchased')}}" class="nav-link">
+                            <span class="title">By Offer Purchased Report</span>
                         </a>
                     </li>
                     <li class="nav-item start @if($page=='report_location') active @endif">
@@ -178,11 +183,6 @@
                     <li class="nav-item start @if($page=='report_merriege') active @endif">
                         <a href="#" class="nav-link">
                             <span class="title">By Marriege Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='report_offer_purchased') active @endif">
-                        <a href="{{url('admin/report_offer_purchased')}}" class="nav-link">
-                            <span class="title">By Offer Purchased Report</span>
                         </a>
                     </li>
                 </ul>

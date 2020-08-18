@@ -802,7 +802,7 @@ class ReportController extends Controller
             $received_data_header_cell_number = $received_data_header_cell_number + 1;
             $spreadsheet->getActiveSheet()
                 ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, '');
-            
+
             /************************/
 
             // Making total purchase column bold
