@@ -167,7 +167,7 @@
 
             <li class="nav-item ajax_item item-6" data-item="6">
                 <a href="javascript:;" class="nav-link" data-toggle="modal" data-target="#GuideModal">
-                    <i class="icon-user"></i>
+                    <i class="icon-book-open"></i>
                     <span class="title">User Guide</span>
                     <span class="selected"></span>
                 </a>

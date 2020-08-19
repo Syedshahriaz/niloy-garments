@@ -77,14 +77,14 @@
                                                             <span class="arrow"> </span>
                                                             <a href="javascript:;" class="name"> Vujadetec </a>
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
-                                                            <span class="body">
+                                                            <p class="body">
                                                                 @if($m_details->file_path !='')
-                                                                    <img style="max-width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    <img style="max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                 @endif
                                                                 @if($m_details->message !='')
                                                                     {{$m_details->message}}
                                                                 @endif
-                                                            </span>
+                                                            </p>
                                                         </div>
                                                     </li>
                                                 @else
@@ -98,18 +98,18 @@
                                                             <span class="arrow"> </span>
                                                             <a href="javascript:;" class="name"> {{$message->user_name}} </a>
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
-                                                            <span class="body">
+                                                            <p class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>
-                                                                        <img style="float: right; max-width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                        <img style="float: right; max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                     </span>
                                                                 @endif
                                                                 @if($m_details->message !='')
-                                                                    <p style="clear: both">
+                                                                    <span style="clear: both">
                                                                     {{$m_details->message}}
-                                                                    </p>
+                                                                    </span>
                                                                 @endif
-                                                            </span>
+                                                            </p>
                                                         </div>
                                                     </li>
                                                 @endif
@@ -166,6 +166,18 @@
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
             }, 1000);
+
+            //message bosy height
+            if($(window).width() > 991){
+                var content_height = $('.page-content').css('min-height');
+                content_height = parseInt(content_height.slice(0, -2));
+                var chat_height = parseInt(content_height - 275);
+                $('#char_body>div').css('max-height', chat_height + 'px');
+            }
+            else{
+                var sm_height = parseInt($(window).width() - 100);
+                $('#char_body>div').css('max-height', sm_height + 'px');
+            }
 
             // var getLastPostPos = function() {
             //     var height = 0;
@@ -229,7 +241,24 @@
                     scrollBottom();
                 }, 5000);
             }
-        })
+        });
+
+        $('#message_input').on('keypress', function (e) {
+            if(e.which === 13){
+
+                if($('#uploaded_img').attr('src') == ''){
+                    setTimeout(() => {
+                        scrollBottom();
+                    }, 1500);
+                }
+                else{
+                    setTimeout(() => {
+                        //alert();
+                        scrollBottom();
+                    }, 5000);
+                }
+            }
+        });
     </script>
 @endsection
 

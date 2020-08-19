@@ -216,15 +216,15 @@
             tpl += '<span class="arrow"></span>';
             tpl += '<a href="'+user_dashboard_link+'" class="name">'+user_name+'</a>&nbsp;';
             tpl += '<span class="datetime">at ' + time_str + '</span>';
-            tpl += '<span class="body">';
+            tpl += '<p class="body">';
             if (photo_path != null) {
                 var file_path = "{{url('/')}}/" + photo_path;
-                tpl += '<img style="float: right;width: 330px;" class="body" src="' + file_path + '">';
+                tpl += '<img style="float: right; max-width: 230px;" class="body" src="' + file_path + '">';
             }
             if(msg.message !==null) {
-                tpl += '<p style="clear: both">' + msg.message + '</p>';
+                tpl += '<span style="clear: both">' + msg.message + '</span>';
             }
-            tpl += '</span>';
+            tpl += '</p>';
             tpl += '</div>';
             tpl += '</li>';
         });

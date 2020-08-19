@@ -50,8 +50,8 @@
                         </div>
                         <div class="portlet-body" id="chats">
                             <div id="char_user_list" class="inbox">
-                                <input id="search-box" type="text" class="validate" autofocus autocomplete="off">
-                                <ul class="inbox-contacts">
+                                <input id="search-box" type="text" class="validate form-control" autocomplete="off" placeholder="Search by name...">
+                                <ul class="inbox-contacts" id="inbox-contacts">
                                     @if(count($messages) !=0)
                                         @foreach($messages as $key=>$message)
                                         <li class="message_head @if($key==0)active @endif" data-id="{{$message->id}}">
@@ -88,14 +88,14 @@
                                                             <span class="arrow"> </span>
                                                             <a href="javascript:;" class="name"> Vujadetec </a>
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
-                                                            <span class="body">
+                                                            <p class="body">
                                                                 @if($m_details->file_path !='')
-                                                                    <img style="float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    <img style="float: right; max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                 @endif
                                                                 @if($m_details->message !='')
-                                                                    <p style="clear: both">{{$m_details->message}}</p>
+                                                                    <span style="clear: both">{{$m_details->message}}</span>
                                                                 @endif
-                                                            </span>
+                                                            </p>
                                                         </div>
                                                     </li>
                                                 @else
@@ -109,18 +109,18 @@
                                                             <span class="arrow"> </span>
                                                             <a href="{{url('admin/user_dashboard').'?u_id='.$last_message->user_id}}" class="name"> {{$last_message->user_name}} </a>
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
-                                                            <span class="body">
+                                                            <p class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>
-                                                                        <img style="float: right;float: right;width: 330px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                        <img style="float: right; max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                     </span>
                                                                 @endif
                                                                 @if($m_details->message !='')
-                                                                    <p style="clear: both">
+                                                                    <span style="clear: both">
                                                                     {{$m_details->message}}
-                                                                    </p>
+                                                                    </span>
                                                                 @endif
-                                                            </span>
+                                                            </p>
                                                         </div>
                                                     </li>
                                                 @endif
@@ -168,18 +168,29 @@
     <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script>
 
     <script>
-        /*initializeListSearch({
-            toggleAnimationSpeed: 0,
-            openLinkWithEnterKey: true,
-            itemSelector: '.inbox-contacts',
-            searchTextBoxSelector: '#search-box',
-            noItemsFoundSelector: '.no-apps-found'
-        });*/
         jQuery(document).ready(function() {
             /*setInterval(function(){
                 var id = $('#message_id').val();
                 getAndPopulateSelectedMessage(id);
             }, 2000);*/
+            $("#inbox-contacts").searcher({
+				itemSelector: "li",
+				textSelector: "",
+				inputSelector: "#search-box"
+			});
+
+            //message bosy height
+            if($(window).width() > 991){
+                var content_height = $('.page-content').css('min-height');
+                content_height = parseInt(content_height.slice(0, -2));
+                var chat_height = parseInt(content_height - 275);
+                $('#char_body>div').css('max-height', chat_height + 'px');
+            }
+            else{
+                var sm_height = parseInt($(window).width() - 100);
+                $('#char_body>div').css('max-height', sm_height + 'px');
+            }
+
             var getLastPostPos = function() {
                 var height = 0;
                 cont.find("li.out, li.in").each(function() {
@@ -437,15 +448,15 @@
             tpl += '<span class="arrow"></span>';
             tpl += '<a href="#" class="name">Vujadetec</a>&nbsp;';
             tpl += '<span class="datetime">at ' + time_str + '</span>';
-            tpl += '<span class="body">';
+            tpl += '<p class="body">';
             if(photo_path !=''){
                 var file_path = "{{url('/')}}/"+photo_path;
-                tpl += '<img style="float: right;width: 330px;" class="body" src="'+file_path+'">';
+                tpl += '<img style="float: right; max-width: 230px;" class="body" src="'+file_path+'">';
             }
             if(message !='') {
-                tpl += '<p style="clear: both">' + message + '</p>';
+                tpl += '<span style="clear: both">' + message + '</span>';
             }
-            tpl += '</span>';
+            tpl += '</p>';
             tpl += '</div>';
             tpl += '</li>';
 
@@ -491,6 +502,23 @@
                 }, 5000);
             }
         })
+
+        $('#message_input').on('keypress', function (e) {
+            if(e.which === 13){
+
+                if($('#uploaded_img').attr('src') == ''){
+                    setTimeout(() => {
+                        scrollBottom();
+                    }, 1500);
+                }
+                else{
+                    setTimeout(() => {
+                        //alert();
+                        scrollBottom();
+                    }, 5000);
+                }
+            }
+        });
     </script>
 @endsection
 

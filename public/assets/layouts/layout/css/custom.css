@@ -592,7 +592,7 @@ div#user_horizontal_task_wrapper .col-sm-12 {
 }
 #char_body>div{
     overflow: auto;
-    max-height: 300px;
+    /* max-height: 300px; */
 }
 #uploaded_img {
     max-height: 30px;
@@ -650,26 +650,46 @@ input.error {
     max-width: 195px;  
 }
 /* width */
-#char_body>div::-webkit-scrollbar {
+#char_body>div::-webkit-scrollbar, #inbox-contacts::-webkit-scrollbar {
     width: 5px;
 }
 
 /* Track */
-#char_body>div::-webkit-scrollbar-track {
+#char_body>div::-webkit-scrollbar-track, #inbox-contacts::-webkit-scrollbar-track {
     background: #f1f1f1; 
 }
 
 /* Handle */
-#char_body>div::-webkit-scrollbar-thumb {
+#char_body>div::-webkit-scrollbar-thumb, #inbox-contacts::-webkit-scrollbar-thumb {
     background: #888; 
 }
 
 /* Handle on hover */
-#char_body>div::-webkit-scrollbar-thumb:hover {
+#char_body>div::-webkit-scrollbar-thumb:hover, #inbox-contacts::-webkit-scrollbar-thumb:hover {
     background: #555; 
 }
 .label.label-icon {
     padding: 4px 0px 4px 4px;
+}
+/*user guide*/
+#GuideModal .modal-dialog{
+    width: 80%;
+}
+/*message*/
+input#search-box {
+    width: 100%;
+    border-radius: 0;
+}
+#inbox-contacts{
+    max-height: 300px;
+    overflow-y: auto;
+}
+.message .body{
+    margin-bottom: 5px;
+    margin-top: 5px !important;
+}
+.message .datetime {
+    color: #636363 !important;
 }
 @media only screen and (max-width: 767px){
     .all_user_sort {
