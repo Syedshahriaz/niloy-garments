@@ -168,13 +168,13 @@
     <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script>
 
     <script>
-        initializeListSearch({
+        /*initializeListSearch({
             toggleAnimationSpeed: 0,
             openLinkWithEnterKey: true,
             itemSelector: '.inbox-contacts',
             searchTextBoxSelector: '#search-box',
             noItemsFoundSelector: '.no-apps-found'
-        });
+        });*/
         jQuery(document).ready(function() {
             /*setInterval(function(){
                 var id = $('#message_id').val();
@@ -410,6 +410,7 @@
 
             var id = $(this).attr('data-id');
             $('#message_id').val(id);
+            show_loader('Please wait while getting data');
 
             getAndPopulateSelectedMessage(id);
         });

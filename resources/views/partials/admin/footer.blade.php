@@ -63,8 +63,8 @@
 
         setInterval(function(){
             var id = $('#message_id').val();
-            getAndPopulateSelectedMessage(id);
-            getAndShowUnreadMessageCount();
+            //getAndPopulateSelectedMessage(id);
+            //getAndShowUnreadMessageCount();
         }, 2000);
     })
 
@@ -128,6 +128,7 @@
 
     function getAndPopulateSelectedMessage(id){
         var url = "{{ url('admin/get_message_details') }}";
+        var keyword = $('#search-box').val();
 
         $.ajax({
             type: "POST",
@@ -136,7 +137,9 @@
             success: function(data) {
                 if (data.status == 200) {
                     populateMessage(data.message);
-                    populateMessageHead(data.message_heads);
+                    if(keyword =='') {
+                        populateMessageHead(data.message_heads);
+                    }
                 } else {
                     //Nothing to do now;
                 }
@@ -227,6 +230,8 @@
         });
 
         var msg = list.html(tpl);
+
+        hide_loader();
 
         var getLastPostPos = function() {
             var height = 0;

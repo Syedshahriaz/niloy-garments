@@ -47,7 +47,7 @@
     <div class="form-group">
         <h4>Thank you for your registration to Niloy Garments!</h4>
         <p>An email with verification link have been sent to your email address</p>
-        <p>Verify your email to login to this portal</p>
+        <p>Verify your email to <a href="{{url('login')}}">login</a> to this portal</p>
     </div>
     <!-- END LOGIN FORM -->
 </div>

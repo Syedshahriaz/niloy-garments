@@ -22,8 +22,8 @@ use DB;
 class Common
 {
     const SITE_TITLE = 'Vujadetect';
-    const DOMAIN_NAME = 'tna.ownenterprise.com';
-    const SITE_URL = 'https://tna.ownenterprise.com';
+    const DOMAIN_NAME = 'vujadetec.net';
+    const SITE_URL = 'https://vujadetec.net';
     //const SITE_URL = 'http://127.0.0.1:8000';
     const FROM_EMAIL = 'mail2technerd@gmail.com';
     const FROM_NAME = 'Vujadetect';

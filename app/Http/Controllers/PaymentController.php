@@ -93,7 +93,7 @@ class PaymentController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://sandbox.easypayway.com/payment/request.php",
+            CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -108,12 +108,25 @@ class PaymentController extends Controller
 
         curl_close($curl);
 
-        //return $response;
+        /*$postdata = http_build_query($fields);
+
+        $opts = array('http' =>
+            array(
+                'method'  => 'POST',
+                'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                'content' => $postdata
+            )
+        );
+
+        $context  = stream_context_create($opts);
+
+        $response = file_get_contents($url, false, $context);*/
+
+        return $response;
+
         if ($response !='"Invalid Store ID"') {
             $url_forward = str_replace('"', '', stripslashes($response));
-            echo "<meta http-equiv='refresh' content='0;url=".$url_forward."'>";
-            # eader("Location: ". $url_forward);
-            exit;
+            return redirect()->away($url_forward);
 
         } else {
             echo "API Error #:" . $response;
