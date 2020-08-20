@@ -110,6 +110,7 @@ Route::get('admin/offer_price_setting', 'Admin\SettingController@offerPriceSetti
 Route::post('admin/save_country_offer', 'Admin\SettingController@storeCountryOffer');
 Route::post('admin/get_country_offer', 'Admin\SettingController@getCountryOffer');
 Route::post('admin/update_country_offer', 'Admin\SettingController@updateCountryOffer');
+Route::post('admin/delete_country_offer', 'Admin\SettingController@deleteCountryOffer');
 Route::get('admin/project_settings', 'Admin\ProjectController@index');
 Route::post('admin/get_project_ajax', 'Admin\ProjectController@getProjectAjax');
 Route::post('admin/update_project', 'Admin\ProjectController@updateProject');

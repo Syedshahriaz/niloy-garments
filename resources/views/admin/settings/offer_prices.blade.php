@@ -60,7 +60,7 @@
                                 <?php
                                 foreach($offer_prices as $key=>$offer_price){
                                 ?>
-                                <tr>
+                                <tr id="country_offer_{{$offer_price->id}}">
                                     <td style="width: 50px;">{{$key+1}}</td>
                                     <td>{{$offer_price->country_name}}</td>
                                     <td>{{$offer_price->country_code}}</td>
@@ -68,7 +68,10 @@
                                     <td>{{$offer_price->offer_price}}</td>
                                     <td class="text-center">
                                         <a href="#" title="Edit Offer" onclick="edit_offer({{$offer_price->id}})">
-                                            <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Dashboard">
+                                            <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Edit Offer">
+                                        </a>
+                                        <a href="#" title="Delete Offer" onclick="delete_offer({{$offer_price->id}})">
+                                            <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Delete Offer">
                                         </a>
                                     </td>
                                 </tr>
@@ -381,6 +384,38 @@
                 $("#edit_error_message").html(validate);
             }
         });
+
+        function delete_offer(id){
+            $(".warning_message").text('Are you sure you delete this offer price? ');
+            $("#warning_modal").modal('show');
+            $( "#warning_ok" ).on('click',function() {
+                event.preventDefault();
+
+                show_loader();
+
+                var url = "{{ url('admin/delete_country_offer')}}";
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {id:id,'_token':'{{ csrf_token() }}'},
+                    async: false,
+                    success: function (data) {
+                        hide_loader();
+
+                        if(data.status == 200){
+                            $('#warning_modal').modal('hide');
+                            $('#country_offer_'+id).remove();
+                        }
+                        else{
+                            show_error_message(data);
+                        }
+                    },
+                    error: function (data) {
+                        show_authentication_error_message();
+                    }
+                });
+            });
+        }
 
     </script>
 @endsection

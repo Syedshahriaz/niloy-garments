@@ -171,4 +171,17 @@ class SettingController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+
+    public function deleteCountryOffer(Request $request){
+        try{
+            OfferPrices::where('id',$request->country_id)->delete();
+            return ['status'=>200, 'reason'=>'Successfully deleted'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deleteCountryOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
 }
