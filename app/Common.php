@@ -40,7 +40,7 @@ class Common
     const PAYMENT_CANCEL_URL = Common::SITE_URL.'/payment_cancel';
 
 
-    const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG'];
+    const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
 
     public static function is_admin_login(){

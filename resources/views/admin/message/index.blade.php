@@ -333,15 +333,11 @@
                             $('#uploaded_img').removeClass('visible');
                             $('#message_input').removeClass('img-added');
                         } else {
-                            $("#success_message").hide();
-                            $("#error_message").show();
-                            $("#error_message").html(data.reason);
+                            show_error_message(data.reason);
                         }
                     },
                     error: function(data) {
-                        $("#success_message").hide();
-                        $("#error_message").show();
-                        $("#error_message").html(data);
+                        show_error_message('Something went wrong. Try again later.');
                     },
                     cache: false,
                     contentType: false,

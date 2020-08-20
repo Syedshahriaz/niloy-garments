@@ -75,6 +75,15 @@ class MessageController extends Controller
 
             if($request->hasFile('message_file')){
                 $file = $request->File('message_file');
+                if(!Common::isValidImageExtension($file)){
+                    return ['status'=>401, 'reason'=>'Only JPG, JPEG and PNG files are allowed'];
+                }
+
+                $file_size = $file->getSize()/1000;
+                if($file_size>2000){
+                    return ['status'=>401, 'reason'=>'File too large. Maximum allowed file size is 2MB'];
+                }
+
                 $extension = $file->getClientOriginalExtension();
                 $file_name = md5(rand(10,10000)).time().'.'.$file->getClientOriginalExtension();
                 $destinationPath = public_path('uploads/messages');
