@@ -107,9 +107,9 @@
                                     <label class="control-label">Country</label>
                                     <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="country" value=""  autocomplete="off">
                                         <option value="">Select</option>
-                                        <option value="Bangladesh#+88">Bangladesh(+88)</option>
-                                        <option value="China#+86">China(+86)</option>
-                                        <option value="India#+91">India(+91)</option>
+                                        @foreach($countries as $country)
+                                            <option value="{{$country->name."#".$country->dial_code}}">{{$country->name."(".$country->dial_code.")"}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -164,9 +164,9 @@
                                     <label class="control-label">Country</label>
                                     <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="edit_country" value="" disabled autocomplete="off">
                                         <option value="">Select</option>
-                                        <option value="Bangladesh#+88">Bangladesh(+88)</option>
-                                        <option value="China#+86">China(+86)</option>
-                                        <option value="India#+91">India(+91)</option>
+                                        @foreach($countries as $country)
+                                            <option value="{{$country->name."#".$country->dial_code}}">{{$country->name."(".$country->dial_code.")"}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
