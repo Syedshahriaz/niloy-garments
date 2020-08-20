@@ -23,10 +23,14 @@ class PaymentController extends Controller
 
         $user = User::where('id',$user_id)->first();
         $offer_price = OfferPrices::where('country_code',$user->country_code)->first();
-        $currency = $offer_price->currency;
-        $offer_amount = $offer_price->offer_price;
-
-        $offer_amount = 10; // Only for sandbox mode.
+        if(!empty($offer_price)){
+            $currency = $offer_price->currency;
+            $offer_amount = $offer_price->offer_price;
+        }
+        else{
+            $currency = 'USD';
+            $offer_amount = 10;
+        }
 
         if(COMMON::EASYPAY_MODE=='sandbox'){
             $url = COMMON::EASYPAY_SANDBOX_URL;
