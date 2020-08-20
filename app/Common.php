@@ -21,12 +21,12 @@ use DB;
  */
 class Common
 {
-    const SITE_TITLE = 'Vujadetect';
+    const SITE_TITLE = 'Vujadetec';
     const DOMAIN_NAME = 'vujadetec.net';
     const SITE_URL = 'https://vujadetec.net';
     //const SITE_URL = 'http://127.0.0.1:8000';
-    const FROM_EMAIL = 'mail2technerd@gmail.com';
-    const FROM_NAME = 'Vujadetect';
+    const FROM_EMAIL = 'support@vujadetec.com';
+    const FROM_NAME = 'Vujadetec';
 
     const EASYPAY_MODE = 'sandbox';
     const EASYPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
