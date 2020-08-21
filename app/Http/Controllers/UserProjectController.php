@@ -23,6 +23,11 @@ use View;
 
 class UserProjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function selectShipment(Request $request){
         try{
             if (Auth::check()) {

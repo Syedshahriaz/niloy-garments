@@ -1,11 +1,13 @@
 <?php
 
 namespace App;
+use App\Models\Payment;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\UserProject;
 use App\Models\UserProjectTask;
 use App\Models\Notification;
+use App\Models\UserShipment;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\ErrorLog;
@@ -49,6 +51,31 @@ class Common
             return 1;
         }
         return 0;
+    }
+
+    public static function checkPaymentAndShipentStatus(){
+        $user = Auth::user();
+        /*
+         * Check if payment done for this user
+         * */
+        $payment = Payment::where('user_id', $user->id)->first();
+        if (empty($payment)) {
+            return 'empty_payment';
+        }
+        if ($payment->payment_status != 'Completed') {
+            return 'empty_payment';
+        }
+
+        /*
+         * Check if shipment date selected already
+         * */
+        $shipment = UserShipment::where('user_id', $user->id)->first();
+
+        if (empty($shipment)) {
+            return 'empty_shipment';
+        }
+
+        return 'active_user';
     }
 
     public static function getNotifications($user_id=''){

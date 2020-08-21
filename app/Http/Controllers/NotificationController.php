@@ -43,6 +43,23 @@ class NotificationController extends Controller
                 $returnHTML = View::make('user.notification',compact('user','notifications'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
+
+
+            /*
+             * Check user status and redirect
+             * */
+            $user_status = Common::checkPaymentAndShipentStatus();
+            if($user_status=='empty_payment'){
+                return redirect('promotion/'.$user->id);
+            }
+            if($user_status=='empty_shipment'){
+                return redirect('select_shipment/'.$user->id);
+            }
+            /*
+             * User status checking ends
+             * */
+
+
             return view('user.notifications',compact('user','notifications'));
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'NotificationController', 'notifications', $e->getLine(),

@@ -16,6 +16,11 @@ use Spatie\PdfToImage\Pdf;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function initiatePayment(Request $request){
 
         $user_id = $request->id;

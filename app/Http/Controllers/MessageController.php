@@ -14,6 +14,11 @@ use View;
 
 class MessageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function message(Request $request)
     {
         $user = Auth::user();
@@ -37,6 +42,23 @@ class MessageController extends Controller
             $returnHTML = View::make('user.message',compact('user','message'))->renderSections()['content'];
             return response()->json(array('status' => 200, 'html' => $returnHTML));
         }
+
+
+        /*
+         * Check user status and redirect
+         * */
+        $user_status = Common::checkPaymentAndShipentStatus();
+        if($user_status=='empty_payment'){
+            return redirect('promotion/'.$user->id);
+        }
+        if($user_status=='empty_shipment'){
+            return redirect('select_shipment/'.$user->id);
+        }
+        /*
+         * User status checking ends
+         * */
+
+
         return view('user.message',compact('user','message'));
     }
 

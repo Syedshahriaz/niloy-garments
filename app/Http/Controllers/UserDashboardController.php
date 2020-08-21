@@ -16,6 +16,11 @@ use View;
 
 class UserDashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function dashboard(Request $request)
     {
         try {
@@ -45,6 +50,22 @@ class UserDashboardController extends Controller
                     compact('user_id','projects','buyer'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
+
+            /*
+             * Check user status and redirect
+             * */
+            $user = Auth::user();
+            $user_status = Common::checkPaymentAndShipentStatus();
+            if($user_status=='empty_payment'){
+                return redirect('promotion/'.$user->id);
+            }
+            if($user_status=='empty_shipment'){
+                return redirect('select_shipment/'.$user->id);
+            }
+            /*
+             * User status checking ends
+             * */
+
             return view('user.dashboard',compact('user_id','projects','buyer'));
             //echo "<pre>"; print_r($projects); echo "</pre>";
         } catch (\Exception $e) {

@@ -23,6 +23,11 @@ use View;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function registration(Request $request){
         try {
             if($request->token !=''){
@@ -225,8 +230,9 @@ class UserController extends Controller
     }
 
     public function profile(Request $request){
-        try {
+        //try {
             if (Auth::check()) {
+
                 $user = User::where('users.id', Session::get('user_id'))
                     ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
@@ -236,18 +242,34 @@ class UserController extends Controller
                     $returnHTML = View::make('user.profile', compact('user'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
+
+                /*
+                 * Check user status and redirect
+                 * */
+                $user = Auth::user();
+                $user_status = Common::checkPaymentAndShipentStatus();
+                if($user_status=='empty_payment'){
+                    return redirect('promotion/'.$user->id);
+                }
+                if($user_status=='empty_shipment'){
+                    return redirect('select_shipment/'.$user->id);
+                }
+                /*
+                 * User status checking ends
+                 * */
+
                 return view('user.profile', compact('user'));
             }
             else{
                 return redirect('login');
             }
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'profile', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function userEdit(Request $request)
@@ -410,6 +432,24 @@ class UserController extends Controller
                     $returnHTML = View::make('user.user_list', compact('users'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
+
+
+                /*
+                 * Check user status and redirect
+                 * */
+                $user = Auth::user();
+                $user_status = Common::checkPaymentAndShipentStatus();
+                if($user_status=='empty_payment'){
+                    return redirect('promotion/'.$user->id);
+                }
+                if($user_status=='empty_shipment'){
+                    return redirect('select_shipment/'.$user->id);
+                }
+                /*
+                 * User status checking ends
+                 * */
+
+
                 return view('user.user_list', compact('users'));
             }
             else{
