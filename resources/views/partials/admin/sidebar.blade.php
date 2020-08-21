@@ -180,11 +180,11 @@
                             <span class="title">By profession Report</span>
                         </a>
                     </li>
-                    <li class="nav-item start @if($page=='report_merriege') active @endif">
+                    <!-- <li class="nav-item start @if($page=='report_merriege') active @endif">
                         <a href="#" class="nav-link">
                             <span class="title">By Marriege Report</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
             <li class="nav-item">

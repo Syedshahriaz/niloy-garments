@@ -53,6 +53,7 @@
                                         <input type="radio" name="offer_3" value="3" disabled="" hidden="">
                                     </div>
                                 </div>
+                                <p class="text-center mt-3">Pink is free for female if any female buy green or red offer. </p>   
                             </div>
                         </form>
                     </div>

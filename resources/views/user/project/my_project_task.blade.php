@@ -39,9 +39,10 @@
                     <!-- BEGIN PORTLET-->
                     <div class="portlet light bordered">
                         <div class="portlet-title">
-                            <div class="caption">
+                            <div class="caption" style="padding:0;">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">Tasks for {{$project->name}} of user {{$user->username}} </span>
+                                <p class="caption-subject font-dark bold uppercase no-margin" style="font-size:14px;">{{$user->username}} </p>
+                                <span class="caption-subject font-dark bold uppercase" style="font-size:14px;">Tasks for {{$project->name}}</span>
                                 <span class="caption-helper"></span>
                             </div>
 
