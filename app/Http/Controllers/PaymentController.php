@@ -16,11 +16,6 @@ use Spatie\PdfToImage\Pdf;
 
 class PaymentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function initiatePayment(Request $request){
 
         $user_id = $request->id;
@@ -143,8 +138,6 @@ class PaymentController extends Controller
     public function success(Request $request){
         try {
             $data = $request->all();
-
-            echo "<pre>"; print_r($data); echo "</pre>"; exit();
 
             $user_id = $data['opt_a'];
             $pay_status = $data['pay_status'];
@@ -320,6 +313,7 @@ class PaymentController extends Controller
 
     public function failed(Request $request){
         try {
+            return 'Payment failed';
             $data = $request->all();
             //echo "<pre>"; print_r($data); echo "</pre>"; exit();
             $user_id = $data['opt_a'];
@@ -340,6 +334,7 @@ class PaymentController extends Controller
 
     public function cancel(Request $request){
         try {
+            return 'Payment cancelled';
             $data = $request->all();
             $user_id = $data['opt_a'];
 

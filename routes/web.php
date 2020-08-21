@@ -27,11 +27,11 @@ Route::get('admin/logout', 'Admin\AdminController@logout');
  * User auth route
  * */
 Route::post('/post_login', 'AuthenticationController@postLogin');
-Route::get('/registration', 'UserController@registration')->name('registration');
-Route::get('/thankyou', 'UserController@registrationThankYou');
+Route::get('/registration', 'AuthenticationController@registration')->name('registration');
+Route::get('/thankyou', 'AuthenticationController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');
-Route::post('user/store', 'UserController@store');
-Route::get('verify_email', 'UserController@verifyEmail');
+Route::post('user/store', 'AuthenticationController@store');
+Route::get('verify_email', 'AuthenticationController@verifyEmail');
 
 Route::get('send_sms', 'HomeController@sendSms');
 
