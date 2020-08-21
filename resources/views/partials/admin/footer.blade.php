@@ -63,8 +63,8 @@
 
         setInterval(function(){
             var id = $('#message_id').val();
-            //getAndPopulateSelectedMessage(id);
-            //getAndShowUnreadMessageCount();
+            getAndPopulateSelectedMessage(id);
+            getAndShowUnreadMessageCount();
         }, 2000);
     })
 
