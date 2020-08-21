@@ -726,6 +726,10 @@ input#search-box {
     .page-header.navbar .top-menu .navbar-nav>li.dropdown-notification .dropdown-menu .dropdown-menu-list>li a .time{
         max-width: 100%; 
     }
+    #header_notification_bar .dropdown-menu{
+        left: -250px;
+        min-width: 320px;
+    }
 }
 /*inbox END*/
 /*Admin part END*/

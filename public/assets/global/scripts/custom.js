@@ -13,7 +13,7 @@ if(input != null){
     var iti = window.intlTelInput(input, {
         initialCountry: "bd",
         separateDialCode: true,
-        utilsScript: "assets/global/plugins/intl-tel-input-master/js/utils.js"
+        utilsScript: "../assets/global/plugins/intl-tel-input-master/js/utils.js"
     });
 
     errorMsg = document.querySelector("#error-msg"),

@@ -115,9 +115,11 @@
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
                                                     <input type="text" class="form-control telephone" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->country_code.$user->phone}}">
-                                                    <!-- <input type="text" class="form-control telephone" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value=""> -->
+                                                    <div>
+                                                    <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
                                                     <span id="valid-msg" class="hide">✓ Valid</span>
                                                     <span id="error-msg" class="hide">Invalid</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -153,6 +155,7 @@
                                                 <div class="form-group">
                                                     <label for=""><b>Shipping Date</b></label>
                                                     <input class="form-control date-picker" size="16" type="text" name="" id="ship_date" @if($user->shipment_date_update_count!=0) value="{{date('l d, M, Y', strtotime($user->shipment_date))}}" disabled @endif />
+                                                    <input class="form-control" size="16" type="text" name="" id="ship_date01" />
                                                     <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
                                                     <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
                                                 </div>
@@ -185,51 +188,55 @@
 
     <script>
         $(document).ready(function(){
-            //$(".telephone").intlTelInput("setNumber", "{{$user->country_code.$user->phone}}");
-            //$("#telephone").intlTelInput("setNumber", "01733123456");
+            $("#ship_date01").datepicker({
+                format: 'DD, d M, yyyy',
+                autoclose: true
+            }).datepicker("update", "10/08/2016"); 
 
-            // var input = document.querySelector("#telephone");
-            // if(input != null){
-            //     var iti = window.intlTelInput(input, {
-            //         initialCountry: "bd",
-            //         separateDialCode: true,
-            //         utilsScript: "http://127.0.0.1:8000/assets/global/plugins/intl-tel-input-master/js/utils.js"
-            //     });
-            //     iti.setNumber("+8801617411666");
-            //     //onsole.log('sdfsdf');
+            //Telephone number validation
+            var input = document.querySelector("#telephone01");
+            if(input != null){
+                var iti = window.intlTelInput(input, {
+                    initialCountry: "bd",
+                    separateDialCode: true,
+                    utilsScript: "../assets/global/plugins/intl-tel-input-master/js/utils.js"
+                });
+                iti.setNumber("+8801617411666");
 
-            //     errorMsg = document.querySelector("#error-msg"),
-            //         validMsg = document.querySelector("#valid-msg");
+                errorMsg = document.querySelector("#error-msg"),
+                validMsg = document.querySelector("#valid-msg");
 
-            //  // here, the index maps to the error code returned from getValidationError - see readme
-            //     var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+                // here, the index maps to the error code returned from getValidationError - see readme
+                var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
 
-            //     var reset = function() {
-            //         input.classList.remove("error");
-            //         errorMsg.innerHTML = "";
-            //         errorMsg.classList.add("hide");
-            //         validMsg.classList.add("hide");
-            //     };
+                var reset = function() {
+                    input.classList.remove("error");
+                    errorMsg.innerHTML = "";
+                    errorMsg.classList.add("hide");
+                    validMsg.classList.add("hide");
+                };
 
-            // // on blur: validate
-            //     input.addEventListener('blur', function() {
-            //         reset();
-            //         if (input.value.trim()) {
-            //             if (iti.isValidNumber()) {
-            //                 validMsg.classList.remove("hide");
-            //             } else {
-            //                 input.classList.add("error");
-            //                 var errorCode = iti.getValidationError();
-            //                 errorMsg.innerHTML = errorMap[errorCode];
-            //                 errorMsg.classList.remove("hide");
-            //             }
-            //         }
-            //     });
+            // on blur: validate
+                input.addEventListener('blur', function() {
+                    reset();
+                    
+                    if (input.value.trim()) {
+                        if (iti.isValidNumber()) {
+                            validMsg.classList.remove("hide");
+                        } else {
+                            input.classList.add("error");
+                            var errorCode = iti.getValidationError();
+                            errorMsg.innerHTML = errorMap[errorCode];
+                            errorMsg.classList.remove("hide");
+                        }
+                    }
+                });
 
-            // // on keyup / change flag: reset
-            //     input.addEventListener('change', reset);
-            //     input.addEventListener('keyup', reset);
-            // }
+            // on keyup / change flag: reset
+                input.addEventListener('change', reset);
+                input.addEventListener('keyup', reset);
+
+            }
         });
     </script>
 @endsection
