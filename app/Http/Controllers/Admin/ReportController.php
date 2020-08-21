@@ -641,8 +641,6 @@ class ReportController extends Controller
             }
             $settings = Setting::first();
 
-            //echo "<pre>"; print_r($week_array); echo "</pre>"; exit();
-
             return view('admin.reports.report_by_offer_purchase',compact('year','week_array','settings'));
         }
         catch (\Exception $e) {

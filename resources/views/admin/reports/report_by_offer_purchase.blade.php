@@ -53,7 +53,7 @@
                         <div class="portlet-body p-relative">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
-                                    <div id="chart_div" style="width: 100%; height: 500px;"></div>        
+                                    <div id="chart_div" style="width: 100%; height: 500px;"></div>
                                 </div>
                                 <div class="col-md-12 col-sm-12">
                                     <hr>
@@ -115,9 +115,9 @@
                                             </tfoot>
                                     </table>
                                 </div>
-                                
+
                             </div>
-                            
+
                         </div>
                     </div>
                     <!-- END PORTLET-->
@@ -156,16 +156,13 @@
             data.addColumn('number', 'Sell Count');
 
             data.addRows([
-                [0, 0],   [1, 110],  [2, 123],  [3, 117],  [4,118],  [5, 119],
-                [6, 11],  [7, 147],  [8, 93],  [9, 180],  [10, 232], [11, 35],
-                [12, 130], [13, 140], [14, 102], [15, 247], [16, 44], [17, 248],
-                [18, 152], [19, 54], [20, 42], [21, 55], [22, 56], [23, 57],
-                [24, 160], [25, 150], [26, 152], [27, 51], [28, 49], [29, 353],
-                [30, 155], [31, 260], [32, 61], [33, 59], [34, 262], [35, 65],
-                [36, 162], [37, 58], [38, 55], [39, 61], [40, 64], [41, 65],
-                [42, 163], [43, 66], [44, 155], [45, 469], [46, 69], [47, 70],
-                [48, 172], [49, 268], [50, 166], [51, 65], [52, 67], [53, 270],
-                [54, 171], [55, 172]
+                <?php
+                $i=0;
+                foreach($week_array as $key=>$week){
+                    $total_purchase = $week['offer_1_purchases']+$week['offer_2_purchases'];
+                    echo "[".$i.", ".$total_purchase."],";
+                    $i++;
+                } ?>
             ]);
 
             var options = {
@@ -173,7 +170,7 @@
                     title: 'Week'
                 },
                 vAxis: {
-                    title: 'No of user',
+                    title: 'No of purchase',
                     viewWindow: {
                         max: 500
                     }

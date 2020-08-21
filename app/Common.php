@@ -28,7 +28,8 @@ class Common
     const FROM_EMAIL = 'support@vujadetec.com';
     const FROM_NAME = 'Vujadetec';
 
-    const EASYPAY_MODE = 'sandbox';
+    /* You can set EASYPAY_MODE to sandbox or live*/
+    const EASYPAY_MODE = 'live';
     const EASYPAY_SANDBOX_URL = 'https://sandbox.easypayway.com/payment/request.php';
     const EASYPAY_SANDBOX_STORE_ID = 'epw';
     const EASYPAY_SANDBOX_SIGNATURE_KEY = 'dc0c2802bf04d2ab3336ec21491146a3';

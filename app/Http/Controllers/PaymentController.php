@@ -126,8 +126,6 @@ class PaymentController extends Controller
 
         $response = file_get_contents($url, false, $context);*/
 
-        return $response;
-
         if ($response !='"Invalid Store ID"') {
             $url_forward = str_replace('"', '', stripslashes($response));
             return redirect()->away($url_forward);
@@ -140,6 +138,8 @@ class PaymentController extends Controller
     public function success(Request $request){
         try {
             $data = $request->all();
+
+            echo "<pre>"; print_r($data); echo "</pre>"; exit();
 
             $user_id = $data['opt_a'];
             $pay_status = $data['pay_status'];
@@ -316,12 +316,13 @@ class PaymentController extends Controller
     public function failed(Request $request){
         try {
             $data = $request->all();
+            //echo "<pre>"; print_r($data); echo "</pre>"; exit();
             $user_id = $data['opt_a'];
 
             /*
              * Re authenticate user
              * */
-            $this->reAuthenticateUser($user_id);
+            $user = $this->reAuthenticateUser($user_id);
 
             return redirect('promotion/'.$user_id);
         } catch (\Exception $e) {
@@ -401,7 +402,7 @@ class PaymentController extends Controller
 
         $fields = array(
             'store_id' => $store_id,
-            'amount' => 10,
+            'amount' => 2,
             'payment_type' => 'VISA',
             'currency' => 'BDT',
             'tran_id' => "TXN_".uniqid(),
@@ -436,7 +437,7 @@ class PaymentController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://sandbox.easypayway.com/payment/request.php",
+            CURLOPT_URL => "https://securepay.easypayway.com/payment/request.php",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
