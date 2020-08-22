@@ -30,7 +30,7 @@ Route::post('/post_login', 'AuthenticationController@postLogin');
 Route::get('/registration', 'AuthenticationController@registration')->name('registration');
 Route::get('/thankyou', 'AuthenticationController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');
-Route::post('user/store', 'AuthenticationController@store');
+Route::post('user/store', 'AuthenticationController@storeUser');
 Route::get('verify_email', 'AuthenticationController@verifyEmail');
 
 Route::get('send_sms', 'HomeController@sendSms');

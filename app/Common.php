@@ -694,4 +694,11 @@ class Common
         }
     }
 
+    public static function formatPhoneNumber($phone){
+        $phone = str_replace(" ","",$phone);
+        $phone = str_replace("-","",$phone);
+        $phone = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $phone);
+        return $phone;
+    }
+
 }//End

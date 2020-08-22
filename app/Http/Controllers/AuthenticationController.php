@@ -43,7 +43,7 @@ class AuthenticationController extends Controller
         }
     }
 
-    public function store(Request $request){
+    public function storeUser(Request $request){
         try {
             $lastUser = User::orderBy('id','DESC')->first();
             if(!empty($lastUser)){
@@ -53,6 +53,8 @@ class AuthenticationController extends Controller
                 $unique_id = Common::generateUniqueNumber(1);
             }
 
+            $phone_number = Common::formatPhoneNumber($request->phone);
+
             $parentUser = User::where('email',$request->email)->where('parent_id',0)->first();
 
             $user = new User();
@@ -61,7 +63,7 @@ class AuthenticationController extends Controller
             }
             $user->username = $request->username;
             $user->email = $request->email;
-            $user->phone = $request->phone;
+            $user->phone = $phone_number;
             $user->country_code = $request->country_code;
             $user->password = bcrypt($request->password);
             $user->unique_id = $unique_id;
@@ -101,7 +103,7 @@ class AuthenticationController extends Controller
              * Send registration confirmation message
              * */
 
-            $response = Common::sendRegistrationConfirmationSms($request->username,$request->phone);
+            $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number);
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
         } catch (\Exception $e) {

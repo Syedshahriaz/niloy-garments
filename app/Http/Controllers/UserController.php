@@ -29,18 +29,18 @@ class UserController extends Controller
     }
 
     public function multiTinent(Request $request){
-        //try {
+        try {
             $user = User::where('id',$request->user_id)->first();
 
             $this->createUserSession($user);
 
             return redirect('promotion');
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'multiTinent', $e->getLine(),
                 $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function updateUserGuideSeenStatus(Request $request){
@@ -182,14 +182,13 @@ class UserController extends Controller
             DB::beginTransaction();
 
             $user_id = $request->user_id;
-
-            //echo "<pre>"; print_r($request->all()); echo "</pre>"; exit();
+            $phone_number = Common::formatPhoneNumber($request->phone);
 
             $user = User::where('id',$user_id)->first();
             $user->first_name = $request->first_name;
             $user->last_name = $request->last_name;
             $user->country_code = $request->country_code;
-            $user->phone = $request->phone;
+            $user->phone = $phone_number;
             $user->profession = $request->profession;
             //$user->birthday = date('Y-m-d', strtotime($request->birthday));
             $user->gender = $request->gender;
@@ -389,13 +388,14 @@ class UserController extends Controller
             else{
                 $unique_id = Common::generateUniqueNumber(1);
             }
+            $phone_number = Common::formatPhoneNumber($request->phone);
 
             $user = new User();
             $user->parent_id = $parentUser->id;
             $user->unique_id = $unique_id;
             $user->username = $request->username;
             $user->email = Session::get('user_email');
-            $user->phone = $request->phone;
+            $user->phone = $phone_number;
             $user->country_code = $request->country_code;
             $user->password = $parentUser->password;
             $user->role = 3;
@@ -427,7 +427,7 @@ class UserController extends Controller
              * Send registration confirmation message
              * */
 
-            $response = Common::sendRegistrationConfirmationSms($request->username,$request->phone);
+            $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number);
 
             return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         } catch (\Exception $e) {
