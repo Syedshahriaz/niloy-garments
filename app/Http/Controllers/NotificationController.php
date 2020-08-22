@@ -16,6 +16,10 @@ class NotificationController extends Controller
     public function notifications(Request $request)
     {
         try{
+            if(!Common::is_user_login()){
+                return redirect('error_404');
+            }
+
             $user = Auth::user();
             if($request->nid !=''){
                 $notifications = Common::getNotificationDetails($request->nid);

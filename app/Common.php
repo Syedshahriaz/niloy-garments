@@ -53,6 +53,13 @@ class Common
         return 0;
     }
 
+    public static function is_user_login(){
+        if (Session::get('user_id') && Session::get('role')==3) {
+            return 1;
+        }
+        return 0;
+    }
+
     public static function checkPaymentAndShipentStatus(){
         $user = Auth::user();
         /*

@@ -21,6 +21,10 @@ class MessageController extends Controller
 
     public function message(Request $request)
     {
+        if(!Common::is_user_login()){
+            return redirect('error_404');
+        }
+
         $user = Auth::user();
         $message = Message::with('message_details')
             ->select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')

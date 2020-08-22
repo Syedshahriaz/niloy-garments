@@ -31,6 +31,10 @@ class UserProjectController extends Controller
     public function selectShipment(Request $request){
         try{
             if (Auth::check()) {
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+
                 $offer = Offer::first();
                 $user = User::where('users.id', $request->id)->first();
 
@@ -147,6 +151,10 @@ class UserProjectController extends Controller
     public function allProject(Request $request){
         try{
             if (Auth::check()) {
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+
                 if ($request->u_id == '') {
                     if(Session::get('selected_user') != ''){
                         $user_id = Session::get('selected_user');
@@ -252,6 +260,10 @@ class UserProjectController extends Controller
     public function myProjectTask(Request $request){
         try{
             if (Auth::check()) {
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+
                 $user_project_id = $request->id;
                 $user = UserProject::select('users.id','users.username')
                     ->join('users','users.id','=','user_projects.user_id')

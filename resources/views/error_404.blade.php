@@ -46,6 +46,7 @@
     <!-- BEGIN LOGIN FORM -->
         <div class="form-group">
            <h1>404! Page not found</h1>
+            <span>Back to <a href="{{url('/')}}">Home</a> page</span>
         </div>
     <!-- END LOGIN FORM -->
 </div>

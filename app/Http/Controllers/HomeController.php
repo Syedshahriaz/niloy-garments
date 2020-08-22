@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Common;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\SMS;
@@ -9,6 +10,10 @@ use Auth;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * Show the application dashboard.
@@ -17,7 +22,14 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        return redirect('all_project');
+        if(Common::is_user_login()){
+            return redirect('all_project');
+        }
+        if(Common::is_admin_login()){
+            return redirect('admin');
+        }
+
+        return redirect('error_404');
     }
 
     public function sendSms(Request $request)

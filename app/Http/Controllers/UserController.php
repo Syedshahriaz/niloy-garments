@@ -28,21 +28,6 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function multiTinent(Request $request){
-        try {
-            $user = User::where('id',$request->user_id)->first();
-
-            $this->createUserSession($user);
-
-            return redirect('promotion');
-        } catch (\Exception $e) {
-            SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'multiTinent', $e->getLine(),
-                $e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
-    }
-
     public function updateUserGuideSeenStatus(Request $request){
         $user = Auth::user();
         $user = User::where('id',$user->id)->first();
@@ -68,6 +53,10 @@ class UserController extends Controller
     public function promotion(Request $request){
         try {
             if (Auth::check()) {
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+
                 $user = user::where('id', $request->id)->first();
                 $offer = Offer::first();
 
@@ -99,8 +88,12 @@ class UserController extends Controller
     }
 
     public function profile(Request $request){
-        //try {
+        try {
             if (Auth::check()) {
+
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
 
                 $user = User::where('users.id', Session::get('user_id'))
                     ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
@@ -132,18 +125,23 @@ class UserController extends Controller
             else{
                 return redirect('login');
             }
-        /*}
+        }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'profile', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function userEdit(Request $request)
     {
         if (Auth::check()) {
+
+            if(!Common::is_user_login()){
+                return redirect('error_404');
+            }
+
             $user = User::where('users.id', $request->id)
                 ->select('users.*', 'user_shipments.shipment_date','user_shipments.shipment_date_update_count')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
@@ -161,9 +159,15 @@ class UserController extends Controller
             return redirect('login');
         }
     }
+
     public function resetPassword(Request $request)
     {
         if (Auth::check()) {
+
+            if(!Common::is_user_login()){
+                return redirect('error_404');
+            }
+
             $user = User::where('users.id', Session::get('user_id'))->first();
 
             if($request->ajax()) {
@@ -288,6 +292,11 @@ class UserController extends Controller
     public function userList(Request $request){
         try {
             if (Auth::check()) {
+
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+
                 $users = User::where('users.email', Session::get('user_email'))
                     ->select('users.*', 'user_shipments.shipment_date','separate_user_logs.otp','separate_user_logs.created_at as otp_sent_at')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
@@ -336,6 +345,11 @@ class UserController extends Controller
     public function userDetails(Request $request){
         try {
             if (Auth::check()) {
+
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+
                 $user = User::where('users.id', $request->id)
                     ->select('users.*', 'user_shipments.shipment_date', 'professions.title as profession_name')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
@@ -363,6 +377,11 @@ class UserController extends Controller
     public function addUser(Request $request)
     {
         if (Auth::check()) {
+
+            if(!Common::is_user_login()){
+                return redirect('error_404');
+            }
+
             $user = User::where('users.id', Session::get('user_id'))->first();
 
             if($request->ajax()) {

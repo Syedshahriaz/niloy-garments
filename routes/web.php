@@ -51,7 +51,6 @@ Route::get('test_payment', 'PaymentController@testPayment');
 Auth::routes();
 
 Route::get('select_user', 'UserController@selectUser');
-Route::post('multi_tinent', 'UserController@multiTinent');
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
@@ -68,7 +67,7 @@ Route::post('update_password', 'UserController@updatePassword')->name('update_pa
 Route::post('send_user_otp', 'UserController@sendUserOtp')->name('user.send_user_otp');
 Route::post('separate_user', 'UserController@separateUser')->name('user.separate_user');
 
-Route::get('dashboard', 'UserDashboardController@dashboard');
+//Route::get('dashboard', 'UserDashboardController@dashboard');
 Route::post('save_buyer', 'UserDashboardController@saveBuyer')->name('buyer.save');
 Route::post('update_user_guide_seen_status', 'UserController@updateUserGuideSeenStatus');
 
