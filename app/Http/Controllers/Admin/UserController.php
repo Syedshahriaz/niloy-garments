@@ -187,7 +187,7 @@ class UserController extends Controller
 
             DB::commit();
 
-            return ['status'=>200, 'reason'=>'Ofer Successfully updated'];
+            return ['status'=>200, 'reason'=>'Offer Successfully updated'];
         } catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
