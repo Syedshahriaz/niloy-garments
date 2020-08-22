@@ -38,9 +38,11 @@ class MessageController extends Controller
         /*
          * mark message as read
          * */
-        MessageDetails::where('message_id',$last_message->id)
-            ->where('type','sent')
-            ->update(['is_read' => 1]);
+        if(!empty($last_message)){
+            MessageDetails::where('message_id',$last_message->id)
+                ->where('type','sent')
+                ->update(['is_read' => 1]);
+        }
 
         //echo "<pre>"; print_r($last_message); echo "</pre>"; exit();
 

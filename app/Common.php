@@ -426,10 +426,6 @@ class Common
 
             return $project_task->id;
         }
-        /*else{ // Dependent task is active
-            $project_task->status = 'not initiate';
-        }*/
-        //$project_task->save();
         return 0;
     }
 
@@ -464,7 +460,6 @@ class Common
             $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
             $tasks = $tasks->get();
 
-            //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
             $past_message_body = '';
             $warning_message_body = '';
 
@@ -478,20 +473,10 @@ class Common
                      * Send past warning sms
                      * */
                     $past_message_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
-                    //$sms_response = self::sendPastDayWarningSms($task->phone,$task);
 
                 }
                 else{
                     $email_response = self::send7dayWarningEmail($email,$task);
-
-                    /*
-                     * Send 7 day before warning sms
-                     * */
-                    /*$now = time(); // or your date as well
-                    $original_delivery_date = strtotime($task->original_delivery_date);
-                    $datediff = $now - $original_delivery_date;
-
-                    $day_left = round($datediff / (60 * 60 * 24));*/
 
                     $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
                     //$sms_response = self::send7dayWarningSms($task->phone,$task);
