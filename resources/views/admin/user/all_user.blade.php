@@ -674,12 +674,7 @@
                     success: function(data) {
                         HoldOn.close();
                         if (data.status == 200) {
-                            $("#offer_success_message").show();
-                            $("#offer_error_message").hide();
-                            $("#offer_success_message").html(data.reason);
-                            setTimeout(function(){
-                                location.reload();
-                            },2000)
+                            $("#change_offer_modal").modal('hide');
                         } else {
                             $("#offer_success_message").hide();
                             $("#offer_error_message").show();

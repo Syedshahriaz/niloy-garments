@@ -126,7 +126,7 @@ class UserController extends Controller
 
     public function updateUserOffer(Request $request)
     {
-        //try {
+        try {
             DB::beginTransaction();
 
             $admin_user = Auth::user();
@@ -141,6 +141,10 @@ class UserController extends Controller
                 ->first();
 
             $shipment = UserShipment::where('user_id',$user_id)->first();
+            if(empty($shipment)){
+                return [ 'status' => 401, 'reason' => 'This user did not select shipping date yet.'];
+            }
+
             $gender = $user->gender;
             $purchase_date = $user->payment_date;
 
@@ -180,13 +184,13 @@ class UserController extends Controller
             DB::commit();
 
             return ['status'=>200, 'reason'=>'Ofer Successfully updated'];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function sendUserEmail(Request $request)
