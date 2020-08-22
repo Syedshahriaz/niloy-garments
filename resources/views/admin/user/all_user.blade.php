@@ -640,6 +640,8 @@
 
         function change_offer(user_id){
             $('#offer_user_id').val(user_id);
+            $("#offer_success_message").hide();
+            $("#offer_error_message").hide();
             $("#change_offer_modal").modal('show');
         }
 
