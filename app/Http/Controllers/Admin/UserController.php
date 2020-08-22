@@ -58,6 +58,10 @@ class UserController extends Controller
 
             $user_id = $request->u_id;
 
+            $user = User::select('unique_id','username')
+                ->where('id',$user_id)
+                ->first();
+
             /*$shipment = UserShipment::where('user_id', $user_id)->first();
             if (empty($shipment)) {
                 return redirect('select_shipment/'.$user_id);
@@ -78,10 +82,10 @@ class UserController extends Controller
 
             if ($request->ajax()) {
                 $returnHTML = View::make('admin.user.dashboard',
-                    compact('user_id','projects','task_titles','buyer'))->renderSections()['content'];
+                    compact('user_id','user','projects','task_titles','buyer'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.user.dashboard',compact('user_id','projects','task_titles','buyer'));
+            return view('admin.user.dashboard',compact('user_id','user','projects','task_titles','buyer'));
             //echo "<pre>"; print_r($projects); echo "</pre>";
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'dashboard', $e->getLine(),

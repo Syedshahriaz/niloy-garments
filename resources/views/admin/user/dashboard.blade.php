@@ -53,7 +53,10 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">All Project Review </span>
+                                <span class="caption-subject font-dark bold">
+                                    {{$user->username." (".$user->unique_id.")"}} <br><br>
+                                    All Project Review
+                                </span>
                                 <span class="caption-helper"></span>
                             </div>
 
