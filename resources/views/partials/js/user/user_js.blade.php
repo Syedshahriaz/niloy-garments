@@ -286,6 +286,7 @@
         var user_id = $("#user_id").val();
         var first_name = $("#first_name").val();
         var email = $("#email").val();
+        var phone = $("#telephone01").val();
         var country_code = $(".iti__selected-dial-code").text();
         var shipment_date = $("#shipment_date").val();
         var old_shipment_date = $('#old_shipment_date').val();
@@ -305,6 +306,9 @@
             if(!re.test(email)){
                 validate = validate+'Email is invalid<br>';
             }
+        }
+        if (phone.trim() == "") {
+            validate = validate + "Phone is required</br>";
         }
 
         if (validate == "") {

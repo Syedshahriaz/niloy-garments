@@ -219,14 +219,13 @@
 
         re_initiate_date_picker();
         re_init_phone_velidation();
+        renInitTeliphoneValidationForProfile();
+        reInitDatepickerForProfile();
         re_initialize_data_table(1);
 
         var telephone = $('#existing_phone').val();
         if(telephone!==undefined){
             //set_teliphone(telephone);
-        }
-        if(item_name=='add_user'){
-            //$("#telephone").intlTelInput("setNumber", "");
         }
         if(item_name=='user_list'){
             //
@@ -312,6 +311,61 @@
     $(window).on('popstate', function(event) {
         window.location.reload();
     });
+
+    function renInitTeliphoneValidationForProfile(){
+        //Telephone number validation
+        var input = document.querySelector("#telephone01");
+        if(input != null){
+            var iti = window.intlTelInput(input, {
+                initialCountry: "bd",
+                separateDialCode: true,
+                utilsScript: "../assets/global/plugins/intl-tel-input-master/js/utils.js"
+            });
+
+            errorMsg = document.querySelector("#error-msg"),
+                validMsg = document.querySelector("#valid-msg");
+
+            // here, the index maps to the error code returned from getValidationError - see readme
+            var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+            var reset = function() {
+                input.classList.remove("error");
+                errorMsg.innerHTML = "";
+                errorMsg.classList.add("hide");
+                validMsg.classList.add("hide");
+            };
+
+            // on blur: validate
+            input.addEventListener('blur', function() {
+                reset();
+
+                if (input.value.trim()) {
+                    if (iti.isValidNumber()) {
+                        validMsg.classList.remove("hide");
+                    } else {
+                        input.classList.add("error");
+                        var errorCode = iti.getValidationError();
+                        errorMsg.innerHTML = errorMap[errorCode];
+                        errorMsg.classList.remove("hide");
+                    }
+                }
+            });
+
+            // on keyup / change flag: reset
+            input.addEventListener('change', reset);
+            input.addEventListener('keyup', reset);
+
+        }
+    }
+
+    function reInitDatepickerForProfile(){
+        var date = $('#old_shipment_date').val();
+        shipping_date =getFormattedDate(date,'m/d/Y');
+        $("#ship_date01").datepicker({
+            format: 'DD, d M, yyyy',
+            autoclose: true
+        }).datepicker("update", shipping_date);
+    }
 </script>
 <!-- END FOOTER scripts-->
 @yield('js')

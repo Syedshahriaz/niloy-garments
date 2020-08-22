@@ -114,9 +114,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Phone Number</b></label>
-                                                    <input type="text" class="form-control telephone" name="phone" id="telephone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->country_code.$user->phone}}">
                                                     <div>
-                                                    <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
+                                                    <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->country_code.$user->phone}}">
                                                     <span id="valid-msg" class="hide">✓ Valid</span>
                                                     <span id="error-msg" class="hide">Invalid</span>
                                                     </div>
@@ -154,8 +153,7 @@
                                             <div class="col-md-6" id="shipping_date_area">
                                                 <div class="form-group">
                                                     <label for=""><b>Shipping Date</b></label>
-                                                    <input class="form-control date-picker" size="16" type="text" name="" id="ship_date" @if($user->shipment_date_update_count!=0) value="{{date('l d, M, Y', strtotime($user->shipment_date))}}" disabled @endif />
-                                                    <input class="form-control" size="16" type="text" name="" id="ship_date01" />
+                                                    <input class="form-control date-picker" size="16" type="text" name="" id="ship_date01" @if($user->shipment_date_update_count!=0) value="{{date('l d, M, Y', strtotime($user->shipment_date))}}" disabled @endif />
                                                     <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
                                                     <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
                                                 </div>
@@ -184,14 +182,16 @@
 @endsection
 
 @section('js')
-    
+
 
     <script>
         $(document).ready(function(){
+            var date = $('#old_shipment_date').val();
+            shipping_date =getFormattedDate(date,'m/d/Y');
             $("#ship_date01").datepicker({
                 format: 'DD, d M, yyyy',
                 autoclose: true
-            }).datepicker("update", "10/08/2016"); 
+            }).datepicker("update", shipping_date);
 
             //Telephone number validation
             var input = document.querySelector("#telephone01");
@@ -201,7 +201,6 @@
                     separateDialCode: true,
                     utilsScript: "../assets/global/plugins/intl-tel-input-master/js/utils.js"
                 });
-                iti.setNumber("+8801617411666");
 
                 errorMsg = document.querySelector("#error-msg"),
                 validMsg = document.querySelector("#valid-msg");
@@ -219,7 +218,7 @@
             // on blur: validate
                 input.addEventListener('blur', function() {
                     reset();
-                    
+
                     if (input.value.trim()) {
                         if (iti.isValidNumber()) {
                             validMsg.classList.remove("hide");
