@@ -41,9 +41,11 @@
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions hidden" id="action_buttons">
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send Email" id="send_email_all">Send Email</button>
+                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
+                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send All SMS</button>
                                {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>--}}
                             </div>
+                            <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
                         </div>
                         <div class="portlet-body p-relative">
                             <div class="all_user_sort">
@@ -140,8 +142,11 @@
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>
-                                            <a href="#" title="Send SMS" onclick="send_message({{$user->id}},{{$user->message_id}})">
+                                            <a href="#" title="Send SMS" onclick="send_sms({{$user->id}},'{{$user->country_code}}','{{$user->phone}}')">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/sms.png')}}" alt="Email">
+                                            </a>
+                                            <a href="#" title="Send Message" onclick="send_message({{$user->id}},{{$user->message_id}})">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/message.png')}}" alt="Email">
                                             </a>
                                             {{--<a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
@@ -204,8 +209,55 @@
         <!-- /.modal-dialog -->
     </div>
 
+
     <!-- Modal -->
-    <div class="modal fade" id="send_message_modal" tabindex="-1" role="send_sms_modal" aria-hidden="true">
+    <div class="modal fade" id="send_sms_modal" tabindex="-1" role="send_sms_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send SMS</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="sms_form" method="post" action="">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="sms_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="sms_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="sms_user_id" value="">
+                            <input type="hidden" name="sms_type" id="sms_type" value="">
+
+                            <div class="col-md-12">
+                                <div class="form-group" id="telephone_area">
+                                    <label class="control-label">Phone*</label>
+                                    <input class="form-control placeholder-no-fix" id="telephone02" type="text" name="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
+                                    <span id="valid-msg" class="hide">✓ Valid</span>
+                                    <span id="error-msg" class="hide">Invalid</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Message</label>
+                                    <textarea class="form-control placeholder-no-fix" name="message" id="sms_message"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn pull-right" id="send_sms">Send SMS</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="send_message_modal" tabindex="-1" role="send_message_modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -439,6 +491,26 @@
             $("#send_email_modal").modal('show');
         });
 
+        $(document).on('click','#send_sms_all',function(){
+            var userIDs = $(".user_checkbox:checked").map(function(){
+                return $(this).val();
+            }).get();
+
+            $('#sms_type').val('bulk');
+            $('#sms_user_id').val(userIDs);
+            $('#telephone02').val('');
+            $('#telephone_area').addClass('hidden');
+            $("#send_sms_modal").modal('show');
+        });
+
+        $(document).on('click','#send_sms_custom',function(){
+            $('#sms_type').val('single');
+            $('#sms_user_id').val('');
+            $('#telephone02').val('');
+            $('#telephone_area').removeClass('hidden');
+            $("#send_sms_modal").modal('show');
+        });
+
         $(document).on('click','#delete_user_all',function(){
             var userIDs = $(".user_checkbox:checked").map(function(){
                 return $(this).val();
@@ -573,6 +645,81 @@
                 $("#success_message").hide();
                 $("#error_message").show();
                 $("#error_message").html(validate);
+            }
+        });
+
+        function send_sms(user_id,country_code,phone){
+            $('#sms_type').val('single');
+            $('#sms_user_id').val(user_id);
+            $('#telephone_area').removeClass('hidden');
+            $('#telephone02').val(phone);
+            $("#send_sms_modal").modal('show');
+        }
+
+        $(document).on("click", "#send_sms", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending sms.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var sms_type = $('#sms_type').val();
+            var phone = $("#telephone02").val();
+            var message = $("#sms_message").val();
+            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            var validate = "";
+
+            if (sms_type == "single" && phone.trim() == "") { // Phone validation fo single sms
+                validate = validate + "Phone is required</br>";
+            }
+            if (message.trim() == "") {
+                validate = validate + "Message is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#sms_form")[0]);
+                var url = "{{ url('admin/send_user_sms') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#sms_success_message").show();
+                            $("#sms_error_message").hide();
+                            $("#sms_success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#sms_success_message").hide();
+                            $("#sms_error_message").show();
+                            $("#sms_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#sms_success_message").hide();
+                        $("#sms_error_message").show();
+                        $("#sms_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#sms_success_message").hide();
+                $("#sms_error_message").show();
+                $("#sms_error_message").html(validate);
             }
         });
 

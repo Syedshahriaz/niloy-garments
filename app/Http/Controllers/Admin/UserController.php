@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Offer;
 use App\Models\TaskTitle;
+use App\SMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserShipment;
@@ -223,12 +224,39 @@ class UserController extends Controller
 
             $result = SendMails::sendMail($emailData, $view);
 
-            return ['status'=>200, 'reason'=>'Status Successfully updated'];
+            return ['status'=>200, 'reason'=>'Email successfully sent'];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'sendUserEmail', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
+    }
+
+    public function sendUserSms(Request $request)
+    {
+        //try {
+            $phones = $request->phone;
+            $message_body = $request->message;
+            $userIds = explode(',',$request->user_id);
+            if($phones==''){ // This is a bulk sms
+                $phones = User::select('phone')
+                    ->whereIN('id',$userIds)
+                    ->pluck('phone')
+                    ->toArray();
+                $phones = implode(',',$phones);
+                $response = SMS::sendCampaignSms($phones,$message_body,'Attention');
+            }
+            else{ // This is a single sms
+                $response = SMS::sendSingleSms($phones,$message_body);
+            }
+
+            return ['status'=>200, 'reason'=>'SMS successfully sent'];
+        /*} catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'sendUserEmail', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
     }
 }

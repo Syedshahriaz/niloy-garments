@@ -37,33 +37,38 @@
             <div class="row mt-3">
                 <div class="col-md-12 col-sm-12">
                     <!-- BEGIN PORTLET-->
-                    <div class="portlet light bordered">
-                        <div class="portlet-title">
-                            <div class="caption" style="padding:0;">
-                                <i class="icon-share font-red-sunglo hide"></i>
-                                <p class="caption-subject font-dark bold uppercase no-margin" style="font-size:14px;">{{$user->username}} </p>
-                                <span class="caption-subject font-dark bold uppercase" style="font-size:14px;">Tasks for {{$project->name}}</span>
-                                <span class="caption-helper"></span>
-                            </div>
-
-                            <div class="actions">
-                                <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summary</a>
-                                <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
-                                    <!--i class="icon-list icons"></i-->Vertical View
-                                </a>
-                                <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
-                                    <!--i class="icon-grid icons"></i-->Horizontal View
-                                </a>
-                            </div>
+                    @if($project->type=='upcoming')
+                        <div class="portlet light bordered">
+                            <h3>Coming Soon</h3>
                         </div>
-                        <div class="portlet-body">
+                    @else
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption" style="padding:0;">
+                                    <i class="icon-share font-red-sunglo hide"></i>
+                                    <p class="caption-subject font-dark bold uppercase no-margin" style="font-size:14px;">{{$user->username}} </p>
+                                    <span class="caption-subject font-dark bold uppercase" style="font-size:14px;">Tasks for {{$project->name}}</span>
+                                    <span class="caption-helper"></span>
+                                </div>
 
-                            <?php
-                            $total_task = count($tasks);
-                            ?>
+                                <div class="actions">
+                                    <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summary</a>
+                                    <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
+                                        <!--i class="icon-list icons"></i-->Vertical View
+                                    </a>
+                                    <a title="Horizontal View" class="btn btn-transparent theme-btn btn-circle btn-sm" href="javascript:;" id="horzon_view_btn">
+                                        <!--i class="icon-grid icons"></i-->Horizontal View
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
 
-                            <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_horizontal_task">
-                                <thead>
+                                <?php
+                                $total_task = count($tasks);
+                                ?>
+
+                                <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_horizontal_task">
+                                    <thead>
                                     <tr>
                                         <th>Title</th>
                                         @foreach($tasks as $task)
@@ -72,8 +77,8 @@
                                             @endif
                                         @endforeach
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr class="focus-tr">
                                         <td> <b>Rule</b></td>
                                         @foreach($tasks as $task)
@@ -88,8 +93,8 @@
                                             @if($task->task_status !='deleted')
                                                 <td>
                                                     @if($task->task_status =='active')
-                                                    {{date('D', strtotime($task->due_date))}},<br>
-                                                    {{date('F d, Y', strtotime($task->due_date))}}
+                                                        {{date('D', strtotime($task->due_date))}},<br>
+                                                        {{date('F d, Y', strtotime($task->due_date))}}
                                                     @endif
                                                 </td>
                                             @endif
@@ -98,45 +103,45 @@
                                     <tr>
                                         <td> <b>Original Delivery Date</b></td>
                                         <?php foreach($tasks as $task){
+                                        $hidden_class = 'hidden';
+                                        $bg_class = '';
+
+                                        /*
+                                         * Calculate number of days left to complete
+                                         * */
+                                        $now = time();
+                                        $datediff = strtotime($task->due_date) - $now;
+                                        $day_left = round($datediff / (60 * 60 * 24));
+
+                                        /*
+                                         * Create hidden class
+                                         * */
+                                        if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                            $hidden_class = '';
+                                        }
+                                        else if($task->status == 'processing' && $task->delivery_date_update_count>1){
                                             $hidden_class = 'hidden';
-                                            $bg_class = '';
+                                        }
 
-                                            /*
-                                             * Calculate number of days left to complete
-                                             * */
-                                            $now = time();
-                                            $datediff = strtotime($task->due_date) - $now;
-                                            $day_left = round($datediff / (60 * 60 * 24));
-
-                                            /*
-                                             * Create hidden class
-                                             * */
-                                            if($task->status == 'processing' && $task->delivery_date_update_count<2){
-                                                $hidden_class = '';
-                                            }
-                                            else if($task->status == 'processing' && $task->delivery_date_update_count>1){
-                                                $hidden_class = 'hidden';
-                                            }
-
-                                            /*
-                                             * Create bg class
-                                             * */
-                                            if($task->status == 'completed'){
-                                                $bg_class = 'bg-success';
-                                            }
-                                            else{
-                                                if($task->has_freeze_rule != 1){
-                                                    if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
-                                                        $bg_class = 'bg-danger';
-                                                    }
-                                                    else if($day_left<=7){
-                                                        $bg_class = 'bg-warning';
-                                                    }
+                                        /*
+                                         * Create bg class
+                                         * */
+                                        if($task->status == 'completed'){
+                                            $bg_class = 'bg-success';
+                                        }
+                                        else{
+                                            if($task->has_freeze_rule != 1){
+                                                if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
+                                                    $bg_class = 'bg-danger';
+                                                }
+                                                else if($day_left<=7){
+                                                    $bg_class = 'bg-warning';
                                                 }
                                             }
-                                            ?>
+                                        }
+                                        ?>
 
-                                            @if($task->task_status !='deleted')
+                                        @if($task->task_status !='deleted')
                                             <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date) || $task->delivery_date_update_count > 1) background-color: #efefef;cursor: not-allowed; @endif">{{--bg-success, bg-warning, bg-danger--}}
                                                 <div class="edit-table-date">
                                                     @if($task->task_status =='active')
@@ -148,87 +153,88 @@
                                                     @endif
                                                 </div>
                                             </td>
-                                            @endif
+                                        @endif
                                         <?php } ?>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
 
 
-                            <table class="table table-striped table-bordered table-hover data-table focus-table hidden" id="user_vertical_task">
-                                <thead>
+                                <table class="table table-striped table-bordered table-hover data-table focus-table hidden" id="user_vertical_task">
+                                    <thead>
                                     <tr>
                                         <th>Title</th>
                                         <th> Role </th>
                                         <th> Due Date </th>
                                         <th> Original Delivery Date </th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <?php foreach($tasks as $task){
-                                        if($task->task_status !='deleted'){
-                                            $hidden_class = 'hidden';
-                                            $bg_class = '';
+                                    if($task->task_status !='deleted'){
+                                    $hidden_class = 'hidden';
+                                    $bg_class = '';
 
-                                            /*
-                                             * Calculate number of days left to complete
-                                             * */
-                                            $now = time();
-                                            $datediff = strtotime($task->due_date) - $now;
-                                            $day_left = round($datediff / (60 * 60 * 24));
+                                    /*
+                                     * Calculate number of days left to complete
+                                     * */
+                                    $now = time();
+                                    $datediff = strtotime($task->due_date) - $now;
+                                    $day_left = round($datediff / (60 * 60 * 24));
 
-                                            /*
-                                             * Create hidden class
-                                             * */
-                                            if($task->status == 'processing' && $task->delivery_date_update_count<2){
-                                                $hidden_class = '';
-                                            }
-                                            else if($task->status == 'processing' && $task->delivery_date_update_count>1){
-                                                $hidden_class = 'hidden';
-                                            }
+                                    /*
+                                     * Create hidden class
+                                     * */
+                                    if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                        $hidden_class = '';
+                                    }
+                                    else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                        $hidden_class = 'hidden';
+                                    }
 
-                                            /*
-                                             * Create bg class
-                                             * */
-                                            if($task->status == 'completed'){
-                                                $bg_class = 'bg-success';
+                                    /*
+                                     * Create bg class
+                                     * */
+                                    if($task->status == 'completed'){
+                                        $bg_class = 'bg-success';
+                                    }
+                                    else{
+                                        if($task->has_freeze_rule != 1){
+                                            if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
+                                                $bg_class = 'bg-danger';
                                             }
-                                            else{
-                                                if($task->has_freeze_rule != 1){
-                                                    if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
-                                                        $bg_class = 'bg-danger';
-                                                    }
-                                                    else if($day_left<=7){
-                                                        $bg_class = 'bg-warning';
-                                                    }
-                                                }
+                                            else if($day_left<=7){
+                                                $bg_class = 'bg-warning';
                                             }
-                                        ?>
-                                            <tr>
-                                                <td> <b>{{$task->title}}</b></td>
-                                                <td> <b>{{$task->rule}}</b></td>
-                                                <td>
-                                                    @if($task->task_status =='active')
-                                                        {{date('D, F d, Y', strtotime($task->due_date))}}
+                                        }
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td> <b>{{$task->title}}</b></td>
+                                        <td> <b>{{$task->rule}}</b></td>
+                                        <td>
+                                            @if($task->task_status =='active')
+                                                {{date('D, F d, Y', strtotime($task->due_date))}}
+                                            @endif
+                                        </td>
+                                        <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date) || $task->delivery_date_update_count > 1) background-color: #efefef;cursor: not-allowed; @endif">
+                                            <div class="edit-table-date">
+                                                @if($task->task_status =='active')
+                                                    {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
+                                                    @if(\App\Common::task_editable($task,$shipment->shipment_date) && $task->delivery_date_update_count < 2)
+                                                        <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
                                                     @endif
-                                                </td>
-                                                <td class="@if($task->due_date !='') {{$bg_class}} @endif" style="@if(!\App\Common::task_editable($task,$shipment->shipment_date) || $task->delivery_date_update_count > 1) background-color: #efefef;cursor: not-allowed; @endif">
-                                                    <div class="edit-table-date">
-                                                        @if($task->task_status =='active')
-                                                            {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
-                                                            @if(\App\Common::task_editable($task,$shipment->shipment_date) && $task->delivery_date_update_count < 2)
-                                                                <a class="" title="Edit"  onclick="select_delivery({{$task->id}},'{{$task->original_delivery_date}}',{{$task->delivery_date_update_count}})"><i class="icons icon-note"></i></a>
-                                                            @endif
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
                                     <?php } // endif
                                     } // endforeach ?>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <!-- END PORTLET-->
                 </div>
             </div>

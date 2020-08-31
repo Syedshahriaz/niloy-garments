@@ -94,7 +94,10 @@
                                     if(empty($project->completed_tasks)){
 
                                     }
-                                    if($task->status == 'completed'){
+                                    if($project->type=='upcoming'){
+                                        $bg_class = '';
+                                    }
+                                    else if($task->status == 'completed'){
                                         $bg_class = 'bg-success';
                                     }
                                     else{
@@ -119,7 +122,9 @@
                                     }
                                 ?>
                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                    @if($project->has_special_date==1 && $project->special_date=='')
+                                    @if($project->type=='upcoming')
+                                        <a class="project-item-title" href="javascript:void(0)" title="{{$project->name}}">
+                                    @elseif($project->has_special_date==1 && $project->special_date=='')
                                         <a class="project-item-title" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
                                     @else
                                         <a class="project-item-title ajax_item item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
@@ -147,15 +152,19 @@
                                                     <span style="width: 100%;" class="progress-bar theme-bg"></span>
                                                 </div>
                                                 <div class="status">
-                                                    <div class="status-title"> Due Date </div>
-                                                    <div class="status-number">
-                                                        @if($task->original_delivery_date !='')
-                                                            {{date('l M d, Y', strtotime($task->original_delivery_date))}}
-                                                        @else
-                                                            Special Date
-                                                        @endif
-                                                    </div>
-                                                    <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                    @if($project->type=='upcoming')
+                                                        Coming Soon
+                                                    @else
+                                                        <div class="status-title"> Due Date </div>
+                                                        <div class="status-number">
+                                                            @if($task->original_delivery_date !='')
+                                                                {{date('l M d, Y', strtotime($task->original_delivery_date))}}
+                                                            @else
+                                                                Special Date
+                                                            @endif
+                                                        </div>
+                                                        <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                    @endif
                                                 </div>
                                             </div>
                                             <input type="hidden" class="project-item-check" name="project_check[]" value="0">

@@ -98,6 +98,7 @@ Route::get('admin/user_dashboard', 'Admin\UserController@dashboard');
 Route::post('admin/update_user_status', 'Admin\UserController@updateStatus');
 Route::post('admin/update_user_offer', 'Admin\UserController@updateUserOffer');
 Route::post('admin/send_user_email', 'Admin\UserController@sendUserEmail');
+Route::post('admin/send_user_sms', 'Admin\UserController@sendUserSms');
 
 Route::post('admin/unlock_project_task', 'Admin\ProjectController@unlockProjectTask');
 Route::post('admin/unlock_shipping_date', 'Admin\ProjectController@unlockShippingDate');

@@ -96,6 +96,7 @@ class ProjectController extends Controller
             $project->name = $request->name;
             $project->sub_title = $request->sub_title;
             $project->description = $request->description;
+            $project->type = $request->project_type;
             $project->updated_by = $user->id;
             $project->updated_at = date('Y-m-d');
             $project->save();

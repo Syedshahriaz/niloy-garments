@@ -202,7 +202,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Edit Projecte</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Edit Project</h4>
                 </div>
 
                 <form id="project_edit_form" method="post" action="">
@@ -228,6 +228,14 @@
                                 <div class="form-group">
                                     <label class="control-label">Description</label>
                                     <textarea rows="4" class="form-control placeholder-no-fix summernote" name="description" id="project_description" ></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Project Type</label> <br>
+                                    <input type="radio" class="" name="project_type" id="running_project" value="running" checked >
+                                    <label for="running_project">Running</label>
+                                    <input type="radio" class="" name="project_type" id="upcoming_project" value="upcoming">
+                                    <label for="upcoming_project">Upcoming</label>
                                 </div>
                             </div>
                         </div>
@@ -273,6 +281,14 @@
                         $('#project_name').val(project.name);
                         $('#project_sub_title').val(project.sub_title);
                         $("#project_description").summernote("code", project.description);
+                        if(project.type=='running'){
+                            $("#running_project").prop("checked", true);
+                            $("#upcoming_project").prop("checked", false);
+                        }
+                        else{
+                            $("#running_project").prop("checked", false);
+                            $("#upcoming_project").prop("checked", true);
+                        }
                         $('#project_edit_modal').modal('show');
                     }
                     else{
