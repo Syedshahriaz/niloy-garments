@@ -27,6 +27,7 @@ Route::get('admin/logout', 'Admin\AdminController@logout');
  * User auth route
  * */
 Route::post('/post_login', 'AuthenticationController@postLogin');
+Route::get('logout', 'AuthenticationController@logout');
 Route::get('/registration', 'AuthenticationController@registration')->name('registration');
 Route::get('/thankyou', 'AuthenticationController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');

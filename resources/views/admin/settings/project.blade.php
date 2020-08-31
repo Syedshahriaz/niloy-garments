@@ -374,16 +374,12 @@
             HoldOn.open(options);
 
             var project_name = $("#project_name").val();
-            var project_sub_title = $("#project_sub_title").val();
             var project_id = $("#project_id").val();
 
             var validate = "";
 
             if (project_name.trim() == "") {
                 validate = validate + "Project name is required</br>";
-            }
-            if (project_sub_title.trim() == "") {
-                validate = validate + "Project subtitle is required</br>";
             }
 
             if (validate == "") {

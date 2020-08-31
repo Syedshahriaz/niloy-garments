@@ -312,10 +312,14 @@ class AuthenticationController extends Controller
         Auth::logout();
 
         Session::forget('user_id');
+        Session::forget('unique_id');
+        Session::forget('role');
         Session::forget('username');
         Session::forget('user_email');
         Session::forget('first_name');
         Session::forget('last_name');
+        Session::forget('user_photo');
+        Session::forget('user_guide_seen');
 
         return redirect('login');
     }

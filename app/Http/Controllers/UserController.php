@@ -100,6 +100,7 @@ class UserController extends Controller
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                     ->leftJoin('professions', 'professions.id', '=', 'users.profession')
                     ->first();
+
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.profile', compact('user'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
@@ -108,7 +109,6 @@ class UserController extends Controller
                 /*
                  * Check user status and redirect
                  * */
-                $user = Auth::user();
                 $user_status = Common::checkPaymentAndShipentStatus();
                 if($user_status=='empty_payment'){
                     return redirect('promotion/'.$user->id);

@@ -461,40 +461,41 @@ class Common
             $tasks = $tasks->get();
 
             $past_message_body = '';
+            $past_email_body = '';
             $warning_message_body = '';
+            $warning_email_body = '';
 
             foreach($tasks as $task){
                 $email = [$task->email];
 
                 if($task->original_delivery_date<$today){ // Due date have been past
-                    $email_response = self::sendPastDayWarningEmail($email,$task);
-
-                    /*
-                     * Send past warning sms
-                     * */
-                    $past_message_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
+                    $past_message_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                    $past_email_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
 
                 }
                 else{
-                    $email_response = self::send7dayWarningEmail($email,$task);
-
-                    $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F',strtotime($task->original_delivery_date)).'. ';
-                    //$sms_response = self::send7dayWarningSms($task->phone,$task);
+                    $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                    $warning_email_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
                 }
 
-                if($email_response=='ok'){
-                    $task->warning_sent = 1;
-                    $task->save();
-                }
+                /*
+                 * Update task warning email sent status
+                 * */
+                $task->warning_sent = 1;
+                $task->save();
             }
 
             if($past_message_body !=''){
                 $past_message_body = $message_initiate.', '.$past_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
+                $past_email_body = $message_initiate.', <br>'.$past_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
                 $sms_response = self::sendPastDayWarningSms($user->phone,$past_message_body);
+                $email_response = self::sendPastDayWarningEmail($email,$past_email_body);
             }
             if($warning_message_body !=''){
                 $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
+                $warning_email_body = $message_initiate.', <br>'.$warning_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
                 $sms_response = self::sendPastDayWarningSms($user->phone,$warning_message_body);
+                $email_response = self::send7dayWarningEmail($email,$warning_email_body);
             }
         }
 
@@ -502,15 +503,10 @@ class Common
         return count($tasks).' Email sent.';
     }
 
-    public static function send7dayWarningEmail($email,$task){
+    public static function send7dayWarningEmail($email,$message_body){
         /*
          * Send task 7 day before complete warning email
          */
-        $now = time(); // or your date as well
-        $original_delivery_date = strtotime($task->original_delivery_date);
-        $datediff = $now - $original_delivery_date;
-
-        $day_left = round($datediff / (60 * 60 * 24));
 
         $email_to = $email;
         $email_cc = [];
@@ -521,11 +517,9 @@ class Common
         $emailData['email'] = $email_to;
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
-        $emailData['task'] = $task;
-        $emailData['day_left'] = abs($day_left);
         $emailData['subject'] = Common::SITE_TITLE.'- Project task completion warning';
 
-        $emailData['bodyMessage'] = '';
+        $emailData['bodyMessage'] = $message_body;
 
         $view = 'emails.project_task_complete_7day_warning_email';
 
@@ -533,11 +527,10 @@ class Common
         return $result;
     }
 
-    public static function sendPastDayWarningEmail($email,$task){
+    public static function sendPastDayWarningEmail($email,$message_body){
         /*
          * Send task past day complete warning email
          */
-        $today = date('Y-m-d');
 
         $email_to = $email;
         $email_cc = [];
@@ -548,15 +541,27 @@ class Common
         $emailData['email'] = $email_to;
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
-        $emailData['task'] = $task;
         $emailData['subject'] = Common::SITE_TITLE.'- Project task completion warning';
 
-        $emailData['bodyMessage'] = '';
+        $emailData['bodyMessage'] = $message_body;
 
         $view = 'emails.project_task_complete_past_warning_email';
 
         $result = SendMails::sendMail($emailData, $view);
         return $result;
+    }
+
+    /*
+     * Counting task due date left days
+     * */
+    public static function dueDayLeftCount($task){
+        $now = time(); // or your date as well
+        $original_delivery_date = strtotime($task->original_delivery_date);
+        $datediff = $now - $original_delivery_date;
+
+        $day_left = round($datediff / (60 * 60 * 24));
+
+        return $day_left;
     }
 
     /*
