@@ -400,6 +400,7 @@ class UserProjectController extends Controller
         foreach($prev_tasks as $task){
             $taskData = UserProjectTask::where('id',$task->id)->first();
             $taskData->delivery_date_update_count = 2;
+            $taskData->status = 'completed';
             $taskData->save();
         }
     }

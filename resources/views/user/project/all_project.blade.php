@@ -129,7 +129,7 @@
                                     @else
                                         <a class="project-item-title ajax_item item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
                                     @endif
-                                        <div class="dashboard-stat2 project-item {{$bg_class}}">
+                                        <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink @endif {{$bg_class}}">
                                             <div class="display title-section">
                                                 <div class="number">
                                                     <h5 class="font-theme project-item-name">
