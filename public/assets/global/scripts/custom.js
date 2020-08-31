@@ -53,7 +53,7 @@ if(input != null){
 //summernote
 $(document).ready(function() {
     $('.summernote').summernote({
-        height: 100,
+        height: 170,
         toolbar: [
             // [groupName, [list of button]]
             ['style', ['bold', 'italic', 'underline', 'clear']],

@@ -144,7 +144,7 @@
                                                 </div>
                                             </div>
                                             <div class="display">
-                                                <p class="project-item-sub" title="This is a sub title">{{$project->sub_title}}</p>
+                                                <p class="project-item-sub">{{$project->sub_title}}</p>
                                                 <p class="project-item-task font-theme">{{$task->title}}</p>
                                             </div>
                                             <div class="progress-info">
@@ -153,7 +153,7 @@
                                                 </div>
                                                 <div class="status">
                                                     @if($project->type=='upcoming')
-                                                        Coming Soon
+                                                        <div class="status-title"> Coming Soon </div>
                                                     @else
                                                         <div class="status-title"> Due Date </div>
                                                         <div class="status-number">

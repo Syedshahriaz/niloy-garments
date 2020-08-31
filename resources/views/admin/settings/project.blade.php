@@ -227,7 +227,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Description</label>
-                                    <textarea rows="4" class="form-control placeholder-no-fix summernote" name="description" id="project_description" ></textarea>
+                                    <textarea rows="6" class="form-control placeholder-no-fix summernote" name="description" id="project_description" ></textarea>
                                 </div>
 
                                 <div class="form-group">

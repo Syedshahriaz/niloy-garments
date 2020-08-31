@@ -76,3 +76,28 @@ body{
     background-color: var(--pink);
     border: 1px solid var(--pink);
 }
+.page-footer {
+    padding: 8px 20px 5px;
+    font-size: 13px;
+    height: 33px;
+    background-color: #ececec;
+}
+b, optgroup, strong {
+    font-weight: 600;
+}
+.prmotion-header{
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    min-height: 50px;        
+    padding: 0 20px;
+    align-items: center;
+    justify-content: flex-end;
+    background: linear-gradient(45deg, #7030a0, #151b26);
+}
+.logout{
+    font-size: 15px;
+    border-radius: 0;
+    padding: 4px 12px !important;
+}

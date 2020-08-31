@@ -42,10 +42,10 @@
                             </div>
                             <div class="actions hidden" id="action_buttons">
                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send All SMS</button>
+                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send SMS to User</button>
                                {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>--}}
                             </div>
-                            <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
+                            <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
                         </div>
                         <div class="portlet-body p-relative">
                             <div class="all_user_sort">
@@ -239,7 +239,7 @@
 
                                 <div class="form-group">
                                     <label class="control-label">Message</label>
-                                    <textarea class="form-control placeholder-no-fix" name="message" id="sms_message"></textarea>
+                                    <textarea class="form-control placeholder-no-fix" rows="6" name="message" id="sms_message"></textarea>
                                 </div>
                             </div>
                         </form>

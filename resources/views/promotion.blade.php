@@ -15,6 +15,13 @@
 </head>
 
 <body>
+    <div class="prmotion-header">
+        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout btn btn-danger" >Logout</a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+    </div>
+
     <div class="container">
         <div class="row">
             <div class="col">
@@ -57,9 +64,14 @@
                             </div>
                         </form>
                     </div>
+                    
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="page-footer">
+        <div class="page-footer-inner text-center w-100"> © All rights reserved to <a target="_blank" href="https://vujadetec.com/"><strong>vujadetec</strong></a></div>
     </div>
 
 

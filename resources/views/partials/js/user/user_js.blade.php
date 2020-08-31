@@ -617,7 +617,6 @@
                     * Showing new message count
                     * */
                     var message_count = data.unread_messages.length;
-                    console.log(message_count);
                     if(message_count>0){
                         $('.new_message_count').removeClass('hidden');
                         $('.new_message_count').text(data.unread_messages.length);

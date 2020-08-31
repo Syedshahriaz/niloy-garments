@@ -84,21 +84,6 @@
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
 
-            <!-- <li class="nav-item  @if($page=='dashboard') active @endif">
-                <a href="#" class="nav-link">
-                    <i class="icon-home"></i>
-                    <span class="title">Dashboard</span>
-                    <span class="selected"></span>
-                </a>
-            </li>
-            <li class="nav-item @if($page=='all_project') active @endif">
-                <a href="#" class="nav-link">
-                    <i class="icon-layers"></i>
-                    <span class="title">All Projects</span>
-                    <span class="selected"></span>
-                </a>
-            </li> -->
-
             <li class="nav-item @if($page=='users') active @endif">
                 <a href="{{url('admin/users')}}" class="nav-link">
                     <i class="icon-users"></i>
