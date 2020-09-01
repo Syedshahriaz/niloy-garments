@@ -232,9 +232,10 @@
                             <div class="col-md-12">
                                 <div class="form-group" id="telephone_area">
                                     <label class="control-label">Phone*</label>
-                                    <input class="form-control placeholder-no-fix" id="telephone02" type="text" name="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
-                                    <span id="valid-msg" class="hide">✓ Valid</span>
-                                    <span id="error-msg" class="hide">Invalid</span>
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="phone-addon">+88</span>
+                                        <input class="form-control placeholder-no-fix" id="telephone02" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
+                                    </div>
                                 </div>
 
                                 <div class="form-group">

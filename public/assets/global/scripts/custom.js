@@ -103,3 +103,9 @@ $('#select_ship_date').on('hidden.bs.modal', function (e) {
     $('body').removeClass('shipment_modal-open');
 });
 
+//Add for menu click trigger
+if($(window).width() < 980){
+    $(document).on('click','.page-sidebar-menu>.nav-item>.nav-link',function(){
+        $('.menu-toggler').trigger('click');
+    });
+}
