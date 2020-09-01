@@ -121,7 +121,7 @@
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <!-- BEGIN GLOABL CUSTOM SCRIPTS -->
-<script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>
+{{--<script src="{{asset('assets/global/scripts/custom.js')}}" type="text/javascript"></script>--}}
 <!-- END GLOABL CUSTOM SCRIPTS -->
 
 <script type="text/javascript">

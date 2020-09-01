@@ -16,10 +16,7 @@
 
 <body>
     <div class="prmotion-header">
-        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout btn btn-danger" >Logout</a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
+        <a href="{{ route('logout') }}"  class="logout btn btn-danger" >Logout</a>
     </div>
 
     <div class="container">
@@ -60,11 +57,11 @@
                                         <input type="radio" name="offer_3" value="3" disabled="" hidden="">
                                     </div>
                                 </div>
-                                <p class="text-center mt-3">Pink is free for female if any female buy green or red offer. </p>   
+                                <p class="text-center mt-3">Pink is free for female if any female buy green or red offer. </p>
                             </div>
                         </form>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -91,6 +88,7 @@
          $(document).on('click','.active_offer_option', function(){
              $('#payment_form').submit();
          })
+
     </script>
 </body>
 

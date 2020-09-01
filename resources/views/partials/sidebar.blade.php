@@ -40,7 +40,7 @@
             <ul class="nav navbar-nav pull-right">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <li>
-                    <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger ajax_item item-3" data-name="add_user" data-item="3">Add New User</a>
+                    <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger item-3" data-name="add_user" data-item="3">Add New User</a>
                 </li>
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">

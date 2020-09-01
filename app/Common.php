@@ -470,12 +470,12 @@ class Common
 
                 if($task->original_delivery_date<$today){ // Due date have been past
                     $past_message_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                    $past_email_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                    $past_email_body .='Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
 
                 }
                 else{
                     $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                    $warning_email_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                    $warning_email_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
                 }
 
                 /*
