@@ -197,7 +197,8 @@
   
   @media (max-width: 480px) {
     .page-header.navbar .top-menu, .page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-toggle {
-        background-color: #612c8b;
+      background-color: #612c8b;
+    }
   }
   
   .dataTables_wrapper   .dataTables_filter {
