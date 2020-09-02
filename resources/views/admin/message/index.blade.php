@@ -295,17 +295,17 @@
             }
         });
 
-        $(document).on('submit','#message_form', function(){
+        $(document).on('submit','#message_form', function(event){
+            event.preventDefault();
             submit_message();
         });
 
-        $(document).on('click','#send_btn', function(){
+        $(document).on('click','#send_btn', function(event){
+            event.preventDefault();
             submit_message();
         });
 
         function submit_message(){
-            event.preventDefault();
-
             var user_id = $("#user_id").val();
             var message = $("#message_input").val();
             var message_file = $("#image_upload_input").val();
@@ -326,7 +326,7 @@
                     data: formData,
                     success: function(data) {
                         if (data.status == 200) {
-                            appendMessage(message,data.photo_path);
+                            appendMessage(data.message,data.photo_path);
 
                             $("#image_upload_input").val('');
                             $("#message_input").val('');
@@ -358,7 +358,9 @@
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             ];
 
+            original_date = original_date.replace(' ', 'T');
             var formattedDate = new Date(original_date);
+
             var d = formattedDate.getDate();
             var day = formattedDate.getDay();
             var m =  formattedDate.getMonth();
@@ -428,7 +430,7 @@
             var user_name = $('#user_name').val();
 
             var time = new Date();
-            var time_str = getFormattedDate(time);
+            var time_str = getFormattedDate(message.created_at,'l M d, Y h:i a');
 
             var profile_photo = "{{Session::get('user_photo')}}";
 

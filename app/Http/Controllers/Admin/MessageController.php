@@ -84,6 +84,7 @@ class MessageController extends Controller
             $messageDetails = NEW MessageDetails();
             $messageDetails->message_id = $message_id;
             $messageDetails->type = 'received';
+            $messageDetails->created_at = date('Y-m-d h:i:s');
             if($request->message !=''){
                 $messageDetails->message = $request->message;
             }
@@ -110,7 +111,7 @@ class MessageController extends Controller
             }
             $messageDetails->save();
 
-            return [ 'status' => 200, 'reason' => 'Message stored successfully','photo_path'=>$photo_path];
+            return [ 'status' => 200, 'reason' => 'Message stored successfully','message'=>$messageDetails,'photo_path'=>$photo_path];
 
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'admin\MessageController', 'store', $e->getLine(),
