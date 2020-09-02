@@ -195,7 +195,9 @@ class UserController extends Controller
             $user->phone = $phone_number;
             $user->profession = $request->profession;
             //$user->birthday = date('Y-m-d', strtotime($request->birthday));
-            $user->gender = $request->gender;
+            if($request->gender !=''){
+                $user->gender = $request->gender;
+            }
 
             /*
              * Update profile photo
@@ -220,6 +222,14 @@ class UserController extends Controller
              * */
 
             $result = $this->updateShipingDate($request,$user_id);
+
+            /*
+             * Add pink offers if gender updated to Female
+             * */
+            if($request->gender !='' && $request->gender != $request->old_gender){
+                $result = $this->managePinkOffer($request,$user_id);
+                $this->increaseGenderChangeCount($user_id);
+            }
 
             DB::commit();
 
@@ -271,6 +281,71 @@ class UserController extends Controller
          * */
         $result = Common::updateUserProjectTaskDueDate($user_projects,$shipment_date);
 
+    }
+
+    private function managePinkOffer($request,$user_id){
+        /*
+         * add/remove pink offer
+         * */
+        if($request->gender == 'Female'){
+            $result = $this->addPinkOffer($user_id,$request->shipment_date);
+        }
+        else{
+            $result = $this->removePinkOffer($user_id,$request->shipment_date);
+        }
+
+        return $result;
+    }
+
+    private function addPinkOffer($user_id){
+        $user = User::where('users.id',$user_id)
+            ->select('users.*','user_payments.created_at as purchase_date')
+            ->join('user_payments','user_payments.user_id','=','users.id')
+            ->first();
+        $purchase_date = $user->purchase_date;
+        $shipment = UserShipment::where('user_id',$user_id)->first();
+        /*
+         * Get user project based on selected offer
+         * */
+        $projects = Common::getOfferedProject('Female',0,0);
+
+        $result = Common::saveUserProject($projects,$user_id,$shipment,$purchase_date);
+
+        return $result;
+    }
+
+    private function removePinkOffer($user_id){
+        /*
+         * Get user project based on selected offer
+         * */
+        $projects = Common::getOfferedProject('Female',0,0);
+
+        foreach($projects as $key=>$project){
+            $user_project = UserProject::select('id')
+                ->where('user_id',$user_id)
+                ->where('project_id',$project->id)
+                ->first();
+
+            /*
+             * Delete User pink projects
+             * */
+            UserProject::where('user_id',$user_id)->where('project_id',$project->id)->delete();
+
+            /*
+             * Delete user pink project tasks
+             * */
+            UserProjectTask::where('user_project_id',$user_project->id)->delete();
+        }
+        return 'Successfully deleted';
+
+    }
+
+    private function increaseGenderChangeCount($user_id){
+        $user = User::select('users.*')->where('users.id',$user_id)->first();
+        $user->gender_update_count = $user->gender_update_count+1;
+        $user->save();
+
+        return 'Successfully updated';
     }
 
     public function updatePassword(Request $request){

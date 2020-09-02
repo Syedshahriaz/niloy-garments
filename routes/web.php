@@ -102,6 +102,7 @@ Route::post('admin/send_user_sms', 'Admin\UserController@sendUserSms');
 
 Route::post('admin/unlock_project_task', 'Admin\ProjectController@unlockProjectTask');
 Route::post('admin/unlock_shipping_date', 'Admin\ProjectController@unlockShippingDate');
+Route::post('admin/unlock_user_gender', 'Admin\UserController@unlockUserGender');
 
 Route::get('admin/promotion_settings', 'Admin\SettingController@promotionSettings');
 Route::post('admin/update_offer', 'Admin\SettingController@updateOffer');

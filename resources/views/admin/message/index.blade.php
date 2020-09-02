@@ -326,7 +326,7 @@
                     data: formData,
                     success: function(data) {
                         if (data.status == 200) {
-                            appendMessage(data.message,data.photo_path);
+                            //appendMessage(data.message,data.photo_path);
 
                             $("#image_upload_input").val('');
                             $("#message_input").val('');
@@ -358,7 +358,7 @@
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             ];
 
-            original_date = original_date.replace(' ', 'T');
+            //original_date = original_date.replace(' ', 'T');
             var formattedDate = new Date(original_date);
 
             var d = formattedDate.getDate();

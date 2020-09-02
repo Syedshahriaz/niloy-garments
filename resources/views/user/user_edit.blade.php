@@ -128,6 +128,7 @@
                                                         <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
                                                         <option value="Female" @if($user->gender=='Female') selected @endif>Female</option>
                                                     </select>
+                                                    <input type="hidden" name="old_gender" value="{{$user->gender}}">
                                                 </div>
                                             </div>
 

@@ -235,7 +235,7 @@ class UserController extends Controller
 
     public function sendUserSms(Request $request)
     {
-        //try {
+        try {
             $phones = $request->phone;
             $message_body = $request->message;
             $userIds = explode(',',$request->user_id);
@@ -252,11 +252,29 @@ class UserController extends Controller
             }
 
             return ['status'=>200, 'reason'=>'SMS successfully sent'];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'sendUserEmail', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
+    }
+
+    public function unlockUserGender(Request $request){
+        try{
+            $user = User::where('id', $request->user_id)->first();
+            if($user->gender_update_count != 0){
+                $user->gender_update_count = 0;
+            }
+            $user->save();
+
+            return ['status'=>200, 'reason'=>'User gender unlocked successfully'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'unlockUserGender', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
     }
 }
