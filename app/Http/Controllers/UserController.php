@@ -603,7 +603,7 @@ class UserController extends Controller
              * Send OTP confirmation message
              * */
             $message_body = 'Your One Time Password (OTP) to transfer the info is '.$otp.'. Validity for OTP is 24 hours. Please contact info@vujadetec.com if you need further assistance.';
-            $response = SMS::sendOtpSms($thisUser->phone,$message_body);
+            //$response = SMS::sendOtpSms($thisUser->phone,$message_body);
 
             return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
         } catch (\Exception $e) {

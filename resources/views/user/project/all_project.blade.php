@@ -154,19 +154,15 @@
                                                     <span style="width: 100%;" class="progress-bar theme-bg"></span>
                                                 </div>
                                                 <div class="status">
-                                                    @if($project->type=='upcoming')
-                                                        <div class="status-title"> Coming Soon. Will contact you once it is available in the market</div>
-                                                    @else
-                                                        <div class="status-title"> Due Date </div>
-                                                        <div class="status-number">
-                                                            @if($task->original_delivery_date !='')
-                                                                {{date('l M d, Y', strtotime($task->original_delivery_date))}}
-                                                            @else
-                                                                Special Date
-                                                            @endif
-                                                        </div>
-                                                        <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
-                                                    @endif
+                                                    <div class="status-title"> Due Date </div>
+                                                    <div class="status-number">
+                                                        @if($task->original_delivery_date !='')
+                                                            {{date('l M d, Y', strtotime($task->original_delivery_date))}}
+                                                        @else
+                                                            Special Date
+                                                        @endif
+                                                    </div>
+                                                    <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
                                                 </div>
                                             </div>
                                             <input type="hidden" class="project-item-check" name="project_check[]" value="0">

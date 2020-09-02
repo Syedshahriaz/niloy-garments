@@ -165,7 +165,7 @@
                 </a>
             </li>
 
-            <li class="nav-item ajax_item item-6" data-item="6">
+            <li class="nav-item item-6" data-item="6">
                 <a href="#" class="nav-link" data-toggle="modal" data-target="#GuideModal">
                     <i class="icon-book-open"></i>
                     <span class="title">User Guide</span>
@@ -174,17 +174,11 @@
             </li>
 
             <li class="nav-item">
-                <a  href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();" class="nav-link">
+                <a  href="{{ route('logout') }}" class="nav-link">
                     <i class="icon-logout"></i>
                     <span class="title">Log Out</span>
                     <span class="selected"></span>
                 </a>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
             </li>
         </ul>
         <!-- END SIDEBAR MENU -->

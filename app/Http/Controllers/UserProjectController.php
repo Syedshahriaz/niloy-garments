@@ -182,7 +182,7 @@ class UserProjectController extends Controller
                 $child_users = User::where('users.email', Session::get('user_email'))
                     ->select('users.*', 'user_shipments.shipment_date')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
-                    ->where('users.status','active')
+                    ->whereIn('users.status',['active','pending'])
                     //->orderBy('parent_id','ASC')
                     ->get();
                 $projects = UserProject::with('running_task','last_task','completed_tasks')
