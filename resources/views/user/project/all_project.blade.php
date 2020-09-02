@@ -155,7 +155,7 @@
                                                 </div>
                                                 <div class="status">
                                                     @if($project->type=='upcoming')
-                                                        <div class="status-title"> Coming Soon </div>
+                                                        <div class="status-title"> Coming Soon. Will contact you once it is available in the market</div>
                                                     @else
                                                         <div class="status-title"> Due Date </div>
                                                         <div class="status-number">

@@ -40,6 +40,7 @@
                     @if($project->type=='upcoming')
                         <div class="portlet light bordered">
                             <h3>Coming Soon</h3>
+                            <h3>Will contact you once it is available in the market</h3>
                         </div>
                     @else
                         <div class="portlet light bordered">

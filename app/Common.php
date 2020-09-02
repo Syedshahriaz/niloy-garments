@@ -443,9 +443,10 @@ class Common
         foreach($users as $user){
             $message_initiate = 'Dear '.$user->username;
 
-            $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title', 'tasks.rule',
+            $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','task_title.name as task_name', 'tasks.rule',
                 'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
             $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+            $tasks = $tasks->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
             $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
             $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
             $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
@@ -469,13 +470,13 @@ class Common
                 $email = [$task->email];
 
                 if($task->original_delivery_date<$today){ // Due date have been past
-                    $past_message_body .=' Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                    $past_email_body .='Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+                    $past_message_body .=' Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                    $past_email_body .='Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
 
                 }
                 else{
-                    $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                    $warning_email_body .= 'Your Project '.$task->project_name.' '.$task->title.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+                    $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                    $warning_email_body .= 'Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
                 }
 
                 /*
@@ -498,7 +499,6 @@ class Common
                 $email_response = self::send7dayWarningEmail($email,$warning_email_body);
             }
         }
-
 
         return count($tasks).' Email sent.';
     }
