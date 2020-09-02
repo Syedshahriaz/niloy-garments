@@ -326,7 +326,7 @@
                     data: formData,
                     success: function(data) {
                         if (data.status == 200) {
-                            appendMessage(data.message,data.photo_path);
+                            //appendMessage(data.message,data.photo_path);
 
                             $("#image_upload_input").val('');
                             $("#message_input").val('');
