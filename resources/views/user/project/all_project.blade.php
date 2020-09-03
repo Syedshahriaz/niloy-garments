@@ -138,11 +138,13 @@
                                                         {{$project->name}}
                                                     </h5>
                                                 </div>
+                                                @if($project->has_special_date==1 && $project->special_date_update_count<4)
+                                                <div class="icon change_special_date" data-id="{{$project->user_project_id}}">
+                                                        <i class="icon-settings"></i>
+                                                @else
                                                 <div class="icon">
-                                                    <!-- <a href="javascript:;" title="Favourite" class="add_to_fav">
-                                                        <i class="icon-heart"></i>
-                                                    </a> -->
-                                                    <i class="icon-arrow-right"></i>
+                                                        <i class="icon-arrow-right"></i>
+                                                @endif
                                                 </div>
                                             </div>
                                             <div class="display">

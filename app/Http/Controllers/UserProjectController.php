@@ -186,7 +186,7 @@ class UserProjectController extends Controller
                     //->orderBy('parent_id','ASC')
                     ->get();
                 $projects = UserProject::with('running_task','last_task','completed_tasks')
-                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.user_id')
+                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.special_date_update_count','user_projects.user_id')
                     ->join('projects', 'projects.id', '=', 'user_projects.project_id')
                     ->join('tasks', 'tasks.project_id', '=', 'projects.id')
                     ->where('user_projects.user_id', $user_id)
@@ -227,6 +227,7 @@ class UserProjectController extends Controller
 
             foreach($user_projects as $key=>$u_project){
                 $u_project->special_date = date('Y-m-d', strtotime($request->special_date));
+                $u_project->special_date_update_count = $u_project->special_date_update_count+1;
                 $u_project->save();
 
                 $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
@@ -237,11 +238,7 @@ class UserProjectController extends Controller
                 /*
                  * Add user project tasks due date
                  * */
-                foreach($project_tasks as $key=>$p_task){
-                    $p_task->due_date = date('Y-m-d', strtotime($request->special_date. ' + '.$p_task->days_to_add.' days'));
-                    $p_task->original_delivery_date = date('Y-m-d', strtotime($request->special_date. ' + '.$p_task->days_to_add.' days'));
-                    $p_task->save();
-                }
+                $result = $this->addSpecialDateToProjectTask($project_tasks,$request->special_date);
             }
 
             DB::commit();
@@ -254,6 +251,14 @@ class UserProjectController extends Controller
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    private function addSpecialDateToProjectTask($project_tasks,$special_date){
+        foreach($project_tasks as $key=>$p_task){
+            $p_task->due_date = date('Y-m-d', strtotime($special_date. ' + '.$p_task->days_to_add.' days'));
+            $p_task->original_delivery_date = date('Y-m-d', strtotime($special_date. ' + '.$p_task->days_to_add.' days'));
+            $p_task->save();
         }
     }
 

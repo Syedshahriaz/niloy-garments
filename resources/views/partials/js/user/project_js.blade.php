@@ -68,6 +68,12 @@
     **********  All project js
     * */
 
+    $(document).on('click','#change_special_date', function(event){
+        event.stopPropagation();
+        var user_project_id = $(this).attr('data-id');
+        show_special_date_modal(user_project_id);
+    })
+
     function show_special_date_modal(user_project_id){
         $('#user_project_id').val(user_project_id);
         $('#special_date_modal').modal('show');
