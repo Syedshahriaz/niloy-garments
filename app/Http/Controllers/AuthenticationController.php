@@ -45,6 +45,11 @@ class AuthenticationController extends Controller
 
     public function storeUser(Request $request){
         try {
+            $checkEmail = User::where('email',$request->email)->first();
+            if(!empty($checkEmail)){
+                return [ 'status' => 401, 'reason' => 'This email address already registered. Please try with another email address.'];
+            }
+
             $lastUser = User::orderBy('id','DESC')->first();
             if(!empty($lastUser)){
                 $unique_id = Common::generateUniqueNumber($lastUser->id+1);
