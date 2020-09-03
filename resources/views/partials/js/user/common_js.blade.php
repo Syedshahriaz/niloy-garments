@@ -197,4 +197,13 @@
         }
     }
 
+    $(document).on('change','#day, #month, #year',function(){
+        var day = $('#day').val();
+        var month = $('#month').val();
+        var year = $('#year').val();
+        var date = year+'-'+month+'-'+day;
+
+        $('#shipment_date').val(date);
+    });
+
 </script>

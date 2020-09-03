@@ -288,6 +288,9 @@
         var email = $("#email").val();
         var phone = $("#telephone01").val();
         var country_code = $(".iti__selected-dial-code").text();
+        var day = $('#day').val();
+        var month = $('#month').val();
+        var year = $('#year').val();
         var shipment_date = $("#shipment_date").val();
         var old_shipment_date = $('#old_shipment_date').val();
         var from = $('#from').val();
@@ -310,6 +313,10 @@
         if (phone.trim() == "") {
             validate = validate + "Phone is required</br>";
         }
+
+        /*if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
+            validate = validate + "Shipment date is required</br>";
+        }*/
 
         if (validate == "") {
             var formData = new FormData($("#profile_form")[0]);

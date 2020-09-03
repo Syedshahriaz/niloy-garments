@@ -10,16 +10,20 @@
         show_loader();
 
         var shipment_date = $("#shipment_date").val();
-        //var offer = $("input[name='offer']:checked").val();
+        var day = $('#day').val();
+        var month = $('#month').val();
+        var year = $('#year').val();
 
         var validate = "";
 
         if (shipment_date.trim() == "") {
             validate = validate + "Shipment date is required</br>";
         }
-        /*if (offer ===undefined || offer.trim() == "") {
-            validate = validate + "Offer is required</br>";
-        }*/
+
+        if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
+            validate = validate + "Shipment date is required</br>";
+        }
+
 
         if (validate == "") {
             var formData = new FormData($("#shipment_form")[0]);
@@ -168,7 +172,12 @@
     });
 
     function select_delivery(id,original_delivery_date,update_count){
+        var date_array = original_delivery_date.split("-");
         $('#project_task_id').val(id);
+        $('#day').val(date_array[2].replace(/^0+/, ''));
+        $('#month').val(date_array[1].replace(/^0+/, ''));
+        $('#year').val(date_array[0].replace(/^0+/, ''));
+        $('#shipment_date').val(original_delivery_date);
         $('#old_delivery_date_hidden').val(original_delivery_date);
         if(update_count>1){
             $('#org_delivery_date').prop('disabled',true);
