@@ -147,24 +147,40 @@
                                             </div>
                                             <div class="display">
                                                 <p class="project-item-sub">{{$project->sub_title}}</p>
-                                                <p class="project-item-task font-theme">{{$task->title}}</p>
+                                                <p class="project-item-task font-theme">
+                                                    @if($bg_class !='bg-success')
+                                                    {{$task->title}}
+                                                    @endif
+                                                </p>
                                             </div>
-                                            <div class="progress-info">
-                                                <div class="progress">
-                                                    <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                                </div>
-                                                <div class="status">
-                                                    <div class="status-title"> Due Date </div>
-                                                    <div class="status-number">
-                                                        @if($task->original_delivery_date !='')
-                                                            {{date('l M d, Y', strtotime($task->original_delivery_date))}}
-                                                        @else
-                                                            Special Date
-                                                        @endif
+                                            @if($bg_class=='bg-success')
+                                                <div class="progress-info">
+                                                    <div class="progress">
+                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
                                                     </div>
-                                                    <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                    <div class="status">
+                                                        <div class="status-title"> Course Completed </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <div class="progress-info">
+                                                    <div class="progress">
+                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
+                                                    </div>
+                                                    <div class="status">
+                                                        <div class="status-title"> Due Date </div>
+                                                        <div class="status-number">
+                                                            @if($task->original_delivery_date !='')
+                                                                {{date('l M d, Y', strtotime($task->original_delivery_date))}}
+                                                            @else
+                                                                Special Date
+                                                            @endif
+                                                        </div>
+                                                        <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                             <input type="hidden" class="project-item-check" name="project_check[]" value="0">
                                             <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}">
                                         </div>

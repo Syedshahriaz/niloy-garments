@@ -128,7 +128,7 @@
                                                         <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
                                                         <option value="Female" @if($user->gender=='Female') selected @endif>Female</option>
                                                     </select>
-                                                    <input type="hidden" name="old_gender" value="{{$user->gender}}">
+                                                    <input type="hidden" name="old_gender" id="old_gender" value="{{$user->gender}}">
                                                 </div>
                                             </div>
 
@@ -179,6 +179,33 @@
         <!-- END CONTENT BODY -->
     </div>
     <!-- END CONTENT -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="gender_warning_modal" tabindex="-1" role="gender_warning_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>--}}
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Warning !!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="text-align:center;">
+                        <h4 id="gender_warning_message"></h4>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="btn theme-btn" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn" data-dismiss="modal" id="decline_gender_change">No</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
 
 @endsection
 
@@ -237,6 +264,27 @@
                 input.addEventListener('keyup', reset);
 
             }
+        });
+
+        $(document).on('change','#gender', function(){
+            var gender = $(this).val();
+            var old_gender = $('#old_gender').val();
+            if(gender != old_gender){
+                var message = '';
+                if(gender=='Female'){
+                    message = "Please note:Are you sure you want to change the gender? Because, It will add pink offer data.";
+                }
+                else{
+                    message = "Please note:Are you sure you want to change the gender? Because, It will delete pink offer data.";
+                }
+                $('#gender_warning_message').text(message);
+                $('#gender_warning_modal').modal('show');
+            }
+        });
+
+        $(document).on('click','#decline_gender_change', function(){
+            var old_gender = $('#old_gender').val();
+            $('#gender').val(old_gender);
         });
     </script>
 @endsection

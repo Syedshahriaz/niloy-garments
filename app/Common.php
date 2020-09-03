@@ -500,7 +500,7 @@ class Common
             }
         }
 
-        return count($tasks).' Email sent.';
+        return 'Email sent.';
     }
 
     public static function send7dayWarningEmail($email,$message_body){
