@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('cron/send_task_warning_email', 'CronController@sendTaskWarningEmail')->name('cron.send_task_warning_email');
+Route::get('cron/send_birthday_wish', 'CronController@sendBirthdayWish')->name('cron.send_birthday_wish');
 
 /*
  * Admin auth route
