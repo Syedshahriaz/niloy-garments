@@ -172,11 +172,19 @@
     });
 
     function select_delivery(id,original_delivery_date,update_count){
-        var date_array = original_delivery_date.split("-");
         $('#project_task_id').val(id);
-        $('#day').val(date_array[2].replace(/^0+/, ''));
-        $('#month').val(date_array[1].replace(/^0+/, ''));
-        $('#year').val(date_array[0].replace(/^0+/, ''));
+
+        var formattedDate = new Date();
+
+        var d = formattedDate.getDate();
+        var m =  formattedDate.getMonth();
+        m += 1;  // JavaScript months are 0-11
+        var y = formattedDate.getFullYear();
+
+        $('#day').val(d);
+        $('#month').val(m);
+        $('#year').val(y);
+
         $('#shipment_date').val(original_delivery_date);
         $('#old_delivery_date_hidden').val(original_delivery_date);
         if(update_count>1){

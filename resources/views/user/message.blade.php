@@ -12,7 +12,7 @@
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
-                        <a class=" ajax_item item-1" href="https://vujadetec.com" target="_blank" data-name="dashboard" data-item="1">Home</a>
+                        <a class=" item-1" href="https://vujadetec.com" target="_blank" data-name="dashboard" data-item="1">Home</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
