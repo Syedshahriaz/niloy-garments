@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserSms;
 use App\Models\Payment;
 use App\Models\Setting;
 use Analytics;
@@ -825,6 +826,157 @@ class ReportController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'downloadOfferPurchaseReportExcel', $e->getLine(), $e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.z
+            return back();
+        }
+
+    }
+
+    public function smsReport(Request $request)
+    {
+        try{
+            $user_sms = UserSms::select('user_sms.*','users.id','users.unique_id','users.username', DB::raw('count(*) as total_sms'))
+                ->join('users','users.id','=','user_sms.user_id')
+                ->groupBy('user_sms.user_id')
+                ->get();
+
+            return view('admin.reports.report_by_sms',compact('user_sms'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'offerPurchaseReport', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return back();
+        }
+    }
+
+    public function downloadSmsReportExcel(Request $request)
+    {
+        try{
+            $user_sms = UserSms::select('user_sms.*','users.id','users.unique_id','users.username', DB::raw('count(*) as total_sms'))
+                ->join('users','users.id','=','user_sms.user_id')
+                ->groupBy('user_sms.user_id')
+                ->get();
+
+            //object of the Spreadsheet class to create the excel data
+            $spreadsheet = new Spreadsheet();
+
+            //get current active sheet(first sheet)
+            $sheet = $spreadsheet->getActiveSheet();
+
+            //set default font
+            $spreadsheet->getDefaultStyle()
+                ->getFont()
+                ->setName("Arial")
+                ->setSize(10);
+
+            /**
+             * Start Heading package with set merge, text center,
+             */
+            //Heading Title Venessa  Bangladesh  Limited
+            $spreadsheet->getActiveSheet()
+                ->setCellValue('A1', "Total SMS by User");
+
+            //Merge Heading
+            $spreadsheet->getActiveSheet()
+                ->mergeCells("A1:H1");
+
+            //set font style
+            $spreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(18)->setBold(true);
+
+            //set Cell Allignment
+            $spreadsheet->getActiveSheet()->getStyle("A1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+
+            //set columns width and Height
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+
+            $z = 200;
+            for ($i = 1; $i < $z; $i++) {
+                $spreadsheet->getActiveSheet()->getRowDimension($i)->setRowHeight(20);
+            }
+
+
+            /**
+             * Received Quantity Header
+             */
+
+            $spreadsheet->getActiveSheet()
+                ->setCellValue('A3', 'User ID');
+
+
+            $spreadsheet->getActiveSheet()
+                ->setCellValue('B3', 'User Name');
+
+
+            $spreadsheet->getActiveSheet()
+                ->setCellValue('C3', 'Total SMS');
+
+            /**
+             * Invoice data Array
+             */
+
+            $received_data_header_row_number = 4;
+
+            $grand_total_sms = 0;
+            foreach($user_sms as $key=>$sms){
+                $received_data_header_cell_number = 1;
+
+                $grand_total_sms = $grand_total_sms+$sms->total_sms;
+
+                $spreadsheet->getActiveSheet()
+                    ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $sms->unique_id);
+
+                $received_data_header_cell_number = $received_data_header_cell_number + 1;
+                $spreadsheet->getActiveSheet()
+                    ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $sms->username);
+
+                $received_data_header_cell_number = $received_data_header_cell_number + 1;
+                $spreadsheet->getActiveSheet()
+                    ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $sms->total_sms);
+
+                $received_data_header_row_number++;
+            }
+
+            /**
+             * Footer Row
+             */
+            $received_data_header_cell_number = 1;
+            $spreadsheet->getActiveSheet()
+                ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, 'Total');
+
+            $received_data_header_cell_number = $received_data_header_cell_number + 1;
+            $spreadsheet->getActiveSheet()
+                ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, '');
+
+            $received_data_header_cell_number = $received_data_header_cell_number + 1;
+            $spreadsheet->getActiveSheet()
+                ->setCellValue($this->getCellName($received_data_header_cell_number) . $received_data_header_row_number, $grand_total_sms);
+            /************************/
+
+            // Making total purchase column bold
+            $spreadsheet->getActiveSheet()->getStyle("A" . $received_data_header_row_number)->getFont()->setBold(true);
+
+            //make object of the Xlsx class to save the excel file
+            $writer = new Xls($spreadsheet);
+
+
+            $filename = 'sms_by_user'.date('Y-m-d-H-i-s') . ".xls";
+
+
+            // We'll be outputting an excel file
+            header('Content-type: application/vnd.ms-excel');
+
+            // It will be called file.xls
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+            // Write file to the browser
+            $writer->save('php://output');
+
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'downloadSmsReportExcel', $e->getLine(), $e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.z
             return back();
         }

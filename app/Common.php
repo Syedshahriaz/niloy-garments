@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\UserShipment;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use App\Models\UserSms;
 use App\Models\ErrorLog;
 use Carbon\Carbon;
 use Session;
@@ -24,8 +25,8 @@ use DB;
 class Common
 {
     const SITE_TITLE = 'Vujadetec';
-    const DOMAIN_NAME = 'vujadetec.net';
-    const SITE_URL = 'https://vujadetec.net';
+    const DOMAIN_NAME = 'dev.vujadetec.net';
+    const SITE_URL = 'https://dev.vujadetec.net';
     //const SITE_URL = 'http://127.0.0.1:8000';
     const FROM_EMAIL = 'support@vujadetec.com';
     const FROM_NAME = 'Vujadetec';
@@ -584,6 +585,23 @@ class Common
     public static function sendPastDayWarningSms($phone,$message_body){
         $response = SMS::sendSingleSms($phone,$message_body);
         return $response;
+    }
+
+    /*
+     * Store sms sending record
+     * */
+    public static function storeSmsRecord($user_id, $content){
+        try{
+            $sms = NEW UserSms();
+            $sms->user_id = $user_id;
+            $sms->content = $content;
+            $sms->save();
+
+            return 'ok';
+        }
+        catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /*

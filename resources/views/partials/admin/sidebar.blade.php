@@ -128,7 +128,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item @if($page=='report_target' || $page=='report_location' || $page=='report_age' || $page=='report_gender' || $page=='report_profession' || $page=='report_merriege' || $page=='report_offer_purchased') active open @endif">
+            <li class="nav-item @if($page=='report_target' || $page=='report_location' || $page=='report_age' || $page=='report_gender' || $page=='report_profession' || $page=='report_merriege' || $page=='report_offer_purchased' || $page=='report_sms') active open @endif">
                 <a href="javascript:;" class="nav-link nav-toggle">
                     <i class="icon-settings"></i>
                     <span class="title">Report</span>
@@ -163,6 +163,11 @@
                     <li class="nav-item start @if($page=='report_profession') active @endif">
                         <a href="{{url('admin/report_profession')}}" class="nav-link">
                             <span class="title">By profession Report</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start @if($page=='report_sms') active @endif">
+                        <a href="{{url('admin/report_sms')}}" class="nav-link">
+                            <span class="title">By SMS Report</span>
                         </a>
                     </li>
                     <!-- <li class="nav-item start @if($page=='report_merriege') active @endif">

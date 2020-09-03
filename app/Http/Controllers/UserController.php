@@ -523,6 +523,12 @@ class UserController extends Controller
 
             $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number);
 
+            /*
+             * Store sms sending record
+             * */
+            $message_body = 'Dear '.$request->username.', Welcome to VUJADETEC. Your registration has been completed.';
+            $result = Common::storeSmsRecord($user->id, $message_body);
+
             return ['status' => 200, 'reason' => 'New user created successfully','user_id'=>$user->id];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'storeNewUser', $e->getLine(),
@@ -710,6 +716,11 @@ class UserController extends Controller
             $message_body = 'Dear '.$childUserDetails->username.', Welcome to VUJADETEC. ';
             $message_body .= $oldParentUserDetails->username.' transferred all your records. Please read the user guide & visit www.vujadetec.com to get more information about our product & services.';
             $response = SMS::sendSingleSms($childUserDetails->phone,$message_body);
+
+            /*
+             * Store sms sending record
+             * */
+            $result = Common::storeSmsRecord($childUserDetails->id, $message_body);
 
             return ['status' => 200, 'reason' => 'User separated successfully'];
         } catch (\Exception $e) {

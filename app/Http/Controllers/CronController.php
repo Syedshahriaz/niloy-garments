@@ -52,26 +52,26 @@ class CronController extends Controller
 
     public function sendBirthdayWish(Request $request){
         try{
-            $users = User::select('users.phone')
+            $users = User::select('users.id','users.phone')
                 ->join('user_shipments','user_shipments.user_id','=','users.id')
                 ->whereRaw('MONTH(shipment_date) = MONTH(NOW())')
                 ->whereRaw('DAY(shipment_date) = DAY(NOW())')
-                ->pluck('users.phone')
-                ->toArray();
-
-            $mobile_nos = implode(',',$users);
+                ->get();
 
             foreach($users as $user){
                 $message_body = 'May your birthday be as beautiful, wonderful as you are. ';
                 $message_body.='I pray to God that each candle on the cake convert into wish and May all of them come true. ';
                 $message_body.='Happy Birthday!';
 
-                $campaign_title = 'Happy Birthday';
+                $response = SMS::sendSingleSms($user->phone,$message_body);
 
-                $response = SMS::sendCampaignSms($mobile_nos,$message_body,$campaign_title);
-
-                return $response;
+                /*
+                 * Store sms sending record
+                 * */
+                $result = Common::storeSmsRecord($user->id, $message_body);
             }
+
+            return $response;
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'CronController', 'sendSubscriptionRenewWarningEmail', $e->getLine(),

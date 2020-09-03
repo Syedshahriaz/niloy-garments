@@ -237,6 +237,11 @@ class PaymentController extends Controller
         $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
         $response = SMS::sendSingleSms($user->phone,$message_body);
 
+        /*
+         * Store sms sending record
+         * */
+        $result = Common::storeSmsRecord($user->id, $message_body);
+
         return 'success';
     }
 
@@ -307,6 +312,11 @@ class PaymentController extends Controller
         $message_body = 'Your payment has been done successfully. ';
         $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
         $response = SMS::sendSingleSms($user->phone,$message_body);
+
+        /*
+         * Store sms sending record
+         * */
+        $result = Common::storeSmsRecord($user->id, $message_body);
 
         return 'success';
     }

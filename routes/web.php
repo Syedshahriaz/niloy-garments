@@ -137,6 +137,8 @@ Route::get('admin/report_profession', 'Admin\ReportController@professionReport')
 Route::get('admin/download_report_profession_excel', 'Admin\ReportController@downloadProfessionReportExcel');
 Route::get('admin/report_offer_purchased', 'Admin\ReportController@offerPurchaseReport');
 Route::get('admin/download_report_offer_purchased_excel', 'Admin\ReportController@downloadOfferPurchaseReportExcel');
+Route::get('admin/report_sms', 'Admin\ReportController@smsReport');
+Route::get('admin/download_report_sms_excel', 'Admin\ReportController@downloadSmsReportExcel');
 Route::get('admin/analytics_test', 'Admin\ReportController@analyticsTest');
 
 

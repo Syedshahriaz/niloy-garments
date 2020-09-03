@@ -251,6 +251,15 @@ class UserController extends Controller
                 $response = SMS::sendSingleSms($phones,$message_body);
             }
 
+            /*
+             * Store sms sending record
+             * */
+            if(!empty($userIds)){
+                foreach($userIds as $user_id){
+                    $result = Common::storeSmsRecord($user_id, $message_body);
+                }
+            }
+
             return ['status'=>200, 'reason'=>'SMS successfully sent'];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'sendUserEmail', $e->getLine(),
