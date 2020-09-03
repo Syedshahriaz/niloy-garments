@@ -79,7 +79,7 @@
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <p class="body">
                                                                 @if($m_details->file_path !='')
-                                                                    <img style="max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    <img style="max-width: 20px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                 @endif
                                                                 @if($m_details->message !='')
                                                                     {{$m_details->message}}
@@ -101,7 +101,7 @@
                                                             <p class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>
-                                                                        <img style="float: right; max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                        <img style="float: right; max-width: 200px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                     </span>
                                                                 @endif
                                                                 @if($m_details->message !='')

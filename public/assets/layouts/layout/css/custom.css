@@ -840,15 +840,20 @@
     margin-top: 7px;
     margin-right: 4px;
   }
-
+  .project-item-task{
+    min-height: 17px;
+  }
+  .change_special_date{
+    right: 30px;
+    width: 30px;
+    height: 30px;
+    text-align: right;
+    position: absolute;
+  }
   /*Custom CSS*/
   .project-item-sub {
     color: green;
     font-weight: 600;
-  }
-  
-  .page-bar {
-    display: none;
   }
   
   .bg-danger>.display>.project-item-sub {

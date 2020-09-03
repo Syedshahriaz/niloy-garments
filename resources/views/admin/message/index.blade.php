@@ -90,7 +90,7 @@
                                                             <span class="datetime"> at {{date('l M d, Y h:i a',strtotime($m_details->created_at))}}</span>
                                                             <p class="body">
                                                                 @if($m_details->file_path !='')
-                                                                    <img style="float: right; max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                    <img style="float: right; max-width: 200px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                 @endif
                                                                 @if($m_details->message !='')
                                                                     <span style="clear: both">{{$m_details->message}}</span>
@@ -112,7 +112,7 @@
                                                             <p class="body">
                                                                 @if($m_details->file_path !='')
                                                                     <span>
-                                                                        <img style="float: right; max-width: 230px;" class="body" src="{{asset($m_details->file_path)}}">
+                                                                        <img style="float: right; max-width: 200px;" class="body" src="{{asset($m_details->file_path)}}">
                                                                     </span>
                                                                 @endif
                                                                 @if($m_details->message !='')
@@ -165,8 +165,8 @@
 @endsection
 
 @section('js')
-    <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script>
-
+    <!-- <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script> -->
+    <script src="{{asset('assets/global/plugins/jquery-searcher/jquery.searcher.js')}}"></script>
     <script>
         jQuery(document).ready(function() {
             /*setInterval(function(){
@@ -449,7 +449,7 @@
             tpl += '<p class="body">';
             if(photo_path !=''){
                 var file_path = "{{url('/')}}/"+photo_path;
-                tpl += '<img style="float: right; max-width: 230px;" class="body" src="'+file_path+'">';
+                tpl += '<img style="float: right; max-width: 200px;" class="body" src="'+file_path+'">';
             }
             if(message !='') {
                 tpl += '<span style="clear: both">' + message + '</span>';

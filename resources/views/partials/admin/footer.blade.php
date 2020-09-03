@@ -219,7 +219,7 @@
             tpl += '<p class="body">';
             if (photo_path != null) {
                 var file_path = "{{url('/')}}/" + photo_path;
-                tpl += '<img style="float: right; max-width: 230px;" class="body" src="' + file_path + '">';
+                tpl += '<img style="float: right; max-width: 200px;" class="body" src="' + file_path + '">';
             }
             if(msg.message !==null) {
                 tpl += '<span style="clear: both">' + msg.message + '</span>';

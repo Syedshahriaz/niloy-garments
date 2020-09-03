@@ -131,15 +131,15 @@
                                     @else
                                         <a class="project-item-title ajax_item item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
                                     @endif
-                                        <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink @endif {{$bg_class}}">
+                                        <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
                                             <div class="display title-section">
                                                 <div class="number">
                                                     <h5 class="font-theme project-item-name">
                                                         {{$project->name}}
                                                     </h5>
                                                 </div>
-                                                @if($project->has_special_date==1 && $project->special_date_update_count<4)
-                                                <div class="icon change_special_date" data-id="{{$project->user_project_id}}">
+                                                @if($project->has_special_date==1 && $project->special_date_update_count < 4)
+                                                <div class="icon change_special_date" data-id="{{$project->user_project_id}}" title="Change special date">
                                                         <i class="icon-settings"></i>
                                                 @else
                                                 <div class="icon">
@@ -236,7 +236,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="text-align: center;">
                         <button type="submit" class="btn theme-btn" id="special_date_submit_button">Submit</button>
                     </div>
                 </form>
@@ -253,9 +253,11 @@
 
 @section('js')
     <script>
-        $(document).ready(function(){
-            //
-        })
+        $(document).on('click','.extra-offer .change_special_date',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            $('#special_date_modal').modal('show');
+        });
     </script>
 @endsection
 
