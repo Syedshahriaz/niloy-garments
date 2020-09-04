@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -33,6 +34,9 @@ class ReportController extends Controller
     public function genderReport(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $male_user = User::where('gender','Male')
                 ->whereIn('status',['active','pending'])
                 ->count();
@@ -52,6 +56,9 @@ class ReportController extends Controller
     public function downloadGenderReportExcel(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $male_user = User::where('gender','Male')
                 ->whereIn('status',['active','pending'])
                 ->count();
@@ -172,6 +179,9 @@ class ReportController extends Controller
     public function locationReport(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $country = Analytics::performQuery(Period::days(14),'ga:sessions',  ['dimensions'=>'ga:country','sort'=>'-ga:country']);
             $locations= collect($country['rows'] ?? [])->map(function (array $dateRow) {
                 return [
@@ -193,6 +203,9 @@ class ReportController extends Controller
     public function downloadLocationReportExcel(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $country = Analytics::performQuery(Period::days(14),'ga:sessions',  ['dimensions'=>'ga:country','sort'=>'-ga:country']);
             $locations= collect($country['rows'] ?? [])->map(function (array $dateRow) {
                 return [
@@ -316,6 +329,9 @@ class ReportController extends Controller
     public function ageReport(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $analyticsData = Analytics::performQuery(Period::days(14),'ga:sessions',
                 ['dimensions' => 'ga:userGender,ga:userAgeBracket']
             );
@@ -341,6 +357,9 @@ class ReportController extends Controller
     public function downloadAgeReportExcel(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $analyticsData = Analytics::performQuery(Period::days(14),'ga:sessions',
                 ['dimensions' => 'ga:userGender,ga:userAgeBracket']
             );
@@ -466,6 +485,9 @@ class ReportController extends Controller
     public function professionReport(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $users = DB::table('users')
                 ->select('professions.title as profession', DB::raw('count(*) as total_user'))
                 ->leftJoin('professions','professions.id','=','users.profession')
@@ -486,6 +508,9 @@ class ReportController extends Controller
     public function downloadProfessionReportExcel(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $users = DB::table('users')
                 ->select('professions.title as profession', DB::raw('count(*) as total_user'))
                 ->leftJoin('professions','professions.id','=','users.profession')
@@ -616,6 +641,9 @@ class ReportController extends Controller
     public function offerPurchaseReport(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $year = date('Y');
             if($request->year != ''){
                 $year = $request->year;
@@ -655,6 +683,9 @@ class ReportController extends Controller
     public function downloadOfferPurchaseReportExcel(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $year = date('Y');
             if($request->year != ''){
                 $year = $request->year;
@@ -835,6 +866,9 @@ class ReportController extends Controller
     public function smsReport(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $user_sms = UserSms::select('user_sms.*','users.id','users.unique_id','users.username', DB::raw('count(*) as total_sms'))
                 ->join('users','users.id','=','user_sms.user_id')
                 ->groupBy('user_sms.user_id')
@@ -853,6 +887,9 @@ class ReportController extends Controller
     public function downloadSmsReportExcel(Request $request)
     {
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $user_sms = UserSms::select('user_sms.*','users.id','users.unique_id','users.username', DB::raw('count(*) as total_sms'))
                 ->join('users','users.id','=','user_sms.user_id')
                 ->groupBy('user_sms.user_id')

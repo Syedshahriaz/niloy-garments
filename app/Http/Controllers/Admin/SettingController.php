@@ -16,6 +16,9 @@ class SettingController extends Controller
 {
     public function commonSetting(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $settings = Setting::first();
             if($request->ajax()) {
                 $returnHTML = View::make('admin.settings.common',compact('settings'))->renderSections()['content'];
@@ -57,6 +60,9 @@ class SettingController extends Controller
 
     public function promotionSettings(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $offer = Offer::first();
             if($request->ajax()) {
                 $returnHTML = View::make('admin.settings.common',compact('offer'))->renderSections()['content'];
@@ -99,6 +105,9 @@ class SettingController extends Controller
 
     public function offerPriceSetting(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $countries = Country::where('status','active')->get();
             $offer_prices = OfferPrices::orderBy('country_name','ASC')
                 ->get();

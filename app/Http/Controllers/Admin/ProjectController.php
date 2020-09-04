@@ -19,6 +19,9 @@ class ProjectController extends Controller
 {
     public function index(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             $projects = Project::with('tasks')
                 ->where('status','!=','deleted')
                 ->get();
@@ -40,6 +43,9 @@ class ProjectController extends Controller
 
     public function create(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
             if($request->ajax()) {
                 $returnHTML = View::make('admin.project.create_project')->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
