@@ -72,7 +72,7 @@
     **********  All project js
     * */
 
-    $(document).on('click','#change_special_date', function(event){
+    $(document).on('click','.change_special_date', function(event){
         event.stopPropagation();
         var user_project_id = $(this).attr('data-id');
         show_special_date_modal(user_project_id);
@@ -88,12 +88,20 @@
 
         show_loader();
 
-        var special_date = $("#sp_date").val();
+        var day = $('#day').val();
+        var month = $('#month').val();
+        var year = $('#year').val();
+        var shipment_date = $("#shipment_date").val();
         var user_project_id = $("#user_project_id").val();
+        alert(user_project_id);
 
         var validate = "";
 
-        if (special_date.trim() == "") {
+        if (shipment_date.trim() == "") {
+            validate = validate + "Special date is required</br>";
+        }
+
+        if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
             validate = validate + "Special date is required</br>";
         }
 
