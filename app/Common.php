@@ -292,7 +292,15 @@ class Common
             if($task->status =='active'){
                 $days_to_add = self::calculateDaysToAdd($task,$shipment->shipment_date);
 
-                if($project->day_add_with=='shipment_date') {
+                $years_diff = (time()-strtotime($shipment->shipment_date))/(3600*24*365.25);
+
+                if($task->project_id==34 && $years_diff<15){ // If project id=34 and age is less than 15 years
+                    $projectTask->due_date = date('Y-m-d',
+                        strtotime($shipment->shipment_date . ' + ' . $days_to_add. ' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d',
+                        strtotime($shipment->shipment_date . ' + ' . $days_to_add . ' days'));
+                }
+                else if($project->day_add_with=='shipment_date') {
                     $projectTask->due_date = date('Y-m-d',
                         strtotime($shipment->shipment_date . ' + ' . $days_to_add. ' days'));
                     $projectTask->original_delivery_date = date('Y-m-d',
@@ -359,7 +367,12 @@ class Common
     }
 
     public static function calculateDaysToAdd($task,$shipment_date){
-        if($task->alternet_days_to_add==''){
+        $years_diff = (time()-strtotime($shipment_date))/(3600*24*365.25);
+
+        if($task->project_id==34 && $years_diff<15){ // If project id=34 and age is less than 15 years
+            $days_to_add = $task->under_age_days_to_add;
+        }
+        else if($task->alternet_days_to_add==''){
             $days_to_add = $task->days_to_add;
         }
         else{
