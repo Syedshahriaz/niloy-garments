@@ -67,6 +67,7 @@
         </div>
     </div>
 
+
     <div class="page-footer">
         <div class="page-footer-inner text-center w-100"> © All rights reserved to <a target="_blank" href="https://vujadetec.com/"><strong>vujadetec</strong></a></div>
     </div>
@@ -87,7 +88,14 @@
 
          $(document).on('click','.active_offer_option', function(){
              $('#payment_form').submit();
-         })
+         });
+
+        /*
+       * Reloading page on browser back and forth button click
+       * */
+        $(window).on('popstate', function(event) {
+            window.location.reload();
+        });
 
     </script>
 </body>

@@ -139,9 +139,9 @@
                                             <a href="#" title="Unlock Shipping Date" onclick="unlock_shipping_date({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
                                             </a>
-                                            {{--<a href="#" title="Unlock User Gender" onclick="unlock_user_gender({{$user->id}})">
+                                            <a href="#" title="Unlock User Gender" onclick="unlock_user_gender({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
-                                            </a>--}}
+                                            </a>
                                             <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
                                             </a>

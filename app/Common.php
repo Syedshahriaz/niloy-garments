@@ -28,7 +28,7 @@ class Common
     const DOMAIN_NAME = 'dev.vujadetec.net';
     const SITE_URL = 'https://dev.vujadetec.net';
     //const SITE_URL = 'http://127.0.0.1:8000';
-    const FROM_EMAIL = 'support@vujadetec.com';
+    const FROM_EMAIL = 'vujadetec@gmail.com';
     const FROM_NAME = 'Vujadetec';
 
     /* You can set EASYPAY_MODE to sandbox or live*/

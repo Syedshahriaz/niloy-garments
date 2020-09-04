@@ -124,7 +124,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for=""><b>Gender</b></label>
-                                                    <select name="gender" id="gender" class="form-control">
+                                                    <select name="gender" id="gender" class="form-control" @if($user->gender_update_count>0) disabled @endif>
                                                         <option value="Male" @if($user->gender=='Male') selected @endif>Male</option>
                                                         <option value="Female" @if($user->gender=='Female') selected @endif>Female</option>
                                                     </select>

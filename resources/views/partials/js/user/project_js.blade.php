@@ -93,7 +93,6 @@
         var year = $('#year').val();
         var shipment_date = $("#shipment_date").val();
         var user_project_id = $("#user_project_id").val();
-        alert(user_project_id);
 
         var validate = "";
 
