@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Niloy Garments::Add User')
+@section('title', 'Add User')
 @section('content')
 
     <!-- BEGIN CONTENT -->

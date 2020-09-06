@@ -1,5 +1,5 @@
 @extends('layouts.admin_master')
-@section('title', 'Niloy Garments::Project Settings')
+@section('title', 'Project Settings')
 @section('content')
 
     <style>
