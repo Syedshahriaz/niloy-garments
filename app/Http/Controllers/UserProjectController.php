@@ -270,7 +270,7 @@ class UserProjectController extends Controller
                 }
 
                 $user_project_id = $request->id;
-                $user = UserProject::select('users.id','users.username', 'users.email','special_date')
+                $user = UserProject::select('users.id','users.username', 'users.email','has_special_date','special_date')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
@@ -316,7 +316,7 @@ class UserProjectController extends Controller
                 if($user->email != Session::get('user_email')){ // Logged in user allowed only
                     return redirect('error_404');
                 }
-                if($user->special_date == ''){ // Need to select special date
+                if($user->has_special_date==1 && $user->special_date == ''){ // Need to select special date
                     return redirect('all_project?u_id='.$user->id);
                 }
 
