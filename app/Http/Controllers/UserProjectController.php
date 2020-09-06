@@ -270,13 +270,10 @@ class UserProjectController extends Controller
                 }
 
                 $user_project_id = $request->id;
-                $user = UserProject::select('users.id','users.username')
+                $user = UserProject::select('users.id','users.username', 'users.email')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
-                if(empty($user)){
-                    return [ 'status' => 401, 'reason' => 'This project have been removed.'];
-                }
 
                 $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','projects.has_offer_1')
                     ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
@@ -289,7 +286,7 @@ class UserProjectController extends Controller
                 $task_titles = TaskTitle::where('status','!=','deleted')
                     ->get();
 
-                if (!empty($tasks)) {
+                if (count($tasks) != 0) {
                     $project = Project::select('projects.*')
                         ->where('id', $tasks[0]->project_id)
                         ->first();
@@ -304,10 +301,22 @@ class UserProjectController extends Controller
                 //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
 
                 if ($request->ajax()) {
+                    if(empty($user)){
+                        return [ 'status' => 401, 'reason' => 'This project have been removed.'];
+                    }
+
                     $returnHTML = View::make('user.project.my_project_task',
                         compact('user_project_id','user','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
+
+                if(empty($user)){
+                    return redirect('error_404');
+                }
+                if($user->email != Session::get('user_email')){
+                    return redirect('error_404');
+                }
+
                 return view('user.project.my_project_task', compact('user_project_id','user','project', 'tasks', 'shipment','task_titles'));
             }
             else{
