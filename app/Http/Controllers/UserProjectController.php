@@ -270,7 +270,7 @@ class UserProjectController extends Controller
                 }
 
                 $user_project_id = $request->id;
-                $user = UserProject::select('users.id','users.username', 'users.email')
+                $user = UserProject::select('users.id','users.username', 'users.email','special_date')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
@@ -310,11 +310,14 @@ class UserProjectController extends Controller
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
 
-                if(empty($user)){
+                if(empty($user)){ // User task not generated yet
                     return redirect('error_404');
                 }
-                if($user->email != Session::get('user_email')){
+                if($user->email != Session::get('user_email')){ // Logged in user allowed only
                     return redirect('error_404');
+                }
+                if($user->special_date == ''){ // Need to select special date
+                    return redirect('all_project?u_id='.$user->id);
                 }
 
                 return view('user.project.my_project_task', compact('user_project_id','user','project', 'tasks', 'shipment','task_titles'));
