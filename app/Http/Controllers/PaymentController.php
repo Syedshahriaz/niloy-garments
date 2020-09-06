@@ -20,7 +20,7 @@ class PaymentController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function initiatePayment(Request $request){
 
         $user_id = $request->id;

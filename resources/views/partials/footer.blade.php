@@ -169,7 +169,11 @@
                     library_re_initialization(item_name);
                 }
                 else{
-                    show_error_message(data);
+                    show_error_message(data.reason);
+                    setTimeout(function(){
+                        location.reload();
+                    },2000)
+
                 }
             },
             error: function (data) {
