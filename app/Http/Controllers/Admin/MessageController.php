@@ -67,7 +67,7 @@ class MessageController extends Controller
                 $message = NEW Message();
                 $message->user_id = $request->user_id;
                 $message->admin_id = $admin_id;
-                $message->updated_at = date('Y-m-d h:i:s');
+                $message->updated_at = date('Y-m-d H:i:s');
                 $message->save();
 
                 $message_id = $message->id;
@@ -75,7 +75,7 @@ class MessageController extends Controller
             else{
                 $message = Message::where('id',$message_id)->first();
                 $message->has_new_message = 1;
-                $message->updated_at = date('Y-m-d h:i:s');
+                $message->updated_at = date('Y-m-d H:i:s');
                 $message->save();
             }
 
@@ -87,7 +87,7 @@ class MessageController extends Controller
             $messageDetails = NEW MessageDetails();
             $messageDetails->message_id = $message_id;
             $messageDetails->type = 'received';
-            $messageDetails->created_at = date('Y-m-d h:i:s');
+            $messageDetails->created_at = date('Y-m-d H:i:s');
             if($request->message !=''){
                 $messageDetails->message = $request->message;
             }
