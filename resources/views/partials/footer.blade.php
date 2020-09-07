@@ -85,6 +85,9 @@
 </div>
 <!-- Guide modal END-->
 
+<input type="hidden" id="refreshed" value="no">
+
+
 <div class="page-footer">
 <div class="page-footer-inner text-center w-100"> © All rights reserved to <a target="_blank" href="https://vujadetec.com/"><strong>vujadetec</strong></a></div>
     <div class="scroll-to-top">
@@ -96,6 +99,19 @@
 @include('partials.scripts')
 <script>
     $(document).ready(function(){
+
+        /*onload=function(){
+            var e=document.getElementById("refreshed");
+            alert(e.value);
+            if(e.value=="no"){
+                e.value="yes";
+            }
+            else{
+                e.value="no";
+                location.reload();
+            }
+        }*/
+
         setInterval(function(){
             var id = $('#message_id').val();
             getAndPopulateSelectedMessage(id);
