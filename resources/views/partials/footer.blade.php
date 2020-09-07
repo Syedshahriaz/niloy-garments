@@ -99,18 +99,7 @@
 @include('partials.scripts')
 <script>
     $(document).ready(function(){
-
-        /*onload=function(){
-            var e=document.getElementById("refreshed");
-            alert(e.value);
-            if(e.value=="no"){
-                e.value="yes";
-            }
-            else{
-                e.value="no";
-                location.reload();
-            }
-        }*/
+        //show_content_loader();
 
         setInterval(function(){
             var id = $('#message_id').val();
@@ -207,6 +196,10 @@
         loader_html += '<img title="Loading..." id="loader-gif" class="" style="" src='+loader_src+'>';
         loader_html += '</div>';
         $('.page-content-wrapper').html(loader_html);
+    }
+
+    function hide_content_loader(){
+        //
     }
 
     function show_loader(message=''){

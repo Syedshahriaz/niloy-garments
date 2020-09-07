@@ -55,9 +55,9 @@
                                     <ul>
                                         @foreach($child_users as $user)
                                             @if($user->shipment_date !='')
-                                                <li class="@if($user->id==$user_id) active @endif"><a href="{{url('all_project').'?u_id='.$user->id}}" class="ajax_item item-2" data-name="all_project?u_id={{$user->id}}" data-item="2">{{$user->username}}</a></li>
+                                                <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('all_project').'?u_id='.$user->id}}" class="item-2" data-name="all_project?u_id={{$user->id}}" data-item="2">{{$user->username}}</a></li>
                                             @else
-                                                <li class="@if($user->id==$user_id) active @endif"><a href="{{url('select_shipment',$user->id)}}" class="" >{{$user->username}}</a></li>
+                                                <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('select_shipment',$user->id)}}" class="" >{{$user->username}}</a></li>
                                                 {{--<li class="@if($user->id==$user_id) active @endif"><a href="{{url('select_shipment',$user->id)}}" class="ajax_item item-7" data-segment="select_shipment" data-name="select_shipment/{{$user->id}}" data-item="7">{{$user->username}}</a></li>--}}
                                             @endif
                                         @endforeach
@@ -294,6 +294,9 @@
             e.stopPropagation();
             e.preventDefault();
             $('#special_date_modal').modal('show');
+        });
+        $(document).on('click','.project_list_item',function(e){
+            show_content_loader();
         });
     </script>
 @endsection
