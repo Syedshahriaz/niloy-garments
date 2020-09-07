@@ -345,6 +345,10 @@ class UserProjectController extends Controller
                 ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
                 ->first();
 
+            if($task->delivery_date_update_count>1){
+                return ['status'=>200, 'reason'=>'Task already completed and locked.'];
+            }
+
             $shipment = UserShipment::where('user_id', $task->user_id)->first();
 
             /*
@@ -352,7 +356,7 @@ class UserProjectController extends Controller
              * */
             if($request->original_delivery_date !='' && ($request->original_delivery_date != $request->old_delivery_date)){
                 $date_updated = 1;
-                $delivery_date_update_count  = $task->delivery_date_update_count+1;
+                //$delivery_date_update_count  = $task->delivery_date_update_count+1;
 
                 $daysAdded = Common::getDateDiffDays($request->original_delivery_date,$request->old_delivery_date);
                 if($daysAdded>0) { // If date increased
@@ -360,15 +364,16 @@ class UserProjectController extends Controller
                 }
             }
             else{
-                $delivery_date_update_count  = $task->delivery_date_update_count;
+                //$delivery_date_update_count  = $task->delivery_date_update_count;
             }
 
             /*
              * Check if task made done by checking done tag
              * */
-            if($date_updated==1){
-                $task->delivery_date_update_count = $delivery_date_update_count;
-            }
+            //if($date_updated==1){
+                $delivery_date_update_count  = $task->delivery_date_update_count+1;
+                $task->delivery_date_update_count = $task->delivery_date_update_count+1;
+            //}
             if($request->original_delivery_date !=''){
                 $task->status = 'completed';
                 $task->original_delivery_date = date('Y-m-d', strtotime($request->original_delivery_date));

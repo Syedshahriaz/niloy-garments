@@ -177,7 +177,10 @@
                 }
             },
             error: function (data) {
-                show_error_message(data);
+                show_error_message('Something went wrong. Try again later.');
+                setTimeout(function(){
+                    location.reload();
+                },2000)
             }
         });
     }

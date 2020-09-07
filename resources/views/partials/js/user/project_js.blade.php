@@ -187,13 +187,14 @@
         var m =  formattedDate.getMonth();
         m += 1;  // JavaScript months are 0-11
         var y = formattedDate.getFullYear();
+        var today = y+'-'+m+'-'+d;
 
         $('#day').val(d);
         $('#month').val(m);
         $('#year').val(y);
 
-        $('#shipment_date').val(original_delivery_date);
-        $('#old_delivery_date_hidden').val(original_delivery_date);
+        $('#shipment_date').val(today);
+        $('#old_delivery_date_hidden').val(today);
         if(update_count>1){
             $('#org_delivery_date').prop('disabled',true);
         }
