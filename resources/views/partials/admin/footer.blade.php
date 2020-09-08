@@ -61,6 +61,9 @@
 @include('partials.admin.scripts')
 <!-- END FOOTER scripts-->
 <script>
+    window.onload=function(){
+      document.getElementById("audio").play();
+    }
     $(document).ready(function(){
 
         setInterval(function(){
