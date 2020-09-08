@@ -55,15 +55,13 @@
     </div>
 </div>
 
+<input id="unread_message" value="{{App\Common::getUnreadMessageCount()}}">
 <audio id="audio" src="{{asset('assets/message_sound.mp3')}}"></audio>
 
 <!-- BEGIN FOOTER scripts-->
 @include('partials.admin.scripts')
 <!-- END FOOTER scripts-->
 <script>
-    window.onload=function(){
-      document.getElementById("audio").play();
-    }
     $(document).ready(function(){
 
         setInterval(function(){
@@ -118,9 +116,16 @@
 
                     var message_count = data.messages.length;
                     if(message_count>0){
+                        var previous_unread_message = $('#unread_message').val();
                         $('.new_message_count').removeClass('hidden');
                         $('.new_message_count').text(message_count);
                         document.title=browser_title+"("+message_count+")"; // Set browser title;
+
+                        /*Play message tone*/
+                        if(message_count>previous_unread_message){
+                            document.getElementById("audio").play();
+                            $('#unread_message').val(message_count);
+                        }
                     }
                     else{
                         $('.new_message_count').addClass('hidden');

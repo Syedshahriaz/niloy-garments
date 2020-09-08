@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\Models\MessageDetails;
 use App\Models\Payment;
 use App\Models\Project;
 use App\Models\Task;
@@ -720,6 +721,23 @@ class Common
         else{
             return 0;
         }
+    }
+
+    public static function getUnreadMessageCount($user_id=''){
+        $messages = MessageDetails::select('message_details.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo');
+        $messages = $messages->join('messages','messages.id','=','message_details.message_id');
+        $messages = $messages->join('users as user','user.id','=','messages.user_id');
+        $messages = $messages->join('users as admin','admin.id','=','messages.admin_id');
+        if($user_id ==''){ // Message for admin
+            $messages = $messages->where('type','sent');
+        }
+        else{// Message for user
+            $messages = $messages->where('messages.user_id',$user_id);
+            $messages = $messages->where('type','received');
+        }
+        $messages = $messages->where('is_read',0);
+        $messages = $messages->count();
+        return $messages;
     }
 
     public static function formatPhoneNumber($phone){

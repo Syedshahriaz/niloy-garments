@@ -95,6 +95,9 @@
     </div>
 </div>
 
+<input id="unread_message" value="{{App\Common::getUnreadMessageCount(Session::get('user_id'))}}">
+<audio id="audio" src="{{asset('assets/message_sound.mp3')}}"></audio>
+
 <!-- BEGIN FOOTER scripts-->
 @include('partials.scripts')
 <script>

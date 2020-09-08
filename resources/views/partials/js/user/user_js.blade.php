@@ -636,9 +636,16 @@
 
                     var message_count = data.unread_messages.length;
                     if(message_count>0){
+                        var previous_unread_message = $('#unread_message').val();
                         $('.new_message_count').removeClass('hidden');
                         $('.new_message_count').text(message_count);
                         document.title=browser_title+"("+message_count+")"; // Set browser title;
+
+                        /*Play message tone*/
+                        if(message_count>previous_unread_message){
+                            document.getElementById("audio").play();
+                            $('#unread_message').val(message_count);
+                        }
                     }
                     else{
                         $('.new_message_count').addClass('hidden');
