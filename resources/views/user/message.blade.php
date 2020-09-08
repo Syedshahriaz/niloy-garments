@@ -155,6 +155,50 @@
 
 @section('js')
     <script>
+        //message FE script START 
+        function scrollBottom(){
+            $('#char_body>div').stop().animate({
+                scrollTop: $('#char_body>div')[0].scrollHeight
+            });
+        }
+        $(document).ready(function(){
+            setTimeout(() => {
+                scrollBottom();
+            }, 1000);
+        })
+        $(document).on('click','#send_btn',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            if($('#uploaded_img').attr('src') == ''){
+                setTimeout(() => {
+                    scrollBottom();
+                }, 1500);
+            }
+            else{
+                setTimeout(() => {
+                    scrollBottom();
+                }, 5000);
+            }
+        });
+
+        $('#message_input').on('keypress', function (e) {
+            if(e.which === 13){
+
+                if($('#uploaded_img').attr('src') == ''){
+                    setTimeout(() => {
+                        scrollBottom();
+                    }, 1500);
+                }
+                else{
+                    setTimeout(() => {
+                        //alert();
+                        scrollBottom();
+                    }, 5000);
+                }
+            }
+        });
+        //message FE script END
+
         jQuery(document).ready(function() {
 
             /*
@@ -215,47 +259,6 @@
                     reader.readAsDataURL(input.files[0]);
                     $('#message_input').addClass('img-added')
                     $('#uploaded_img').addClass('visible')
-                }
-            }
-        });
-
-        function scrollBottom(){
-            $('#char_body>div').stop().animate({
-                scrollTop: $('#char_body>div')[0].scrollHeight
-            },100);
-        }
-        $(document).ready(function(){
-            setTimeout(() => {
-                scrollBottom();
-            }, 2000);
-        })
-        $(document).on('click','#send_btn',function(){
-            if($('#uploaded_img').attr('src') == ''){
-                setTimeout(() => {
-                    scrollBottom();
-                }, 1500);
-            }
-            else{
-                setTimeout(() => {
-                    //alert();
-                    scrollBottom();
-                }, 5000);
-            }
-        });
-
-        $('#message_input').on('keypress', function (e) {
-            if(e.which === 13){
-
-                if($('#uploaded_img').attr('src') == ''){
-                    setTimeout(() => {
-                        scrollBottom();
-                    }, 1500);
-                }
-                else{
-                    setTimeout(() => {
-                        //alert();
-                        scrollBottom();
-                    }, 5000);
                 }
             }
         });

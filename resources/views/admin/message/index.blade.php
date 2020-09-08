@@ -168,6 +168,53 @@
     <!-- <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script> -->
     <script src="{{asset('assets/global/plugins/jquery-searcher/jquery.searcher.js')}}"></script>
     <script>
+        //message FE script START 
+        function scrollBottom(){
+            $('#char_body>div').stop().animate({
+                scrollTop: $('#char_body>div')[0].scrollHeight
+            });
+        }
+
+        $(document).ready(function(){
+            setTimeout(() => {
+                scrollBottom();
+            }, 1000);
+        })
+
+        $(document).on('click','#send_btn, .message_head',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            if($('#uploaded_img').attr('src') == ''){
+                setTimeout(() => {
+                    scrollBottom();
+                }, 1500);
+            }
+            else{
+                setTimeout(() => {
+                    //alert();
+                    scrollBottom();
+                }, 5000);
+            }
+        })
+
+        $('#message_input').on('keypress', function (e) {
+            if(e.which === 13){
+
+                if($('#uploaded_img').attr('src') == ''){
+                    setTimeout(() => {
+                        scrollBottom();
+                    }, 1500);
+                }
+                else{
+                    setTimeout(() => {
+                        //alert();
+                        scrollBottom();
+                    }, 5000);
+                }
+            }
+        });
+        //message FE script END
+
         jQuery(document).ready(function() {
             /*setInterval(function(){
                 var id = $('#message_id').val();
@@ -413,49 +460,6 @@
                 scrollTo: getLastPostPos()
             });
         }
-
-        function scrollBottom(){
-            $('#char_body>div').stop().animate({
-                scrollTop: $('#char_body>div')[0].scrollHeight
-            },100);
-        }
-
-        $(document).ready(function(){
-            setTimeout(() => {
-                scrollBottom();
-            }, 2000);
-        })
-
-        $(document).on('click','#send_btn',function(){
-            if($('#uploaded_img').attr('src') == ''){
-                setTimeout(() => {
-                    scrollBottom();
-                }, 1500);
-            }
-            else{
-                setTimeout(() => {
-                    //alert();
-                    scrollBottom();
-                }, 5000);
-            }
-        })
-
-        $('#message_input').on('keypress', function (e) {
-            if(e.which === 13){
-
-                if($('#uploaded_img').attr('src') == ''){
-                    setTimeout(() => {
-                        scrollBottom();
-                    }, 1500);
-                }
-                else{
-                    setTimeout(() => {
-                        //alert();
-                        scrollBottom();
-                    }, 5000);
-                }
-            }
-        });
     </script>
 @endsection
 
