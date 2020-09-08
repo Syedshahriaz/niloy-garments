@@ -151,7 +151,7 @@
             success: function(data) {
                 var keyword = $('#search-box').val();
                 var current_message_id = $('#message_id').val();
-                
+
                 if (data.status == 200) {
                     if(id==current_message_id){
                         populateMessage(data.message);

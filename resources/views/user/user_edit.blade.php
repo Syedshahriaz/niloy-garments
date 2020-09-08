@@ -161,7 +161,7 @@
                                                             <select name="day" id="day" class="form-control" @if($user->shipment_date_update_count!=0) disabled @endif>
                                                                 <option value="">Day</option>
                                                                 @for($i=1; $i<=31; $i++)
-                                                                    <option value="{{$i}}" @if($i==date('d')) selected @endif>{{$i}}</option>
+                                                                    <option value="{{$i}}" @if($i==date('d',strtotime($user->shipment_date))) selected @endif>{{$i}}</option>
                                                                 @endfor
                                                             </select>
                                                         </div>
@@ -169,18 +169,18 @@
                                                         <div class="col-md-4 form-group">
                                                             <select name="month" id="month" class="form-control" @if($user->shipment_date_update_count!=0) disabled @endif>
                                                                 <option value="">Month</option>
-                                                                <option value="1" @if(date('m')==1) selected @endif>Jan</option>
-                                                                <option value="2" @if(date('m')==2) selected @endif>Feb</option>
-                                                                <option value="3" @if(date('m')==3) selected @endif>Mar</option>
-                                                                <option value="4" @if(date('m')==4) selected @endif>Apr</option>
-                                                                <option value="5" @if(date('m')==5) selected @endif>May</option>
-                                                                <option value="6" @if(date('m')==6) selected @endif>Jun</option>
-                                                                <option value="7" @if(date('m')==7) selected @endif>Jul</option>
-                                                                <option value="8" @if(date('m')==8) selected @endif>Aug</option>
-                                                                <option value="9" @if(date('m')==9) selected @endif>Sep</option>
-                                                                <option value="10" @if(date('m')==10) selected @endif>Oct</option>
-                                                                <option value="11" @if(date('m')==11) selected @endif>Nov</option>
-                                                                <option value="12" @if(date('m')==12) selected @endif>Dec</option>
+                                                                <option value="1" @if(date('m',strtotime($user->shipment_date))==1) selected @endif>Jan</option>
+                                                                <option value="2" @if(date('m',strtotime($user->shipment_date))==2) selected @endif>Feb</option>
+                                                                <option value="3" @if(date('m',strtotime($user->shipment_date))==3) selected @endif>Mar</option>
+                                                                <option value="4" @if(date('m',strtotime($user->shipment_date))==4) selected @endif>Apr</option>
+                                                                <option value="5" @if(date('m',strtotime($user->shipment_date))==5) selected @endif>May</option>
+                                                                <option value="6" @if(date('m',strtotime($user->shipment_date))==6) selected @endif>Jun</option>
+                                                                <option value="7" @if(date('m',strtotime($user->shipment_date))==7) selected @endif>Jul</option>
+                                                                <option value="8" @if(date('m',strtotime($user->shipment_date))==8) selected @endif>Aug</option>
+                                                                <option value="9" @if(date('m',strtotime($user->shipment_date))==9) selected @endif>Sep</option>
+                                                                <option value="10" @if(date('m',strtotime($user->shipment_date))==10) selected @endif>Oct</option>
+                                                                <option value="11" @if(date('m',strtotime($user->shipment_date))==11) selected @endif>Nov</option>
+                                                                <option value="12" @if(date('m',strtotime($user->shipment_date))==12) selected @endif>Dec</option>
                                                             </select>
                                                         </div>
 
@@ -188,7 +188,7 @@
                                                             <select name="year" id="year" class="form-control" @if($user->shipment_date_update_count!=0) disabled @endif>
                                                                 <option value="">Year</option>
                                                                 @for($i=date('Y'); $i>=1920; $i--)
-                                                                    <option value="{{$i}}" @if($i==date('Y')) selected @endif>{{$i}}</option>
+                                                                    <option value="{{$i}}" @if($i==date('Y',strtotime($user->shipment_date))) selected @endif>{{$i}}</option>
                                                                 @endfor
                                                             </select>
                                                         </div>

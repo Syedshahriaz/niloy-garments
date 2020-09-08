@@ -118,11 +118,7 @@
                         $('#special_date_modal').modal('hide');
 
                         setTimeout(function(){
-                            var item_name = 'my_project_task/'+user_project_id;
-                            var browser_title = 'My Project Task';
-                            var uri_string = '/'+item_name;
-                            var url = "{{url('/')}}"+uri_string;
-                            load_new_page_content(url,item_name,browser_title);
+                            window.location.href="{{url('my_project_task')}}/"+user_project_id;
                         },200)
 
                     } else {

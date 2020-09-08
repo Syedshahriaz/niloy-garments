@@ -16,6 +16,7 @@ use App\Models\SeparateUserLog;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Session;
 use Spatie\PdfToImage\Pdf;
 use DB;
@@ -543,12 +544,8 @@ class UserController extends Controller
             /*
              * Authenticate user
              * */
-            $result = Auth::attempt([
-                'email' => Session::get('user_email'),
-                'password' => $request->password
-            ]);
-
-            if (!$result) {
+            $old_password = Auth::user()->password;
+            if (!Hash::check($request->password, $old_password)) {
                 return ['status' => 401, 'reason' => 'Authentication failed'];
             }
 
