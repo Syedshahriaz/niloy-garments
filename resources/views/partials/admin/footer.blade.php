@@ -55,6 +55,8 @@
     </div>
 </div>
 
+<audio id="audio" src="{{asset('assets/message_sound.mp3')}}"></audio>
+
 <!-- BEGIN FOOTER scripts-->
 @include('partials.admin.scripts')
 <!-- END FOOTER scripts-->
@@ -108,13 +110,18 @@
             data: {'_token':'<?php echo e(csrf_token()); ?>'},
             success: function(data) {
                 if (data.status == 200) {
+                    var browser_title = document.title;
+                    browser_title = browser_title.replace(/ *\([^)]*\) */g, "");
+
                     var message_count = data.messages.length;
                     if(message_count>0){
                         $('.new_message_count').removeClass('hidden');
-                        $('.new_message_count').text(data.messages.length);
+                        $('.new_message_count').text(message_count);
+                        document.title=browser_title+"("+message_count+")"; // Set browser title;
                     }
                     else{
                         $('.new_message_count').addClass('hidden');
+                        document.title=browser_title; // Set browser title;
                     }
                 } else {
                     //Nothing to do now;

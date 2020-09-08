@@ -234,10 +234,6 @@
                         $('#select_delivery_modal').modal('hide');
 
                         setTimeout(function(){
-                            /*var item_name = 'my_project_task/'+user_project_id;
-                            var browser_title = 'My Project Task';
-                            var uri_string = '/'+item_name;
-                            var url = "{{url('/')}}"+uri_string;*/
                             location.reload();
                         },200)
 
