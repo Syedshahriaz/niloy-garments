@@ -143,15 +143,19 @@
 
     function getAndPopulateSelectedMessage(id){
         var url = "{{ url('admin/get_message_details') }}";
-        var keyword = $('#search-box').val();
 
         $.ajax({
             type: "POST",
             url: url,
             data: {message_id:id,'_token':'{{ csrf_token() }}'},
             success: function(data) {
+                var keyword = $('#search-box').val();
+                var current_message_id = $('#message_id').val();
+                
                 if (data.status == 200) {
-                    populateMessage(data.message);
+                    if(id==current_message_id){
+                        populateMessage(data.message);
+                    }
                     if(keyword =='') {
                         populateMessageHead(data.message_heads);
                     }
@@ -197,8 +201,8 @@
         var cont = $('#chats');
         var list = $('.chats', cont);
 
-        $('#user_id').val(message.user_id);
-        $('#message_id').val(message.id);
+        /*$('#user_id').val(message.user_id);
+        $('#message_id').val(message.id);*/
 
         var tpl = '';
 
