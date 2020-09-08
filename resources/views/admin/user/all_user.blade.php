@@ -519,6 +519,8 @@
             }).get();
 
             $('#user_id').val(userIDs);
+            $('#subject').val('');
+            $("#email_message").summernote("code", "");
             $("#send_email_modal").modal('show');
         });
 
@@ -530,6 +532,7 @@
             $('#sms_type').val('bulk');
             $('#sms_user_id').val(userIDs);
             $('#telephone02').val('');
+            $('#sms_message').val('');
             $('#telephone_area').addClass('hidden');
             $("#send_sms_modal").modal('show');
         });
@@ -538,6 +541,7 @@
             $('#sms_type').val('single');
             $('#sms_user_id').val('');
             $('#telephone02').val('');
+            $('#sms_message').val('');
             $('#telephone_area').removeClass('hidden');
             $("#send_sms_modal").modal('show');
         });
@@ -610,6 +614,8 @@
 
         function send_email(user_id){
             $('#user_id').val(user_id);
+            $('#subject').val('');
+            $("#email_message").summernote("code", "");
             $("#send_email_modal").modal('show');
         }
 
@@ -684,6 +690,7 @@
             $('#sms_user_id').val(user_id);
             $('#telephone_area').removeClass('hidden');
             $('#telephone02').val(phone);
+            $('#sms_message').val('');
             $("#send_sms_modal").modal('show');
         }
 
@@ -757,6 +764,8 @@
         function send_message(user_id,message_id){
             $('#message_user_id').val(user_id);
             $('#message_id').val(message_id);
+            $('#message').val('');
+            $('#image_upload_input').val('');
             $("#send_message_modal").modal('show');
         }
 
