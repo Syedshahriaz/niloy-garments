@@ -130,7 +130,7 @@
                                     @elseif($project->has_special_date==1 && $project->special_date=='')
                                         <a class="project-item-title" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
                                     @else
-                                        <a class="project-item-title ajax_item item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
+                                        <a class="project-item-title item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
                                     @endif
                                         <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
                                             <div class="display title-section">

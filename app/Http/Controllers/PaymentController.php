@@ -18,10 +18,15 @@ class PaymentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //
     }
 
     public function initiatePayment(Request $request){
+
+        if(!Auth::check())
+        {
+            return redirect('login');
+        }
 
         $user_id = $request->id;
         $tran_id = "TXN_".uniqid();

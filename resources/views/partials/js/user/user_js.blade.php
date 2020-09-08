@@ -343,15 +343,17 @@
                                     var photo_url = "{{url('/')}}/"+data.photo_path;
                                     $( ".profile_image" ).attr( 'src', photo_url);
                                 }
-                                $( ".item-5" ).trigger( "click" );
+                                var item_name = 'profile';
+                                var browser_title = 'Profile';
                             }
                             else{
                                 var item_name = 'user_details/'+user_id;
-                                var browser_title = 'Niloy Garments: User details/'+user_id;
-                                var uri_string = '/'+item_name;
-                                var url = "{{url('/')}}"+uri_string;
-                                load_new_page_content(url,item_name,browser_title);
+                                var browser_title = 'User details/'+user_id;
                             }
+
+                            var uri_string = '/'+item_name;
+                            var url = "{{url('/')}}"+uri_string;
+                            load_new_page_content(url,item_name,browser_title);
                         },1000)
                     } else {
                         $("#success_message").hide();
@@ -409,7 +411,11 @@
                         $("#success_message").html(data.reason);
                         $('#reset_password_form')[0].reset();
                         setTimeout(function(){
-                            $( ".item-5" ).trigger( "click" );
+                            var item_name = 'profile';
+                            var browser_title = 'Profile';
+                            var uri_string = '/'+item_name;
+                            var url = "{{url('/')}}"+uri_string;
+                            load_new_page_content(url,item_name,browser_title);
                         },1000)
                     } else {
                         $("#success_message").hide();
@@ -560,6 +566,7 @@
 
     function submit_message(){
         event.preventDefault();
+        show_loader();
 
         var user_id = $("#user_id").val();
         var message = $("#message_input").val();
@@ -580,6 +587,7 @@
                 url: url,
                 data: formData,
                 success: function(data) {
+                    hide_loader();
                     $('#send_btn').removeClass("disable-click");
                     if (data.status == 200) {
                         $("#message_id").val(data.message_id);

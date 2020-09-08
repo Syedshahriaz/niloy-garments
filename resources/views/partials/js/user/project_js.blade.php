@@ -194,7 +194,7 @@
         $('#year').val(y);
 
         $('#shipment_date').val(today);
-        $('#old_delivery_date_hidden').val(today);
+        $('#old_delivery_date_hidden').val(original_delivery_date);
         if(update_count>1){
             $('#org_delivery_date').prop('disabled',true);
         }
@@ -234,11 +234,11 @@
                         $('#select_delivery_modal').modal('hide');
 
                         setTimeout(function(){
-                            var item_name = 'my_project_task/'+user_project_id;
+                            /*var item_name = 'my_project_task/'+user_project_id;
                             var browser_title = 'My Project Task';
                             var uri_string = '/'+item_name;
-                            var url = "{{url('/')}}"+uri_string;
-                            load_new_page_content(url,item_name,browser_title);
+                            var url = "{{url('/')}}"+uri_string;*/
+                            location.reload();
                         },200)
 
                     } else {

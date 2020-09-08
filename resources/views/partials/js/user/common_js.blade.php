@@ -143,7 +143,7 @@
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ];
 
-        //original_date = original_date.replace(' ', 'T');
+        original_date = original_date.replace(' ', 'T');
         var formattedDate = new Date(original_date);
 
         var d = formattedDate.getDate();
