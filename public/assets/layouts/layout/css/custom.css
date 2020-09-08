@@ -1,10 +1,39 @@
 /* here you can put your own css to customize and override the theme */
 /*Core css START*/
-:root {
+  :root {
     --primary-theme-color: #7030a0;
     --seconadry-theme-color: #fbae42;
   }
-  
+
+  /* cyrillic */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: local('Open Sans Light'), local('OpenSans-Light'), url(../fonts/open-sans/OpenSans-Light.ttf) format('ttf');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(../fonts/open-sans/OpenSans-Regular.ttf) format('ttf');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(../fonts/open-sans/OpenSans-SemiBold.ttf) format('ttf');
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(../fonts/open-sans/OpenSans-Bold.ttf) format('ttf');
+  }
   .mt-0 {
     margin-top: 0 !important;
   }
