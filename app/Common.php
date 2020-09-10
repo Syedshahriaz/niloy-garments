@@ -370,8 +370,9 @@ class Common
     public static function updateUserProjectTaskDueDate($user_projects,$shipment_date){
         foreach($user_projects as $key=>$u_project){
             $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
-                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
+                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with','projects.has_offer_1','projects.has_offer_2')
                 ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->join('projects','projects.id','=','tasks.project_id')
                 ->whereIn('user_project_tasks.status',['not initiate','processing'])
                 //->where('tasks.update_date_with','shipment_date')
                 ->get();
@@ -472,17 +473,18 @@ class Common
     }
 
     public static function makeCorrectTaskEditable($task,$shipment_date){
-        $project_task = UserProjectTask::where('id',$task->id)->first();
+        return 1;
+        /*$project_task = UserProjectTask::where('id',$task->id)->first();
         $taskData = Task::where('id',$task->task_id)->first();
 
         $in_date_range = Common::task_in_date_range($shipment_date,$taskData->days_range_start,$taskData->days_range_end);
-        if($in_date_range==1){ // The dependent task not freezed
+        if($task->has_offer_2==1 && $in_date_range==1){ // The dependent task not freezed and task is for red offer
             $project_task->status = 'processing';
             $project_task->save();
 
             return $project_task->id;
         }
-        return 0;
+        return 0;*/
     }
 
     public static function sendTaskWarningEmail($user_id=''){

@@ -77,7 +77,7 @@
                 <input type="checkbox" name="remember" id="remember" value="1" />Remember
                 <span></span>
             </label>
-            <button type="submit" class="btn uppercase theme-btn pull-right">Login</button>
+            <button type="submit" class="btn uppercase theme-btn pull-right" id="login_button">Login</button>
             <!-- <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a> -->
         </div>
         <div class="create-account theme-bg">
@@ -141,6 +141,8 @@
     $(document).on("submit", "#login_form", function(event) {
         event.preventDefault();
 
+        $("#login_button").attr("disabled", true);
+
         var email = $("#email").val();
         var password = $("#password").val();
 
@@ -168,12 +170,15 @@
                         $("#success_message").html(data.reason);
                         window.location.href="{{url('promotion')}}/"+data.user_id;
                     } else {
+                        $("#login_button").attr("disabled", false);
                         $("#success_message").hide();
                         $("#error_message").show();
                         $("#error_message").html(data.reason);
                     }
                 },
                 error: function(data) {
+                    $("#login_button").attr("disabled", false);
+
                     $("#success_message").hide();
                     $("#error_message").show();
                     $("#error_message").html(data.reason);
@@ -183,6 +188,7 @@
                 processData: false
             });
         } else {
+            $("#login_button").attr("disabled", false);
             $("#success_message").hide();
             $("#error_message").show();
             $("#error_message").html(validate);
