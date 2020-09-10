@@ -376,10 +376,42 @@ class Common
                 //->where('tasks.update_date_with','shipment_date')
                 ->get();
 
+            $user = User::where('users.id',$u_project->user_id)
+                ->select('users.*','user_payments.created_at as purchase_date')
+                ->join('user_payments','user_payments.user_id','=','users.id')
+                ->first();
+
             /*
              * Add user project tasks due date
              * */
-            if($u_project->day_add_with=='shipment_date'){
+            if($u_project->project_id==34){
+                foreach($project_tasks as $key=>$p_task){
+                    $task = Task::select('tasks.*','tasks.id as task_id')
+                        ->where('id',$p_task->task_id)
+                        ->first();
+
+                    $years_diff = (time()-strtotime($shipment_date))/(3600*24*365.25);
+                    $days_to_add = self::calculateDaysToAdd($task,$shipment_date);
+
+                    if($years_diff<15){
+                        $parent_date = $shipment_date;
+                    }
+                    else{
+                        $parent_date = $user->purchase_date;
+                    }
+                    $p_task->due_date = date('Y-m-d',
+                        strtotime($parent_date . ' + ' . abs($days_to_add) . ' days'));
+                    $p_task->original_delivery_date = date('Y-m-d',
+                        strtotime($parent_date . ' + ' . abs($days_to_add) . ' days'));
+                    $p_task->save();
+
+                    /*
+                     * Making correct task editable
+                     * */
+                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                }
+            }
+            else if($u_project->day_add_with=='shipment_date'){
                 foreach($project_tasks as $key=>$p_task){
                     $task = Task::select('tasks.*','tasks.id as task_id')
                         ->where('id',$p_task->task_id)
@@ -415,6 +447,9 @@ class Common
 
         if($task->project_id==34 && $years_diff<15){ // If project id=34 and age is less than 15 years
             $days_to_add = $task->under_age_days_to_add;
+        }
+        else if($task->project_id==34 && $years_diff>=15){ // If project id=34 and age is greater than 15 years
+            $days_to_add = $task->days_to_add;
         }
         else if($task->alternet_days_to_add==''){
             $days_to_add = $task->days_to_add;
