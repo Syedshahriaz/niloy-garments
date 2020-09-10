@@ -101,12 +101,19 @@
             <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
             <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
         </div>
-        <div class="form-group margin-top-20 margin-bottom-20">
+        <div class="form-group margin-top-20">
             <label class="mt-checkbox mt-checkbox-outline mb-0">
-                <input type="checkbox" class="show-password" name="show_password" /> Show password
+                <input type="checkbox" class="show-password" name="show_password" /> show_password
                 <span></span>
             </label>
             <div id="register_tnc_error"> </div>
+        </div>
+        <div class="form-group margin-top-20 margin-bottom-20">
+            <label class="mt-checkbox mt-checkbox-outline mb-0">
+                <input type="checkbox" id="agreement" class="" name="agreement" /> I agree with this <a href="https://vujadetec.com/terms-conditions/" target="_blank">terms & conditions</a> and <a href="https://vujadetec.com/privacy-policy-2" target="_blank">privacy policy</a>
+                <span></span>
+            </label>
+            <div id="agreement_error"> </div>
         </div>
         <div class="form-actions text-center">
             <button type="submit" id="register-submit-btn" class="btn theme-btn uppercase">Submit</button>
@@ -188,8 +195,8 @@
         var country_code = $(".iti__selected-dial-code").text();
         var password = $("#password").val();
         var repassword = $("#repassword").val();
+        var agreement = $("#agreement").prop("checked");
         var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
         var validate = "";
 
         if (username.trim() == "") {
@@ -214,6 +221,9 @@
             if(!re.test(email)){
                 validate = validate+'Email is invalid<br>';
             }
+        }
+        if (agreement == false) {
+            validate = validate + "Agree with terms & conditions and privacy policy</br>";
         }
 
         if (validate == "") {
