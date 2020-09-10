@@ -367,6 +367,49 @@ class Common
         }
     }
 
+    public static function updateUserProjectTaskDueDate($user_projects,$shipment_date){
+        foreach($user_projects as $key=>$u_project){
+            $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
+                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
+                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->whereIn('user_project_tasks.status',['not initiate','processing'])
+                //->where('tasks.update_date_with','shipment_date')
+                ->get();
+
+            /*
+             * Add user project tasks due date
+             * */
+            if($u_project->day_add_with=='shipment_date'){
+                foreach($project_tasks as $key=>$p_task){
+                    $task = Task::select('tasks.*','tasks.id as task_id')
+                        ->where('id',$p_task->task_id)
+                        ->first();
+
+                    $days_to_add = self::calculateDaysToAdd($task,$shipment_date);
+
+                    $p_task->due_date = date('Y-m-d',
+                        strtotime($shipment_date . ' + ' . abs($days_to_add) . ' days'));
+                    $p_task->original_delivery_date = date('Y-m-d',
+                        strtotime($shipment_date . ' + ' . abs($days_to_add) . ' days'));
+                    $p_task->save();
+
+                    /*
+                     * Making correct task editable
+                     * */
+                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                }
+            }
+            else{
+                foreach($project_tasks as $key=>$p_task){
+                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
+                    if($result==1){
+                        break 1; // Break this foreach loop
+                    }
+                }
+            }
+        }
+    }
+
     public static function calculateDaysToAdd($task,$shipment_date){
         $years_diff = (time()-strtotime($shipment_date))/(3600*24*365.25);
 
@@ -391,43 +434,6 @@ class Common
         }
 
         return $days_to_add;
-    }
-
-    public static function updateUserProjectTaskDueDate($user_projects,$shipment_date){
-        foreach($user_projects as $key=>$u_project){
-            $project_tasks = UserProjectTask::where('user_project_id',$u_project->id)
-                ->select('user_project_tasks.*','tasks.days_to_add','tasks.update_date_with')
-                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
-                ->whereIn('user_project_tasks.status',['not initiate','processing'])
-                //->where('tasks.update_date_with','shipment_date')
-                ->get();
-
-            /*
-             * Add user project tasks due date
-             * */
-            if($u_project->day_add_with=='shipment_date'){
-                foreach($project_tasks as $key=>$p_task){
-                    $p_task->due_date = date('Y-m-d',
-                        strtotime($shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
-                    $p_task->original_delivery_date = date('Y-m-d',
-                        strtotime($shipment_date . ' + ' . abs($p_task->days_to_add) . ' days'));
-                    $p_task->save();
-
-                    /*
-                     * Making correct task editable
-                     * */
-                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
-                }
-            }
-            else{
-                foreach($project_tasks as $key=>$p_task){
-                    $result = self::makeCorrectTaskEditable($p_task,$shipment_date);
-                    if($result==1){
-                        break 1; // Break this foreach loop
-                    }
-                }
-            }
-        }
     }
 
     public static function makeCorrectTaskEditable($task,$shipment_date){

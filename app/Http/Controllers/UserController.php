@@ -183,7 +183,7 @@ class UserController extends Controller
     }
 
     public function userUpdate(Request $request){
-        try {
+        //try {
             DB::beginTransaction();
 
             $user_id = $request->user_id;
@@ -235,14 +235,14 @@ class UserController extends Controller
             DB::commit();
 
             return ['status' => 200, 'reason' => 'User successfully updated','photo_path'=>$photo_path];
-        }
+        /*}
         catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updateUser', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     private function updateShipingDate($request,$user_id){
@@ -272,15 +272,18 @@ class UserController extends Controller
 
     private function updateProjectTaskDueDate($user_id,$shipment_date){
         $user_projects = UserProject::where('user_id',$user_id)
-            ->select('user_projects.*')
+            ->select('user_projects.*','projects.day_add_with')
             ->join('projects','projects.id','=','user_projects.project_id')
             //->where('projects.day_add_with','shipment_date')
+            //->where('user_projects.project_id',34)
             ->get();
 
         /*
          * Update due date
          * */
         $result = Common::updateUserProjectTaskDueDate($user_projects,$shipment_date);
+
+        return $result;
 
     }
 

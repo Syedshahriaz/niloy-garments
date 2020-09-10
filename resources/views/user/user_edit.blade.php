@@ -193,7 +193,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date"/>
+                                                    <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date" value="{{$user->shipment_date}}"/>
                                                     <input class="" type="hidden" name="old_shipment_date" id="old_shipment_date" value="{{$user->shipment_date}}"/>
                                                 </div>
                                             </div>
