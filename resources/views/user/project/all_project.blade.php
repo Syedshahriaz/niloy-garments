@@ -98,7 +98,7 @@
 
                                     }
                                     if($project->type=='upcoming'){
-                                        $bg_class = '';
+                                        $bg_class = 'bg-upcoming';
                                     }
                                     else if($task->status == 'completed'){
                                         $bg_class = 'bg-success';
@@ -151,7 +151,7 @@
                                             <div class="display">
                                                 <p class="project-item-sub">{{$project->sub_title}}</p>
                                                 <p class="project-item-task font-theme">
-                                                    @if($bg_class !='bg-success')
+                                                    @if($bg_class !='bg-success' && $bg_class !='bg-upcoming')
                                                     {{$task->title}}
                                                     @endif
                                                 </p>
@@ -171,15 +171,17 @@
                                                         <span style="width: 100%;" class="progress-bar theme-bg"></span>
                                                     </div>
                                                     <div class="status">
-                                                        <div class="status-title"> Due Date </div>
-                                                        <div class="status-number">
-                                                            @if($task->original_delivery_date !='')
-                                                                {{date('l M d, Y', strtotime($task->original_delivery_date))}}
-                                                            @else
-                                                                Special Date
-                                                            @endif
-                                                        </div>
-                                                        <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                        @if($bg_class !='bg-upcoming')
+                                                            <div class="status-title"> Due Date </div>
+                                                            <div class="status-number">
+                                                                @if($task->original_delivery_date !='')
+                                                                    {{date('l M d, Y', strtotime($task->original_delivery_date))}}
+                                                                @else
+                                                                    Special Date
+                                                                @endif
+                                                            </div>
+                                                            <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                        @endif
                                                     </div>
                                                 </div>
                                             @endif
