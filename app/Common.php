@@ -490,7 +490,7 @@ class Common
         return 0;*/
     }
 
-    public static function sendTaskWarningEmail($user_id=''){
+    public static function sendTaskWarningEmail($user_id='',$user_project_id=''){
         $today = date('Y-m-d');
         $next_day = date('Y-m-d', strtotime('+1 days'));
         $allow_date = date('Y-m-d', strtotime('+7 days'));
@@ -512,6 +512,9 @@ class Common
             $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
             $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
             $tasks = $tasks->where('users.id', $user->id);
+            if($user_project_id !=''){
+                $tasks = $tasks->where('user_project_tasks.user_project_id', $user_project_id);
+            }
             $tasks = $tasks->where('user_project_tasks.status', 'processing');
             $tasks = $tasks->where('user_project_tasks.warning_sent',0);
             $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
