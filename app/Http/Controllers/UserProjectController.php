@@ -520,7 +520,9 @@ class UserProjectController extends Controller
             /*
              * Sending warning message
              * */
-            $p_task->original_delivery_date = $taskData->original_delivery_date;
+            if(isset($taskData)){
+                $p_task->original_delivery_date = $taskData->original_delivery_date;
+            }
             $this->sendNextTaskWarningMessage($p_task);
         }
     }

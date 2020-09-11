@@ -170,8 +170,11 @@ class Common
         if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1){
             $result = 1;
         }
-        else if(isset($task->has_offer_1) && $task->has_offer_1==1){ // If task is for green offer(offer 1) and due date have been passed
+        else if(isset($task->has_offer_1) && $task->has_offer_1==1){ // If task is for green offer(offer 1) and due date have been passed then make editable
             $result = self::isTaskOriginalDueDatePassed($task);
+        }
+        else if($task->has_freeze_rule==1 && $task->freeze_forever!=1){ // If task has freeze rule then pass to next step to allow to make editable
+            $result = 1;
         }
 
         /*
