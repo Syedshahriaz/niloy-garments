@@ -445,27 +445,6 @@ class UserProjectController extends Controller
                 $next_task->status = 'processing';
                 $next_task->save();
 
-                $today = date('Y-m-d');
-                $next_day = date('Y-m-d', strtotime('+1 days'));
-                $allow_date = date('Y-m-d', strtotime('+7 days'));
-                $email = [$next_task->email];
-                if($next_task->original_delivery_date<$today){ // Due date have been past
-                    /*
-                     * Send past warning sms
-                     * */
-                    $message_body ='Dear '.$next_task->username.', Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. Please visit www.vujadetec.com to get more information about our product & services';
-                    $email_body ='Dear '.$next_task->username.', <br>Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services';
-                    $sms_response = Common::sendPastDayWarningSms($next_task->phone,$message_body);
-                    $email_response = Common::sendPastDayWarningEmail($email,$email_body);
-
-                }
-                else if($next_task->original_delivery_date>=$next_day && $next_task->original_delivery_date<=$allow_date){
-                    $message_body ='Dear '.$next_task->username.', Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. Please visit www.vujadetec.com to get more information about our product & services';
-                    $email_body ='Dear '.$next_task->username.', <br>Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services';
-                    $sms_response = Common::send7dayWarningSms($next_task->phone,$message_body);
-                    $email_response = Common::send7dayWarningEmail($email,$email_body);
-                }
-
                 return 1;
             }
         }
@@ -497,8 +476,12 @@ class UserProjectController extends Controller
             ->first();
 
         $project_tasks = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
-            ->select('user_project_tasks.*','tasks.date_update_dependent_with')
+            ->select('user_project_tasks.*','tasks.date_update_dependent_with','projects.name as project_name','task_title.name as task_name', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','users.id as user_id','users.username','users.email','users.phone')
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+            ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
+            ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
+            ->join('projects','projects.id','=','user_projects.project_id')
+            ->join('users','users.id','=','user_projects.user_id')
             ->where('user_project_id',$user_project_id)
             ->where('tasks.status','active')
             ->whereIn('user_project_tasks.status',['not initiate','processing'])
@@ -533,7 +516,43 @@ class UserProjectController extends Controller
                     $taskData->save();
                 }
             }
+
+            /*
+             * Sending warning message
+             * */
+            $p_task->original_delivery_date = $taskData->original_delivery_date;
+            $this->sendNextTaskWarningMessage($p_task);
         }
+    }
+
+    private function sendNextTaskWarningMessage($next_task){
+        $today = date('Y-m-d');
+        $next_day = date('Y-m-d', strtotime('+1 days'));
+        $allow_date = date('Y-m-d', strtotime('+7 days'));
+        $email = [$next_task->email];
+        $message_body = '';
+        if($next_task->original_delivery_date<$today){ // Due date have been past
+            /*
+             * Send past warning sms
+             * */
+            $message_body ='Dear '.$next_task->username.', Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. Please visit www.vujadetec.com to get more information about our product & services';
+            $email_body ='Dear '.$next_task->username.', <br>Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services';
+            $sms_response = Common::sendPastDayWarningSms($next_task->phone,$message_body);
+            $email_response = Common::sendPastDayWarningEmail($email,$email_body);
+
+        }
+        else if($next_task->original_delivery_date>=$next_day && $next_task->original_delivery_date<=$allow_date){
+            $message_body ='Dear '.$next_task->username.', Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. Please visit www.vujadetec.com to get more information about our product & services';
+            $email_body ='Dear '.$next_task->username.', <br>Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services';
+            $sms_response = Common::send7dayWarningSms($next_task->phone,$message_body);
+            $email_response = Common::send7dayWarningEmail($email,$email_body);
+        }
+
+        /*
+         * Store sms sending record
+         * */
+        $user_id = $next_task->user_id;
+        Common::storeSmsRecord($user_id, $message_body);
     }
 
     private function disableNextTaskOriginalDeliveryDateEdit($project_task_id,$user_project_id){

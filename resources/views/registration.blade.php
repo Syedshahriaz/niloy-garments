@@ -110,7 +110,7 @@
         </div>
         <div class="form-group margin-top-20 margin-bottom-20">
             <label class="mt-checkbox mt-checkbox-outline mb-0">
-                <input type="checkbox" id="agreement" class="" name="agreement" /> I agree with this <a href="https://vujadetec.com/terms-conditions/" target="_blank">terms & conditions</a> and <a href="https://vujadetec.com/privacy-policy-2" target="_blank">privacy policy</a>
+                <input type="checkbox" id="agreement" class="" name="agreement" checked /> I agree with this <a href="https://vujadetec.com/terms-conditions/" target="_blank">terms & conditions</a> and <a href="https://vujadetec.com/privacy-policy-2" target="_blank">privacy policy</a>
                 <span></span>
             </label>
             <div id="agreement_error"> </div>
