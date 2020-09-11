@@ -492,8 +492,8 @@ class Common
 
     public static function sendTaskWarningEmail($user_id='',$user_project_id=''){
         $today = date('Y-m-d');
-        $next_day = date('Y-m-d', strtotime('+1 days'));
-        $allow_date = date('Y-m-d', strtotime('+7 days'));
+        $next_day = date('Y-m-d');
+        $allow_date = date('Y-m-d', strtotime('+6 days'));
 
         $users = User::where('status','active');
         if($user_id !=''){

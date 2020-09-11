@@ -472,7 +472,9 @@ class UserProjectController extends Controller
          * Get all next task of this user project
          * */
 
-        $previous_task = UserProjectTask::where('user_project_tasks.id',$project_task_id)
+        $previous_task = UserProjectTask::select('user_project_tasks.*','tasks.date_update_dependent_with')
+            ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+            ->where('user_project_tasks.id',$project_task_id)
             ->first();
 
         $project_tasks = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
@@ -494,25 +496,25 @@ class UserProjectController extends Controller
             if($p_task->date_update_dependent_with==''){
                 $taskData = UserProjectTask::where('id',$p_task->id)->first();
                 if($date_increased==1){ // If date increased
-                    $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs($daysAdded).' days'));
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs($daysAdded).' days'));
+                    $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs(round($daysAdded)).' days'));
+                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs(round($daysAdded)).' days'));
                 }
                 else{
-                    $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs($daysAdded).' days'));
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs($daysAdded).' days'));
+                    $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs(round($daysAdded)).' days'));
+                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs(round($daysAdded)).' days'));
                 }
                 $taskData->save();
             }
             else{
-                if($p_task->date_update_dependent_with==$previous_task->task_id){
+                if($p_task->date_update_dependent_with==$previous_task->task_id || $p_task->date_update_dependent_with==$previous_task->date_update_dependent_with){
                     $taskData = UserProjectTask::where('id',$p_task->id)->first();
                     if($date_increased==1){ // If date increased
-                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs($daysAdded).' days'));
-                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs($daysAdded).' days'));
+                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs(round($daysAdded)).' days'));
+                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs(round($daysAdded)).' days'));
                     }
                     else{
-                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs($daysAdded).' days'));
-                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs($daysAdded).' days'));
+                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs(round($daysAdded)).' days'));
+                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs(round($daysAdded)).' days'));
                     }
                     $taskData->save();
                 }
