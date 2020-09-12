@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'My Project Tasks')
+@section('title', 'Vaccine doses')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -15,11 +15,11 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <a class=" ajax_item item-2" href="{{url('all_project')}}" data-name="all_project" data-item="2">Projects</a>
+                        <a class=" ajax_item item-2" href="{{url('all_project')}}" data-name="all_project" data-item="2"> Vaccine schedule</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>My Project Tasks</span>
+                        <span>Vaccine doses</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -48,12 +48,12 @@
                                 <div class="caption" style="padding:0;">
                                     <i class="icon-share font-red-sunglo hide"></i>
                                     <p class="caption-subject font-dark bold uppercase no-margin" style="font-size:14px;">{{$user->username}} </p>
-                                    <span class="caption-subject font-dark bold uppercase" style="font-size:14px;">Tasks for {{$project->name}}</span>
+                                    <span class="caption-subject bold uppercase" style="font-size:14px; color:green;">{{$project->name}}</span>
                                     <span class="caption-helper"></span>
                                 </div>
 
                                 <div class="actions">
-                                    <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">View Summary</a>
+                                    <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">{{$project->name}} Facts</a>
                                     <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
                                         <!--i class="icon-list icons"></i-->Vertical View
                                     </a>
@@ -71,7 +71,7 @@
                                 <table class="table table-striped table-bordered table-hover data-table focus-table dt-responsive" id="user_horizontal_task">
                                     <thead>
                                     <tr>
-                                        <th>Title</th>
+                                        <th>Number of Dose</th>
                                         @foreach($tasks as $task)
                                             @if($task->task_status !='deleted')
                                                 <th> {{$task->title}} </th>
@@ -81,7 +81,7 @@
                                     </thead>
                                     <tbody>
                                     <tr class="focus-tr">
-                                        <td> <b>Rule</b></td>
+                                        <td> <b>Approx. Age</b></td>
                                         @foreach($tasks as $task)
                                             @if($task->task_status !='deleted')
                                                 <td> <b>{{$task->rule}}</b> </td>
@@ -102,7 +102,7 @@
                                         @endforeach
                                     </tr>
                                     <tr>
-                                        <td> <b>Original Delivery Date</b></td>
+                                        <td> <b>Given Date <br>(Need to fill by User)</b></td>
                                         <?php foreach($tasks as $task){
                                         $hidden_class = 'hidden';
                                         $bg_class = '';
@@ -282,7 +282,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Update task</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Date of vaccination</h4>
                 </div>
                 <form id="delivery_form" method="post" action="">
                     {{ csrf_field() }}
@@ -296,7 +296,7 @@
                         <div class="row">
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="form-group">
-                                    <label for=""><b>Original Delivery Date</b></label>
+                                    <label class="w-100 text-center mb-1" for=""><b>Actual dose given date</b></label>
                                     {{--<input class="form-control date-picker" size="16" type="text" name="org_delivery_date" id="org_delivery_date" value="" placeholder="Select Delivery Date"/>--}}
                                     <div class="row">
                                         <div class="col-md-4 form-group">

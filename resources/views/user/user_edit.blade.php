@@ -153,7 +153,7 @@
 
                                             <div class="col-md-6" id="shipping_date_area">
                                                 <div class="form-group">
-                                                    <label for=""><b>Shipping Date</b></label>
+                                                    <label for=""><b>Date of birth</b></label>
                                                     {{--<input class="form-control date-picker" size="16" type="text" name="" id="ship_date01" @if($user->shipment_date_update_count!=0) value="{{date('l d, M, Y', strtotime($user->shipment_date))}}" disabled @endif />--}}
 
                                                     <div class="row">

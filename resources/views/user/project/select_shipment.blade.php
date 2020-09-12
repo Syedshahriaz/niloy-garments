@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Select Shipment')
+@section('title', 'Select date of birth')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>Select Shipment</span>
+                        <span>Select date of birth</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -37,7 +37,7 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">Select Shipment</span>
+                                <span class="caption-subject font-dark bold uppercase">Select date of birth</span>
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions">
@@ -75,7 +75,7 @@
                                 <div class="row">
                                     <div class="col-md-10 col-md-offset-1">
                                         <div class="form-group">
-                                            <label for=""><b>Shipping Date for {{$user->username}}</b></label>
+                                            <label for=""><b>Date of birth for {{$user->username}}</b></label>
                                             {{--<input class="form-control date-picker" size="16" type="text" name="" id="shipment_date" value="" placeholder="Select Shipping Date"/>
                                             --}}
                                             <div class="row">

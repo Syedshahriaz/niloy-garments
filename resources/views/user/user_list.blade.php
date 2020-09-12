@@ -50,7 +50,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Username</th>
-                                        <th>Shipment Date</th>
+                                        <th>Date of birth</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>

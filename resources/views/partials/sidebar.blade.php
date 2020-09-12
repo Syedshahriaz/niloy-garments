@@ -12,7 +12,7 @@
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a href="{{url('dashboard')}}" class="nav-item item-1  @if($page=='dashboard') active @endif" data-name="dashboard" data-item="1">
-                <img src="{{asset('assets/layouts/layout/img/logo.png')}}" alt="logo" class="logo-default" /> </a>
+                <img src="{{asset('assets/layouts/layout/img/logoVujade.jpg')}}" alt="logo" class="logo-default" /> </a>
             <div class="menu-toggler sidebar-toggler">
                 <span></span>
             </div>
@@ -40,7 +40,7 @@
             <ul class="nav navbar-nav pull-right">
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <li>
-                    <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger item-3" data-name="add_user" data-item="3">Add New User</a>
+                    <a href="{{url('add_user')}}" class="add-new-usre btn btn-danger item-3" data-name="add_user" data-item="3">Add family member</a>
                 </li>
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
@@ -137,7 +137,7 @@
             <li class="nav-item item-2 @if($page=='all_project') active @endif" data-name="all_project" data-item="2">
                 <a href="{{url('all_project')}}" class="nav-link">
                     <i class="icon-layers"></i>
-                    <span class="title">All Projects</span>
+                    <span class="title">All user vaccine schedule </span>
                     <span class="selected"></span>
                 </a>
             </li>

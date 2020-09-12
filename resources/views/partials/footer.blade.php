@@ -55,27 +55,48 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title font-blue-madison bold uppercase" id="GuideModalLabel">User Guide</h4>
+                <h4 class="modal-title bold text-white uppercase " id="GuideModalLabel">User Guide</h4>
             </div>
             <div class="modal-body">
-                <h4><b>What is Lorem Ipsum?</b></h4>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-                <h4><b>Why do we use it?</b></h4>
-                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-
-
-                <h4><b>Where does it come from?</b></h4>
-                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-
-                <h4><b>Why do we use it?</b></h4>
-                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-
-                <h4><b>Where can I get some?</b></h4>
-                There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-
+                <span style="background-color:black; color:white;">&nbsp; Vujade<span style="color:#bf945b;">tec&nbsp;</span></span> offers 3 offer <span style="background-color:#599a13; color:white;">&nbsp;Green&nbsp;</span>-<span style="background-color:#d61919;; color:white;">&nbsp;Red&nbsp;</span>-<span style="background-color:#fc0aa6">&nbsp;Pink&nbsp;</span>. These 3 offer cover all age, all gender including pregnant women &amp; females. It is also for those who are taking regular vaccines OR who are not taking regular vaccines OR missed the vaccines. So anyone can start the vaccine from today. <span style="background-color:#fc0aa6">&nbsp;Pink&nbsp;</span> offers are complimentary for females if you buy any one offer from <span style="background-color:#599a13; color:white;">&nbsp;Green&nbsp;</span> or <span style="background-color:#d61919;; color:white;">&nbsp;Red&nbsp;</span> 
+                <br><br>
+                <span style="background-color:#599a13; color:white;">GREEN OFFER:</span> This offer is for newborn to Life time (100+ years). Please<span> choose</span> this offer for your baby who are regularly taking the vaccine from newborn to till today. You still can buy this if your baby missed a few vaccines but your baby age is under 18 months. 
+                There is an option to change your offer without extra charge from GREEN to RED if you mistakenly choose the Green offer instead of Red offer. 
+                <br><br>
+                <span style="background-color:#d61919;; color:white;">&nbsp;RED OFFER:&nbsp;</span> This offer is for those who missed the vaccine multiple times or who do not have a record. The recommended age group starts from 2 years to Life time (100+ years). Preteens, Teens, Adults across all gender fall under this category. 
+                There is an option to change your offer without extra charge from RED to GREEN if you mistakenly choose RED offer instead of Green offer. <br>
+                If you choose Red offfer, the system will give you reminder only for those dose which are required based on your age and gender. Therefore some dose will keep locked which is not required for you.
+                <br><br>
+                <span style="background-color:#fc0aa6">&nbsp;PINK OFFER&nbsp;</span>=FREE: This offer is free for females who have already purchased from above 2 offers. System will give you reminders of required vaccines automatically if you put a date of pregnancy. Female Teen Child who are age 15+ also will get a reminder of vaccine automatically. 
+                <br><br>
+                How to use:
+                <br><br>
+                <ul>
+                1.	Correct date of birth is so important for On-Time vaccine reminders because we will send a reminder 1 week prior to the due date based on your given date of birth so that you can plan accordingly. You can change it once if you make a mistake. You have to reach us if you want to change it <span>2nd</span> time.
+                 
+                <br><br>2.	Need your correct phone number &amp; email ID so that you receive notification 1 week prior to vaccine due date.
+                
+                <br><br>3.	Please fill the date of taking the vaccine into the system so that we can send you a reminder for the next dose based on the last dose because sometimes you may miss the exact date due to <span>non-availability</span> of the vaccine. If you make any mistake of giving the wrong date, <span>you can change it once.</span> After that it will freeze &amp; you need to contact us for amendment.
+                
+                <br><br>4.	If you did not fill the last dose date, we will still send you a reminder of the next dose considering you have given the last dose on time. 
+                
+                <br><br>5.	Vaccines provided by the Bangladesh government are free for all babies. You will be able to give these vaccines without charge from all government &amp; private hospitals/clinics. 
+                
+                <br><br>6.	Repeat vaccine means you need to give this vaccine your whole life with specific intervals. Like Influenza once in every year, Typhoid once in every 3 year, Yellow fever &amp; DTap once in every 10 years.
+                
+                <br><br>7.	A user can add multiple new users for his/her child/parents/wife/husband by clicking add user. You can use the same mobile or email id for all users. <span>Payment is required for each new user.</span>
+                
+                <br><br>8.	You can transfer your sub user at any time to another existing or new user.
+                <br><br>9.	You can see a Horizontal &amp; Vertical view of all vaccines.
+                
+                <br><br>10.	You can see all vaccine details information together at dashboard. Or any particular vaccine details from all vaccine information by selecting one.
+                
+                <br><br>11.	Missed &amp; non updated vaccines will be highlighted as RED.  
+                Due date within 7 days of your vaccine will be highlighted as YELLOW. 
+                <span>Completed and updated vaccines</span> will be highlighted as GREEN.
+                
+                <br><br>12.	If you buy a green offer and do not want to update all previous vaccine information. Just update the last dose information in the system so that you will get the next due date reminder on time.
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

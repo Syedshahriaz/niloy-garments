@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'All Projects')
+@section('title', 'Vaccine schedule')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>All Projects</span>
+                        <span>Vaccine schedule</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -47,8 +47,8 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">All projects</span>
-                                <span class="caption-helper">Select to add project</span>
+                                <span class="caption-subject font-dark bold">Vaccine schedule &nbsp;</span>
+                                <span class="caption-helper"> Click & update from below</span>
                             </div>
                             <div class="actions">
                                 <div class="user-list-tag">

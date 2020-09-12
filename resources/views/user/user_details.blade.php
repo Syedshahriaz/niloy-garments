@@ -105,7 +105,7 @@
                                                     <p>{{$user->profession_name}} &nbsp;</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <h5 class="mb-0"><b>Shipping Date</b></h5>
+                                                    <h5 class="mb-0"><b>Date of birth</b></h5>
                                                     @if($user->shipment_date !='')
                                                         <p>{{date('l d, M, Y', strtotime($user->shipment_date))}}</p>
                                                     @endif

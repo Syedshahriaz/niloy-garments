@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Add User')
+@section('title', 'Add family member')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>Create User</span>
+                        <span>Add family member</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -39,7 +39,7 @@
                             <div class="portlet-title">
                                 <div class="caption caption-md">
                                     <i class="icon-bar-chart theme-font hide"></i>
-                                    <span class="caption-subject font-blue-madison bold uppercase">New User Information</span>
+                                    <span class="caption-subject font-blue-madison bold">Information of New family member</span>
                                 </div>
                             </div>
                             <div class="portlet-body">
