@@ -131,7 +131,15 @@
                                             $bg_class = 'bg-success';
                                         }
                                         else{
-                                            if($task->has_freeze_rule != 1){
+                                            if($task->has_freeze_rule == 0){
+                                                if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
+                                                    $bg_class = 'bg-danger';
+                                                }
+                                                else if($day_left<=7){
+                                                    $bg_class = 'bg-warning';
+                                                }
+                                            }
+                                            else if($task->has_freeze_rule == 1 && $task->status == 'processing'){
                                                 if(strtotime($task->due_date) < strtotime(date('Y-m-d'))) {
                                                     $bg_class = 'bg-danger';
                                                 }

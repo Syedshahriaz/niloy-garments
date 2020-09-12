@@ -162,11 +162,21 @@ class Common
     }
 
     public static function isTaskEditable($task,$shipment_date){
+        $result = self::isEditableStatusCheck($task,$shipment_date);
+
+        /*
+         * Now check if task is in date range
+         * */
+        if($result==1){
+            $result = self::task_in_date_range($shipment_date,$task->days_range_start,$task->days_range_end);
+        }
+
+        return $result;
+    }
+
+    public static function isEditableStatusCheck($task,$shipment_date){
         $result = 0;
-        /*if($task->has_freeze_rule==1 && $task->status != 'completed'){
-            $result = 1;
-        }*/
-        //else if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1){
+
         if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1){
             $result = 1;
         }
@@ -178,13 +188,38 @@ class Common
         }
 
         /*
-         * Now check if task is in date range
+         * Check if previous any task has 'processing' status and editable. If yes then make this task non editable
          * */
-        if($result==1){
-            $result = self::task_in_date_range($shipment_date,$task->days_range_start,$task->days_range_end);
+        if($result ==1){
+            $processing_result = self::isPreviousAnyTaskProcessing($task,$shipment_date);
+            if($processing_result==1){ // Previous processing/editable task exists
+                $result = 0;           // So make this task non editable.
+            }
         }
 
         return $result;
+    }
+
+    public static function isPreviousAnyTaskProcessing($task,$shipment_date){
+        /*
+         * Get details of previous processing task (if any).
+         * */
+        $previous_task = UserProjectTask::select('user_project_tasks.*','tasks.days_range_start','tasks.days_range_end')
+            ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+            ->where('user_project_tasks.id','<',$task->id)
+            ->where('user_project_tasks.user_project_id',$task->user_project_id)
+            ->where('user_project_tasks.status','processing')
+            ->first();
+
+        if(!empty($previous_task)){ // If previous processing task found
+            /*
+             * Now check if previous task is in editable date range.
+             * If not in date range then previous task is not editable.
+             * */
+            $result = self::task_in_date_range($shipment_date,$previous_task->days_range_start,$previous_task->days_range_end);
+            return $result;
+        }
+        return 0;
     }
 
     public static function task_in_date_range($shipment_date,$days_range_start,$days_range_end){
