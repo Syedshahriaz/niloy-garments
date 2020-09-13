@@ -145,14 +145,14 @@
             <li class="nav-item item-3 @if($page=='user_list') active @endif" data-name="user_list" data-item="3">
                 <a href="{{url('user_list')}}" class="nav-link">
                     <i class="icon-users"></i>
-                    <span class="title">Users</span>
+                    <span class="title">Family members</span>
                     <span class="selected"></span>
                 </a>
             </li>
             <li class="nav-item item-4 @if($page=='messages') active @endif" data-name="message" data-item="4">
                 <a href="{{url('message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
-                    <span class="title">Message</span>
+                    <span class="title">Help Center</span>
                     <span class="badge new_message_count badge-danger hidden">0</span>
                     <span class="selected"></span>
                 </a>

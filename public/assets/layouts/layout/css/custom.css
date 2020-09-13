@@ -301,6 +301,10 @@
   .bg-danger {
     background-color: #ef5454 !important;
   }
+
+  .bg-danger .icon-note{
+    color: #ffffff;
+  }
   
   .project-item-title:hover,.project-item-title:focus,.project-item-title:visited {
     text-decoration: none;

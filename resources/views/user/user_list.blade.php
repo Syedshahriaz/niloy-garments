@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'All User')
+@section('title', 'All Family Members')
 @section('content')
 
     <!-- BEGIN CONTENT -->
@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>All User</span>
+                        <span>All family members</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -37,8 +37,8 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">All user</span>
-                                <span class="caption-helper">Select to separate user</span>
+                                <span class="caption-subject font-dark bold uppercase">All Family Members</span>
+                                <span class="caption-helper">Select to separate Members</span>
                             </div>
                             <div class="actions">
 
@@ -49,7 +49,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Username</th>
+                                        <th>Name</th>
                                         <th>Date of birth</th>
                                         <th class="text-center">Action</th>
                                     </tr>
@@ -67,15 +67,15 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn ajax_item item-3" data-name="user_details/{{$user->id}}" data-item="3" title="Dashboard" title="Profile"><i class="icon-user"></i> Profile</a>
-                                            <button type="button" class="btn green action-btn" title="Send OTP to separate this user" id="send_otp_button_{{$user->id}}" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
+                                            <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn ajax_item item-3" data-name="user_details/{{$user->id}}" data-item="3" title="Profile"><i class="icon-user"></i> Profile</a>
+                                            <button type="button" class="btn green action-btn" id="send_otp_button_{{$user->id}}" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
                                                 @if($user->otp =='')
-                                                    Send OTP
+                                                    Transfer member
                                                 @else
-                                                    Send OTP Again
+                                                    Transfer member Again
                                                 @endif
                                             </button>
-                                            <button type="button" class="btn red action-btn @if($user->otp =='') hidden @endif" title="Make Separate" id="make_separate_button_{{$user->id}}" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Make Separate</button>
+                                            <button type="button" class="btn red action-btn @if($user->otp =='') hidden @endif" id="make_separate_button_{{$user->id}}" onclick="separate_user({{$user->id}})"><i class="icon-user-unfollow"></i> Enter OTP from Member otp</button>
                                         </td>
                                     </tr>
                                     <?php
@@ -160,7 +160,7 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="separate_user_id">
                             <div class="col-md-10 col-md-offset-1">
-                                <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, this user will be <strong>separated</strong> from your account. You will not be able to access this user anymore. </div>
+                                <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, this member will be <strong>separated</strong> from your account. You will not be able to access this member anymore. </div>
                                 <div class="form-group">
                                     <label class="control-label visible-ie8 visible-ie9">OTP</label>
                                     <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="otp" placeholder="OTP*" name="otp" />

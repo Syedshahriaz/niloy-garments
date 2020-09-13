@@ -53,8 +53,8 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label visible-ie8 visible-ie9">User Name*</label>
-                                            <input class="form-control placeholder-no-fix" type="text" placeholder="User Name*" name="username" id="username" />
+                                            <label class="control-label visible-ie8 visible-ie9">Name*</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="Name*" name="username" id="username" />
                                         </div>
                                     </div>
                                     <div class="col-md-12">
