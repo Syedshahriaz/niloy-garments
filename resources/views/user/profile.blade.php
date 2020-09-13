@@ -53,7 +53,7 @@
                             <!-- END SIDEBAR USER TITLE -->
                             <!-- SIDEBAR BUTTONS -->
                             <div class="profile-userbuttons">
-                                <a href="{{url('user_edit',$user->id).'?frm=profile'}}" class="btn blue btn-sm item-5" data-name="user_edit/{{$user->id.'?frm=profile'}}" data-item="5">Update Info</a>
+                                <a href="{{url('user_edit',$user->id).'?frm=profile'}}" class="btn blue btn-sm item-5" data-name="user_edit/{{$user->id.'?frm=profile'}}" data-item="5">Edit Info</a>
                                 <a href="{{url('reset-password')}}" class="btn red btn-sm ajax_item item-5" data-name="reset-password" data-item="5">Reset password</a>
                             </div>
                             <!-- END SIDEBAR BUTTONS -->
@@ -77,11 +77,11 @@
                                         <div class="user-info">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <h5 class="mb-0"><b>Username</b></h5>
+                                                    <h5 class="mb-0"><b>Name</b></h5>
                                                     <p>{{$user->username}}</p>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <h5 class="mb-0"><b>Name</b></h5>
+                                                    <h5 class="mb-0"><b>Full name</b></h5>
                                                     <p>{{$user->first_name." ".$user->last_name}} &nbsp;</p>
                                                 </div>
                                                 <div class="col-md-6">

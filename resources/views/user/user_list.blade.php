@@ -112,11 +112,11 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="user_id">
                             <div class="col-md-10 col-md-offset-1">
-                                <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, user will get a <strong>24 hours valid OTP.</strong> </div>
+                                <div class="alert alert-danger" role="alert"> <strong><i class="icons icon-info"></i> Warning!</strong> By submitting form, member will get a <strong>24 hours valid OTP.</strong> </div>
                                 <div class="form-group">
                                     <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-                                    <label class="control-label">New user email</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter new user email*" name="email" id="email" value=""  autocomplete="off"/>
+                                    <label class="control-label">New member email</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter new member email*" name="email" id="email" value=""  autocomplete="off"/>
                                 </div>
 
                                 <div class="form-group">

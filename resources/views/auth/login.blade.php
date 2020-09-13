@@ -46,7 +46,7 @@
 <div class="login-header">
     <div class="page-logo">
         <a href="#" class="nav-item ajax_item item-1  " data-name="dashboard" data-item="1">
-            <img src="../../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default"> </a>
+            <img src="{{asset('assets/layouts/layout/img/logoVujade.jpg')}}" alt="Vujadetec logo" class="logo-default"> </a>
     </div>
 </div>
 
@@ -86,7 +86,7 @@
             </p>
 
             <p>
-                <a href="{{url('registration')}}" id="" class="uppercase">Sign Up</a>
+                <a href="{{url('registration')}}" id="" class="uppercase">Register Here</a>
             </p>
         </div>
     </form>

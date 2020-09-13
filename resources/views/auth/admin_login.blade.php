@@ -50,7 +50,7 @@
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <img src="../../assets/global/img/logo-invert.png" alt="" />
+            <img src="{{asset('assets/layouts/layout/img/logoVujade.jpg')}}" alt="Vujadetec logo" alt="" />
         </div>
         <!-- END LOGO -->
         <h3 class="form-title font-theme">Sign In</h3>

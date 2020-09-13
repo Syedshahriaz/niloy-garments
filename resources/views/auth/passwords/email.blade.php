@@ -102,7 +102,7 @@
         {{csrf_field()}}
         <!-- BEGIN LOGO -->
         <div class="logo">
-            <img src="../../assets/global/img/logo-invert.png" alt="" />
+            <img src="{{asset('assets/layouts/layout/img/logoVujade.jpg')}}" alt="Vujadetec logo" />
         </div>
         <!-- END LOGO -->
 
