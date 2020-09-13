@@ -597,7 +597,7 @@ class UserController extends Controller
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
             $emailData['otp'] = $otp;
-            $emailData['subject'] = Common::SITE_TITLE.'- User separation request';
+            $emailData['subject'] = Common::SITE_TITLE.'- Member separation request';
 
             $emailData['bodyMessage'] = '';
 

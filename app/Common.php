@@ -534,7 +534,9 @@ class Common
         $next_day = date('Y-m-d');
         $allow_date = date('Y-m-d', strtotime('+6 days'));
 
-        $users = User::where('status','active');
+        $users = User::select('users.*','user_shipments.shipment_date');
+        $users = $users->join('user_shipments', 'user_shipments.user_id', '=', 'users.id');
+        $users = $users->where('status','active');
         if($user_id !=''){
             $users = $users->where('users.id', $user_id);
         }
@@ -543,7 +545,7 @@ class Common
         foreach($users as $user){
             $message_initiate = 'Dear '.$user->username;
             $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','task_title.name as task_name', 'tasks.rule',
-                'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
+                'tasks.project_id','tasks.days_range_start','tasks.days_range_end','users.unique_id','users.username','users.email','users.phone');
             $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
             $tasks = $tasks->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
             $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
@@ -558,7 +560,7 @@ class Common
                 $tasks = $tasks->where('user_project_tasks.warning_sent',0);
             }
             $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
-                //$query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
+                $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
                 $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
             });
             $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
@@ -570,23 +572,26 @@ class Common
             $warning_email_body = '';
 
             foreach($tasks as $task){
-                $email = [$task->email];
+                $task_in_date_range = self::task_in_date_range($user->shipment_date,$task->days_range_start,$task->days_range_end);
+                if($task_in_date_range==1){
+                    $email = [$task->email];
 
-                if($task->original_delivery_date<$today){ // Due date have been past
-                    $past_message_body .=' Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                    $past_email_body .='Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+                    if($task->original_delivery_date<$today){ // Due date have been past
+                        $past_message_body .=' Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                        $past_email_body .='Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
 
+                    }
+                    else{
+                        $warning_message_body .= 'Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                        $warning_email_body .= 'Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+                    }
+
+                    /*
+                     * Update task warning email sent status
+                     * */
+                    $task->warning_sent = 1;
+                    $task->save();
                 }
-                else{
-                    $warning_message_body .= 'Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                    $warning_email_body .= 'Your Project '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
-                }
-
-                /*
-                 * Update task warning email sent status
-                 * */
-                $task->warning_sent = 1;
-                $task->save();
             }
 
             if($past_message_body !=''){
