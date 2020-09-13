@@ -189,6 +189,11 @@ class UserController extends Controller
 
             DB::commit();
 
+            /*
+             * Send task warning email
+             * */
+            $result = Common::sendTaskWarningEmail($user_id);
+
             return ['status'=>200, 'reason'=>'Offer Successfully updated'];
         } catch (\Exception $e) {
             DB::rollback();

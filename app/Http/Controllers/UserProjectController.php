@@ -194,7 +194,6 @@ class UserProjectController extends Controller
                     ->groupBy('projects.id')
                     ->get();
 
-                //return $user_id;
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.all_project',
                         compact('user_id','setting', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
@@ -298,7 +297,6 @@ class UserProjectController extends Controller
                     ->join('user_shipments','user_shipments.user_id','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
-                //echo "<pre>"; print_r($tasks); echo "</pre>"; exit();
 
                 if ($request->ajax()) {
                     if(empty($user)){
@@ -363,17 +361,13 @@ class UserProjectController extends Controller
                     $date_increased = 1;
                 }
             }
-            else{
-                //$delivery_date_update_count  = $task->delivery_date_update_count;
-            }
 
             /*
              * Check if task made done by checking done tag
              * */
-            //if($date_updated==1){
-                $delivery_date_update_count  = $task->delivery_date_update_count+1;
-                $task->delivery_date_update_count = $task->delivery_date_update_count+1;
-            //}
+            $delivery_date_update_count  = $task->delivery_date_update_count+1;
+            $task->delivery_date_update_count = $task->delivery_date_update_count+1;
+
             if($request->original_delivery_date !=''){
                 $task->status = 'completed';
                 $task->original_delivery_date = date('Y-m-d', strtotime($request->original_delivery_date));
@@ -398,11 +392,12 @@ class UserProjectController extends Controller
              * */
             if($date_updated==1){
                 $result = $this->updateNextTaskOriginalDeliveryDate($request->project_task_id,$task->user_project_id,$date_increased,$daysAdded);
-                if($task->has_freeze_rule==1){
-                    //$this->disableNextTaskOriginalDeliveryDateEdit($request->project_task_id,$task->user_project_id);
-                }
             }
 
+            /*
+             * Sending warning message (if needed)
+             * */
+            $result = Common::sendTaskWarningEmail($task->user_id,$task->user_project_id);
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
         }
@@ -436,9 +431,6 @@ class UserProjectController extends Controller
         if(!empty($next_task)){
             $task_in_date_range = Common::task_in_date_range($shipment_date,$next_task->days_range_start,$next_task->days_range_end);
             if($task_in_date_range==0){
-                /*$next_task->freeze_forever = 1;
-                $next_task->save();*/
-
                 $result = $this->makeImmediateNextTaskProcessing($next_task->id,$user_project_id,$shipment_date);
             }
             else{
@@ -472,13 +464,13 @@ class UserProjectController extends Controller
          * Get all next task of this user project
          * */
 
-        $previous_task = UserProjectTask::select('user_project_tasks.*','tasks.date_update_dependent_with')
+        $previous_task = UserProjectTask::select('user_project_tasks.*','tasks.id as task_id','tasks.date_update_dependent_with','tasks.only_date_update_dependent_with')
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->where('user_project_tasks.id',$project_task_id)
             ->first();
 
         $project_tasks = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
-            ->select('user_project_tasks.*','tasks.date_update_dependent_with','projects.name as project_name','task_title.name as task_name', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','users.id as user_id','users.username','users.email','users.phone')
+            ->select('user_project_tasks.*','tasks.date_update_dependent_with','tasks.only_date_update_dependent_with','projects.name as project_name','task_title.name as task_name', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','users.id as user_id','users.username','users.email','users.phone')
             ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
             ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
             ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
@@ -493,17 +485,23 @@ class UserProjectController extends Controller
 
         foreach($project_tasks as $key=>$p_task){
             $user_id = $p_task->user_id;
+
             if($p_task->date_update_dependent_with==''){
-                $taskData = UserProjectTask::where('id',$p_task->id)->first();
-                if($date_increased==1){ // If date increased
-                    $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs(round($daysAdded)).' days'));
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs(round($daysAdded)).' days'));
+                /*
+                 * Check if task has only_date_update_dependent_with parent task and that parent task is the previous task or not.
+                 * */
+                if($p_task->only_date_update_dependent_with=='' || $p_task->only_date_update_dependent_with==$previous_task->task_id){
+                    $taskData = UserProjectTask::where('id',$p_task->id)->first();
+                    if($date_increased==1){ // If date increased
+                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs(round($daysAdded)).' days'));
+                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs(round($daysAdded)).' days'));
+                    }
+                    else{
+                        $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs(round($daysAdded)).' days'));
+                        $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs(round($daysAdded)).' days'));
+                    }
+                    $taskData->save();
                 }
-                else{
-                    $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs(round($daysAdded)).' days'));
-                    $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs(round($daysAdded)).' days'));
-                }
-                $taskData->save();
             }
             else{
                 if($p_task->date_update_dependent_with==$previous_task->task_id || $p_task->date_update_dependent_with==$previous_task->date_update_dependent_with){
@@ -520,45 +518,7 @@ class UserProjectController extends Controller
                 }
             }
         }
-
-        /*
-         * Sending warning message
-         * */
-        if(count($project_tasks) !=0){
-            if(isset($taskData)){
-                $p_task->original_delivery_date = $taskData->original_delivery_date;
-            }
-            //$this->sendNextTaskWarningMessage($p_task);
-            $result = Common::sendTaskWarningEmail($user_id,$user_project_id);
-            return $result;
-        }
     }
-
-    /*private function sendNextTaskWarningMessage($next_task){
-        $today = date('Y-m-d');
-        $next_day = date('Y-m-d', strtotime('+1 days'));
-        $allow_date = date('Y-m-d', strtotime('+7 days'));
-        $email = [$next_task->email];
-        $message_body = '';
-        if($next_task->original_delivery_date<$today){ // Due date have been past
-            //Send past warning sms
-            $message_body ='Dear '.$next_task->username.', Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. Please visit www.vujadetec.com to get more information about our product & services';
-            $email_body ='Dear '.$next_task->username.', <br>Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services';
-            $sms_response = Common::sendPastDayWarningSms($next_task->phone,$message_body);
-            $email_response = Common::sendPastDayWarningEmail($email,$email_body);
-
-        }
-        else if($next_task->original_delivery_date>=$next_day && $next_task->original_delivery_date<=$allow_date){
-            $message_body ='Dear '.$next_task->username.', Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. Please visit www.vujadetec.com to get more information about our product & services';
-            $email_body ='Dear '.$next_task->username.', <br>Your Project '.$next_task->project_name.' '.$next_task->task_name.' due date is on '.date('d F, Y',strtotime($next_task->original_delivery_date)).'. <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services';
-            $sms_response = Common::send7dayWarningSms($next_task->phone,$message_body);
-            $email_response = Common::send7dayWarningEmail($email,$email_body);
-        }
-
-        //Store sms sending record
-        $user_id = $next_task->user_id;
-        Common::storeSmsRecord($user_id, $message_body);
-    }*/
 
     private function disableNextTaskOriginalDeliveryDateEdit($project_task_id,$user_project_id){
         /*

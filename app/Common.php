@@ -176,12 +176,16 @@ class Common
 
     public static function isEditableStatusCheck($task,$shipment_date){
         $result = 0;
+        $is_passed = 0;
 
         if(($task->status == 'processing' || $task->status == 'completed') && $task->freeze_forever!=1){
             $result = 1;
         }
         else if(isset($task->has_offer_1) && $task->has_offer_1==1){ // If task is for green offer(offer 1) and due date have been passed then make editable
             $result = self::isTaskOriginalDueDatePassed($task);
+            if($result==1){
+                $is_passed = 1;
+            }
         }
         else if($task->has_freeze_rule==1 && $task->freeze_forever!=1){ // If task has freeze rule then pass to next step to allow to make editable
             $result = 1;
@@ -190,7 +194,7 @@ class Common
         /*
          * Check if previous any task has 'processing' status and editable. If yes then make this task non editable
          * */
-        if($result ==1){
+        if($result ==1 && $is_passed==0){
             $processing_result = self::isPreviousAnyTaskProcessing($task,$shipment_date);
             if($processing_result==1){ // Previous processing/editable task exists
                 $result = 0;           // So make this task non editable.
@@ -538,7 +542,6 @@ class Common
 
         foreach($users as $user){
             $message_initiate = 'Dear '.$user->username;
-
             $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','task_title.name as task_name', 'tasks.rule',
                 'tasks.project_id','users.unique_id','users.username','users.email','users.phone');
             $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
@@ -550,11 +553,12 @@ class Common
             if($user_project_id !=''){
                 $tasks = $tasks->where('user_project_tasks.user_project_id', $user_project_id);
             }
-            $tasks = $tasks->where('user_project_tasks.status', 'processing');
-            $tasks = $tasks->where('user_project_tasks.warning_sent',0);
+            $tasks = $tasks->whereIn('user_project_tasks.status', ['processing','not initiate']);
+            if($user_project_id==''){
+                $tasks = $tasks->where('user_project_tasks.warning_sent',0);
+            }
             $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
-                //$query->orWhere('user_project_tasks.original_delivery_date',$allow_date);
-                $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
+                //$query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
                 $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
             });
             $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
@@ -590,13 +594,16 @@ class Common
                 $past_email_body = $message_initiate.', <br>'.$past_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
                 $sms_response = self::sendPastDayWarningSms($user->phone,$past_message_body);
                 $email_response = self::sendPastDayWarningEmail($email,$past_email_body);
+                $result = self::storeSmsRecord($user->id, $past_message_body);
             }
             if($warning_message_body !=''){
                 $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $warning_email_body = $message_initiate.', <br>'.$warning_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
                 $sms_response = self::sendPastDayWarningSms($user->phone,$warning_message_body);
                 $email_response = self::send7dayWarningEmail($email,$warning_email_body);
+                $result = self::storeSmsRecord($user->id, $warning_message_body);
             }
+
         }
 
         return 'Email sent.';
@@ -706,7 +713,6 @@ class Common
      * Saving error log
      * */
     public static function saveErrorLog($method,$line_number,$file_path,$message,$object,$type,$screenshot,$page_url,$argument,$prefix,$domain){
-
         /*Save error to database*/
         try{
             $errorLog = NEW ErrorLog();
