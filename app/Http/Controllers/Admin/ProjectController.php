@@ -193,12 +193,13 @@ class ProjectController extends Controller
                 ->where('user_projects.id',$project_task->user_project_id)
                 ->first();
 
-            $project_task_details = UserProjectTask::select('user_project_tasks.id','tasks.rule')
+            $project_task_details = UserProjectTask::select('user_project_tasks.id','task_title.name as task_name','tasks.rule')
                 ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->join('task_title','task_title.id','=','tasks.title_id')
                 ->where('user_project_tasks.id',$request->project_task_id)
                 ->first();
 
-            $message = "User ".$user_project->unique_id.": Task ".$project_task_details->rule." of project ".$user_project->name." have been unlocked";
+            $message = "Member ".$user_project->unique_id.": Task ".$project_task_details->task_name." of project ".$user_project->name." have been unlocked";
 
             /*
              * Save notification
