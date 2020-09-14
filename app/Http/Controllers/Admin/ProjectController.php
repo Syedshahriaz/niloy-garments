@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\UserProject;
 use App\Models\UserShipment;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
@@ -204,16 +205,7 @@ class ProjectController extends Controller
             /*
              * Save notification
              * */
-            $notification = NEW Notification();
-            $notification->user_id = $user_project->user_id;
-            if($user_project->parent_id==0){
-                $notification->parent_id = $user_project->user_id;
-            }
-            else{
-                $notification->parent_id = $user_project->parent_id;
-            }
-            $notification->message = $message;
-            $notification->save();
+            $result = Common::saveNotification($user_project,$message);
 
             return ['status'=>200, 'reason'=>'Project task unlocked successfully'];
         }
@@ -232,6 +224,14 @@ class ProjectController extends Controller
                 $shipment->shipment_date_update_count = 0;
             }
             $shipment->save();
+
+            $user = User::select('users.*','users.id as user_id')->where('id',$request->user_id)->first();
+            $message = "Member ".$user->unique_id.": Shipping date have been unlocked";
+
+            /*
+             * Save notification
+             * */
+            $result = Common::saveNotification($user,$message);
 
             return ['status'=>200, 'reason'=>'Shipment date unlocked successfully'];
         }

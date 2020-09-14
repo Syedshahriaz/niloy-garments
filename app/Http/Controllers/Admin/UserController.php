@@ -141,7 +141,7 @@ class UserController extends Controller
             /*
              * Save offer details
              * */
-            $user = User::select('users.*','user_payments.created_at as payment_date')
+            $user = User::select('users.*','users.id as user_id','user_payments.created_at as payment_date')
                 ->where('users.id',$user_id)
                 ->leftJoin('user_payments','user_payments.user_id','=','users.id')
                 ->first();
@@ -156,10 +156,12 @@ class UserController extends Controller
 
 
             if($request->offer == 1){
+                $offer_name = 'Green';
                 $shipment->has_ofer_1 = 1;
                 $shipment->has_ofer_2 = 0;
             }
             else{
+                $offer_name = 'Red';
                 $shipment->has_ofer_1 = 0;
                 $shipment->has_ofer_2 = 1;
             }
@@ -193,6 +195,13 @@ class UserController extends Controller
              * Send task warning email
              * */
             $result = Common::sendTaskWarningEmail($user_id);
+
+
+            /*
+             * Save notification
+             * */
+            $message = "Member ".$user->unique_id.": Offer have been changed to ".$offer_name;
+            $result = Common::saveNotification($user,$message);
 
             return ['status'=>200, 'reason'=>'Offer Successfully updated'];
         } catch (\Exception $e) {
@@ -277,11 +286,18 @@ class UserController extends Controller
 
     public function unlockUserGender(Request $request){
         try{
-            $user = User::where('id', $request->user_id)->first();
+            $user = User::select('users.*','users.id as user_id')->where('id', $request->user_id)->first();
             if($user->gender_update_count != 0){
                 $user->gender_update_count = 0;
             }
             $user->save();
+
+            $message = "Member ".$user->unique_id.": Gender have been unlocked";
+
+            /*
+             * Save notification
+             * */
+            $result = Common::saveNotification($user,$message);
 
             return ['status'=>200, 'reason'=>'User gender unlocked successfully'];
         }

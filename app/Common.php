@@ -26,8 +26,8 @@ use DB;
 class Common
 {
     const SITE_TITLE = 'Vujadetec';
-    const DOMAIN_NAME = 'dev.vujadetec.net';
-    const SITE_URL = 'https://dev.vujadetec.net';
+    const DOMAIN_NAME = 'vujadetec.net';
+    const SITE_URL = 'https://vujadetec.net';
     //const SITE_URL = 'http://127.0.0.1:8000';
     const FROM_EMAIL = 'vujadetec@gmail.com';
     const FROM_NAME = 'Vujadetec';
@@ -85,6 +85,21 @@ class Common
         }
 
         return 'active_user';
+    }
+
+    public static function saveNotification($user,$message){
+        $notification = NEW Notification();
+        $notification->user_id = $user->user_id;
+        if($user->parent_id==0){
+            $notification->parent_id = $user->user_id;
+        }
+        else{
+            $notification->parent_id = $user->parent_id;
+        }
+        $notification->message = $message;
+        $notification->save();
+
+        return 1;
     }
 
     public static function getNotifications($user_id=''){
