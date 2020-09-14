@@ -18,6 +18,10 @@ class AdminController extends Controller
     }
 
     public function login(){
+        if (Common::is_admin_login()) {
+            return redirect('admin/users');
+        }
+
         return view('auth.admin_login');
     }
 

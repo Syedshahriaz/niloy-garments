@@ -79,6 +79,11 @@ class UserProjectController extends Controller
         try{
             DB::beginTransaction();
 
+            $shipment = UserShipment::where('user_id',$request->user_id)->first();
+            if($shipment->shipment_date != ''){
+                return [ 'status' => 401, 'reason' => 'You have already added your shipment date'];
+            }
+
             /*
              * Update user
              * */
@@ -126,7 +131,7 @@ class UserProjectController extends Controller
              * */
             $result = Common::sendTaskWarningEmail($user_id);
 
-            return ['status'=>200, 'reason'=>'Shipment date successfully saved'];
+            return ['status'=>200, 'reason'=>'Date of birth successfully saved'];
         }
         catch (\Exception $e) {
             DB::rollback();

@@ -678,7 +678,7 @@
             tpl += '<img class="avatar" alt="" src="{{asset(Session::get('user_photo'))}}"/>';
         }
         else{
-            tpl += '<img class="avatar" alt="" src="http://127.0.0.1:8000/assets/layouts/layout/img/emptyuserphoto.png"/>';
+            tpl += '<img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}"/>';
         }
         tpl += '<div class="message">';
         tpl += '<span class="arrow"></span>';

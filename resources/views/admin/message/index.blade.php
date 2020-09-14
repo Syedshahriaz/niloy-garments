@@ -168,7 +168,7 @@
     <!-- <script src="http://lloiser.github.io/jquery-searcher/js/jquery.searcher.js" type="text/javascript"></script> -->
     <script src="{{asset('assets/global/plugins/jquery-searcher/jquery.searcher.js')}}"></script>
     <script>
-        //message FE script START 
+        //message FE script START
         function scrollBottom(){
             $('#char_body>div').stop().animate({
                 scrollTop: $('#char_body>div')[0].scrollHeight
@@ -426,7 +426,7 @@
                 tpl += '<img class="avatar" alt="" src="{{asset(Session::get('user_photo'))}}"/>';
             }
             else{
-                tpl += '<img class="avatar" alt="" src="http://127.0.0.1:8000/assets/layouts/layout/img/emptyuserphoto.png"/>';
+                tpl += '<img class="avatar" alt="" src="{{asset('assets/layouts/layout/img/emptyuserphoto.png')}}"/>';
             }
             tpl += '<div class="message">';
             tpl += '<span class="arrow"></span>';

@@ -184,16 +184,16 @@
             return d + "/" + m + "/" +  y;
         }
         else if(format=='M d'){
-            return monthNames[m] + " " + d;
+            return monthNames[m-1] + " " + d;
         }
         else if(format=='M-d-y'){
-            return monthNames[m] + "-" + d + "-" + y;
+            return monthNames[m-1] + "-" + d + "-" + y;
         }
         else if(format=='l M d, Y h:i a'){
-            return (dayNames[day] + ' ' + monthNames[m] + ' ' + d +', ' + y + ' ' + hours + ':' + minutes +' '+ampm);
+            return (dayNames[day] + ' ' + monthNames[m-1] + ' ' + d +', ' + y + ' ' + hours + ':' + minutes +' '+ampm);
         }
         else{
-            return monthNames[m] + " " + d + ", " + y;
+            return monthNames[m-1] + " " + d + ", " + y;
         }
     }
 
