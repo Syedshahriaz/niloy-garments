@@ -81,7 +81,7 @@
                                             <div class="row">
                                                 <div class="col-md-4 form-group">
                                                     <select name="day" id="day" class="form-control">
-                                                        <option value="">Day</option>
+                                                        <option disabled="true" value="">Day</option>
                                                         @for($i=1; $i<=31; $i++)
                                                             <option value="{{$i}}" @if($i==date('d')) selected @endif>{{$i}}</option>
                                                         @endfor
@@ -90,7 +90,7 @@
 
                                                 <div class="col-md-4 form-group">
                                                     <select name="month" id="month" class="form-control">
-                                                        <option value="">Month</option>
+                                                        <option disabled="true" value="">Month</option>
                                                         <option value="1" @if(date('m')==1) selected @endif>Jan</option>
                                                         <option value="2" @if(date('m')==2) selected @endif>Feb</option>
                                                         <option value="3" @if(date('m')==3) selected @endif>Mar</option>
@@ -108,7 +108,7 @@
 
                                                 <div class="col-md-4 form-group">
                                                     <select name="year" id="year" class="form-control">
-                                                        <option value="">Year</option>
+                                                        <option disabled="true" value="">Year</option>
                                                         @for($i=date('Y'); $i>=1920; $i--)
                                                             <option value="{{$i}}" @if($i==date('Y')) selected @endif>{{$i}}</option>
                                                         @endfor

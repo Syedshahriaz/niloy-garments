@@ -159,7 +159,7 @@
                                                     <div class="row">
                                                         <div class="col-md-4 form-group">
                                                             <select name="day" id="day" class="form-control" @if($user->shipment_date_update_count!=0) disabled @endif>
-                                                                <option value="">Day</option>
+                                                                <option disabled="true" value="">Day</option>
                                                                 @for($i=1; $i<=31; $i++)
                                                                     <option value="{{$i}}" @if($i==date('d',strtotime($user->shipment_date))) selected @endif>{{$i}}</option>
                                                                 @endfor
@@ -168,7 +168,7 @@
 
                                                         <div class="col-md-4 form-group">
                                                             <select name="month" id="month" class="form-control" @if($user->shipment_date_update_count!=0) disabled @endif>
-                                                                <option value="">Month</option>
+                                                                <option disabled="true" value="">Month</option>
                                                                 <option value="1" @if(date('m',strtotime($user->shipment_date))==1) selected @endif>Jan</option>
                                                                 <option value="2" @if(date('m',strtotime($user->shipment_date))==2) selected @endif>Feb</option>
                                                                 <option value="3" @if(date('m',strtotime($user->shipment_date))==3) selected @endif>Mar</option>
@@ -186,7 +186,7 @@
 
                                                         <div class="col-md-4 form-group">
                                                             <select name="year" id="year" class="form-control" @if($user->shipment_date_update_count!=0) disabled @endif>
-                                                                <option value="">Year</option>
+                                                                <option disabled="true" value="">Year</option>
                                                                 @for($i=date('Y'); $i>=1920; $i--)
                                                                     <option value="{{$i}}" @if($i==date('Y',strtotime($user->shipment_date))) selected @endif>{{$i}}</option>
                                                                 @endfor
