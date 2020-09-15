@@ -587,8 +587,9 @@ class Common
             $warning_email_body = '';
 
             foreach($tasks as $task){
-                $task_in_date_range = self::task_in_date_range($user->shipment_date,$task->days_range_start,$task->days_range_end);
-                if($task_in_date_range==1){
+                //$task_in_date_range = self::task_in_date_range($user->shipment_date,$task->days_range_start,$task->days_range_end);
+                $is_task_editable = self::isTaskEditable($task,$user->shipment_date);
+                if($is_task_editable==1){
                     $email = [$task->email];
 
                     if($task->original_delivery_date<$today){ // Due date have been past
@@ -643,7 +644,7 @@ class Common
         $emailData['email'] = $email_to;
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
-        $emailData['subject'] = Common::SITE_TITLE.'- Project task completion warning';
+        $emailData['subject'] = Common::SITE_TITLE.'- Vaccine completion warning';
 
         $emailData['bodyMessage'] = $message_body;
 
@@ -667,7 +668,7 @@ class Common
         $emailData['email'] = $email_to;
         $emailData['email_cc'] = $email_cc;
         $emailData['email_bcc'] = $email_bcc;
-        $emailData['subject'] = Common::SITE_TITLE.'- Project task completion warning';
+        $emailData['subject'] = Common::SITE_TITLE.'- Vaccine completion warning';
 
         $emailData['bodyMessage'] = $message_body;
 
