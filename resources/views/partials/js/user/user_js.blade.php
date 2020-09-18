@@ -313,6 +313,9 @@
         if (phone.trim() == "") {
             validate = validate + "Phone is required</br>";
         }
+        if (shipment_date.trim() != "" && isFutureDate(shipment_date)) {
+            validate = validate + "You can not select a future date</br>";
+        }
 
         /*if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
             validate = validate + "Shipment date is required</br>";
@@ -344,16 +347,14 @@
                                     $( ".profile_image" ).attr( 'src', photo_url);
                                 }
                                 var item_name = 'profile';
-                                var browser_title = 'Profile';
                             }
                             else{
                                 var item_name = 'user_details/'+user_id;
-                                var browser_title = 'User details/'+user_id;
                             }
 
                             var uri_string = '/'+item_name;
                             var url = "{{url('/')}}"+uri_string;
-                            load_new_page_content(url,item_name,browser_title);
+                            window.location.href=url;
                         },1000)
                     } else {
                         $("#success_message").hide();

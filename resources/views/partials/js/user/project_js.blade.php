@@ -19,6 +19,9 @@
         if (shipment_date.trim() == "") {
             validate = validate + "Shipment date is required</br>";
         }
+        if (shipment_date.trim() != "" && isFutureDate(shipment_date)) {
+            validate = validate + "You can not select a future date</br>";
+        }
 
         if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
             validate = validate + "Shipment date is required</br>";
@@ -98,6 +101,10 @@
 
         if (shipment_date.trim() == "") {
             validate = validate + "Special date is required</br>";
+        }
+
+        if (shipment_date.trim() != "" && isFutureDate(shipment_date)) {
+            validate = validate + "You can not select a future date</br>";
         }
 
         if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
@@ -205,7 +212,7 @@
 
         show_loader();
 
-        var org_delivery_date = $("#org_delivery_date").val();
+        var org_delivery_date = $("#shipment_date").val();
         var user_project_id = $("#user_project_id").val();
 
         var validate = "";
@@ -213,6 +220,10 @@
         /*if (org_delivery_date.trim() == "") {
             validate = validate + "Delivery date is required</br>";
         }*/
+
+        if (org_delivery_date.trim() != "" && isFutureDate(org_delivery_date)) {
+            validate = validate + "You can not select a future date</br>";
+        }
 
         if (validate == "") {
             var formData = new FormData($("#delivery_form")[0]);

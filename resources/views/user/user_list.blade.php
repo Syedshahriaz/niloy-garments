@@ -67,7 +67,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn ajax_item item-3" data-name="user_details/{{$user->id}}" data-item="3" title="Profile"><i class="icon-user"></i> Profile</a>
+                                            <a href="{{url('user_details',$user->id)}}" type="button" class="btn blue action-btn item-3" data-name="user_details/{{$user->id}}" data-item="3" title="Profile"><i class="icon-user"></i> Profile</a>
                                             <button type="button" class="btn green action-btn" id="send_otp_button_{{$user->id}}" onclick="send_otp({{$user->id}})"><i class="icon-action-redo"></i>
                                                 @if($user->otp =='')
                                                     Transfer member

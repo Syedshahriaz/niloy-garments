@@ -183,6 +183,16 @@
             }
             return d + "/" + m + "/" +  y;
         }
+        else if(format=='y-m-d'){
+            if(d<10){
+                d = '0'+d;
+            }
+            m = m+1;
+            if(m<10){
+                m = '0'+m;
+            }
+            return y + "-" + m + "-" + d;
+        }
         else if(format=='M d'){
             return monthNames[m-1] + " " + d;
         }
@@ -205,5 +215,16 @@
 
         $('#shipment_date').val(date);
     });
+
+    function isFutureDate(date){
+        var CurrentDate = new Date();
+        var GivenDate = new Date(date);
+
+        if(GivenDate > CurrentDate){
+            return 1;
+        }
+        
+        return 0;
+    }
 
 </script>
