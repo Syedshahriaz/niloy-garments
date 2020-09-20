@@ -566,6 +566,7 @@ class Common
             $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
             $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
             $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+            $tasks = $tasks->where('projects.type', 'running');
             $tasks = $tasks->where('users.id', $user->id);
             if($user_project_id !=''){
                 $tasks = $tasks->where('user_project_tasks.user_project_id', $user_project_id);
