@@ -17,14 +17,14 @@
         var validate = "";
 
         if (shipment_date.trim() == "") {
-            validate = validate + "Shipment date is required</br>";
+            validate = validate + "Birth date is required</br>";
         }
         if (shipment_date.trim() != "" && isFutureDate(shipment_date)) {
             validate = validate + "You can not select a future date</br>";
         }
 
         if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
-            validate = validate + "Shipment date is required</br>";
+            validate = validate + "Birth date is required</br>";
         }
 
 

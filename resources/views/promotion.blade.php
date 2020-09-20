@@ -17,12 +17,23 @@
 
 <body>
     <div class="prmotion-header">
+        <a href="https://vujadetec.com/" target="_blank" data-name="dashboard" data-item="1">
+            <img src="https://vujadetec.net/assets/layouts/layout/img/logoVujade.jpg" alt="Vujadetec logo" class="logo-default"> 
+        </a>
         <a href="{{ route('logout') }}"  class="logout btn btn-danger" >Logout</a>
     </div>
 
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col" style="margin-top:25px;">
+                <span style="font-weight: bold;background-color:black; color:white;">&nbsp;Vujade<span style="font-weight: bold;color:#bf945b;">tec&nbsp;</span></span> has 3 offers <span style="font-weight: bold;color:#599a13;">&nbsp;Green&nbsp;</span>-<span style="font-weight: bold;color:#d61919;">&nbsp;<b>Red&nbsp;</b></span>-<span style="font-weight: bold;color:#fc0aa6;">&nbsp;Pink&nbsp;</span> which cover all ages, all gender including pregnant women. Pink offer are related to females and completely FREE if you buy Green or Red.
+                <br><br>
+                It is for those: 
+                <ul>
+                    <li>Who are taking regular vaccines. </li>
+                    <li>Who missed the vaccine.</li>
+                    <li>Who does not know or remember what vaccine was given during childhood.</li>
+                </ul>
                 <div class="Offer-info mt-5">
                     <div class="offer-item green-offer animate__animated animate__fadeInLeft">
                         <h3>{{$offer->offer1_name}}</h3>
@@ -39,7 +50,11 @@
                         <p><?php echo htmlspecialchars_decode($offer->offer3_details); ?></p>
                     </div>
 
-                    <h2 class="text-center mt-5">Choose your offer</h2>
+                    <div>
+                        <p>So, please register to know more about vaccines of all ages &amp; buy vaccine-care tracker only ৳0 for Bangladesh &amp; $0 for other countries per person for the next 2 years. You can extend it up to a whole lifetime if you are happy with our service.</p>
+                    </div>
+
+                    <h2 class="text-center mt-5">Choose your offer - We kept price 11 BDT for testing purpose</h2>
 
                     <div class="offer-option mb-5 animate__animated animate__fadeInUp">
                         <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">

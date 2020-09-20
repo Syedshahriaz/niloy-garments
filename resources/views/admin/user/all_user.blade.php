@@ -70,7 +70,7 @@
                                         <th>Username</th>
                                         <th>User Email</th>
                                         <th>Payment Status</th>
-                                        <th>Shipment Date</th>
+                                        <th>Birth Date</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
