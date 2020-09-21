@@ -52,10 +52,13 @@ class CronController extends Controller
 
     public function sendBirthdayWish(Request $request){
         try{
+            $month = date("m", strtotime("+ 1 day")); // getting tomorrow month
+            $day = date("d", strtotime("+ 1 day")); // getting tomorrow day
+
             $users = User::select('users.id','users.phone')
                 ->join('user_shipments','user_shipments.user_id','=','users.id')
-                ->whereRaw('MONTH(shipment_date) = MONTH(NOW())')
-                ->whereRaw('DAY(shipment_date) = DAY(NOW())')
+                ->whereRaw('MONTH(shipment_date) = '.$month)
+                ->whereRaw('DAY(shipment_date) = '.$day)
                 ->get();
 
             foreach($users as $user){
