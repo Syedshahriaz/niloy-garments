@@ -148,7 +148,7 @@ class UserController extends Controller
 
             $shipment = UserShipment::where('user_id',$user_id)->first();
             if(empty($shipment)){
-                return [ 'status' => 401, 'reason' => 'This user did not select shipping date yet.'];
+                return [ 'status' => 401, 'reason' => 'This user did not select birth date yet.'];
             }
 
             $gender = $user->gender;

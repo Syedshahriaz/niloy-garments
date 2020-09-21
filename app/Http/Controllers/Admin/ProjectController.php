@@ -226,7 +226,7 @@ class ProjectController extends Controller
             $shipment->save();
 
             $user = User::select('users.*','users.id as user_id')->where('id',$request->user_id)->first();
-            $message = "Member ".$user->unique_id.": Shipping date have been unlocked";
+            $message = "Member ".$user->unique_id.": Birth date have been unlocked";
 
             /*
              * Save notification

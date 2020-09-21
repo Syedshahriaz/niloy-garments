@@ -136,7 +136,7 @@
                                             <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
                                             </a>
-                                            <a href="#" title="Unlock Shipping Date" onclick="unlock_shipping_date({{$user->id}})">
+                                            <a href="#" title="Unlock Birth Date" onclick="unlock_shipping_date({{$user->id}})">
                                                 <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
                                             </a>
                                             <a href="#" title="Unlock User Gender" onclick="unlock_user_gender({{$user->id}})">
@@ -371,12 +371,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock Shipping Date</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock Birth Date</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row" style="text-align:center;">
                         <input type="hidden" name="user_id" id="unlock_user_id" value="">
-                        <h4>Are you sure you want to unlock this user's shipping date update?</h4>
+                        <h4>Are you sure you want to unlock this user's birth date update?</h4>
                     </div>
                 </div>
                 <div class="modal-footer">
