@@ -40,7 +40,38 @@ class CronController extends Controller
 
     public function sendSubscriptionRenewWarningEmail(Request $request){
         try{
-            $result = Common::sendTaskWarningEmail();
+            $month = date("m", strtotime("+ 7 day")); // getting tomorrow month
+            $day = date("d", strtotime("+ 7 day")); // getting tomorrow day
+
+            $users = User::select('users.id','users.unique_id','users.username','users.phone','users.email','user_payments.payment_date')
+                ->join('user_payments','user_payments.user_id','=','users.id')
+                ->whereRaw('MONTH(payment_date) = '.$month)
+                ->whereRaw('DAY(payment_date) = '.$day)
+                ->get();
+
+            foreach($users as $user){
+                $email = [$user->email];
+
+                $email_to = $email;
+                $email_cc = [];
+                $email_bcc = [];
+
+                $emailData['from_email'] = Common::FROM_EMAIL;
+                $emailData['from_name'] = Common::FROM_NAME;
+                $emailData['email'] = $email_to;
+                $emailData['email_cc'] = $email_cc;
+                $emailData['email_bcc'] = $email_bcc;
+                $emailData['user'] = $user;
+                $emailData['subject'] = Common::SITE_TITLE.'- Subscription renew warning';
+
+                $emailData['bodyMessage'] = '';
+
+                $view = 'emails.subscription_renew_warning_email';
+
+                $response = SendMails::sendMail($emailData, $view);
+            }
+
+            return $response;
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'CronController', 'sendSubscriptionRenewWarningEmail', $e->getLine(),
