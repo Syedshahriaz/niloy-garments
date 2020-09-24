@@ -183,7 +183,7 @@ class UserController extends Controller
     }
 
     public function userUpdate(Request $request){
-        //try {
+        try {
             DB::beginTransaction();
 
             $user_id = $request->user_id;
@@ -235,14 +235,14 @@ class UserController extends Controller
             DB::commit();
 
             return ['status' => 200, 'reason' => 'User successfully updated','photo_path'=>$photo_path];
-        /*}
+        }
         catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'updateUser', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     private function updateShipingDate($request,$user_id){

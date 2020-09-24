@@ -352,7 +352,7 @@ class Common
 
                 $years_diff = (time()-strtotime($shipment->shipment_date))/(3600*24*365.25);
 
-                if($task->project_id==34 && $years_diff<15){ // If project id=34 and age is less than 15 years
+                if($task->under_age_rule !='' && $years_diff<$task->under_age_rule){ // If task has under_age_rule and age is less than under_age_rule years
                     $projectTask->due_date = date('Y-m-d',
                         strtotime($shipment->shipment_date . ' + ' . $days_to_add. ' days'));
                     $projectTask->original_delivery_date = date('Y-m-d',
@@ -451,7 +451,7 @@ class Common
                     $years_diff = (time()-strtotime($shipment_date))/(3600*24*365.25);
                     $days_to_add = self::calculateDaysToAdd($task,$shipment_date);
 
-                    if($years_diff<15){
+                    if($task->under_age_rule !='' && $years_diff<$task->under_age_rule){ // If task has under_age_rule and age is less than under_age_rule years
                         $parent_date = $shipment_date;
                     }
                     else{
@@ -503,7 +503,7 @@ class Common
     public static function calculateDaysToAdd($task,$shipment_date){
         $years_diff = (time()-strtotime($shipment_date))/(3600*24*365.25);
 
-        if($task->project_id==34 && $years_diff<15){ // If project id=34 and age is less than 15 years
+        if($task->under_age_rule !='' && $years_diff<$task->under_age_rule){ // If task has under_age_rule and age is less than under_age_rule years
             $days_to_add = $task->under_age_days_to_add;
         }
         else if($task->project_id==34 && $years_diff>=15){ // If project id=34 and age is greater than 15 years
