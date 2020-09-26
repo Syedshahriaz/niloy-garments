@@ -101,3 +101,9 @@ b, optgroup, strong {
     border-radius: 0;
     padding: 4px 12px !important;
 }
+
+.promotion-address-field{
+    padding: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+}

@@ -54,41 +54,52 @@
                         <p>So, please register to know more about vaccines of all ages &amp; buy vaccine-care tracker only ৳0 for Bangladesh &amp; $0 for other countries per person for the next 2 years. You can extend it up to a whole lifetime if you are happy with our service.</p>
                     </div>
 
-                    <h2 class="text-center mt-5">Choose your offer - We kept price 11 BDT for testing purpose</h2>
-
                     <div class="offer-option mb-5 animate__animated animate__fadeInUp">
                         <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
-                            <div class="">
-                                <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">Address</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Address*" name="address" id="address" />
-                                </div>
+                            <div class="promotion-address-field">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">Your Address</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="Address*" name="address" id="address" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">City</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="City*" name="city" id="city" />
+                                        </div>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">City</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="City*" name="city" id="city" />
-                                </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">State</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="State*" name="state" id="state" />
+                                        </div>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">State</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="State*" name="state" id="state" />
-                                </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">Postcode</label>
+                                            <input class="form-control placeholder-no-fix" type="text" placeholder="Poscode*" name="postcode" id="postcode" />
+                                        </div>
+                                    </div>
 
-                                <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">Postcode</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Poscode*" name="postcode" id="postcode" />
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label visible-ie8 visible-ie9">Country</label>
-                                    <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="country" value=""  autocomplete="off">
-                                        <option value="">Select</option>
-                                        @foreach($countries as $country)
-                                            <option value="{{$country->name}}">{{$country->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="control-label visible-ie8 visible-ie9">Country</label>
+                                            <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="country" value=""  autocomplete="off">
+                                                <option value="">Select</option>
+                                                @foreach($countries as $country)
+                                                    <option value="{{$country->name}}">{{$country->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <h2 class="text-center mt-3 mb-4">Choose your offer - We kept price 11 BDT for testing purpose</h2>
 
                             <div class="form-group">
                                 <div class="offer-itemlist">
