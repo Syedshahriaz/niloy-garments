@@ -32,6 +32,13 @@ class PaymentController extends Controller
         $tran_id = "TXN_".uniqid();
 
         $user = User::where('id',$user_id)->first();
+        $user->address = $request->address;
+        $user->city = $request->city;
+        $user->state = $request->state;
+        $user->postcode = $request->postcode;
+        $user->country = $request->country;
+        $user->save();
+
         $offer_price = OfferPrices::where('country_code',$user->country_code)->first();
         if(!empty($offer_price)){
             $currency = $offer_price->currency;
@@ -72,21 +79,21 @@ class PaymentController extends Controller
             'tran_id' => $tran_id,
             'cus_name' => $user->username,
             'cus_email' => $user->email,
-            'cus_add1' => '',
+            'cus_add1' => $user->address,
             'cus_add2' => '',
-            'cus_city' => '',
-            'cus_state' => '',
-            'cus_postcode' => '',
-            'cus_country' => '',
+            'cus_city' => $user->city,
+            'cus_state' => $user->state,
+            'cus_postcode' => $user->postcode,
+            'cus_country' => $user->country,
             'cus_phone' => $user->phone,
             'cus_fax' => 'N/A',
-            'ship_name' => '',
-            'ship_add1' => '',
+            'ship_name' => $user->username,
+            'ship_add1' => $user->address,
             'ship_add2' => '',
-            'ship_city' => '',
-            'ship_state' => '',
-            'ship_postcode' => '',
-            'ship_country' => '',
+            'ship_city' => $user->city,
+            'ship_state' => $user->state,
+            'ship_postcode' => $user->postcode,
+            'ship_country' => $user->country,
             'desc' => 'Offer Payment',
             'success_url' => $success_url,
             'fail_url' => $fail_url,

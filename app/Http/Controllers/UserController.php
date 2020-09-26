@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\Offer;
 use App\Models\Task;
 use App\Models\UserProjectTask;
@@ -57,6 +58,7 @@ class UserController extends Controller
                 if(!Common::is_user_login()){
                     return redirect('error_404');
                 }
+                $countries = Country::where('status','active')->get();
 
                 $user = user::where('id', $request->id)->first();
                 $offer = Offer::first();
@@ -71,10 +73,10 @@ class UserController extends Controller
                     return redirect('all_project');
                 }
                 if ($request->ajax()) {
-                    $returnHTML = View::make('promotion', compact('user','offer'))->renderSections()['content'];
+                    $returnHTML = View::make('promotion', compact('user','offer','countries'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('promotion', compact('user','offer'));
+                return view('promotion', compact('user','offer','countries'));
             }
             else{
                 return redirect('login');

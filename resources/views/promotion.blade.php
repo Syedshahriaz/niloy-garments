@@ -18,7 +18,7 @@
 <body>
     <div class="prmotion-header">
         <a href="https://vujadetec.com/" target="_blank" data-name="dashboard" data-item="1">
-            <img src="https://vujadetec.net/assets/layouts/layout/img/logoVujade.jpg" alt="Vujadetec logo" class="logo-default"> 
+            <img src="https://vujadetec.net/assets/layouts/layout/img/logoVujade.jpg" alt="Vujadetec logo" class="logo-default">
         </a>
         <a href="{{ route('logout') }}"  class="logout btn btn-danger" >Logout</a>
     </div>
@@ -28,7 +28,7 @@
             <div class="col" style="margin-top:25px;">
                 <span style="font-weight: bold;background-color:black; color:white;">&nbsp;Vujade<span style="font-weight: bold;color:#bf945b;">tec&nbsp;</span></span> has 3 offers <span style="font-weight: bold;color:#599a13;">&nbsp;Green&nbsp;</span>-<span style="font-weight: bold;color:#d61919;">&nbsp;<b>Red&nbsp;</b></span>-<span style="font-weight: bold;color:#fc0aa6;">&nbsp;Pink&nbsp;</span> which cover all ages, all gender including pregnant women. Pink offer are related to females and completely FREE if you buy Green or Red.
                 <br><br>
-                It is for those: 
+                It is for those:
                 <ul>
                     <li>Who are taking regular vaccines. </li>
                     <li>Who missed the vaccine.</li>
@@ -58,6 +58,38 @@
 
                     <div class="offer-option mb-5 animate__animated animate__fadeInUp">
                         <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
+                            <div class="">
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Address</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Address*" name="address" id="address" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">City</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="City*" name="city" id="city" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">State</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="State*" name="state" id="state" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Postcode</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Poscode*" name="postcode" id="postcode" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Country</label>
+                                    <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="country" value=""  autocomplete="off">
+                                        <option value="">Select</option>
+                                        @foreach($countries as $country)
+                                            <option value="{{$country->name}}">{{$country->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="offer-itemlist">
                                     <div class="offer-option-item green-offer-option active_offer_option">
@@ -83,6 +115,34 @@
         </div>
     </div>
 
+    <!-- alert message START -->
+    <div class="modal fade alert global-warning" role="dialog" id="alert-modal" style="z-index: 99999">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div id="alert-error-msg">
+                        <i class="fa fa-exclamation-triangle fa-3x text-danger"></i> <br>  <br>
+                        <p class="text-danger"></p>
+                    </div>
+
+                    <div id="alert-success-msg">
+                        <i class="fa fa-check-circle text-success fa-3x"></i>
+                        <p class="text-success"></p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" id="alert-ok">ok</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- alert message End -->
+
+
 
     <div class="page-footer">
         <div class="page-footer-inner text-center w-100"> © All rights reserved to <a target="_blank" href="https://vujadetec.com/"><strong>vujadetec</strong></a></div>
@@ -96,6 +156,19 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <script>
+        function show_success_message($message){
+            $('#alert-modal').modal('show');
+            $('#alert-error-msg').hide();
+            $('#alert-success-msg').show();
+            $('#alert-success-msg p').html($message);
+        }
+        function show_error_message(message){
+            $('#alert-modal').modal('show');
+            $('#alert-error-msg').show();
+            $('#alert-success-msg').hide();
+            $('#alert-error-msg p').html(message);
+        }
+
         $(document).on('click','.offer-option-item',function(){
             $('.offer-option-item').removeClass('selected-offer')
             $(this).addClass('selected-offer');
@@ -103,7 +176,31 @@
         });
 
          $(document).on('click','.active_offer_option', function(){
-             $('#payment_form').submit();
+             var address = $('#address').val();
+             var city = $('#city').val();
+             var state = $('#state').val();
+             var postcode = $('#postcode').val();
+             var validate = '';
+
+             if (address.trim() == "") {
+                 validate = validate + "Address is required</br>";
+             }
+             if (city.trim() == "") {
+                 validate = validate + "City is required</br>";
+             }
+             if (state.trim() == "") {
+                 validate = validate + "State is required</br>";
+             }
+             if (postcode.trim() == "") {
+                 validate = validate + "Post code is required</br>";
+             }
+
+             if (validate == "") {
+                 $('#payment_form').submit();
+             }
+             else{
+                 show_error_message(validate);
+             }
          });
 
         /*
