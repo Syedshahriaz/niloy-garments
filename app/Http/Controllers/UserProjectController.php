@@ -184,10 +184,17 @@ class UserProjectController extends Controller
                     return redirect('select_shipment/'.$user_id);
                 }
 
+                /*
+                 * Removing duplicate user shipment record
+                 * */
+                $result = Common::removeUserDuplicateShippingRecord($user_id);
+
+
                 $child_users = User::where('users.email', Session::get('user_email'))
                     ->select('users.*', 'user_shipments.shipment_date')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                     ->whereIn('users.status',['active','pending'])
+                    ->groupBy('user_shipments.user_id')
                     //->orderBy('parent_id','ASC')
                     ->get();
                 $projects = UserProject::with('running_task','last_task','completed_tasks')

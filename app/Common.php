@@ -692,6 +692,28 @@ class Common
         return $day_left;
     }
 
+    public static function removeUserDuplicateShippingRecord($user_id){
+        $userShipmentId = UserShipment::select('id')
+            ->where('user_id',$user_id)
+            ->get();
+        if(count($userShipmentId)>1){
+            UserShipment::where('user_id',$user_id)
+                ->whereNull('shipment_date')
+                ->delete();
+        }
+        return 1;
+    }
+
+    public static function removeAllDuplicateShippingRecord(){
+        $userShipmentId = UserShipment::select('id')
+            ->groupBy('user_id')
+            ->pluck('id')
+            ->toArray();
+        UserShipment::whereNotIn('id', $userShipmentId )->delete();
+
+        return 1;
+    }
+
     /*
      * SMS sending methods
      * */

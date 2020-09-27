@@ -378,6 +378,11 @@ class UserController extends Controller
                     return redirect('error_404');
                 }
 
+                /*
+                 * Removing all duplicate user shipment record
+                 * */
+                //$result = Common::removeAllDuplicateShippingRecord();
+
                 $users = User::where('users.email', Session::get('user_email'))
                     ->select('users.*', 'user_shipments.shipment_date','separate_user_logs.otp','separate_user_logs.created_at as otp_sent_at')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
