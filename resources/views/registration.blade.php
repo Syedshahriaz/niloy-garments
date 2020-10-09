@@ -217,11 +217,11 @@
         if (email.trim() == "") {
             validate = validate + "Email is required</br>";
         }
-        if(email.trim()!=''){
+        /*if(email.trim()!=''){
             if(!re.test(email)){
                 validate = validate+'Email is invalid<br>';
             }
-        }
+        }*/
         if (agreement == false) {
             validate = validate + "Agree with terms & conditions and privacy policy</br>";
         }
