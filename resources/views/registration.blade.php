@@ -79,26 +79,30 @@
 
         <p class="hint"> Enter your personal details below: </p>
         <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">User Name*</label>
-            <input class="form-control placeholder-no-fix" type="text" placeholder="User Name*" name="username" id="username" />
+            <label class="control-label">Your Name*</label>
+            <input class="form-control placeholder-no-fix" type="text" placeholder="Your Name" name="name" id="name" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Vaccine User Name*</label>
+            <input class="form-control placeholder-no-fix" type="text" placeholder="Vaccine User Name*" name="username" id="username" />
         </div>
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-            <label class="control-label visible-ie8 visible-ie9">Email</label>
+            <label class="control-label ">Email you want to get reminder*</label>
             <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="email" value="{{$email}}" />
         </div>
         <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Phone*</label>
+            <label class="control-label">Phone  you want to get reminder*</label>
             <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$phone}}" />
             <span id="valid-msg" class="hide">✓ Valid</span>
             <span id="error-msg" class="hide">Invalid</span>
         </div>
         <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Password</label>
+            <label class="control-label">Password</label>
             <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="password" placeholder="Password* (At least 5 characters)" name="password" />
         </div>
         <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Re-type Your Password</label>
+            <label class="control-label">Re-type Your Password</label>
             <input class="form-control placeholder-no-fix password-field" type="password" autocomplete="off" id="repassword" placeholder="Re-type Your Password*" name="repassword" />
         </div>
         <div class="form-group margin-top-20">

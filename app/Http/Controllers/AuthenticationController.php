@@ -66,6 +66,7 @@ class AuthenticationController extends Controller
             if(!empty($parentUser)){
                 $user->parent_id = $parentUser->id;
             }
+            $user->first_name = $request->name;
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $phone_number;
@@ -84,7 +85,28 @@ class AuthenticationController extends Controller
             $verification_link = url('verify_email').'?token='.$token;
 
             /*
-             * Send confirmation email
+             * Send confirmation email to admin
+             */
+            $email_to = [Common::ADMIN_EMAIL];
+            $email_cc = [];
+            $email_bcc = [];
+
+            $emailData['from_email'] = Common::FROM_EMAIL;
+            $emailData['from_name'] = Common::FROM_NAME;
+            $emailData['email'] = $email_to;
+            $emailData['email_cc'] = $email_cc;
+            $emailData['email_bcc'] = $email_bcc;
+            $emailData['user'] = $user;
+            $emailData['subject'] = Common::SITE_TITLE.'- New user registration';
+
+            $emailData['bodyMessage'] = '';
+
+            $view = 'emails.admin_new_user_registration_email';
+
+            $result = SendMails::sendMail($emailData, $view);
+
+            /*
+             * Send confirmation email to user
              */
             $email_to = [$request->email];
             $email_cc = [];
