@@ -41,7 +41,8 @@
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions" id="action_buttons">
-                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Add New Country" id="add_new_country">Add New Country</button>
+                                {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Add New Country" id="add_new_country">Add New Country</button>--}}
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Set All Country Price" id="all_country_price">Set All Country Price</button>
                             </div>
                         </div>
                         <div class="portlet-body p-relative">
@@ -63,16 +64,16 @@
                                 <tr id="country_offer_{{$offer_price->id}}">
                                     <td style="width: 50px;">{{$key+1}}</td>
                                     <td>{{$offer_price->country_name}}</td>
-                                    <td>{{$offer_price->country_code}}</td>
+                                    <td>{{$offer_price->dial_code}}</td>
                                     <td>{{$offer_price->currency}}</td>
                                     <td>{{$offer_price->offer_price}}</td>
                                     <td class="text-center">
                                         <a href="#" title="Edit Offer" onclick="edit_offer({{$offer_price->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Edit Offer">
                                         </a>
-                                        <a href="#" title="Delete Offer" onclick="delete_offer({{$offer_price->id}})">
+                                        {{--<a href="#" title="Delete Offer" onclick="delete_offer({{$offer_price->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Delete Offer">
-                                        </a>
+                                        </a>--}}
                                     </td>
                                 </tr>
                                 <?php } ?>
@@ -111,7 +112,7 @@
                                     <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="country" value=""  autocomplete="off">
                                         <option value="">Select</option>
                                         @foreach($countries as $country)
-                                            <option value="{{$country->name."#".$country->dial_code}}">{{$country->name."(".$country->dial_code.")"}}</option>
+                                            <option value="{{$country->id}}">{{$country->name."(".$country->dial_code.")"}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -201,13 +202,60 @@
 
     <!-- Modal -->
 
+    <!-- Modal -->
+    <div class="modal fade" id="all_country_price_modal" tabindex="-1" role="all_country_price_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="all_country_price_modalLabel">Set All Country Price</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="all_country_price_form" method="post" action="">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="all_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="all_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Currency</label>
+                                    <select class="form-control placeholder-no-fix" placeholder="Select currency*" name="currency" id="all_currency" value=""  autocomplete="off">
+                                        <option value="">Select</option>
+                                        <option value="BDT">BDT</option>
+                                        <option value="USD">USD</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Offer Price</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price" id="all_offer_price" value=""  autocomplete="off"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn pull-right" id="update_all_country">Save</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+
 @endsection
 
 @section('js')
     <script>
         $(document).ready(function() {
             $('#user_list_table').DataTable({
-            //     //"paging":   true,
+                 "paging":   false,
             //     //"ordering": true,
             //     //"info":     true,
             //     //"searching": true
@@ -223,7 +271,7 @@
 
             var options = {
                 theme: "sk-cube-grid",
-                message: 'Please wait while sending email.....',
+                message: 'Please wait while saving datal.....',
                 backgroundColor: "#1847B1",
                 textColor: "white"
             };
@@ -320,7 +368,7 @@
 
             var options = {
                 theme: "sk-cube-grid",
-                message: 'Please wait while sending email.....',
+                message: 'Please wait while saving datal.....',
                 backgroundColor: "#1847B1",
                 textColor: "white"
             };
@@ -382,6 +430,76 @@
                 $("#edit_success_message").hide();
                 $("#edit_error_message").show();
                 $("#edit_error_message").html(validate);
+            }
+        });
+
+        $(document).on('click','#all_country_price',function(){
+            $("#all_country_price_modal").modal('show');
+        });
+
+        $(document).on("click", "#update_all_country", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while saving datal.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var currency = $("#all_currency").val();
+            var offer_price = $("#all_offer_price").val();
+
+            var validate = "";
+
+            if (currency.trim() == "") {
+                validate = validate + "Currency is required</br>";
+            }
+            if (offer_price.trim() == "") {
+                validate = validate + "Offer price is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#all_country_price_form")[0]);
+                var url = "{{ url('admin/update_all_country_offer') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#all_success_message").show();
+                            $("#all_error_message").hide();
+                            $("#all_success_message").html(data.reason);
+                            setTimeout(function(){
+                                $("#all_country_price_modal").modal('hide');
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#all_success_message").hide();
+                            $("#all_error_message").show();
+                            $("#all_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#all_success_message").hide();
+                        $("#all_error_message").show();
+                        $("#all_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#all_success_message").hide();
+                $("#all_error_message").show();
+                $("#all_error_message").html(validate);
             }
         });
 

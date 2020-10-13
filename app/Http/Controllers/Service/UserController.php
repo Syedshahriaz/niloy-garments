@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Service;
 
 use App\Models\Country;
 use App\Models\Offer;
@@ -508,28 +508,7 @@ class UserController extends Controller
             $user->save();
 
             /*
-             * Send confirmation email to admin
-             */
-            $email_to = [Common::ADMIN_EMAIL];
-            $email_cc = [];
-            $email_bcc = [];
-
-            $emailData['from_email'] = Common::FROM_EMAIL;
-            $emailData['from_name'] = Common::FROM_NAME;
-            $emailData['email'] = $email_to;
-            $emailData['email_cc'] = $email_cc;
-            $emailData['email_bcc'] = $email_bcc;
-            $emailData['user'] = $user;
-            $emailData['subject'] = Common::SITE_TITLE.'- New user creation';
-
-            $emailData['bodyMessage'] = '';
-
-            $view = 'emails.admin_new_user_registration_email';
-
-            $result = SendMails::sendMail($emailData, $view);
-
-            /*
-             * Send confirmation email to user
+             * Send confirmation email
              */
             $email_to = [Session::get('user_email')];
             $email_cc = [];
@@ -637,7 +616,7 @@ class UserController extends Controller
              * Send OTP confirmation message
              * */
             $message_body = 'Your One Time Password (OTP) to transfer the info is '.$otp.'. Validity for OTP is 24 hours. Please contact info@vujadetec.com if you need further assistance.';
-            $response = SMS::sendOtpSms($thisUser->phone,$message_body);
+            //$response = SMS::sendOtpSms($thisUser->phone,$message_body);
 
             return ['status' => 200, 'reason' => 'An email with OTP have been sent to '.$request->email];
         } catch (\Exception $e) {

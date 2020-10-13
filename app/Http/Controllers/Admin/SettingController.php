@@ -8,9 +8,11 @@ use App\Models\Setting;
 use App\Models\Offer;
 use App\Models\OfferPrices;
 use App\Models\Country;
+use App\Models\Profession;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class SettingController extends Controller
 {
@@ -109,7 +111,9 @@ class SettingController extends Controller
                 return redirect('admin/login');
             }
             $countries = Country::where('status','active')->get();
-            $offer_prices = OfferPrices::orderBy('country_name','ASC')
+            $offer_prices = OfferPrices::select('offer_prices.*','countries.name as country_name','countries.dial_code')
+                ->join('countries','countries.id','=','offer_prices.country_id')
+                ->orderBy('country_name','ASC')
                 ->get();
             if($request->ajax()) {
                 $returnHTML = View::make('admin.settings.offer_prices',compact('countries','offer_prices'))->renderSections()['content'];
@@ -121,21 +125,19 @@ class SettingController extends Controller
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'offerPriceSetting', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+            return back();
         }
     }
 
     public function storeCountryOffer(Request $request){
         try{
-            $countryData = explode('#',$request->country);
-            $oldCountry = OfferPrices::where('country_code',$countryData[1])->first();
+            $oldCountry = OfferPrices::where('country_id',$request->country_id)->first();
             if(!empty($oldCountry)){
                 return ['status'=>401, 'reason'=>'This country already added'];
             }
 
             $offer_prices = NEW OfferPrices();
-            $offer_prices->country_name = $countryData[0];
-            $offer_prices->country_code = $countryData[1];
+            $offer_prices->country_id = $request->country;
             $offer_prices->currency = $request->currency;
             $offer_prices->offer_price = $request->offer_price;
             $offer_prices->save();
@@ -181,6 +183,25 @@ class SettingController extends Controller
         }
     }
 
+    public function updateAllCountryOffer(Request $request){
+        try{
+            DB::table('offer_prices')
+                ->update(array(
+                    'currency' => $request->currency,
+                    'offer_price' => $request->offer_price
+                    )
+                );
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateAllCountryOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
     public function deleteCountryOffer(Request $request){
         try{
             OfferPrices::where('id',$request->country_id)->delete();
@@ -188,6 +209,178 @@ class SettingController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deleteCountryOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function countryList(Request $request){
+        try{
+            $countries = Country::orderBy('name','ASC')->get();
+
+            if($request->ajax()) {
+                $returnHTML = View::make('admin.settings.country',compact('countries'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('admin.settings.country',compact('countries'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'storeCountry', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function storeCountry(Request $request){
+        try{
+            $country = NEW Country();
+            $country->name = $request->name;
+            $country->country_code = $request->country_code;
+            $country->dial_code = $request->dial_code;
+            $country->save();
+
+            /*
+             * Save country offer price
+             * */
+            $offer_prices = NEW OfferPrices();
+            $offer_prices->country_id = $country->id;
+            $offer_prices->save();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'storeCountry', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getCountryDetails(Request $request){
+        try{
+            $country = Country::where('id',$request->id)->first();
+
+            return ['status'=>200, 'reason'=>'', 'country'=>$country];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getCountryDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateCountry(Request $request){
+        try{
+            $country = Country::where('id',$request->country_id)->first();
+            $country->name = $request->name;
+            $country->country_code = $request->country_code;
+            $country->dial_code = $request->dial_code;
+            $country->save();
+
+            return ['status'=>200, 'reason'=>'Successfully updated'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateCountry', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function deleteCountry(Request $request){
+        try{
+            Country::where('id',$request->id)->delete();
+
+            // Deleting country offer
+            OfferPrices::where('country_id',$request->id)->delete();
+
+            return ['status'=>200, 'reason'=>'Successfully deleted'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deleteCountry', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function professionList(Request $request){
+        try{
+            $professions = Profession::get();
+
+            if($request->ajax()) {
+                $returnHTML = View::make('admin.settings.profession',compact('professions'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('admin.settings.profession',compact('professions'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'professionList', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function storeProfession(Request $request){
+        try{
+            $profession = NEW Profession();
+            $profession->title = $request->title;
+            $profession->description = $request->description;
+            $profession->save();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'storeProfession', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getProfessionDetails(Request $request){
+        try{
+            $profession = Profession::where('id',$request->id)->first();
+
+            return ['status'=>200, 'reason'=>'', 'profession'=>$profession];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getProfessionDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateProfession(Request $request){
+        try{
+            $profession = Profession::where('id',$request->profession_id)->first();
+            $profession->title = $request->title;
+            $profession->description = $request->description;
+            $profession->save();
+
+            return ['status'=>200, 'reason'=>'Successfully updated'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateProfession', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function deleteProfession(Request $request){
+        try{
+            Profession::where('id',$request->id)->delete();
+
+            return ['status'=>200, 'reason'=>'Successfully deleted'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deleteProfession', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

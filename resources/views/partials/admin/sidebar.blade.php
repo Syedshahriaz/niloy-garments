@@ -105,7 +105,7 @@
                     <span class="title">Settings</span>
                     <span class="arrow"></span>
                 </a>
-                <ul class="sub-menu" @if($page=='promotion_settings' || $page=='project_settings' || $page=='common_settings' || $page=='offer_price_setting') style="display: block;" @endif>
+                <ul class="sub-menu" @if($page=='promotion_settings' || $page=='project_settings' || $page=='common_settings' || $page=='offer_price_setting' || $page=='country_setting' || $page=='profession_setting') style="display: block;" @endif>
                     <li class="nav-item start @if($page=='promotion_settings') active @endif">
                         <a href="{{url('admin/promotion_settings')}}" class="nav-link">
                             <span class="title">Promotion Page</span>
@@ -124,6 +124,16 @@
                     <li class="nav-item start @if($page=='offer_price_setting') active @endif">
                         <a href="{{url('admin/offer_price_setting')}}" class="nav-link">
                             <span class="title">Offer Price</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start @if($page=='country_setting') active @endif">
+                        <a href="{{url('admin/country_setting')}}" class="nav-link">
+                            <span class="title">Country</span>
+                        </a>
+                    </li>
+                    <li class="nav-item start @if($page=='profession_setting') active @endif">
+                        <a href="{{url('admin/profession_setting')}}" class="nav-link">
+                            <span class="title">Profession</span>
                         </a>
                     </li>
                 </ul>

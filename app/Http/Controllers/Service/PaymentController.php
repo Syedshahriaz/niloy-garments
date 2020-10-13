@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Service;
 
 use App\Models\OfferPrices;
 use App\Models\UserShipment;
@@ -39,9 +39,7 @@ class PaymentController extends Controller
         $user->country = $request->country;
         $user->save();
 
-        $offer_price = OfferPrices::where('countries.dial_code',$user->country_code)
-            ->join('countries','countries.id','=','offer_prices.country_id')
-            ->first();
+        $offer_price = OfferPrices::where('country_code',$user->country_code)->first();
         if(!empty($offer_price)){
             $currency = $offer_price->currency;
             $offer_amount = $offer_price->offer_price;
@@ -248,29 +246,6 @@ class PaymentController extends Controller
         }
 
         $shipment->save();
-
-
-        /*
-         * Send payment confirmation email to admin
-         */
-        $email_to = [Common::ADMIN_EMAIL];
-        $email_cc = [];
-        $email_bcc = [];
-
-        $emailData['from_email'] = Common::FROM_EMAIL;
-        $emailData['from_name'] = Common::FROM_NAME;
-        $emailData['email'] = $email_to;
-        $emailData['email_cc'] = $email_cc;
-        $emailData['email_bcc'] = $email_bcc;
-        $emailData['user'] = $user;
-        $emailData['payment'] = $payment;
-        $emailData['subject'] = Common::SITE_TITLE.'- Member payment completed';
-
-        $emailData['bodyMessage'] = '';
-
-        $view = 'emails.admin_member_payment_confirmation_email';
-
-        $result = SendMails::sendMail($emailData, $view);
 
         /*
          * Send registration confirmation message

@@ -114,12 +114,24 @@ Route::get('admin/offer_price_setting', 'Admin\SettingController@offerPriceSetti
 Route::post('admin/save_country_offer', 'Admin\SettingController@storeCountryOffer');
 Route::post('admin/get_country_offer', 'Admin\SettingController@getCountryOffer');
 Route::post('admin/update_country_offer', 'Admin\SettingController@updateCountryOffer');
+Route::post('admin/update_all_country_offer', 'Admin\SettingController@updateAllCountryOffer');
 Route::post('admin/delete_country_offer', 'Admin\SettingController@deleteCountryOffer');
 Route::get('admin/project_settings', 'Admin\ProjectController@index');
 Route::post('admin/get_project_ajax', 'Admin\ProjectController@getProjectAjax');
 Route::post('admin/update_project', 'Admin\ProjectController@updateProject');
 Route::post('admin/update_task_rule', 'Admin\ProjectController@updateTaskRule');
 Route::post('admin/update_task_title', 'Admin\ProjectController@updateTaskTitle');
+
+Route::get('admin/country_setting', 'Admin\SettingController@countryList');
+Route::post('admin/save_country', 'Admin\SettingController@storeCountry');
+Route::post('admin/get_country', 'Admin\SettingController@getCountryDetails');
+Route::post('admin/update_country', 'Admin\SettingController@updateCountry');
+Route::post('admin/delete_country', 'Admin\SettingController@deleteCountry');
+Route::get('admin/profession_setting', 'Admin\SettingController@professionList');
+Route::post('admin/save_profession', 'Admin\SettingController@storeProfession');
+Route::post('admin/get_profession', 'Admin\SettingController@getProfessionDetails');
+Route::post('admin/update_profession', 'Admin\SettingController@updateProfession');
+Route::post('admin/delete_profession', 'Admin\SettingController@deleteProfession');
 
 Route::get('admin/message', 'Admin\MessageController@message');
 Route::post('admin/store_message', 'Admin\MessageController@store');
