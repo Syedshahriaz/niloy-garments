@@ -80,7 +80,7 @@
         <p class="hint"> Enter your personal details below: </p>
         <div class="form-group">
             <label class="control-label">Your Name*</label>
-            <input class="form-control placeholder-no-fix" type="text" placeholder="Your Name" name="name" id="name" />
+            <input class="form-control placeholder-no-fix" type="text" placeholder="Your Name" name="parent_name" id="parent_name" />
         </div>
         <div class="form-group">
             <label class="control-label">Vaccine User Name*</label>

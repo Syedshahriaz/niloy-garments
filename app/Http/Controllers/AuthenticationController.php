@@ -66,7 +66,7 @@ class AuthenticationController extends Controller
             if(!empty($parentUser)){
                 $user->parent_id = $parentUser->id;
             }
-            $user->first_name = $request->name;
+            $user->parent_name = $request->parent_name;
             $user->username = $request->username;
             $user->email = $request->email;
             $user->phone = $phone_number;
