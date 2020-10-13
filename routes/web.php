@@ -127,11 +127,18 @@ Route::post('admin/save_country', 'Admin\SettingController@storeCountry');
 Route::post('admin/get_country', 'Admin\SettingController@getCountryDetails');
 Route::post('admin/update_country', 'Admin\SettingController@updateCountry');
 Route::post('admin/delete_country', 'Admin\SettingController@deleteCountry');
+
 Route::get('admin/profession_setting', 'Admin\SettingController@professionList');
 Route::post('admin/save_profession', 'Admin\SettingController@storeProfession');
 Route::post('admin/get_profession', 'Admin\SettingController@getProfessionDetails');
 Route::post('admin/update_profession', 'Admin\SettingController@updateProfession');
 Route::post('admin/delete_profession', 'Admin\SettingController@deleteProfession');
+
+Route::get('admin/coupon_setting', 'Admin\SettingController@couponList');
+Route::post('admin/save_coupon', 'Admin\SettingController@storeCoupon');
+Route::post('admin/get_coupon', 'Admin\SettingController@getCouponDetails');
+Route::post('admin/update_coupon', 'Admin\SettingController@updateCoupon');
+Route::post('admin/delete_coupon', 'Admin\SettingController@deleteCoupon');
 
 Route::get('admin/message', 'Admin\MessageController@message');
 Route::post('admin/store_message', 'Admin\MessageController@store');

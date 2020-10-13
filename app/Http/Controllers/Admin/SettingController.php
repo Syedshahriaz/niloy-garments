@@ -9,6 +9,7 @@ use App\Models\Offer;
 use App\Models\OfferPrices;
 use App\Models\Country;
 use App\Models\Profession;
+use App\Models\Coupon;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -381,6 +382,88 @@ class SettingController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deleteProfession', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function couponList(Request $request){
+        try{
+            $coupons = Coupon::get();
+
+            if($request->ajax()) {
+                $returnHTML = View::make('admin.settings.coupon',compact('coupons'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('admin.settings.coupon',compact('coupons'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'couponList', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function storeCoupon(Request $request){
+        try{
+            $coupon = NEW Coupon();
+            $coupon->code = $request->code;
+            $coupon->discount = $request->discount;
+            $coupon->availability = $request->availability;
+            $coupon->save();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'storecoupon', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getCouponDetails(Request $request){
+        try{
+            $coupon = Coupon::where('id',$request->id)->first();
+
+            return ['status'=>200, 'reason'=>'', 'coupon'=>$coupon];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getcouponDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateCoupon(Request $request){
+        try{
+            $coupon = Coupon::where('id',$request->coupon_id)->first();
+            $coupon->code = $request->code;
+            $coupon->discount = $request->discount;
+            $coupon->availability = $request->availability;
+            $coupon->save();
+
+            return ['status'=>200, 'reason'=>'Successfully updated'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updatecoupon', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function deleteCoupon(Request $request){
+        try{
+            Coupon::where('id',$request->id)->delete();
+
+            return ['status'=>200, 'reason'=>'Successfully deleted'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deletecoupon', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
