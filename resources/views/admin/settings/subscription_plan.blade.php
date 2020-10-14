@@ -37,11 +37,11 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">Coupons</span>
+                                <span class="caption-subject font-dark bold uppercase">Subscription Plans</span>
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions" id="action_buttons">
-                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Add New coupon" id="add_new_coupon">Add New Coupon</button>
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Add New Subscription Plan" id="add_new_subscription_plan">Add New Subscription Plan</button>
                             </div>
                         </div>
                         <div class="portlet-body p-relative">
@@ -49,26 +49,22 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Coupon Code</th>
-                                    <th>Discount(%)</th>
-                                    <th>Available for</th>
+                                    <th>Name</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
-                                foreach($coupons as $key=>$coupon){
+                                foreach($subscription_plans as $key=>$subscription_plan){
                                 ?>
-                                <tr id="coupon_{{$coupon->id}}">
+                                <tr id="subscription_plan_{{$subscription_plan->id}}">
                                     <td style="width: 50px;">{{$key+1}}</td>
-                                    <td>{{$coupon->code}}</td>
-                                    <td>{{$coupon->discount}}</td>
-                                    <td>{{$coupon->availability}}</td>
+                                    <td>{{$subscription_plan->name}}</td>
                                     <td class="text-center">
-                                        <a href="#" title="Edit Offer" onclick="edit_coupon({{$coupon->id}})">
+                                        <a href="#" title="Edit Offer" onclick="edit_subscription_plan({{$subscription_plan->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Edit Offer">
                                         </a>
-                                        <a href="#" title="Delete Offer" onclick="delete_coupon({{$coupon->id}})">
+                                        <a href="#" title="Delete Offer" onclick="delete_subscription_plan({{$subscription_plan->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Delete Offer">
                                         </a>
                                     </td>
@@ -87,16 +83,16 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="add_coupon_modal" tabindex="-1" role="add_coupon_modal" aria-hidden="true">
+    <div class="modal fade" id="add_subscription_plan_modal" tabindex="-1" role="add_subscription_plan_modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Add New coupon</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Add New Subscription Plan</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form id="coupon_form" method="post" action="">
+                        <form id="subscription_plan_form" method="post" action="">
                             <div class="col-md-12">
                                 <div class="alert alert-success" id="success_message" style="display:none"></div>
                                 <div class="alert alert-danger" id="error_message" style="display: none"></div>
@@ -104,17 +100,13 @@
                             {{csrf_field()}}
 
                             <div class="col-md-12">
+                                <label class="control-label">Subscription Plan</label> <br>
                                 <div class="form-group">
-                                    <label class="control-label">Coupon Code</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter code*" name="code" id="code" value=""  autocomplete="off"/>
+                                    Upto <input class="form-control placeholder-no-fix" type="number" placeholder="Enter year" name="year" id="year" value=""  autocomplete="off"/>
+                                    Years
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Discount</label>
-                                    <input class="form-control placeholder-no-fix" type="number" placeholder="Enter discount" name="discount" id="discount" value=""  autocomplete="off"/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Available for</label>
-                                    <input class="form-control placeholder-no-fix" type="number" placeholder="Enter availability" name="availability" id="availability" value=""  autocomplete="off"/>
+                                    <input class="" type="checkbox" name="is_lifetime" id="is_lifetime" value="1"  autocomplete="off"/> <label for="is_lifetime">Is Lifetime </label>
                                 </div>
                             </div>
                         </form>
@@ -122,7 +114,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center">
-                        <button type="submit" class="btn theme-btn pull-right" id="save_coupon">Save</button>
+                        <button type="submit" class="btn theme-btn pull-right" id="save_subscription_plan">Save</button>
                     </div>
                 </div>
             </div>
@@ -134,35 +126,31 @@
     <!-- Modal -->
 
     <!-- Modal -->
-    <div class="modal fade" id="edit_coupon_modal" tabindex="-1" role="edit_coupon_modal" aria-hidden="true">
+    <div class="modal fade" id="edit_subscription_plan_modal" tabindex="-1" role="edit_subscription_plan_modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Edit coupon</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Edit Subscription Plan</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <form id="edit_coupon_form" method="post" action="">
+                        <form id="edit_subscription_plan_form" method="post" action="">
                             <div class="col-md-12">
                                 <div class="alert alert-success" id="edit_success_message" style="display:none"></div>
                                 <div class="alert alert-danger" id="edit_error_message" style="display: none"></div>
                             </div>
                             {{csrf_field()}}
-                            <input type="hidden" name="coupon_id" id="coupon_id">
+                            <input type="hidden" name="subscription_plan_id" id="subscription_plan_id">
 
                             <div class="col-md-12">
+                                <label class="control-label">Subscription Plan</label> <br>
                                 <div class="form-group">
-                                    <label class="control-label">Coupon Code</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter code*" name="code" id="edit_code" value=""  autocomplete="off"/>
+                                    Upto <input class="form-control placeholder-no-fix" type="number" placeholder="Enter year" name="year" id="edit_year" value=""  autocomplete="off"/>
+                                    Years
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label">Discount</label>
-                                    <input class="form-control placeholder-no-fix" type="number" placeholder="Enter discount" name="discount" id="edit_discount" value=""  autocomplete="off"/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Available for</label>
-                                    <input class="form-control placeholder-no-fix" type="number" placeholder="Enter availability" name="availability" id="edit_availability" value=""  autocomplete="off"/>
+                                    <input class="" type="checkbox" name="is_lifetime" id="edit_is_lifetime" value="1"  autocomplete="off"/> <label for="edit_is_lifetime">Is Lifetime </label>
                                 </div>
                             </div>
                         </form>
@@ -170,7 +158,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center">
-                        <button type="submit" class="btn theme-btn pull-right" id="update_coupon">Save</button>
+                        <button type="submit" class="btn theme-btn pull-right" id="update_subscription_plan">Save</button>
                     </div>
                 </div>
             </div>
@@ -194,12 +182,14 @@
             });
         });
 
-        $(document).on('click','#add_new_coupon',function(){
-            $("#add_coupon_modal").modal('show');
+        $(document).on('click','#add_new_subscription_plan',function(){
+            $("#add_subscription_plan_modal").modal('show');
         });
 
-        $(document).on("click", "#save_coupon", function(event) {
+        $(document).on("click", "#save_subscription_plan", function(event) {
             event.preventDefault();
+
+            $('#save_subscription_plan').prop('disabled',true);
 
             var options = {
                 theme: "sk-cube-grid",
@@ -210,25 +200,19 @@
 
             HoldOn.open(options);
 
-            var code = $("#code").val();
-            var discount = $("#discount").val();
-            var availability = $("#availability").val();
+            var year = $("#year").val();
 
             var validate = "";
 
-            if (code.trim() == "") {
-                validate = validate + "Coupon code is required</br>";
-            }
-            if (discount.trim() == "") {
-                validate = validate + "Discount amount is required</br>";
-            }
-            if (availability.trim() == "") {
-                validate = validate + "Availability is required</br>";
+            if(!$('#edit_is_lifetime').is(":checked")){
+                if (year.trim() == "") {
+                    validate = validate + "Year is required</br>";
+                }
             }
 
             if (validate == "") {
-                var formData = new FormData($("#coupon_form")[0]);
-                var url = "{{ url('admin/save_coupon') }}";
+                var formData = new FormData($("#subscription_plan_form")[0]);
+                var url = "{{ url('admin/save_subscription_plan') }}";
 
                 $.ajax({
                     type: "POST",
@@ -244,12 +228,15 @@
                                 location.reload();
                             },2000)
                         } else {
+                            $('#save_subscription_plan').prop('disabled',false);
+
                             $("#success_message").hide();
                             $("#error_message").show();
                             $("#error_message").html(data.reason);
                         }
                     },
                     error: function(data) {
+                        $('#save_subscription_plan').prop('disabled',false);
                         HoldOn.close();
                         $("#success_message").hide();
                         $("#error_message").show();
@@ -260,6 +247,7 @@
                     processData: false
                 });
             } else {
+                $('#save_subscription_plan').prop('disabled',false);
                 HoldOn.close();
                 $("#success_message").hide();
                 $("#error_message").show();
@@ -267,8 +255,8 @@
             }
         });
 
-        function edit_coupon(id){
-            var url = "{{ url('admin/get_coupon') }}";
+        function edit_subscription_plan(id){
+            var url = "{{ url('admin/get_subscription_plan') }}";
             $.ajax({
                 type: "POST",
                 url: url,
@@ -276,11 +264,12 @@
                 success: function (data) {
 
                     if(data.status == 200){
-                        $('#coupon_id').val(id);
-                        $("#edit_code").val(data.coupon.code);
-                        $("#edit_discount").val(data.coupon.discount);
-                        $("#edit_availability").val(data.coupon.availability);
-                        $("#edit_coupon_modal").modal('show');
+                        $('#subscription_plan_id').val(id);
+                        $("#edit_year").val(data.subscription_plan.year);
+                        if(data.subscription_plan.name=='Lifetime'){
+                            $('#edit_is_lifetime').prop('checked',true);
+                        }
+                        $("#edit_subscription_plan_modal").modal('show');
                     }
                     else{
                         //
@@ -292,7 +281,7 @@
             });
         }
 
-        $(document).on("click", "#update_coupon", function(event) {
+        $(document).on("click", "#update_subscription_plan", function(event) {
             event.preventDefault();
 
             var options = {
@@ -304,25 +293,19 @@
 
             HoldOn.open(options);
 
-            var code = $("#edit_code").val();
-            var discount = $("#edit_discount").val();
-            var availability = $("#edit_availability").val();
+            var year = $("#edit_year").val();
 
             var validate = "";
 
-            if (code.trim() == "") {
-                validate = validate + "Coupon code is required</br>";
-            }
-            if (discount.trim() == "") {
-                validate = validate + "Discount amount is required</br>";
-            }
-            if (availability.trim() == "") {
-                validate = validate + "Availability is required</br>";
+            if(!$('#edit_is_lifetime').is(":checked")){
+                if (year.trim() == "") {
+                    validate = validate + "Year is required</br>";
+                }
             }
 
             if (validate == "") {
-                var formData = new FormData($("#edit_coupon_form")[0]);
-                var url = "{{ url('admin/update_coupon') }}";
+                var formData = new FormData($("#edit_subscription_plan_form")[0]);
+                var url = "{{ url('admin/update_subscription_plan') }}";
 
                 $.ajax({
                     type: "POST",
@@ -361,15 +344,15 @@
             }
         });
 
-        function delete_coupon(id){
-            $(".warning_message").text('Are you sure you delete this coupon? ');
+        function delete_subscription_plan(id){
+            $(".warning_message").text('Are you sure you delete this subscription_plan? ');
             $("#warning_modal").modal('show');
             $( "#warning_ok" ).on('click',function() {
                 event.preventDefault();
 
                 show_loader();
 
-                var url = "{{ url('admin/delete_coupon')}}";
+                var url = "{{ url('admin/delete_subscription_plan')}}";
                 $.ajax({
                     type: "POST",
                     url: url,
@@ -380,7 +363,7 @@
 
                         if(data.status == 200){
                             $('#warning_modal').modal('hide');
-                            $('#coupon_'+id).remove();
+                            $('#subscription_plan_'+id).remove();
                         }
                         else{
                             show_error_message(data);

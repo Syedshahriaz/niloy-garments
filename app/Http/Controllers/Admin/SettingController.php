@@ -10,6 +10,7 @@ use App\Models\OfferPrices;
 use App\Models\Country;
 use App\Models\Profession;
 use App\Models\Coupon;
+use App\Models\SubscriptionPlan;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -464,6 +465,118 @@ class SettingController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deletecoupon', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function subscriptionPlanList(Request $request){
+        try{
+            $subscription_plans = SubscriptionPlan::get();
+
+            if($request->ajax()) {
+                $returnHTML = View::make('admin.settings.subscription_plan',compact('subscription_plans'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('admin.settings.subscription_plan',compact('subscription_plans'));
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'couponList', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function storeSubscriptionPlan(Request $request){
+        try{
+            $subscription_plan = NEW SubscriptionPlan();
+            if($request->is_lifetime == ''){
+                $isDuplicateYear = SubscriptionPlan::where('year',$request->year)->first();
+                if(!empty($isDuplicateYear)){
+                    return [ 'status' => 401, 'reason' => 'This plan already added'];
+                }
+
+                $subscription_plan->name = 'Upto '.$request->year.' years';
+                $subscription_plan->year = $request->year;
+            }
+            else{
+                $isDuplicateYear = SubscriptionPlan::where('name','Lifetime')->first();
+                if(!empty($isDuplicateYear)){
+                    return [ 'status' => 401, 'reason' => 'This plan already added'];
+                }
+
+                $subscription_plan->name = 'Lifetime';
+                $subscription_plan->year = '';
+            }
+            $subscription_plan->save();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'storesubscription_plan', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getSubscriptionPlanDetails(Request $request){
+        try{
+            $subscription_plan = SubscriptionPlan::where('id',$request->id)->first();
+
+            return ['status'=>200, 'reason'=>'', 'subscription_plan'=>$subscription_plan];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getsubscription_planDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateSubscriptionPlan(Request $request){
+        try{
+            $subscription_plan = SubscriptionPlan::where('id',$request->subscription_plan_id)->first();
+            if($request->is_lifetime == ''){
+                $isDuplicateYear = SubscriptionPlan::where('year',$request->year)->first();
+                if(!empty($isDuplicateYear) && $isDuplicateYear->id != $request->subscription_plan_id){
+                    return [ 'status' => 401, 'reason' => 'This plan already added'];
+                }
+
+                $subscription_plan->name = 'Upto '.$request->year.' years';
+                $subscription_plan->year = $request->year;
+            }
+            else{
+                $isDuplicateYear = SubscriptionPlan::where('name','Lifetime')->first();
+                if(!empty($isDuplicateYear) && $isDuplicateYear->id != $request->subscription_plan_id){
+                    return [ 'status' => 401, 'reason' => 'This plan already added'];
+                }
+
+                $subscription_plan->name = 'Lifetime';
+                $subscription_plan->year = '';
+            }
+            $subscription_plan->save();
+
+            return ['status'=>200, 'reason'=>'Successfully updated'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updatesubscription_plan', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function deleteSubscriptionPlan(Request $request){
+        try{
+            SubscriptionPlan::where('id',$request->id)->delete();
+
+            return ['status'=>200, 'reason'=>'Successfully deleted'];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'deletesubscription_plan', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

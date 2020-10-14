@@ -140,6 +140,12 @@ Route::post('admin/get_coupon', 'Admin\SettingController@getCouponDetails');
 Route::post('admin/update_coupon', 'Admin\SettingController@updateCoupon');
 Route::post('admin/delete_coupon', 'Admin\SettingController@deleteCoupon');
 
+Route::get('admin/subscription_plan_setting', 'Admin\SettingController@subscriptionPlanList');
+Route::post('admin/save_subscription_plan', 'Admin\SettingController@storeSubscriptionPlan');
+Route::post('admin/get_subscription_plan', 'Admin\SettingController@getSubscriptionPlanDetails');
+Route::post('admin/update_subscription_plan', 'Admin\SettingController@updateSubscriptionPlan');
+Route::post('admin/delete_subscription_plan', 'Admin\SettingController@deleteSubscriptionPlan');
+
 Route::get('admin/message', 'Admin\MessageController@message');
 Route::post('admin/store_message', 'Admin\MessageController@store');
 Route::post('admin/get_unread_message', 'Admin\MessageController@getUnreadMessage');
