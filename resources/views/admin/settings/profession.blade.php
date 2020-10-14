@@ -37,11 +37,11 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">professions</span>
+                                <span class="caption-subject font-dark bold uppercase">Professions</span>
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions" id="action_buttons">
-                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Add New profession" id="add_new_profession">Add New profession</button>
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Add New profession" id="add_new_profession">Add New Profession</button>
                             </div>
                         </div>
                         <div class="portlet-body p-relative">

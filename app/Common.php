@@ -31,6 +31,7 @@ class Common
     //const SITE_URL = 'http://127.0.0.1:8000';
     const FROM_EMAIL = 'vujadetec@gmail.com';
     const FROM_NAME = 'Vujadetec';
+    const ADMIN_EMAIL = 'info@vujadetec.com';
 
     /* You can set EASYPAY_MODE to sandbox or live*/
     const EASYPAY_MODE = 'live';
@@ -47,6 +48,8 @@ class Common
 
     const VALID_IMAGE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG'];
     const VALID_FILE_EXTENSIONS = ['jpg','JPG','jpeg','JPEG','png','PNG','svg','doc','docx','odt','xls','xlsx','ods','pdf'];
+
+    const oAuthToken = 'vuja123detec';
 
     public static function is_admin_login(){
         if (Session::get('user_id') && Session::get('role')==2) {

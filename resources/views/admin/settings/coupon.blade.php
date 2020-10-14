@@ -243,7 +243,6 @@
                             $("#error_message").hide();
                             $("#success_message").html(data.reason);
                             setTimeout(function(){
-                                $("#add_coupon_modal").modal('hide');
                                 location.reload();
                             },2000)
                         } else {
@@ -338,7 +337,6 @@
                             $("#edit_error_message").hide();
                             $("#edit_success_message").html(data.reason);
                             setTimeout(function(){
-                                $("#edit_coupon_modal").modal('hide');
                                 location.reload();
                             },2000)
                         } else {

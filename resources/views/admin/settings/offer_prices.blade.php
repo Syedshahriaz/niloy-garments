@@ -151,7 +151,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Add New Country</h4>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Update Country Offer Price</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -169,7 +169,7 @@
                                     <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="edit_country" value="" disabled autocomplete="off">
                                         <option value="">Select</option>
                                         @foreach($countries as $country)
-                                            <option value="{{$country->name."#".$country->dial_code}}">{{$country->name."(".$country->dial_code.")"}}</option>
+                                            <option value="{{$country->id}}">{{$country->name."(".$country->dial_code.")"}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -348,7 +348,7 @@
 
                     if(data.status == 200){
                         $('#country_id').val(id);
-                        $('#edit_country').val(data.offer_price.country_name+'#'+data.offer_price.country_code);
+                        $('#edit_country').val(data.offer_price.country_id);
                         $('#edit_currency').val(data.offer_price.currency);
                         $('#edit_offer_price').val(data.offer_price.offer_price);
                         $("#edit_country_modal").modal('show');
