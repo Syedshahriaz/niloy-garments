@@ -204,7 +204,7 @@
 
             var validate = "";
 
-            if(!$('#edit_is_lifetime').is(":checked")){
+            if(!$('#is_lifetime').is(":checked")){
                 if (year.trim() == "") {
                     validate = validate + "Year is required</br>";
                 }
@@ -345,7 +345,7 @@
         });
 
         function delete_subscription_plan(id){
-            $(".warning_message").text('Are you sure you delete this subscription_plan? ');
+            $(".warning_message").text('Are you sure you delete this subscription plan? ');
             $("#warning_modal").modal('show');
             $( "#warning_ok" ).on('click',function() {
                 event.preventDefault();
