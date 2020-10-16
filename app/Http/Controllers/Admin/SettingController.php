@@ -113,15 +113,16 @@ class SettingController extends Controller
                 return redirect('admin/login');
             }
             $countries = Country::where('status','active')->get();
+            $subscription_plans = SubscriptionPlan::where('status','active')->get();
             $offer_prices = OfferPrices::select('offer_prices.*','countries.name as country_name','countries.dial_code')
                 ->join('countries','countries.id','=','offer_prices.country_id')
                 ->orderBy('country_name','ASC')
                 ->get();
             if($request->ajax()) {
-                $returnHTML = View::make('admin.settings.offer_prices',compact('countries','offer_prices'))->renderSections()['content'];
+                $returnHTML = View::make('admin.settings.offer_prices',compact('countries','offer_prices','subscription_plans'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.settings.offer_prices',compact('countries','offer_prices'));
+            return view('admin.settings.offer_prices',compact('countries','offer_prices','subscription_plans'));
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'offerPriceSetting', $e->getLine(),

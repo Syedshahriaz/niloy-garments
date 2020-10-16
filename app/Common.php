@@ -721,9 +721,11 @@ class Common
      * SMS sending methods
      * */
 
-    public static function sendRegistrationConfirmationSms($username,$phone){
+    public static function sendRegistrationConfirmationSms($username,$phone,$otp=''){
         $message_body = 'Dear '.$username.', Welcome to VUJADETEC. Your registration has been completed.';
-        //$message_body .='Please pay by clicking the link https://vujadetec to buy & get services.';
+        if($otp !=''){
+            $message_body .='After login use '.$otp.' as OTP to verify your account.';
+        }
         $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
         $response = SMS::sendSingleSms($phone,$message_body);
         return $response;

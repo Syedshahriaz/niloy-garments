@@ -160,6 +160,14 @@ class UserProjectController extends Controller
                     return redirect('error_404');
                 }
 
+                /*
+                 * Check if user already verified account
+                 * */
+                $user = Auth::user();
+                if($user->status=='pending'){
+                    return redirect('verify_account');
+                }
+
                 if ($request->u_id == '') {
                     if(Session::get('selected_user') != ''){
                         $user_id = Session::get('selected_user');

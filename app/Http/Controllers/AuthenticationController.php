@@ -62,6 +62,8 @@ class AuthenticationController extends Controller
 
             $parentUser = User::where('email',$request->email)->where('parent_id',0)->first();
 
+            $otp = Common::generaterandomNumber(4);
+
             $user = new User();
             if(!empty($parentUser)){
                 $user->parent_id = $parentUser->id;
@@ -74,6 +76,8 @@ class AuthenticationController extends Controller
             $user->password = bcrypt($request->password);
             $user->unique_id = $unique_id;
             $user->role = 3;
+            $user->otp = $otp;
+            $user->otp_sent_at = date('Y-m-d h:i:s');
             $user->status = 'pending';
             $user->save();
 
@@ -87,6 +91,7 @@ class AuthenticationController extends Controller
             /*
              * Send confirmation email to admin
              */
+
             $email_to = [Common::ADMIN_EMAIL];
             $email_cc = [];
             $email_bcc = [];
@@ -108,29 +113,12 @@ class AuthenticationController extends Controller
             /*
              * Send confirmation email to user
              */
-            $email_to = [$request->email];
-            $email_cc = [];
-            $email_bcc = [];
-
-            $emailData['from_email'] = Common::FROM_EMAIL;
-            $emailData['from_name'] = Common::FROM_NAME;
-            $emailData['email'] = $email_to;
-            $emailData['email_cc'] = $email_cc;
-            $emailData['email_bcc'] = $email_bcc;
-            $emailData['verification_link'] = $verification_link;
-            $emailData['subject'] = Common::SITE_TITLE.'- Registration confirmation';
-
-            $emailData['bodyMessage'] = '';
-
-            $view = 'emails.registration_confirmation_email';
-
-            $result = SendMails::sendMail($emailData, $view);
+            $result = $this->sendConfirmationEmailToUser($user,$otp);
 
             /*
              * Send registration confirmation message
              * */
-
-            $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number);
+            $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number,$otp);
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
         } catch (\Exception $e) {
@@ -139,6 +127,27 @@ class AuthenticationController extends Controller
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
+    }
+
+    private function sendConfirmationEmailToUser($user,$otp){
+        $email_to = [$user->email];
+        $email_cc = [];
+        $email_bcc = [];
+
+        $emailData['from_email'] = Common::FROM_EMAIL;
+        $emailData['from_name'] = Common::FROM_NAME;
+        $emailData['email'] = $email_to;
+        $emailData['email_cc'] = $email_cc;
+        $emailData['email_bcc'] = $email_bcc;
+        $emailData['otp'] = $otp;
+        $emailData['subject'] = Common::SITE_TITLE.'- Registration confirmation';
+
+        $emailData['bodyMessage'] = '';
+
+        $view = 'emails.registration_confirmation_email';
+
+        $result = SendMails::sendMail($emailData, $view);
+        return $result;
     }
 
     public function verifyEmail(Request $request){
@@ -164,6 +173,76 @@ class AuthenticationController extends Controller
 
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyEmail', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function accountVerificationForm(Request $request){
+        try {
+            $user = Auth::user();
+            if($request->ajax()) {
+                $returnHTML = View::make('user.verify_account', compact('user'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+            return view('user.verify_account', compact('user'));
+
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyAccount', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function verifyAccount(Request $request){
+        try {
+            $user = User::where('id',$request->user_id)->first();
+            if($request->otp != $user->otp){
+                return [ 'status' => 401, 'reason' => 'Invalid OTP given'];
+            }
+
+            $timediff = time() - strtotime($user->otp_sent_at);
+            if($timediff > 86400){ // more than 24 hours
+                return [ 'status' => 401, 'reason' => 'Sorry! The OTP has been expired'];
+            }
+
+            $user->status = 'active';
+            $user->save();
+
+            return [ 'status' => 200, 'reason' => 'Account verified successfully'];
+
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyAccount', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function resendRegistrationOtp(Request $request){
+        try {
+            $otp = Common::generaterandomNumber(4);
+
+            $user = User::where('id',$request->user_id)->first();
+            $user->otp = $otp;
+            $user->otp_sent_at = date('Y-m-d h:i:s');
+            $user->save();
+
+            /*
+             * Send confirmation email to user
+             */
+            $result = $this->sendConfirmationEmailToUser($user,$otp);
+
+            /*
+             * Send registration confirmation message
+             * */
+            $response = Common::sendRegistrationConfirmationSms($user->username,$user->phone,$otp);
+
+            return ['status' => 200, 'reason' => 'OTP resent successfully.'];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'verifyAccount', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
@@ -196,7 +275,7 @@ class AuthenticationController extends Controller
             'password' => $request->password,
             'parent_id' => 0,
             'role' => 3,
-            'status' => 'active',
+            'status' => ['active','pending'],
         ], $request->has('remember'));
 
         if ($result) {

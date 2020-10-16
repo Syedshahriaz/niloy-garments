@@ -112,32 +112,37 @@ class SMS
      * you can use this API.
      * */
     public static function sendSingleSms($mobile_no,$message_body){
-        $postdata = array(
-            'api_key' => env('SMS_API_KEY'),
-            'api_secret' => env('SMS_API_SECRET'),
-            'request_type' => 'SINGLE_SMS',
-            'message_type' => 'TEXT',
-            'mobile' => $mobile_no,
-            'message_body' => $message_body,
-        );
+        $new_message_body = wordwrap($message_body, 740, "<br />\n");
+        $new_message_body = explode("<br />\n",$new_message_body);
 
-        $curl = curl_init();
+        foreach($new_message_body as $message){
+            $postdata = array(
+                'api_key' => env('SMS_API_KEY'),
+                'api_secret' => env('SMS_API_SECRET'),
+                'request_type' => 'SINGLE_SMS',
+                'message_type' => 'TEXT',
+                'mobile' => $mobile_no,
+                'message_body' => $message,
+            );
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => env('SMS_PORTAL') . "/api/v1/secure/send-sms",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $postdata,
-        ));
+            $curl = curl_init();
 
-        $response = curl_exec($curl);
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => env('SMS_PORTAL') . "/api/v1/secure/send-sms",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $postdata,
+            ));
 
-        curl_close($curl);
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+        }
 
         return $response;
     }
@@ -183,33 +188,38 @@ class SMS
      * Multiple mobile numbers should be comma-separated.
      * */
     public static function sendCampaignSms($mobile_no,$message_body,$campaign_title){
-        $postdata = array(
-            'api_key' => env('SMS_API_KEY'),
-            'api_secret' => env('SMS_API_SECRET'),
-            'request_type' => 'GENERAL_CAMPAIGN',
-            'message_type' => 'TEXT',
-            'mobile' => $mobile_no, // comma separated mobile numbers, ex. 018XXXXXXXX,017XXXXXXXX
-            'message_body' => $message_body,
-            'campaign_title' => $campaign_title,
-        );
+        $new_message_body = wordwrap($message_body, 740, "<br />\n");
+        $new_message_body = explode("<br />\n",$new_message_body);
 
-        $curl = curl_init();
+        foreach($new_message_body as $message){
+            $postdata = array(
+                'api_key' => env('SMS_API_KEY'),
+                'api_secret' => env('SMS_API_SECRET'),
+                'request_type' => 'GENERAL_CAMPAIGN',
+                'message_type' => 'TEXT',
+                'mobile' => $mobile_no, // comma separated mobile numbers, ex. 018XXXXXXXX,017XXXXXXXX
+                'message_body' => $message_body,
+                'campaign_title' => $campaign_title,
+            );
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => env('SMS_PORTAL') . "/api/v1/secure/send-sms",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $postdata,
-        ));
+            $curl = curl_init();
 
-        $response = curl_exec($curl);
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => env('SMS_PORTAL') . "/api/v1/secure/send-sms",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => $postdata,
+            ));
 
-        curl_close($curl);
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+        }
 
         return $response;
     }

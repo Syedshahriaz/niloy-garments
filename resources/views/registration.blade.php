@@ -107,7 +107,7 @@
         </div>
         <div class="form-group margin-top-20">
             <label class="mt-checkbox mt-checkbox-outline mb-0">
-                <input type="checkbox" class="show-password" name="show_password" /> show_password
+                <input type="checkbox" class="show-password" name="show_password" /> Show password
                 <span></span>
             </label>
             <div id="register_tnc_error"> </div>

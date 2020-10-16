@@ -106,6 +106,126 @@
     });
 
     /*
+    * ******** Verify account js
+    * */
+    $(document).on("submit", "#verification_form", function(event) {
+        event.preventDefault();
+
+        $('#done_button').prop('disabled',true);
+
+        show_loader();
+
+        var user_id = $("#user_id").val();
+        var otp = $("#otp").val();
+
+        var validate = "";
+
+        if (otp.trim() == "") {
+            validate = validate + "OTP is required</br>";
+        }
+
+
+        if (validate == "") {
+            var formData = new FormData($("#verification_form")[0]);
+            var url = "{{ url('verify_account') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                success: function(data) {
+                    hide_loader();
+                    if (data.status == 200) {
+                        $("#success_message").show();
+                        $("#error_message").hide();
+                        $("#success_message").html(data.reason);
+                        setTimeout(function(){
+                            window.location.href="{{url('promotion')}}/"+user_id;
+                        },2000)
+                    } else {
+                        $('#done_button').prop('disabled',false);
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data.reason);
+                    }
+                },
+                error: function(data) {
+                    $('#done_button').prop('disabled',false);
+                    hide_loader();
+                    $("#success_message").hide();
+                    $("#error_message").show();
+                    $("#error_message").html(data);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        } else {
+            $('#done_button').prop('disabled',false);
+            hide_loader();
+            $("#success_message").hide();
+            $("#error_message").show();
+            $("#error_message").html(validate);
+        }
+    });
+
+    /*
+    * ******** Resend registration OTP
+    * */
+    $(document).on("click", "#resend_registration_otp", function(event) {
+        event.preventDefault();
+
+        show_loader();
+
+        var user_id = $("#user_id").val();
+
+        var validate = "";
+
+
+        if (validate == "") {
+            var formData = new FormData($("#verification_form")[0]);
+            var url = "{{ url('resend_registration_otp') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                success: function(data) {
+                    hide_loader();
+                    if (data.status == 200) {
+                        $("#success_message").show();
+                        $("#error_message").hide();
+                        $("#success_message").html(data.reason);
+                        setTimeout(function(){
+                            $("#success_message").hide();
+                        },2000)
+                    } else {
+                        $("#success_message").hide();
+                        $("#error_message").show();
+                        $("#error_message").html(data.reason);
+                    }
+                },
+                error: function(data) {
+                    $('#done_button').prop('disabled',false);
+                    hide_loader();
+                    $("#success_message").hide();
+                    $("#error_message").show();
+                    $("#error_message").html(data);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        } else {
+            $('#done_button').prop('disabled',false);
+            hide_loader();
+            $("#success_message").hide();
+            $("#error_message").show();
+            $("#error_message").html(validate);
+        }
+    });
+
+    /*
     * User list js
     * */
     function send_otp(user_id){

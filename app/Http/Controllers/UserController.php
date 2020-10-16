@@ -63,6 +63,10 @@ class UserController extends Controller
                 $user = user::where('id', $request->id)->first();
                 $offer = Offer::first();
 
+                if($user->status=='pending'){
+                    return redirect('verify_account');
+                }
+
                 $payment = Payment::where('user_id', $user->id)->first();
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
                     $shipment = UserShipment::where('user_id', $user->id)->first();

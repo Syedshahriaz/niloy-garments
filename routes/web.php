@@ -35,6 +35,9 @@ Route::get('/thankyou', 'AuthenticationController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');
 Route::post('user/store', 'AuthenticationController@storeUser');
 Route::get('verify_email', 'AuthenticationController@verifyEmail');
+Route::get('verify_account', 'AuthenticationController@accountVerificationForm');
+Route::post('verify_account', 'AuthenticationController@verifyAccount');
+Route::post('resend_registration_otp', 'AuthenticationController@resendRegistrationOtp');
 
 Route::get('send_sms', 'HomeController@sendSms');
 

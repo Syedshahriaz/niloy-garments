@@ -124,10 +124,13 @@
                                         <option value="USD">USD</option>
                                     </select>
                                 </div>
+                                @foreach($subscription_plans as $plan)
                                 <div class="form-group">
-                                    <label class="control-label">Offer Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price" id="offer_price" value=""  autocomplete="off"/>
+                                    <label class="control-label">{{$plan->name}} Offer Price</label>
+                                    <input class="form-control" type="hidden" placeholder="" name="subscription_plan_id[]" id="subscription_plan_id" value="{{$plan->id}}"  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price[]" id="offer_price" value=""  autocomplete="off"/>
                                 </div>
+                                @endforeach
                             </div>
                         </form>
                     </div>
@@ -228,10 +231,13 @@
                                         <option value="USD">USD</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label">Offer Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price" id="all_offer_price" value=""  autocomplete="off"/>
-                                </div>
+                                @foreach($subscription_plans as $plan)
+                                    <div class="form-group">
+                                        <label class="control-label">{{$plan->name}} Offer Price</label>
+                                        <input class="form-control" type="hidden" placeholder="" name="subscription_plan_id[]" id="subscription_plan_id" value="{{$plan->id}}"  autocomplete="off"/>
+                                        <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price[]" id="offer_price" value=""  autocomplete="off"/>
+                                    </div>
+                                @endforeach
                             </div>
                         </form>
                     </div>
