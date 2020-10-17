@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\Offer;
 use App\Models\OfferPrices;
+use App\Models\OfferPriceDetail;
 use App\Models\Country;
 use App\Models\Profession;
 use App\Models\Coupon;
@@ -157,7 +158,9 @@ class SettingController extends Controller
 
     public function getCountryOffer(Request $request){
         try{
-            $offer_price = OfferPrices::where('id',$request->id)->first();
+            $offer_price = OfferPrices::with('offer_details')
+                ->where('id',$request->id)
+                ->first();
 
             return ['status'=>200, 'offer_price'=>$offer_price];
         }
@@ -171,14 +174,29 @@ class SettingController extends Controller
 
     public function updateCountryOffer(Request $request){
         try{
+            DB::beginTransaction();
+
+            $subscrintion_plans = $request->subscription_plan_id;
+            $offer_price_details = $request->offer_price;
+
             $offer_prices = OfferPrices::where('id',$request->country_id)->first();
             $offer_prices->currency = $request->currency;
-            $offer_prices->offer_price = $request->offer_price;
             $offer_prices->save();
+
+            foreach($offer_price_details as $key=>$price){
+                $opd = OfferPriceDetail::where('offer_price_id',$offer_prices->id)
+                    ->where('subscription_plan_id',$subscrintion_plans[$key])
+                    ->first();
+                $opd->offer_price = $offer_price_details[$key];
+                $opd->save();
+            }
+
+            DB::commit();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
         }
         catch (\Exception $e) {
+            DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateCountryOffer', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
@@ -188,16 +206,38 @@ class SettingController extends Controller
 
     public function updateAllCountryOffer(Request $request){
         try{
-            DB::table('offer_prices')
-                ->update(array(
-                    'currency' => $request->currency,
-                    'offer_price' => $request->offer_price
-                    )
-                );
+            DB::beginTransaction();
+
+            $subscrintion_plans = $request->subscription_plan_id;
+            $offer_price_details = $request->offer_price;
+
+            /*
+             * First remove all previous offer details
+             * */
+            OfferPriceDetail::truncate();
+
+            /*
+             * Now add new offer price detail
+             * */
+            $offer_prices = OfferPrices::select('offer_prices.*')
+                ->get();
+
+            foreach($offer_prices as $offer_price){
+                foreach($offer_price_details as $key=>$price){
+                    $opd = NEW OfferPriceDetail();
+                    $opd->offer_price_id = $offer_price->id;
+                    $opd->subscription_plan_id = $subscrintion_plans[$key];
+                    $opd->offer_price = $offer_price_details[$key];
+                    $opd->save();
+                }
+            }
+
+            DB::commit();
 
             return ['status'=>200, 'reason'=>'Successfully saved'];
         }
         catch (\Exception $e) {
+            DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateAllCountryOffer', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
@@ -251,6 +291,18 @@ class SettingController extends Controller
             $offer_prices->country_id = $country->id;
             $offer_prices->save();
 
+            /*
+             * Save offer details
+             * */
+            $subscription_plans = SubscriptionPlan::where('status','active')->get();
+
+            foreach($subscription_plans as $key=>$plan){
+                $opd = NEW OfferPriceDetail();
+                $opd->offer_price_id = $offer_prices->id;
+                $opd->subscription_plan_id = $plan->id;
+                $opd->save();
+            }
+
             return ['status'=>200, 'reason'=>'Successfully saved'];
         }
         catch (\Exception $e) {
@@ -298,7 +350,13 @@ class SettingController extends Controller
             Country::where('id',$request->id)->delete();
 
             // Deleting country offer
+            $offer_price = OfferPrices::where('country_id',$request->id)->first();
+
             OfferPrices::where('country_id',$request->id)->delete();
+
+            // Deleting country offer detail
+
+            OfferPriceDetail::where('offer_price_id',$offer_price->id)->delete();
 
             return ['status'=>200, 'reason'=>'Successfully deleted'];
         }

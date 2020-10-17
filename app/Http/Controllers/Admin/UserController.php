@@ -50,6 +50,36 @@ class UserController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+    public function deletedUserList(Request $request)
+    {
+        try {
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
+            $offer = Offer::first();
+
+            $users = User::with('projects.passed_task','projects.recent_due_task')
+                ->select('users.*', 'user_shipments.shipment_date','messages.id as message_id')
+                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->leftJoin('messages', 'messages.user_id', '=', 'users.id')
+                ->where('users.role',3)
+                ->where('users.status', 'deleted')
+                ->orderBy('users.id', 'ASC')
+                ->get();
+
+            if ($request->ajax()) {
+                $returnHTML = View::make('admin.user.deleted_user', compact('offer','users'))->renderSections()['content'];
+                return response()->json(array('status' => 200, 'html' => $returnHTML));
+            }
+
+            return view('admin.user.deleted_user', compact('offer','users'));
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'deletedUserList', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
 
     public function dashboard(Request $request)
     {

@@ -38,6 +38,7 @@ Route::get('verify_email', 'AuthenticationController@verifyEmail');
 Route::get('verify_account', 'AuthenticationController@accountVerificationForm');
 Route::post('verify_account', 'AuthenticationController@verifyAccount');
 Route::post('resend_registration_otp', 'AuthenticationController@resendRegistrationOtp');
+Route::get('expired_account', 'UserController@expiredAccount');
 
 Route::get('send_sms', 'HomeController@sendSms');
 
@@ -99,6 +100,7 @@ Route::post('get_notifications_ajax', 'NotificationController@getNotificationsAj
 Route::get('admin', 'Admin\AdminController@index');
 
 Route::get('admin/users', 'Admin\UserController@userList');
+Route::get('admin/deleted_users', 'Admin\UserController@deletedUserList');
 Route::get('admin/user_dashboard', 'Admin\UserController@dashboard');
 Route::post('admin/update_user_status', 'Admin\UserController@updateStatus');
 Route::post('admin/update_user_offer', 'Admin\UserController@updateUserOffer');

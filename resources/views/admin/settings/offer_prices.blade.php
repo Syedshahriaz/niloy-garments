@@ -53,7 +53,6 @@
                                         <th>Country Name</th>
                                         <th>Country Code</th>
                                         <th>Currency</th>
-                                        <th>Offer Price</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -66,8 +65,10 @@
                                     <td>{{$offer_price->country_name}}</td>
                                     <td>{{$offer_price->dial_code}}</td>
                                     <td>{{$offer_price->currency}}</td>
-                                    <td>{{$offer_price->offer_price}}</td>
                                     <td class="text-center">
+                                        <a href="#" title="View Offer Price" onclick="view_offer({{$offer_price->id}})">
+                                            <img class="action-icon" src="{{asset('assets/global/img/icons/view.png')}}" alt="View Offer Price">
+                                        </a>
                                         <a href="#" title="Edit Offer" onclick="edit_offer({{$offer_price->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Edit Offer">
                                         </a>
@@ -128,7 +129,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{$plan->name}} Offer Price</label>
                                     <input class="form-control" type="hidden" placeholder="" name="subscription_plan_id[]" id="subscription_plan_id" value="{{$plan->id}}"  autocomplete="off"/>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price[]" id="offer_price" value=""  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix offer_price" type="text" placeholder="Enter offer price*" name="offer_price[]" id="offer_price" value=""  autocomplete="off"/>
                                 </div>
                                 @endforeach
                             </div>
@@ -139,6 +140,41 @@
                     <div class="text-center">
                         <button type="submit" class="btn theme-btn pull-right" id="save_country">Save</button>
                     </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="view_country_modal" tabindex="-1" role="view_country_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Offer Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="country_detail_form" method="post" action="">
+                            <div class="col-md-12">
+                            </div>
+                            {{csrf_field()}}
+
+                            <div class="col-md-12">
+                                @foreach($subscription_plans as $plan)
+                                <div class="form-group">
+                                    <label class="control-label">{{$plan->name}} Offer Price</label>
+                                    <input class="form-control" type="hidden" placeholder="" name="subscription_plan_id[]" id="subscription_plan_id" value="{{$plan->id}}"  autocomplete="off"/>
+                                    <input class="form-control placeholder-no-fix offer_price" type="text" placeholder="Enter offer price*" name="offer_price[]" id="view_offer_price_{{$plan->id}}" value=""  autocomplete="off" disabled />
+                                </div>
+                                @endforeach
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -184,10 +220,13 @@
                                         <option value="USD">USD</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label">Offer Price</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter offer price*" name="offer_price" id="edit_offer_price" value=""  autocomplete="off"/>
-                                </div>
+                                @foreach($subscription_plans as $plan)
+                                    <div class="form-group">
+                                        <label class="control-label">{{$plan->name}} Offer Price</label>
+                                        <input class="form-control" type="hidden" placeholder="" name="subscription_plan_id[]" id="edit_subscription_plan_id" value="{{$plan->id}}"  autocomplete="off"/>
+                                        <input class="form-control placeholder-no-fix edit_offer_price" type="text" placeholder="Enter offer price*" name="offer_price[]" id="edit_offer_price_{{$plan->id}}" value=""  autocomplete="off"/>
+                                    </div>
+                                @endforeach
                             </div>
                         </form>
                     </div>
@@ -353,10 +392,13 @@
                 success: function (data) {
 
                     if(data.status == 200){
+                        var offer_details = data.offer_price.offer_details;
                         $('#country_id').val(id);
                         $('#edit_country').val(data.offer_price.country_id);
                         $('#edit_currency').val(data.offer_price.currency);
-                        $('#edit_offer_price').val(data.offer_price.offer_price);
+                        $.each(offer_details, function( index, value ) {
+                            $('#edit_offer_price_'+value.subscription_plan_id).val(value.offer_price);
+                        });
                         $("#edit_country_modal").modal('show');
                     }
                     else{
@@ -383,18 +425,12 @@
 
             var country = $("#edit_country").val();
             var currency = $("#edit_currency").val();
-            var offer_price = $("#edit_offer_price").val();
+            //var offer_price = $("#edit_offer_price").val();
 
             var validate = "";
 
             if (country.trim() == "") {
                 validate = validate + "Country is required</br>";
-            }
-            if (currency.trim() == "") {
-                validate = validate + "Currency is required</br>";
-            }
-            if (offer_price.trim() == "") {
-                validate = validate + "Offer price is required</br>";
             }
 
             if (validate == "") {
@@ -439,6 +475,28 @@
             }
         });
 
+        function view_offer(id){
+            var url = "{{ url('admin/get_country_offer') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {id:id,'_token':'{{ csrf_token() }}'},
+                success: function (data) {
+
+                    if(data.status == 200){
+                        var offer_details = data.offer_price.offer_details;
+                        $.each(offer_details, function( index, value ) {
+                            $('#view_offer_price_'+value.subscription_plan_id).val(value.offer_price);
+                        });
+                        $("#view_country_modal").modal('show');
+                    }
+                },
+                error: function (data) {
+                    show_error_message(data);
+                }
+            });
+        }
+
         $(document).on('click','#all_country_price',function(){
             $("#all_country_price_modal").modal('show');
         });
@@ -456,16 +514,16 @@
             HoldOn.open(options);
 
             var currency = $("#all_currency").val();
-            var offer_price = $("#all_offer_price").val();
+            //var offer_price = $("#all_offer_price").val();
 
             var validate = "";
 
             if (currency.trim() == "") {
                 validate = validate + "Currency is required</br>";
             }
-            if (offer_price.trim() == "") {
+            /*if (offer_price.trim() == "") {
                 validate = validate + "Offer price is required</br>";
-            }
+            }*/
 
             if (validate == "") {
                 var formData = new FormData($("#all_country_price_form")[0]);

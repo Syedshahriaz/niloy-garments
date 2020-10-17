@@ -120,7 +120,7 @@ class AuthenticationController extends Controller
              * */
             $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number,$otp);
 
-            return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification link have been sent to your email address.'];
+            return ['status' => 200, 'reason' => 'Registration successfully done. An email with verification OTP have been sent to your email address.'];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'store', $e->getLine(),
             //$e->getFile(), '', '', '', '');

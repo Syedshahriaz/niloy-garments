@@ -68,7 +68,12 @@ class PaymentController extends Controller
             $cancel_url = 'http://127.0.0.1:8000/payment_cancel';
         }
         else{
-            $success_url = COMMON::PAYMENT_SUCCESS_URL;
+            if($request->subscription_type == 'renew'){
+                $success_url = COMMON::PAYMENT_RENEW_SUCCESS_URL;
+            }
+            else{
+                $success_url = COMMON::PAYMENT_SUCCESS_URL;
+            }
             $fail_url = COMMON::PAYMENT_FAILED_URL;
             $cancel_url = COMMON::PAYMENT_CANCEL_URL;
         }
@@ -188,6 +193,40 @@ class PaymentController extends Controller
         }
     }
 
+    public function renewSuccess(Request $request){
+        try {
+            $data = $request->all();
+
+            $user_id = $data['opt_a'];
+            $pay_status = $data['pay_status'];
+
+            /*
+             * Update user payment payment
+             * */
+            if($pay_status=='Successful'){
+                $status = $this->updatePaymentInformation($data);
+                if($status=='INVALID_TRANSACTION'){
+                    return redirect('expired_account/'.$user_id);
+                }
+            }
+            else { // Failed
+                return redirect('expired_account/'.$user_id);
+            }
+
+            /*
+             * Re authenticate user
+             * */
+            $this->reAuthenticateUser($user_id);
+
+            return redirect('all_project');
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'PaymentController', 'success', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
     public function ipnListener(Request $request){
         try{
             /*
@@ -210,7 +249,6 @@ class PaymentController extends Controller
     }
 
     private function updatePaymentInformation($response){
-        # TO CONVERT AS OBJECT
         $user_id = $response['opt_a'];
 
         $user = User::where('id',$user_id)->first();
@@ -235,19 +273,23 @@ class PaymentController extends Controller
         /*
          * Save offer details
          * */
-        $shipment = NEW UserShipment();
-        $shipment->user_id = $user_id;
-        $offer = $response['opt_b'];
-        if($offer == 1){
-            $shipment->has_ofer_1 = 1;
-            $shipment->has_ofer_2 = 0;
-        }
-        else{
-            $shipment->has_ofer_1 = 0;
-            $shipment->has_ofer_2 = 1;
-        }
+        $shipment = UserShipment::where('user_id',$user_id)->first();
+        if(empty($shipment)){
+            $shipment = NEW UserShipment();
+            $shipment->user_id = $user_id;
+            $offer = $response['opt_b'];
+            if($offer == 1){
+                $shipment->has_ofer_1 = 1;
+                $shipment->has_ofer_2 = 0;
+            }
+            else{
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 1;
+            }
+            $shipment->subscription_plan_id = $response['opt_b'];
 
-        $shipment->save();
+            $shipment->save();
+        }
 
 
         /*

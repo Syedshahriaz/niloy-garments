@@ -67,6 +67,10 @@ class UserController extends Controller
                     return redirect('verify_account');
                 }
 
+                if($user->status=='expired'){
+                    return redirect('expired_account');
+                }
+
                 $payment = Payment::where('user_id', $user->id)->first();
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
                     $shipment = UserShipment::where('user_id', $user->id)->first();
@@ -88,6 +92,32 @@ class UserController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function expiredAccount(Request $request){
+        try {
+            $countries = Country::where('status','active')->get();
+
+            $user = Auth::user();
+            $offer = Offer::first();
+
+            if($user->status=='expired'){
+                if ($request->ajax()) {
+                    $returnHTML = View::make('renew_subscription', compact('user','offer','countries'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('renew_subscription', compact('user','offer','countries'));
+            }
+            else{
+                return back();
+            }
+
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'expiredAccount', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

@@ -42,6 +42,7 @@ class Common
     const EASYPAY_LIVE_STORE_ID = 'vujadetec';
     const EASYPAY_LIVE_SIGNATURE_KEY = '8c6404963b81604381d5070e92fc4fcb';
     const PAYMENT_SUCCESS_URL = Common::SITE_URL.'/payment_success';
+    const PAYMENT_RENEW_SUCCESS_URL = Common::SITE_URL.'/payment_renew_success';
     const PAYMENT_FAILED_URL = Common::SITE_URL.'/payment_fail';
     const PAYMENT_CANCEL_URL = Common::SITE_URL.'/payment_cancel';
 

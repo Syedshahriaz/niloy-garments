@@ -11,4 +11,10 @@ class OfferPrices extends Model
     public $primaryKey = 'id';
 
     public $timestamps = false;
+
+    public function offer_details ()
+    {
+        $instance = $this->hasMany('App\Models\OfferPriceDetail','offer_price_id','id');
+        return $instance;
+    }
 }

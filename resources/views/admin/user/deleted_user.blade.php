@@ -15,7 +15,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>All Users</span>
+                        <span>Deleted Users</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -37,125 +37,97 @@
                         <div class="portlet-title">
                             <div class="caption">
                                 <i class="icon-share font-red-sunglo hide"></i>
-                                <span class="caption-subject font-dark bold uppercase">All users</span>
+                                <span class="caption-subject font-dark bold uppercase">Deleted users</span>
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions hidden" id="action_buttons">
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send SMS to User</button>
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>
+                                {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send SMS to User</button>--}}
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="restore_user_all">Restore Users</button>
                             </div>
-                            <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
+                            {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>--}}
                         </div>
                         <div class="portlet-body p-relative">
-                            <div class="all_user_sort">
-                                <select class="form-control" id="payment_check">
-                                    <option value="">Sort by payment Status</option>
-                                    <option value="active">Paid</option>
-                                    <option value="pending">Unpaid</option>
-                                </select>
-                            </div>
                             <table id="user_list_table" class="table table-striped table-bordered table-hover data-table focus-table">
                                 <thead>
-                                    <tr>
-                                        <th style="width: 50px;">
-                                            <div class="form-group">
-                                                <label class="mt-checkbox">
-                                                    <input type="checkbox" class="show-password" name="all_user" id="selectall">
-                                                    <span></span>
-                                                </label>
-                                            </div>
-                                        </th>
-                                        <th>User ID</th>
-                                        <th>Username</th>
-                                        <th>User Email</th>
-                                        <th>Payment Status</th>
-                                        <th>Birth Date</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
+                                <tr>
+                                    <th style="width: 50px;">
+                                        <div class="form-group">
+                                            <label class="mt-checkbox">
+                                                <input type="checkbox" class="show-password" name="all_user" id="selectall">
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>User ID</th>
+                                    <th>Username</th>
+                                    <th>User Email</th>
+                                    <th>Payment Status</th>
+                                    <th>Birth Date</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 <?php
                                 foreach($users as $user){
-                                    $user_projects = $user->projects;
-                                    $passed = 0;
-                                    $upcoming = 0;
-                                    $test = '';
-                                    $last = '';
-                                    if(!empty($user_projects)){
-                                        foreach($user_projects as $u_project){
-                                            if(!empty($u_project->passed_task)){
-                                                $passed = 1;
-                                            }
-                                        }
-
-                                        foreach($user_projects as $u_project){
-                                            if(!empty($u_project->recent_due_task)){
-                                                $upcoming = 1;
-                                            }
+                                $user_projects = $user->projects;
+                                $passed = 0;
+                                $upcoming = 0;
+                                $test = '';
+                                $last = '';
+                                if(!empty($user_projects)){
+                                    foreach($user_projects as $u_project){
+                                        if(!empty($u_project->passed_task)){
+                                            $passed = 1;
                                         }
                                     }
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <label class="mt-checkbox">
-                                                    <input type="checkbox" class="show-password name user_checkbox" name="all_user" value="{{$user->id}}" id="checkbox-1-{{$user->id}}">
-                                                    <span></span>
-                                                </label>
+
+                                    foreach($user_projects as $u_project){
+                                        if(!empty($u_project->recent_due_task)){
+                                            $upcoming = 1;
+                                        }
+                                    }
+                                }
+                                ?>
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <label class="mt-checkbox">
+                                                <input type="checkbox" class="show-password name user_checkbox" name="all_user" value="{{$user->id}}" id="checkbox-1-{{$user->id}}">
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>{{$user->unique_id}}</td>
+                                    <td>{{$user->username}}</td>
+                                    <td>{{$user->email}}</td>
+                                    <td>{{$user->status}}</td>
+                                    <td style="min-width: 170px;">
+                                        @if($user->shipment_date !='')
+                                            {{date('l d, M, Y', strtotime($user->shipment_date))}}
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- If Task done-->
+                                    {{--<div class="user-status bg-success"></div>--}}
+                                    <!-- If Task not done-->
+                                        @if($passed==1)
+                                            <div class="user-status bg-danger"></div>
+                                        @endif
+                                        @if($upcoming==1)
+                                        <!-- If Task 7days before-->
+                                            <div class="user-status bg-warning">
+                                                <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="SMS Sent">
                                             </div>
-                                        </td>
-                                        <td>{{$user->unique_id}}</td>
-                                        <td>{{$user->username}}</td>
-                                        <td>{{$user->email}}</td>
-                                        <td>{{$user->status}}</td>
-                                        <td style="min-width: 170px;">
-                                            @if($user->shipment_date !='')
-                                                {{date('l d, M, Y', strtotime($user->shipment_date))}}
-                                            @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <!-- If Task done-->
-                                            {{--<div class="user-status bg-success"></div>--}}
-                                            <!-- If Task not done-->
-                                            @if($passed==1)
-                                                <div class="user-status bg-danger"></div>
-                                            @endif
-                                            @if($upcoming==1)
-                                                <!-- If Task 7days before-->
-                                                <div class="user-status bg-warning">
-                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/tick.png')}}" alt="SMS Sent">
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td class="text-center" style="min-width: 170px;">
-                                            <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/speed.png')}}" alt="Dashboard">
-                                            </a>
-                                            <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
-                                            </a>
-                                            <a href="#" title="Unlock Birth Date" onclick="unlock_shipping_date({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
-                                            </a>
-                                            <a href="#" title="Unlock User Gender" onclick="unlock_user_gender({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/gender.png')}}" alt="Change Offer">
-                                            </a>
-                                            <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
-                                            </a>
-                                            <a href="#" title="Send SMS" onclick="send_sms({{$user->id}},'{{$user->country_code}}','{{$user->phone}}')">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/sms.png')}}" alt="Email">
-                                            </a>
-                                            <a href="#" title="Send Message" onclick="send_message({{$user->id}},{{$user->message_id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/message.png')}}" alt="Email">
-                                            </a>
-                                            <a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        @endif
+                                    </td>
+                                    <td class="text-center" style="min-width: 170px;">
+                                        <a href="#" title="Restore User" id="restore_user" onclick="user_status_update_warning({{$user->id}},'active')">
+                                            <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Restore">
+                                        </a>
+                                    </td>
+                                </tr>
                                 <?php } ?>
                                 </tbody>
                             </table>
@@ -546,16 +518,16 @@
             $("#send_sms_modal").modal('show');
         });
 
-        $(document).on('click','#delete_user_all',function(){
+        $(document).on('click','#restore_user_all',function(){
             var userIDs = $(".user_checkbox:checked").map(function(){
                 return $(this).val();
             }).get();
 
-            user_status_update_warning(userIDs,'deleted');
+            user_status_update_warning(userIDs,'active');
         });
 
         function user_status_update_warning(user_id,status){
-            $(".warning_message").text('Are you sure you want to '+status+' this users? This can not be undone in future.');
+            $(".warning_message").text('Are you sure you want to '+status+' this users?');
             $("#warning_modal").modal('show');
             $('#item_id').val(user_id);
             $('#item_type').val(status);

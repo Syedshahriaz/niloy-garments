@@ -91,6 +91,13 @@
                     <span class="selected"></span>
                 </a>
             </li>
+            <li class="nav-item @if($page=='deleted_users') active @endif">
+                <a href="{{url('admin/deleted_users')}}" class="nav-link">
+                    <i class="icon-user-unfollow"></i>
+                    <span class="title">Deleted Users</span>
+                    <span class="selected"></span>
+                </a>
+            </li>
             <li class="nav-item @if($page=='messages') active @endif">
                 <a href="{{url('admin/message')}}" class="nav-link">
                     <i class="icon-envelope"></i>
