@@ -27,6 +27,8 @@
     <div class="row">
         <div class="col" style="margin-top:25px;">
             <div class="offer-option mb-5">
+                <span style="background: #ec0404; padding: 10px;">Your account subscription has been expired. Please renew your subscription plan to continue.</span>
+                <br><br>
                 <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
                     <input type="hidden" name="subscription_type" value="new">
 
