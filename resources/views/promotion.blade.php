@@ -49,6 +49,7 @@
                                                         <input type="hidden" name="subscription_plan_id" id="subscription_plan_id" value="">
                                                         <input type="hidden" name="currency" id="currency" value="{{$plan->currency}}">
                                                         <input type="hidden" name="subscription_price" id="subscription_price" value="">
+                                                        <input type="hidden" name="coupon_id" id="coupon_id" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -75,7 +76,7 @@
 
                                 <div class="col-md-6 d-none" id="price_preview">
                                     <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currensy">BDT</span> <span class="prev_cost">00.00</span></strong></p>
-                                    <p>After discount yout total cost is BDT <strong><span class="slected_currensy">BDT</span> <span class="payable_cost">00.00</span></strong></p>
+                                    <p>After discount your total cost is BDT <strong><span class="slected_currensy">BDT</span> <span class="payable_cost">00.00</span></strong></p>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +166,8 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    {{--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>--}}
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
@@ -248,10 +250,12 @@
                     var subscription_id = $(this).attr('data-id');
                     var subscription_price = $(this).attr('data-price');
                     $('#subscription_plan_id').val(subscription_id);
+                    $('#promo').val('');
                     if(subscription_id != ''){
                         $('#coupon_apply_button').prop('disabled',false);
                         $('#price_preview').removeClass('d-none');
                         $('#subscription_price').val(subscription_price);
+                        $('#coupon_id').val('');
                         $('.prev_cost').text(subscription_price);
                         $('.payable_cost').text(subscription_price);
                     }
@@ -271,6 +275,39 @@
                 }
             }
         });
+
+        $(document).on('click','#coupon_apply_button',function(){
+            var coupon = $('#promo').val();
+            if(coupon.trim()==''){
+                show_error_message('You did not enter any coupon code');
+                return false;
+            }
+
+            var url = "{{ url('calculate_coupon_code') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {coupon:coupon,'_token':'{{ csrf_token() }}'},
+                success: function (data) {
+                    if(data.status == 200){
+                        var coupon_discount = data.coupon.discount;
+                        var subscription_price = $('#subscription_price').val();
+                        var discounted_amount = subscription_price*(coupon_discount/100);
+                        var discounted_price = subscription_price-discounted_amount;
+                        $('#subscription_price').val(discounted_price);
+                        $('.payable_cost').text(discounted_price);
+                        $('#coupon_id').val(data.coupon.id);
+                        $('#coupon_apply_button').prop('disabled',true);
+                    }
+                    else{
+                        show_error_message(data.reason);
+                    }
+                },
+                error: function (data) {
+                    show_error_message(data);
+                }
+            });
+        })
 
     </script>
 </body>

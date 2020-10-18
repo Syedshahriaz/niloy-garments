@@ -8,6 +8,7 @@ use App\SMS;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Payment;
+use App\Models\Coupon;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,15 @@ class PaymentController extends Controller
         $user->postcode = $request->postcode;
         $user->country = $request->country;
         $user->save();
+
+        /*
+         * Update coupon usability if coupon applied
+         * */
+        if($request->coupon_id != ''){
+            $coupon = Coupon::where('id',$request->coupon_id)->first();
+            $coupon->number_of_use = $coupon->number_of_use+1;
+            $coupon->save();
+        }
 
         $currency = $request->currency;
         $offer_amount = $request->subscription_price;

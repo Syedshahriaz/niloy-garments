@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Payment;
 use App\Models\Profession;
 use App\Models\SeparateUserLog;
+use App\Models\Coupon;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +104,32 @@ class UserController extends Controller
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return back();
+        }
+    }
+
+    public function calculateCouponCode(Request $request){
+        try {
+            if(!Common::is_user_login()){
+                return redirect('error_404');
+            }
+            $couponDetails = Coupon::where('code',$request->coupon)
+                ->where('coupons.status','active')
+                ->first();
+            if(empty($couponDetails)){
+                return ['status'=>401, 'reason'=>'Invalid coupon code'];
+            }
+            if($couponDetails->number_of_use>=$couponDetails->availability){
+                return ['status'=>401, 'reason'=>'Coupon code exceeds the limit of use'];
+            }
+
+            return ['status'=>200, 'reason'=>'Valid coupon code', 'coupon'=>$couponDetails];
+
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'calculateCouponCode', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return ['status'=>401, 'reason'=>'Something went wrong. Try again later'];
         }
     }
 
