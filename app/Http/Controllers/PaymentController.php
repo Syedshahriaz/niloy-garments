@@ -39,17 +39,8 @@ class PaymentController extends Controller
         $user->country = $request->country;
         $user->save();
 
-        $offer_price = OfferPrices::where('countries.dial_code',$user->country_code)
-            ->join('countries','countries.id','=','offer_prices.country_id')
-            ->first();
-        if(!empty($offer_price)){
-            $currency = $offer_price->currency;
-            $offer_amount = $offer_price->offer_price;
-        }
-        else{
-            $currency = 'USD';
-            $offer_amount = 10;
-        }
+        $currency = $request->currency;
+        $offer_amount = $request->subscription_price;
 
         if(COMMON::EASYPAY_MODE=='sandbox'){
             $url = COMMON::EASYPAY_SANDBOX_URL;
@@ -106,8 +97,8 @@ class PaymentController extends Controller
             'fail_url' => $fail_url,
             'cancel_url' => $cancel_url,
             'opt_a' => $user_id,
-            'opt_b' => $request->offer,
-            'opt_c' => '',
+            'opt_b' => $request->subscription_plan_id,
+            'opt_c' => $request->subscription_type,
             'opt_d' => '',
             'signature_key' => $signature_key,
         );
@@ -176,7 +167,7 @@ class PaymentController extends Controller
                 }
             }
             else { // Failed
-                return redirect('promotion/'.$user_id);
+                return redirect('select_offer/'.$user_id);
             }
 
             /*
@@ -277,16 +268,12 @@ class PaymentController extends Controller
         if(empty($shipment)){
             $shipment = NEW UserShipment();
             $shipment->user_id = $user_id;
-            $offer = $response['opt_b'];
-            if($offer == 1){
-                $shipment->has_ofer_1 = 1;
+            $subscription_plan = $response['opt_b'];
+            if($response['opt_c'] == 'new'){ // If new subscription
+                $shipment->has_ofer_1 = 0;
                 $shipment->has_ofer_2 = 0;
             }
-            else{
-                $shipment->has_ofer_1 = 0;
-                $shipment->has_ofer_2 = 1;
-            }
-            $shipment->subscription_plan_id = $response['opt_b'];
+            $shipment->subscription_plan_id = $subscription_plan;
 
             $shipment->save();
         }

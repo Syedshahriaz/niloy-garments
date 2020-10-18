@@ -2,21 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30ac861d-5d9e-4f10-8043-5ef91ebd9341" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/admin/user/deleted_user.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/renew_subscription.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/offer.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PaymentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PaymentController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/OfferPriceDetail.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/OfferPriceDetail.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/OfferPrices.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/OfferPrices.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/settings/offer_prices.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/settings/offer_prices.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/partials/admin/sidebar.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/partials/admin/sidebar.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/registration.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/registration.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/settings/subscription_plan.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/settings/subscription_plan.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/promotion.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/promotion.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/renew_subscription.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/renew_subscription.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -183,7 +176,8 @@
       <workItem from="1602745440667" duration="617000" />
       <workItem from="1602756880576" duration="9671000" />
       <workItem from="1602813535474" duration="13175000" />
-      <workItem from="1602913331707" duration="4111000" />
+      <workItem from="1602913331707" duration="4856000" />
+      <workItem from="1603005783680" duration="10167000" />
     </task>
     <servers />
   </component>
@@ -195,13 +189,17 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="419" y="198" width="584" height="396" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1299.741@67.27.1299.741" timestamp="1602585566097" />
+    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1603006144563">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/67.27.1299.741@67.27.1299.741" timestamp="1603006144563" />
     <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1602824407642">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1602824407642" />
-    <state x="407" y="135" width="618" height="522" key="find.popup" timestamp="1602770898727">
+    <state x="407" y="135" width="618" height="522" key="find.popup" timestamp="1603025151081">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="407" y="135" width="618" height="522" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1602770898727" />
+    <state x="407" y="135" width="618" height="522" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1603025151081" />
   </component>
 </project>

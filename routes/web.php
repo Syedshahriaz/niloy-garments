@@ -33,6 +33,8 @@ Route::get('logout', 'AuthenticationController@logout');
 Route::get('/registration', 'AuthenticationController@registration')->name('registration');
 Route::get('/thankyou', 'AuthenticationController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');
+Route::get('/select_offer/{id}', 'UserController@selectOffer');
+Route::post('/save_offer', 'UserController@saveOffer');
 Route::post('user/store', 'AuthenticationController@storeUser');
 Route::get('verify_email', 'AuthenticationController@verifyEmail');
 Route::get('verify_account', 'AuthenticationController@accountVerificationForm');

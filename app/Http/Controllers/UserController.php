@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\Offer;
+use App\Models\SubscriptionPlan;
 use App\Models\Task;
 use App\Models\UserProjectTask;
 use App\SMS;
@@ -62,8 +63,15 @@ class UserController extends Controller
 
                 $user = user::where('id', $request->id)->first();
                 $offer = Offer::first();
+                $subscription_plans = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
+                    ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
+                    ->join('offer_prices','offer_prices.id','=','offer_price_details.offer_price_id')
+                    ->join('countries','countries.id','=','offer_prices.country_id')
+                    ->where('subscription_plans.status','active')
+                    ->where('countries.dial_code',$user->country_code)
+                    ->get();
 
-                if($user->status=='pending'){
+                if($user->parent_id ==0 && $user->status=='pending'){
                     return redirect('verify_account');
                 }
 
@@ -81,10 +89,10 @@ class UserController extends Controller
                     return redirect('all_project');
                 }
                 if ($request->ajax()) {
-                    $returnHTML = View::make('promotion', compact('user','offer','countries'))->renderSections()['content'];
+                    $returnHTML = View::make('promotion', compact('user','offer','subscription_plans','countries'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('promotion', compact('user','offer','countries'));
+                return view('promotion', compact('user','offer','subscription_plans','countries'));
             }
             else{
                 return redirect('login');
@@ -94,7 +102,96 @@ class UserController extends Controller
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+            return back();
+        }
+    }
+
+    public function selectOffer(Request $request){
+        try {
+            if (Auth::check()) {
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+                $countries = Country::where('status','active')->get();
+
+                $user = user::where('id', $request->id)->first();
+                $offer = Offer::first();
+                $subscription_plans = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
+                    ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
+                    ->join('offer_prices','offer_prices.id','=','offer_price_details.offer_price_id')
+                    ->join('countries','countries.id','=','offer_prices.country_id')
+                    ->where('subscription_plans.status','active')
+                    ->where('countries.dial_code',$user->country_code)
+                    ->get();
+
+                if($user->parent_id ==0 && $user->status=='pending'){
+                    return redirect('verify_account');
+                }
+
+                if($user->status=='expired'){
+                    return redirect('expired_account');
+                }
+
+                /*
+                 * Check if payment completed or not
+                 * */
+                $payment = Payment::where('user_id', $user->id)->first();
+                if (empty($payment)) {
+                    return redirect('promotion/'.$user->id);
+                }
+                if ($payment->payment_status != 'Completed') {
+                    return redirect('promotion/'.$user->id);
+                }
+
+                /*
+                 * Check if shipment date already selected
+                 * */
+                $shipment = UserShipment::where('user_id', $user->id)->first();
+                if ($shipment->has_ofer_1==1 || $shipment->has_ofer_2==1) { // If offer already selected
+                    return redirect('all_project');
+                }
+
+                if ($request->ajax()) {
+                    $returnHTML = View::make('offer', compact('user','offer','subscription_plans','countries'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('offer', compact('user','offer','subscription_plans','countries'));
+            }
+            else{
+                return redirect('login');
+            }
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'selectOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return back();
+        }
+    }
+
+    public function saveOffer(Request $request){
+        try {
+            $user_id = $request->user_id;
+            $shipment = UserShipment::where('user_id',$user_id)->first();
+            if($request->offer == 1){
+                $shipment->has_ofer_1 = 1;
+                $shipment->has_ofer_2 = 0;
+            }
+            else{
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 1;
+            }
+
+            $shipment->save();
+
+            return redirect('select_shipment/'.$user_id);
+
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'saveOffer', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return back();
         }
     }
 
@@ -104,13 +201,20 @@ class UserController extends Controller
 
             $user = Auth::user();
             $offer = Offer::first();
+            $subscription_plans = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
+                ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
+                ->join('offer_prices','offer_prices.id','=','offer_price_details.offer_price_id')
+                ->join('countries','countries.id','=','offer_prices.country_id')
+                ->where('subscription_plans.status','active')
+                ->where('countries.dial_code',$user->country_code)
+                ->get();
 
             if($user->status=='expired'){
                 if ($request->ajax()) {
-                    $returnHTML = View::make('renew_subscription', compact('user','offer','countries'))->renderSections()['content'];
+                    $returnHTML = View::make('renew_subscription', compact('user','offer','subscription_plans','countries'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
-                return view('renew_subscription', compact('user','offer','countries'));
+                return view('renew_subscription', compact('user','offer','subscription_plans','countries'));
             }
             else{
                 return back();

@@ -28,12 +28,13 @@
             <div class="col" style="margin-top:25px;">
                 <div class="offer-option mb-5">
                     <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
-                        
+                        <input type="hidden" name="subscription_type" value="new">
+
                         <div class="mb-4">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <h4 class="mb-4 text-center">Select yout offer</h4>
+                                        <h4 class="mb-4 text-center">Select your subscription plan</h4>
                                         <div class="select-container">
                                             <div class="custom-select-wrapper">
                                                 <div class="custom-select">
@@ -41,17 +42,13 @@
                                                         <div class="arrow"></div>
                                                     </div>
                                                     <div class="custom-options">
-                                                        <span class="custom-option selected" data-value="">Select</span>
-                                                        <span class="custom-option" data-value="2">0-2 Years</span>
-                                                        <span class="custom-option" data-value="0">Lifetime</span>
-                                                        <span class="custom-option" data-value="5">0-5 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
-                                                        <span class="custom-option" data-value="10">0-10 Years</span>
+                                                        <span class="custom-option selected" data-id="">Select</span>
+                                                        @foreach($subscription_plans as $plan)
+                                                        <span class="custom-option" data-id="{{$plan->id}}" data-price="{{$plan->offer_price}}">{{$plan->name}}</span>
+                                                        @endforeach
+                                                        <input type="hidden" name="subscription_plan_id" id="subscription_plan_id" value="">
+                                                        <input type="hidden" name="currency" id="currency" value="{{$plan->currency}}">
+                                                        <input type="hidden" name="subscription_price" id="subscription_price" value="">
                                                     </div>
                                                 </div>
                                             </div>
@@ -65,20 +62,20 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label visible-ie8 visible-ie9">Have you have promo?</label>
+                                        <label class="control-label visible-ie8 visible-ie9">Do you have promo?</label>
                                         <div class="input-group">
                                             <input class="form-control placeholder-no-fix" type="text" placeholder="Enter your promo code" name="promo" id="promo" />
                                             <span class="input-group-btn">
-                                                <button class="btn btn-primary" type="button">Apply</button>
+                                                <button class="btn btn-primary" type="button" id="coupon_apply_button" disabled>Apply</button>
                                             </span>
                                         </div><!-- /input-group -->
-                                        
+
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currensy">BDT</span></span> <span class="prev_cost">999.00</span></strong></p>
-                                    <p>After discount yout total cost is BDT <strong><span class="slected_currensy">BDT</span> <span class="payable_cost">700.00</span></strong></p>
+                                <div class="col-md-6 d-none" id="price_preview">
+                                    <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currensy">BDT</span> <span class="prev_cost">00.00</span></strong></p>
+                                    <p>After discount yout total cost is BDT <strong><span class="slected_currensy">BDT</span> <span class="payable_cost">00.00</span></strong></p>
                                 </div>
                             </div>
                         </div>
@@ -125,63 +122,8 @@
                                 </div>
                             </div>
                         </div>
-
-                        <h2 class="text-center mt-3 mb-4">Choose your offer - We kept price 11 BDT for testing purpose</h2>
-
-                        <div class="form-group">
-                            <div class="offer-itemlist">
-                                <div class="offer-option-item green-offer-option active_offer_option">
-                                    <p>{{$offer->offer1_name}}</p>
-                                    <input type="radio" name="offer" value="1" hidden="">
-                                </div>
-                                <div class="offer-option-item red-offer-option active_offer_option">
-                                    <p>{{$offer->offer2_name}}</p>
-                                    <input type="radio" name="offer" value="2" hidden="">
-                                </div>
-                                <div class="offer-option-item pink-offer-option">
-                                    <p>{{$offer->offer3_name}}</p>
-                                    <input type="radio" name="offer_3" value="3" disabled="" hidden="">
-                                </div>
-                            </div>
-                            <p class="text-center mt-3">Pink is free for female if any female buy green or red offer. </p>
-                        </div>
+                        <buton type="button" class="btn btn-lg btn-success" id="payment_button">Submit</buton>
                     </form>
-                </div>
-
-
-
-
-
-
-
-                <span style="font-weight: bold;background-color:black; color:white;">&nbsp;Vujade<span style="font-weight: bold;color:#bf945b;">tec&nbsp;</span></span> has 3 offers <span style="font-weight: bold;color:#599a13;">&nbsp;Green&nbsp;</span>-<span style="font-weight: bold;color:#d61919;">&nbsp;<b>Red&nbsp;</b></span>-<span style="font-weight: bold;color:#fc0aa6;">&nbsp;Pink&nbsp;</span> which cover all ages, all gender including pregnant women. Pink offer are related to females and completely FREE if you buy Green or Red.
-                <br><br>
-                It is for those:
-                <ul>
-                    <li>Who are taking regular vaccines. </li>
-                    <li>Who missed the vaccine.</li>
-                    <li>Who does not know or remember what vaccine was given during childhood.</li>
-                </ul>
-                <div class="Offer-info mt-5">
-                    <div class="offer-item green-offer animate__animated animate__fadeInLeft">
-                        <h3>{{$offer->offer1_name}}</h3>
-                        <p><?php echo htmlspecialchars_decode($offer->offer1_details); ?></p>
-                    </div>
-
-                    <div class="offer-item red-offer  animate__animated animate__fadeInRight">
-                        <h3>{{$offer->offer2_name}}</h3>
-                        <p><?php echo htmlspecialchars_decode($offer->offer2_details); ?></p>
-                    </div>
-
-                    <div class="offer-item pink-offer animate__animated animate__fadeInLeft">
-                        <h3>{{$offer->offer3_name}}</h3>
-                        <p><?php echo htmlspecialchars_decode($offer->offer3_details); ?></p>
-                    </div>
-
-                    <div>
-                        <p>So, please register to know more about vaccines of all ages &amp; buy vaccine-care tracker only ৳0 for Bangladesh &amp; $0 for other countries per person for the next 2 years. You can extend it up to a whole lifetime if you are happy with our service.</p>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -247,13 +189,19 @@
             $(this).children('input[type="radio"]').prop('checked',true);
         });
 
-         $(document).on('click','.active_offer_option', function(){
+         $(document).on('click','#payment_button', function(event){
+             event.preventDefault();
+
+             var subscription_plan_id = $('#subscription_plan_id').val();
              var address = $('#address').val();
              var city = $('#city').val();
              var state = $('#state').val();
              var postcode = $('#postcode').val();
              var validate = '';
 
+             if (subscription_plan_id.trim() == "") {
+                 validate = validate + "Subscription plan is required</br>";
+             }
              if (address.trim() == "") {
                  validate = validate + "Address is required</br>";
              }
@@ -296,6 +244,22 @@
                     this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
                     this.classList.add('selected');
                     this.closest('.custom-select').querySelector('.custom-select__trigger span').textContent = this.textContent;
+
+                    var subscription_id = $(this).attr('data-id');
+                    var subscription_price = $(this).attr('data-price');
+                    $('#subscription_plan_id').val(subscription_id);
+                    if(subscription_id != ''){
+                        $('#coupon_apply_button').prop('disabled',false);
+                        $('#price_preview').removeClass('d-none');
+                        $('#subscription_price').val(subscription_price);
+                        $('.prev_cost').text(subscription_price);
+                        $('.payable_cost').text(subscription_price);
+                    }
+                    else{
+                        $('#subscription_price').val(0);
+                        $('#coupon_apply_button').prop('disabled',true);
+                        $('#price_preview').addClass('d-none');
+                    }
                 }
             })
         }

@@ -175,7 +175,7 @@
     <script>
         $(document).ready(function() {
             $('#user_list_table').DataTable({
-                //     //"paging":   true,
+                "paging":   false,
                 //     //"ordering": true,
                 //     //"info":     true,
                 //     //"searching": true

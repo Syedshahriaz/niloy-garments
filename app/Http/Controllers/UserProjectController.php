@@ -54,9 +54,14 @@ class UserProjectController extends Controller
                  * */
                 $shipment = UserShipment::where('user_id', $user->id)->first();
 
-                if (!empty($shipment) && $shipment->shipment_date != '') {
+                if ($shipment->has_ofer_1==0 && $shipment->has_ofer_2==0) { // If no offer selected yet
+                    return redirect('select_offer/'.$user->id);
+                }
+
+                if (($shipment->has_ofer_1==1 || $shipment->has_ofer_2==1) && $shipment->shipment_date != '') {
                     return redirect('all_project');
                 }
+
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.select_shipment', compact('user','offer'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
@@ -164,7 +169,7 @@ class UserProjectController extends Controller
                  * Check if user already verified account
                  * */
                 $user = Auth::user();
-                if($user->status=='pending'){
+                if($user->parent_id ==0 && $user->status=='pending'){
                     return redirect('verify_account');
                 }
 
@@ -186,7 +191,7 @@ class UserProjectController extends Controller
 
                 $shipment = UserShipment::where('user_id', $user_id)->first();
                 if (empty($shipment)) {
-                    return redirect('select_shipment/'.$user_id);
+                    return redirect('promotion/'.$user_id);
                 }
                 if ($shipment->shipment_date == '') {
                     return redirect('select_shipment/'.$user_id);
