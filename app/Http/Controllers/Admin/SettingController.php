@@ -187,7 +187,17 @@ class SettingController extends Controller
                 $opd = OfferPriceDetail::where('offer_price_id',$offer_prices->id)
                     ->where('subscription_plan_id',$subscrintion_plans[$key])
                     ->first();
-                $opd->offer_price = $offer_price_details[$key];
+                if(empty($opd)){
+                    $opd = NEW OfferPriceDetail();
+                    $opd->offer_price_id = $offer_prices->id;
+                    $opd->subscription_plan_id = $subscrintion_plans[$key];
+                }
+                if($opd->offer_price==''){
+                    $opd->offer_price = 10;
+                }
+                else{
+                    $opd->offer_price = $offer_price_details[$key];
+                }
                 $opd->save();
             }
 
@@ -571,6 +581,18 @@ class SettingController extends Controller
             }
             $subscription_plan->save();
 
+            /*
+             * Save offer price details for new subscription
+             * */
+            $offer_prices = OfferPrices::get();
+
+            foreach($offer_prices as $key=>$offer_price){
+                $opd = NEW OfferPriceDetail();
+                $opd->offer_price_id = $offer_price->id;
+                $opd->subscription_plan_id = $subscription_plan->id;
+                $opd->save();
+            }
+
             return ['status'=>200, 'reason'=>'Successfully saved'];
         }
         catch (\Exception $e) {
@@ -631,6 +653,11 @@ class SettingController extends Controller
     public function deleteSubscriptionPlan(Request $request){
         try{
             SubscriptionPlan::where('id',$request->id)->delete();
+
+            /*
+             * Delete offer price details for this subscription
+             * */
+            $opd = OfferPriceDetail::where('subscription_plan_id',$request->id)->delete();
 
             return ['status'=>200, 'reason'=>'Successfully deleted'];
         }
