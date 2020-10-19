@@ -40,35 +40,52 @@ class CronController extends Controller
 
     public function sendSubscriptionRenewWarningEmail(Request $request){
         try{
-            $month = date("m", strtotime("+ 7 day")); // getting tomorrow month
-            $day = date("d", strtotime("+ 7 day")); // getting tomorrow day
+            $month = date("m", strtotime("+ 30 day")); // getting next month
+            $day = date("d", strtotime("+ 30 day")); // getting next month day
 
-            $users = User::select('users.id','users.unique_id','users.username','users.phone','users.email','user_payments.payment_date')
+            $users = User::select('users.id','users.unique_id','users.username','users.phone','users.email','user_shipments.subscription_plan_id','user_payments.payment_date','subscription_plans.name as subscription_name','subscription_plans.year','subscription_plans.is_lifetime')
+                ->join('user_shipments','user_shipments.user_id','=','users.id')
+                ->join('user_payments','user_payments.user_id','=','users.id')
+                ->join('subscription_plans','subscription_plans.id','=','user_shipments.subscription_plan_id')
+                ->where('subscription_plans.is_lifetime',0)
+                ->get();
+
+            //echo "<pre>"; print_r($users); echo "</pre>"; exit();
+
+            /*$users = User::select('users.id','users.unique_id','users.username','users.phone','users.email','user_payments.payment_date')
                 ->join('user_payments','user_payments.user_id','=','users.id')
                 ->whereRaw('MONTH(payment_date) = '.$month)
                 ->whereRaw('DAY(payment_date) = '.$day)
-                ->get();
+                ->get();*/
+
+            $response = 'No user found';
 
             foreach($users as $user){
-                $email = [$user->email];
+                $expiry_date = date('Y-m-d', strtotime('+'.$user->year.' years', strtotime($user->payment_date)));
+                $upcoming_date = date("Y-m-d", strtotime("+ 30 day")); // getting next month date
 
-                $email_to = $email;
-                $email_cc = [];
-                $email_bcc = [];
+                if($upcoming_date == $expiry_date){
+                    $email = [$user->email];
 
-                $emailData['from_email'] = Common::FROM_EMAIL;
-                $emailData['from_name'] = Common::FROM_NAME;
-                $emailData['email'] = $email_to;
-                $emailData['email_cc'] = $email_cc;
-                $emailData['email_bcc'] = $email_bcc;
-                $emailData['user'] = $user;
-                $emailData['subject'] = Common::SITE_TITLE.'- Subscription renew warning';
+                    $email_to = $email;
+                    $email_cc = [];
+                    $email_bcc = [];
 
-                $emailData['bodyMessage'] = '';
+                    $emailData['from_email'] = Common::FROM_EMAIL;
+                    $emailData['from_name'] = Common::FROM_NAME;
+                    $emailData['email'] = $email_to;
+                    $emailData['email_cc'] = $email_cc;
+                    $emailData['email_bcc'] = $email_bcc;
+                    $emailData['user'] = $user;
+                    $emailData['expiry_date'] = $expiry_date;
+                    $emailData['subject'] = Common::SITE_TITLE.'- Subscription renew warning';
 
-                $view = 'emails.subscription_renew_warning_email';
+                    $emailData['bodyMessage'] = '';
 
-                $response = SendMails::sendMail($emailData, $view);
+                    $view = 'emails.subscription_renew_warning_email';
+
+                    $response = SendMails::sendMail($emailData, $view);
+                }
             }
 
             return $response;

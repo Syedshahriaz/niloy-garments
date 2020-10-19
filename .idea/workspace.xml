@@ -4,11 +4,8 @@
     <list default="true" id="30ac861d-5d9e-4f10-8043-5ef91ebd9341" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CronController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CronController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/emails/subscription_renew_warning_email.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/emails/subscription_renew_warning_email.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +174,7 @@
       <workItem from="1602913331707" duration="4856000" />
       <workItem from="1603005783680" duration="10167000" />
       <workItem from="1603031552054" duration="7198000" />
-      <workItem from="1603073288448" duration="12392000" />
+      <workItem from="1603073288448" duration="15140000" />
     </task>
     <servers />
   </component>

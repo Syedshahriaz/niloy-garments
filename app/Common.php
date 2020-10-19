@@ -74,8 +74,8 @@ class Common
             ->first();
 
         if($shipment->is_lifetime==0){
-            $payment_since = date('Y-m-d h:i:s', strtotime('+'.$shipment->year.' years', strtotime($shipment->payment_date)));
-            if( strtotime($payment_since) < time() ){ // Subscription plan expired
+            $expiry_date = date('Y-m-d h:i:s', strtotime('+'.$shipment->year.' years', strtotime($shipment->payment_date)));
+            if( strtotime($expiry_date) < time() ){ // Subscription plan expired
                 /*
                  * Update user status
                  * */
