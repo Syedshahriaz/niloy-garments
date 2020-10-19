@@ -186,7 +186,18 @@ class UserProjectController extends Controller
 
                 Session::put('selected_user',$user_id);
 
+                /*
+                 * Check if user subscription is expired or not
+                 * */
                 $user = User::where('users.id', $user_id)->first();
+                if($user->status=='expired'){
+                    return redirect('expired_account/'.$user->id);
+                }
+
+                if(Common::checkIfUserSubscriptionExpired($user)){
+                    return redirect('expired_account/'.$user->id);
+                }
+
                 $setting = Setting::select('message_to_user')->first();
 
                 $shipment = UserShipment::where('user_id', $user_id)->first();
@@ -206,7 +217,7 @@ class UserProjectController extends Controller
                 $child_users = User::where('users.email', Session::get('user_email'))
                     ->select('users.*', 'user_shipments.shipment_date')
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
-                    ->whereIn('users.status',['active','pending'])
+                    ->whereIn('users.status',['active','pending','expired'])
                     ->groupBy('user_shipments.user_id')
                     //->orderBy('parent_id','ASC')
                     ->get();

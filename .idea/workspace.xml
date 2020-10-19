@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="30ac861d-5d9e-4f10-8043-5ef91ebd9341" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/renew_subscription.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/renew_subscription.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +176,8 @@
       <workItem from="1602813535474" duration="13175000" />
       <workItem from="1602913331707" duration="4856000" />
       <workItem from="1603005783680" duration="10167000" />
-      <workItem from="1603031552054" duration="6598000" />
+      <workItem from="1603031552054" duration="7198000" />
+      <workItem from="1603073288448" duration="12392000" />
     </task>
     <servers />
   </component>
@@ -191,9 +197,9 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1602824407642" />
-    <state x="407" y="135" width="618" height="522" key="find.popup" timestamp="1603025151081">
+    <state x="407" y="135" width="618" height="522" key="find.popup" timestamp="1603101463519">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="407" y="135" width="618" height="522" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1603025151081" />
+    <state x="407" y="135" width="618" height="522" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1603101463519" />
   </component>
 </project>

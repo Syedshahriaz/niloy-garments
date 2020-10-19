@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\PasswordReset;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserShipment;
 use App\Common;
 use App\SendMails;
 use Auth;
@@ -275,11 +276,18 @@ class AuthenticationController extends Controller
             'password' => $request->password,
             'parent_id' => 0,
             'role' => 3,
-            'status' => ['active','pending'],
+            'status' => ['active','pending','expired'],
         ], $request->has('remember'));
 
         if ($result) {
             $user = Auth::user();
+
+            if($user->status == 'active'){
+                /*
+                 * Check if subscription plan has expired or not
+                 * */
+                $result = Common::checkIfUserSubscriptionExpired($user);
+            }
 
             $this->createUserSession($user);
 

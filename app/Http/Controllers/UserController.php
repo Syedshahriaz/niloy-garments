@@ -77,7 +77,7 @@ class UserController extends Controller
                 }
 
                 if($user->status=='expired'){
-                    return redirect('expired_account');
+                    return redirect('expired_account/'.$user->id);
                 }
 
                 $payment = Payment::where('user_id', $user->id)->first();
@@ -156,7 +156,7 @@ class UserController extends Controller
                 }
 
                 if($user->status=='expired'){
-                    return redirect('expired_account');
+                    return redirect('expired_account/'.$user->id);
                 }
 
                 /*
@@ -226,7 +226,7 @@ class UserController extends Controller
         try {
             $countries = Country::where('status','active')->get();
 
-            $user = Auth::user();
+            $user = User::where('id',$request->id)->first();
             $offer = Offer::first();
             $subscription_plans = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
                 ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
@@ -244,7 +244,7 @@ class UserController extends Controller
                 return view('renew_subscription', compact('user','offer','subscription_plans','countries'));
             }
             else{
-                return back();
+                return redirect('all_project?u_id='.$user->id);
             }
 
         } catch (\Exception $e) {

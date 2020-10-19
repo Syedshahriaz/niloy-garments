@@ -578,6 +578,7 @@ class SettingController extends Controller
 
                 $subscription_plan->name = 'Lifetime';
                 $subscription_plan->year = '';
+                $subscription_plan->is_lifetime = 1;
             }
             $subscription_plan->save();
 

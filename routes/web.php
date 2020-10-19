@@ -41,7 +41,7 @@ Route::get('verify_email', 'AuthenticationController@verifyEmail');
 Route::get('verify_account', 'AuthenticationController@accountVerificationForm');
 Route::post('verify_account', 'AuthenticationController@verifyAccount');
 Route::post('resend_registration_otp', 'AuthenticationController@resendRegistrationOtp');
-Route::get('expired_account', 'UserController@expiredAccount');
+Route::get('expired_account/{id}', 'UserController@expiredAccount');
 
 Route::get('send_sms', 'HomeController@sendSms');
 

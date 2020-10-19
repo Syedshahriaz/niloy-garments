@@ -66,6 +66,30 @@ class Common
         return 0;
     }
 
+    public static function checkIfUserSubscriptionExpired($user){
+        $shipment = UserShipment::select('user_shipments.*','user_payments.payment_date','subscription_plans.year','subscription_plans.is_lifetime')
+            ->join('user_payments','user_payments.user_id','=','user_shipments.user_id')
+            ->join('subscription_plans','subscription_plans.id','=','user_shipments.subscription_plan_id')
+            ->where('user_shipments.user_id',$user->id)
+            ->first();
+
+        if($shipment->is_lifetime==0){
+            $payment_since = date('Y-m-d h:i:s', strtotime('+'.$shipment->year.' years', strtotime($shipment->payment_date)));
+            if( strtotime($payment_since) < time() ){ // Subscription plan expired
+                /*
+                 * Update user status
+                 * */
+                $userDetail = User::where('id',$user->id)->first();
+                $userDetail->status = 'expired';
+                $userDetail->save();
+
+                return 1;
+            }
+            return 0;
+        }
+        return 0;
+    }
+
     public static function checkPaymentAndShipentStatus(){
         $user = Auth::user();
         /*
