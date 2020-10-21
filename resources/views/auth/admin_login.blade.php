@@ -157,7 +157,12 @@
                         $("#success_message").show();
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
-                        window.location.href="{{url('admin/users')}}";
+                        if(data.role_id==1){
+                            window.location.href="{{url('admin/admin_users')}}";
+                        }
+                        else{
+                            window.location.href="{{url('admin/users')}}";
+                        }
                     } else {
                         $("#login_button").attr("disabled", false);
                         $("#success_message").hide();

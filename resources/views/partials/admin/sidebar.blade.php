@@ -42,12 +42,16 @@
                 <!-- END NOTIFICATION DROPDOWN -->
                 <!-- BEGIN INBOX DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                    <a href="{{url('admin/message')}}" class="dropdown-toggle">
-                        <i class="icon-envelope-open"></i>
-                        <span class="badge badge-default new_message_count hidden"> 0 </span>
-                    </a>
-                </li>
+                @if(Session::get('role') == 0 || Session::get('role') == 2)
+                    @if(App\Common::can_access('messages'))
+                        <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                            <a href="{{url('admin/message')}}" class="dropdown-toggle">
+                                <i class="icon-envelope-open"></i>
+                                <span class="badge badge-default new_message_count hidden"> 0 </span>
+                            </a>
+                        </li>
+                    @endif
+                @endif
                 <!-- END INBOX DROPDOWN -->
             </ul>
         </div>
@@ -84,126 +88,186 @@
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
 
-            <li class="nav-item @if($page=='users') active @endif">
-                <a href="{{url('admin/users')}}" class="nav-link">
+            @if(Session::get('role') == 0 || Session::get('role') == 1)
+
+            <li class="nav-item @if($page=='admin_users') active @endif">
+                <a href="{{url('admin/admin_users')}}" class="nav-link">
                     <i class="icon-users"></i>
-                    <span class="title">All Users</span>
+                    <span class="title">Admin Users</span>
                     <span class="selected"></span>
                 </a>
             </li>
-            <li class="nav-item @if($page=='deleted_users') active @endif">
-                <a href="{{url('admin/deleted_users')}}" class="nav-link">
-                    <i class="icon-user-unfollow"></i>
-                    <span class="title">Deleted Users</span>
-                    <span class="selected"></span>
-                </a>
-            </li>
-            <li class="nav-item @if($page=='messages') active @endif">
-                <a href="{{url('admin/message')}}" class="nav-link">
-                    <i class="icon-envelope"></i>
-                    <span class="title">Message</span>
-                    <span class="badge badge-danger new_message_count hidden">0</span>
-                    <span class="selected"></span>
-                </a>
-            </li>
-            <li class="nav-item @if($page=='promotion_settings' || $page=='project_settings' || $page=='common_settings') active open @endif">
-                <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="icon-settings"></i>
-                    <span class="title">Settings</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu" @if($page=='promotion_settings' || $page=='project_settings' || $page=='common_settings' || $page=='offer_price_setting' || $page=='country_setting' || $page=='profession_setting' || $page=='coupon_setting' || $page=='subscription_plan_setting') style="display: block;" @endif>
-                    <li class="nav-item start @if($page=='promotion_settings') active @endif">
-                        <a href="{{url('admin/promotion_settings')}}" class="nav-link">
-                            <span class="title">Promotion Page</span>
+
+            @endif
+
+            @if(Session::get('role') == 0 || Session::get('role') == 2)
+
+                @if(App\Common::can_access('users'))
+                    <li class="nav-item @if($page=='users') active @endif">
+                        <a href="{{url('admin/users')}}" class="nav-link">
+                            <i class="icon-users"></i>
+                            <span class="title">All Users</span>
+                            <span class="selected"></span>
                         </a>
                     </li>
-                    <li class="nav-item start @if($page=='project_settings') active @endif">
-                        <a href="{{url('admin/project_settings')}}" class="nav-link">
-                            <span class="title">Project & Tasks</span>
+                @endif
+                @if(App\Common::can_access('deleted_users'))
+                    <li class="nav-item @if($page=='deleted_users') active @endif">
+                        <a href="{{url('admin/deleted_users')}}" class="nav-link">
+                            <i class="icon-user-unfollow"></i>
+                            <span class="title">Deleted Users</span>
+                            <span class="selected"></span>
                         </a>
                     </li>
-                    <li class="nav-item start @if($page=='common_settings') active @endif">
-                        <a href="{{url('admin/common_settings')}}" class="nav-link">
-                            <span class="title">Common</span>
+                @endif
+
+                @if(App\Common::can_access('messages'))
+                    <li class="nav-item @if($page=='messages') active @endif">
+                        <a href="{{url('admin/message')}}" class="nav-link">
+                            <i class="icon-envelope"></i>
+                            <span class="title">Message</span>
+                            <span class="badge badge-danger new_message_count hidden">0</span>
+                            <span class="selected"></span>
                         </a>
                     </li>
-                    <li class="nav-item start @if($page=='offer_price_setting') active @endif">
-                        <a href="{{url('admin/offer_price_setting')}}" class="nav-link">
-                            <span class="title">Offer Price</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='country_setting') active @endif">
-                        <a href="{{url('admin/country_setting')}}" class="nav-link">
-                            <span class="title">Country</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='profession_setting') active @endif">
-                        <a href="{{url('admin/profession_setting')}}" class="nav-link">
-                            <span class="title">Profession</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='coupon_setting') active @endif">
-                        <a href="{{url('admin/coupon_setting')}}" class="nav-link">
-                            <span class="title">Coupons</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='subscription_plan_setting') active @endif">
-                        <a href="{{url('admin/subscription_plan_setting')}}" class="nav-link">
-                            <span class="title">Subscription Plan</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item @if($page=='report_target' || $page=='report_location' || $page=='report_age' || $page=='report_gender' || $page=='report_profession' || $page=='report_merriege' || $page=='report_offer_purchased' || $page=='report_sms') active open @endif">
-                <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="icon-settings"></i>
-                    <span class="title">Report</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    {{--<li class="nav-item start @if($page=='report_target') active @endif">
-                        <a href="{{url('admin/report_target')}}" class="nav-link">
-                            <span class="title">Target Basis Sell Report</span>
-                        </a>
-                    </li>--}}
-                    <li class="nav-item start @if($page=='report_offer_purchased') active @endif">
-                        <a href="{{url('admin/report_offer_purchased')}}" class="nav-link">
-                            <span class="title">By Offer Purchased Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='report_location') active @endif">
-                        <a href="{{url('admin/report_location')}}" class="nav-link">
-                            <span class="title">By Location Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='report_age') active @endif">
-                        <a href="{{url('admin/report_age')}}" class="nav-link">
-                            <span class="title">By Age Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='report_gender') active @endif">
-                        <a href="{{url('admin/report_gender')}}" class="nav-link">
-                            <span class="title">By Gender Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='report_profession') active @endif">
-                        <a href="{{url('admin/report_profession')}}" class="nav-link">
-                            <span class="title">By profession Report</span>
-                        </a>
-                    </li>
-                    <li class="nav-item start @if($page=='report_sms') active @endif">
-                        <a href="{{url('admin/report_sms')}}" class="nav-link">
-                            <span class="title">By SMS Report</span>
-                        </a>
-                    </li>
-                    <!-- <li class="nav-item start @if($page=='report_merriege') active @endif">
-                        <a href="#" class="nav-link">
-                            <span class="title">By Marriege Report</span>
-                        </a>
-                    </li> -->
-                </ul>
-            </li>
+                @endif
+
+                @if(App\Common::can_access('settings'))
+                    <li class="nav-item @if($page=='promotion_setting' || $page=='project_setting' || $page=='common_setting') active open @endif">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="icon-settings"></i>
+                        <span class="title">Settings</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu" @if($page=='promotion_setting' || $page=='project_setting' || $page=='common_setting' || $page=='offer_price_setting' || $page=='country_setting' || $page=='profession_setting' || $page=='coupon_setting' || $page=='subscription_plan_setting') style="display: block;" @endif>
+                        @if(App\Common::can_access('promotion_setting'))
+                        <li class="nav-item start @if($page=='promotion_setting') active @endif">
+                            <a href="{{url('admin/promotion_setting')}}" class="nav-link">
+                                <span class="title">Promotion Page</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if(App\Common::can_access('project_setting'))
+                            <li class="nav-item start @if($page=='project_setting') active @endif">
+                                <a href="{{url('admin/project_setting')}}" class="nav-link">
+                                    <span class="title">Project & Tasks</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('common_setting'))
+                            <li class="nav-item start @if($page=='common_setting') active @endif">
+                                <a href="{{url('admin/common_setting')}}" class="nav-link">
+                                    <span class="title">Common</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('offer_price_setting'))
+                            <li class="nav-item start @if($page=='offer_price_setting') active @endif">
+                                <a href="{{url('admin/offer_price_setting')}}" class="nav-link">
+                                    <span class="title">Offer Price</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('country_setting'))
+                            <li class="nav-item start @if($page=='country_setting') active @endif">
+                                <a href="{{url('admin/country_setting')}}" class="nav-link">
+                                    <span class="title">Country</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('profession_setting'))
+                            <li class="nav-item start @if($page=='profession_setting') active @endif">
+                                <a href="{{url('admin/profession_setting')}}" class="nav-link">
+                                    <span class="title">Profession</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('coupon_setting'))
+                            <li class="nav-item start @if($page=='coupon_setting') active @endif">
+                                <a href="{{url('admin/coupon_setting')}}" class="nav-link">
+                                    <span class="title">Coupons</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('subscription_plan_setting'))
+                            <li class="nav-item start @if($page=='subscription_plan_setting') active @endif">
+                                <a href="{{url('admin/subscription_plan_setting')}}" class="nav-link">
+                                    <span class="title">Subscription Plan</span>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
+                @endif
+
+                @if(App\Common::can_access('reports'))
+                    <li class="nav-item @if($page=='report_target' || $page=='report_location' || $page=='report_age' || $page=='report_gender' || $page=='report_profession' || $page=='report_merriege' || $page=='report_offer_purchased' || $page=='report_sms') active open @endif">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="icon-settings"></i>
+                        <span class="title">Report</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        {{--<li class="nav-item start @if($page=='report_target') active @endif">
+                            <a href="{{url('admin/report_target')}}" class="nav-link">
+                                <span class="title">Target Basis Sell Report</span>
+                            </a>
+                        </li>--}}
+                        @if(App\Common::can_access('report_offer_purchased'))
+                            <li class="nav-item start @if($page=='report_offer_purchased') active @endif">
+                                <a href="{{url('admin/report_offer_purchased')}}" class="nav-link">
+                                    <span class="title">By Offer Purchased Report</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('report_location'))
+                            <li class="nav-item start @if($page=='report_location') active @endif">
+                                <a href="{{url('admin/report_location')}}" class="nav-link">
+                                    <span class="title">By Location Report</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('report_age'))
+                            <li class="nav-item start @if($page=='report_age') active @endif">
+                                <a href="{{url('admin/report_age')}}" class="nav-link">
+                                    <span class="title">By Age Report</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('report_gender'))
+                            <li class="nav-item start @if($page=='report_gender') active @endif">
+                                <a href="{{url('admin/report_gender')}}" class="nav-link">
+                                    <span class="title">By Gender Report</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('report_profession'))
+                            <li class="nav-item start @if($page=='report_profession') active @endif">
+                                <a href="{{url('admin/report_profession')}}" class="nav-link">
+                                    <span class="title">By profession Report</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('report_sms'))
+                            <li class="nav-item start @if($page=='report_sms') active @endif">
+                                <a href="{{url('admin/report_sms')}}" class="nav-link">
+                                    <span class="title">By SMS Report</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if(App\Common::can_access('report_merriege'))
+                            <!-- <li class="nav-item start @if($page=='report_merriege') active @endif">
+                                <a href="#" class="nav-link">
+                                    <span class="title">By Marriege Report</span>
+                                </a>
+                            </li> -->
+                        @endif
+                    </ul>
+                </li>
+                @endif
+
+            @endif
+
             <li class="nav-item">
                 <a  href="{{ url('admin/logout') }}" class="nav-link">
                     <i class="icon-logout"></i>

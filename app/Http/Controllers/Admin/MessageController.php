@@ -20,6 +20,9 @@ class MessageController extends Controller
         if (!Common::is_admin_login()) {
             return redirect('admin/login');
         }
+        if(!Common::can_access('messages')){
+            return redirect('error_404');
+        }
         $user = Auth::user();
         $messages = Message::select('messages.*','user.username as user_name','user.photo as user_photo','admin.username as admin_name','admin.photo as admin_photo')
             ->join('users as user','user.id','=','messages.user_id')

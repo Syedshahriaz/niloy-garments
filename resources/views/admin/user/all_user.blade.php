@@ -41,11 +41,19 @@
                                 <span class="caption-helper"></span>
                             </div>
                             <div class="actions hidden" id="action_buttons">
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send SMS to User</button>
-                               <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>
+                                @if(App\Common::can_access('send_email'))
+                                    <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
+                                @endif
+                                @if(App\Common::can_access('send_sms'))
+                                    <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send SMS to User</button>
+                                @endif
+                                @if(App\Common::can_access('delete_user'))
+                                    <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>
+                                @endif
                             </div>
-                            <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
+                            @if(App\Common::can_access('custom_sms'))
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
+                            @endif
                         </div>
                         <div class="portlet-body p-relative">
                             <div class="all_user_sort">
@@ -130,30 +138,46 @@
                                             @endif
                                         </td>
                                         <td class="text-center" style="min-width: 170px;">
-                                            <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/speed.png')}}" alt="Dashboard">
-                                            </a>
-                                            <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
-                                            </a>
-                                            <a href="#" title="Unlock Birth Date" onclick="unlock_shipping_date({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
-                                            </a>
-                                            <a href="#" title="Unlock User Gender" onclick="unlock_user_gender({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/gender.png')}}" alt="Change Offer">
-                                            </a>
-                                            <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
-                                            </a>
-                                            <a href="#" title="Send SMS" onclick="send_sms({{$user->id}},'{{$user->country_code}}','{{$user->phone}}')">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/sms.png')}}" alt="Email">
-                                            </a>
-                                            <a href="#" title="Send Message" onclick="send_message({{$user->id}},{{$user->message_id}})">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/message.png')}}" alt="Email">
-                                            </a>
-                                            <a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
-                                                <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
-                                            </a>
+                                            @if(App\Common::can_access('user_dashboard'))
+                                                <a href="{{url('admin/user_dashboard').'?u_id='.$user->id}}" title="User Dashboard">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/speed.png')}}" alt="Dashboard">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('change_offer'))
+                                                <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('unlock_birth_date'))
+                                                <a href="#" title="Unlock Birth Date" onclick="unlock_birth_date({{$user->id}})">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/date_unlock.png')}}" alt="Change Offer">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('unlock_user_gender'))
+                                                <a href="#" title="Unlock User Gender" onclick="unlock_user_gender({{$user->id}})">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/gender.png')}}" alt="Change Offer">
+                                                </a>
+                                                @endif
+                                            @if(App\Common::can_access('send_email'))
+                                                <a href="#" title="Send Email" onclick="send_email({{$user->id}})">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/mail.png')}}" alt="Email">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('send_sms'))
+                                                <a href="#" title="Send SMS" onclick="send_sms({{$user->id}},'{{$user->country_code}}','{{$user->phone}}')">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/sms.png')}}" alt="Email">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('send_message'))
+                                                <a href="#" title="Send Message" onclick="send_message({{$user->id}},{{$user->message_id}})">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/message.png')}}" alt="Email">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('delete_user'))
+                                                <a href="#" title="Remove User" id="remove_user" onclick="user_status_update_warning({{$user->id}},'deleted')">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Email">
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -888,7 +912,7 @@
             }
         });
 
-        function unlock_shipping_date(user_id){
+        function unlock_birth_date(user_id){
             $('#unlock_user_id').val(user_id);
             $("#unlock_shipping_modal").modal('show');
         }
@@ -910,7 +934,7 @@
             var validate = "";
 
             if (validate == "") {
-                var url = "{{ url('admin/unlock_shipping_date') }}";
+                var url = "{{ url('admin/unlock_birth_date') }}";
 
                 $.ajax({
                     type: "POST",

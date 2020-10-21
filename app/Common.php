@@ -9,6 +9,7 @@ use App\Models\UserProject;
 use App\Models\UserProjectTask;
 use App\Models\Notification;
 use App\Models\UserShipment;
+use App\Models\UserPermission;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\UserSms;
@@ -53,7 +54,7 @@ class Common
     const oAuthToken = 'vuja123detec';
 
     public static function is_admin_login(){
-        if (Session::get('user_id') && Session::get('role')==2) {
+        if (Session::get('user_id') && (Session::get('role')==0 || Session::get('role')==1 || Session::get('role')==2)) {
             return 1;
         }
         return 0;
@@ -64,6 +65,19 @@ class Common
             return 1;
         }
         return 0;
+    }
+
+    public static function can_access($feature){
+        $user_id = Session::get('user_id');
+
+        $permission = UserPermission::where('user_id',$user_id)
+            ->join('permissions','permissions.id','user_permissions.permission_id')
+            ->where('permissions.name',$feature)
+            ->first();
+        if(empty($permission)){
+            return 0;
+        }
+        return 1;
     }
 
     public static function checkIfUserSubscriptionExpired($user){

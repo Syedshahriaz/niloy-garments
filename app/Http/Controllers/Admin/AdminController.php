@@ -30,7 +30,7 @@ class AdminController extends Controller
         $result = Auth::attempt([
             'email' => trim($request->email),
             'password' => $request->password,
-            'role' => 2,
+            'role' => [0,1,2], // 0:developer, 1:Super admin, 2:Admin
             'status' => 'active',
         ], $request->has('remember'));
 

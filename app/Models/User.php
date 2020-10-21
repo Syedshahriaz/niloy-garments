@@ -38,4 +38,10 @@ class User extends Authenticatable
         return $instance;
     }
 
+    public function permissions()
+    {
+        $instance = $this->hasMany('App\Models\UserPermission','user_id','id');
+        return $instance;
+    }
+
 }

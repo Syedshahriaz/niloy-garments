@@ -24,6 +24,10 @@ class SettingController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('common_setting')){
+                return redirect('error_404');
+            }
+
             $settings = Setting::first();
             if($request->ajax()) {
                 $returnHTML = View::make('admin.settings.common',compact('settings'))->renderSections()['content'];
@@ -68,6 +72,10 @@ class SettingController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('promotion_setting')){
+                return redirect('error_404');
+            }
+
             $offer = Offer::first();
             if($request->ajax()) {
                 $returnHTML = View::make('admin.settings.common',compact('offer'))->renderSections()['content'];
@@ -113,6 +121,10 @@ class SettingController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('offer_price_setting')){
+                return redirect('error_404');
+            }
+
             $countries = Country::where('status','active')->get();
             $subscription_plans = SubscriptionPlan::where('status','active')->get();
             $offer_prices = OfferPrices::select('offer_prices.*','countries.name as country_name','countries.dial_code')
@@ -270,6 +282,13 @@ class SettingController extends Controller
 
     public function countryList(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
+            if(!Common::can_access('country_setting')){
+                return redirect('error_404');
+            }
+
             $countries = Country::orderBy('name','ASC')->get();
 
             if($request->ajax()) {
@@ -380,6 +399,13 @@ class SettingController extends Controller
 
     public function professionList(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
+            if(!Common::can_access('profession_setting')){
+                return redirect('error_404');
+            }
+
             $professions = Profession::get();
 
             if($request->ajax()) {
@@ -460,6 +486,13 @@ class SettingController extends Controller
 
     public function couponList(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
+            if(!Common::can_access('coupon_setting')){
+                return redirect('error_404');
+            }
+
             $coupons = Coupon::get();
 
             if($request->ajax()) {
@@ -542,6 +575,13 @@ class SettingController extends Controller
 
     public function subscriptionPlanList(Request $request){
         try{
+            if (!Common::is_admin_login()) {
+                return redirect('admin/login');
+            }
+            if(!Common::can_access('subscription_plan_setting')){
+                return redirect('error_404');
+            }
+
             $subscription_plans = SubscriptionPlan::get();
 
             if($request->ajax()) {

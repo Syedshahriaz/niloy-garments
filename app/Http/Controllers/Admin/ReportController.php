@@ -18,25 +18,16 @@ use DB;
 
 class ReportController extends Controller
 {
-    public function allReport(Request $request)
-    {
-        try{
-            return view('admin.reports.sample_report');
-        }
-        catch (\Exception $e) {
-            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ReportController', 'allReport', $e->getLine(),
-            //$e->getFile(), '', '', '', '');
-            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
-            return back();
-        }
-    }
-
     public function genderReport(Request $request)
     {
         try{
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('report_gender')){
+                return redirect('error_404');
+            }
+
             $male_user = User::where('gender','Male')
                 ->whereIn('status',['active','pending'])
                 ->count();
@@ -182,6 +173,10 @@ class ReportController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('report_location')){
+                return redirect('error_404');
+            }
+
             $country = Analytics::performQuery(Period::days(14),'ga:sessions',  ['dimensions'=>'ga:country','sort'=>'-ga:country']);
             $locations= collect($country['rows'] ?? [])->map(function (array $dateRow) {
                 return [
@@ -332,6 +327,10 @@ class ReportController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('report_age')){
+                return redirect('error_404');
+            }
+
             $analyticsData = Analytics::performQuery(Period::days(14),'ga:sessions',
                 ['dimensions' => 'ga:userGender,ga:userAgeBracket']
             );
@@ -488,6 +487,10 @@ class ReportController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('report_profession')){
+                return redirect('error_404');
+            }
+
             $users = DB::table('users')
                 ->select('professions.title as profession', DB::raw('count(*) as total_user'))
                 ->leftJoin('professions','professions.id','=','users.profession')
@@ -644,6 +647,10 @@ class ReportController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('report_offer_purchased')){
+                return redirect('error_404');
+            }
+
             $year = date('Y');
             if($request->year != ''){
                 $year = $request->year;
@@ -869,6 +876,10 @@ class ReportController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('report_sms')){
+                return redirect('error_404');
+            }
+
             $user_sms = UserSms::select('user_sms.*','users.id','users.unique_id','users.username', DB::raw('count(*) as total_sms'))
                 ->join('users','users.id','=','user_sms.user_id')
                 ->groupBy('user_sms.user_id')

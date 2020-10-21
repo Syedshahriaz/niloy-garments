@@ -23,6 +23,11 @@ class ProjectController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+
+            if(!Common::can_access('project_setting')){
+                return redirect('error_404');
+            }
+
             $projects = Project::with('tasks')
                 ->where('status','!=','deleted')
                 ->get();

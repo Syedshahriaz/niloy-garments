@@ -26,6 +26,10 @@ class UserController extends Controller
             if (!Common::is_admin_login()) {
                 return redirect('admin/login');
             }
+            if(!Common::can_access('users')){
+                return redirect('error_404');
+            }
+
             $offer = Offer::first();
 
             $users = User::with('projects.passed_task','projects.recent_due_task')
@@ -50,6 +54,7 @@ class UserController extends Controller
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
         }
     }
+
     public function deletedUserList(Request $request)
     {
         try {

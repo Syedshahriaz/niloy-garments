@@ -114,10 +114,10 @@ Route::post('admin/unlock_project_task', 'Admin\ProjectController@unlockProjectT
 Route::post('admin/unlock_shipping_date', 'Admin\ProjectController@unlockShippingDate');
 Route::post('admin/unlock_user_gender', 'Admin\UserController@unlockUserGender');
 
-Route::get('admin/promotion_settings', 'Admin\SettingController@promotionSettings');
+Route::get('admin/promotion_setting', 'Admin\SettingController@promotionSettings');
 Route::post('admin/update_offer', 'Admin\SettingController@updateOffer');
-Route::get('admin/common_settings', 'Admin\SettingController@commonSetting');
-Route::post('admin/update_common_settings', 'Admin\SettingController@updateCommonSetting');
+Route::get('admin/common_setting', 'Admin\SettingController@commonSetting');
+Route::post('admin/update_common_setting', 'Admin\SettingController@updateCommonSetting');
 Route::get('admin/offer_price_setting', 'Admin\SettingController@offerPriceSetting');
 Route::post('admin/save_country_offer', 'Admin\SettingController@storeCountryOffer');
 Route::post('admin/get_country_offer', 'Admin\SettingController@getCountryOffer');
@@ -175,5 +175,11 @@ Route::get('admin/report_sms', 'Admin\ReportController@smsReport');
 Route::get('admin/download_report_sms_excel', 'Admin\ReportController@downloadSmsReportExcel');
 Route::get('admin/analytics_test', 'Admin\ReportController@analyticsTest');
 
+/*
+ * Super admin routes
+ * */
+Route::get('admin/admin_users', 'SuperAdmin\UserController@userList');
+Route::post('admin/edit_admin_user', 'SuperAdmin\UserController@editUser');
+Route::post('admin/update_admin_user', 'SuperAdmin\UserController@updateUser');
 
 
