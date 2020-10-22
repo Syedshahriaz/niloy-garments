@@ -44,7 +44,7 @@
                                                     <div class="custom-options">
                                                         <span class="custom-option selected" data-id="">Select</span>
                                                         @foreach($subscription_plans as $plan)
-                                                        <span class="custom-option" data-id="{{$plan->id}}" data-price="{{$plan->offer_price}}">{{$plan->name}}</span>
+                                                        <span class="custom-option" data-id="{{$plan->id}}" data-price="{{$plan->offer_price}}" data-currency="{{$plan->currency}}">{{$plan->name}}</span>
                                                         @endforeach
                                                         <input type="hidden" name="subscription_plan_id" id="subscription_plan_id" value="">
                                                         <input type="hidden" name="currency" id="currency" value="{{$plan->currency}}">
@@ -75,8 +75,8 @@
                                 </div>
 
                                 <div class="col-md-6 d-none" id="price_preview">
-                                    <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currensy">BDT</span> <span class="prev_cost">00.00</span></strong></p>
-                                    <p>After discount your total cost is BDT <strong><span class="slected_currensy">BDT</span> <span class="payable_cost">00.00</span></strong></p>
+                                    <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currency">BDT</span> <span class="prev_cost">00.00</span></strong></p>
+                                    <p>After discount your total cost is BDT <strong><span class="slected_currency">BDT</span> <span class="payable_cost">00.00</span></strong></p>
                                 </div>
                             </div>
                         </div>
@@ -249,6 +249,7 @@
 
                     var subscription_id = $(this).attr('data-id');
                     var subscription_price = $(this).attr('data-price');
+                    var currency = $(this).attr('data-currency');
                     $('#subscription_plan_id').val(subscription_id);
                     $('#promo').val('');
                     if(subscription_id != ''){
@@ -256,6 +257,7 @@
                         $('#price_preview').removeClass('d-none');
                         $('#subscription_price').val(subscription_price);
                         $('#coupon_id').val('');
+                        $('.slected_currency').text(currency);
                         $('.prev_cost').text(subscription_price);
                         $('.payable_cost').text(subscription_price);
                     }
