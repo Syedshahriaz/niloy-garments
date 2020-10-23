@@ -27,6 +27,102 @@
     <div class="row">
         <div class="col" style="margin-top:25px;">
             <div class="offer-option mb-5">
+                
+                <div class=""> 
+                    <div class="row">
+                        <div class="col-md-8 offset-2">
+                            <div class="form-group offer-item">
+                                <h5 class="text-center mb-3">Gender of vaccine</h5>
+                                <div class="row mb-4">
+                                    <div class="col-md-4 offset-4 form-group">
+                                        <select name="Gender" id="Gender" class="form-control">
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option></option></option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <h5 class="text-center mb-4">Date of birth for vaccine</h5>
+                                {{--<input class="form-control date-picker" size="16" type="text" name="" id="shipment_date" value="" placeholder="Select Shipping Date"/>
+                                --}}
+                                <div class="row">
+                                    <div class="col-md-4 form-group">
+                                        <select name="day" id="day" class="form-control">
+                                            <option disabled="true" value="">Day</option>
+                                            @for($i=1; $i<=31; $i++)
+                                                <option value="{{$i}}" @if($i==date('d')) selected @endif>{{$i}}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <select name="month" id="month" class="form-control">
+                                            <option disabled="true" value="">Month</option>
+                                            <option value="1" @if(date('m')==1) selected @endif>Jan</option>
+                                            <option value="2" @if(date('m')==2) selected @endif>Feb</option>
+                                            <option value="3" @if(date('m')==3) selected @endif>Mar</option>
+                                            <option value="4" @if(date('m')==4) selected @endif>Apr</option>
+                                            <option value="5" @if(date('m')==5) selected @endif>May</option>
+                                            <option value="6" @if(date('m')==6) selected @endif>Jun</option>
+                                            <option value="7" @if(date('m')==7) selected @endif>Jul</option>
+                                            <option value="8" @if(date('m')==8) selected @endif>Aug</option>
+                                            <option value="9" @if(date('m')==9) selected @endif>Sep</option>
+                                            <option value="10" @if(date('m')==10) selected @endif>Oct</option>
+                                            <option value="11" @if(date('m')==11) selected @endif>Nov</option>
+                                            <option value="12" @if(date('m')==12) selected @endif>Dec</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <select name="year" id="year" class="form-control">
+                                            <option disabled="true" value="">Year</option>
+                                            @for($i=date('Y'); $i>=1920; $i--)
+                                                <option value="{{$i}}" @if($i==date('Y')) selected @endif>{{$i}}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date" value="{{date('Y-m-d')}}"/>
+                            </div>
+
+                            <div class="offer-item">
+                                <h5 class="text-center mb-3">Do you take vaccine regularly?</h5>
+                                <div class="row">
+                                    <div class="col-md-4 offset-4 form-group text-center mb-0">
+                                        <label class="radio-inline mr-3">
+                                            <input type="radio" name="regular_vaccine" id="regular_vaccine_yes" value="1"> Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="regular_vaccine" id="regular_vaccine_no" value="0"> No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="offer-item">
+                                <h5 class="text-center mb-3">Did you miss any vaccine?</h5>
+                                <div class="row">
+                                    <div class="col-md-4 offset-4 form-group text-center mb-0">
+                                        <label class="radio-inline mr-3">
+                                            <input type="radio" name="miss_vaccine" id="miss_vaccine_yes" value="1"> Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="miss_vaccine" id="miss_vaccine_no" value="0"> No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary" id="offer_submit_btn">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <form id="offer_form" class="login-form" action="{{url('save_offer')}}" method="post">
                     {{csrf_field()}}
                     <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
@@ -204,6 +300,34 @@
             if (!select.contains(e.target)) {
                 select.classList.remove('open');
             }
+        }
+    });
+
+    //Auto select offer
+    $('#offer_submit_btn').on('click',function(){
+        var isRegular = $('input[name="regular_vaccine"]:checked').val();
+        var isMissed = $('input[name="miss_vaccine"]:checked').val();
+        if(isRegular == 1 && isMissed == 1){
+            $('.offer-option-item ').each(function(){
+                var filtered_offer =$(this).children('input[name="offer"]').val();
+                if(filtered_offer == 1){
+                    $(this).children('input[name="offer"]').prop('checked', true);
+                    $('.offer-option-item').removeClass('selected-offer');
+                    $(this).addClass('selected-offer');
+                    alert($(this).children('input[name="offer"]:checked').val());
+                }
+            });
+        }
+        else{
+            $('.offer-option-item ').each(function(){
+                var filtered_offer =$(this).children('input[name="offer"]').val();
+                if(filtered_offer == 2){
+                    $(this).children('input[name="offer"]').prop('checked', true);
+                    $('.offer-option-item').removeClass('selected-offer');
+                    $(this).addClass('selected-offer');
+                    alert($(this).children('input[name="offer"]:checked').val());
+                }
+            });
         }
     });
 

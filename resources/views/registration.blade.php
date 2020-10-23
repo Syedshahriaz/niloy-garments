@@ -43,7 +43,7 @@
     <link href="{{asset('assets/holdon/holdon.min.css')}}" rel="stylesheet" />
 </head>
 
-<body class=" login">
+<body class=" login registration">
 
 <div class="login-header">
     <div class="page-logo">
@@ -181,6 +181,19 @@
 <script src="{{ asset('assets/holdon/holdon.min.js')}}"></script>
 
 <script type="text/javascript">
+    // 0 1st digit in phone field
+    $('#telephone').on("keyup change", function () {
+        var countryData = iti.getSelectedCountryData();
+        //console.log(countryData.iso2);
+        if(countryData.iso2 == 'bd'){
+            
+            var this_val = $(this).val().charAt(0);
+            if(this_val != 0){
+                $('#error-msg').removeClass('hide').text('Enter 0 as first digit');
+            }
+        }
+    });
+
     $(document).on("submit", "#registration_form", function(event) {
         event.preventDefault();
 
