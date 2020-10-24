@@ -123,7 +123,9 @@
                                 </div>
                             </div>
                         </div>
-                        <buton type="button" class="btn btn-lg btn-success" id="payment_button">Submit</buton>
+                        <div class="text-center">
+                            <buton type="button" class="btn btn-lg btn-success" id="payment_button">Submit</buton>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -302,10 +304,12 @@
                         $('#coupon_apply_button').prop('disabled',true);
                     }
                     else{
+                        $('#coupon_apply_button').prop('disabled',false);
                         show_error_message(data.reason);
                     }
                 },
                 error: function (data) {
+                    $('#coupon_apply_button').prop('disabled',false);
                     show_error_message(data);
                 }
             });

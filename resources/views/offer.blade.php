@@ -128,7 +128,7 @@
 
                     <h2 class="text-center mt-3 mb-4">{{--Choose your offer--}}</h2>
 
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <div class="offer-itemlist">
                             <div class="offer-option-item green-offer-option active_offer_option selected-offer">
                                 <p>{{$offer->offer1_name}}</p>
@@ -145,9 +145,9 @@
                         </div>
                         <p class="text-center mt-3">Pink is free for female if any female buy green or red offer. </p>
 
-                        <div class="text-center">
-                            <button type="button" class="btn btn-primary" id="offer_submit_btn">Submit</button>
-                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" id="offer_submit_btn">Submit</button>
                     </div>
                 </form>
             </div>
@@ -255,15 +255,15 @@
         var start = new Date(date);
         var end   = new Date();
         var diff  = new Date(end - start);
-        var years  = diff/1000/60/60/24/365;
+        var months  = diff/1000/60/60/24/30;
 
-        if(years>=2){
+        if(months>=23){
             $('#question_area').removeClass('d-none');
         }
         else{
             $('#question_area').addClass('d-none');
         }
-        $('#age').val(years);
+        $('#age').val(months);
     });
 
     $(document).on('click','#offer_submit_btn', function(event){
@@ -296,7 +296,7 @@
             validate = validate + "Birth date is required</br>";
         }
 
-        if(age>=2){
+        if(age>=23){
             if (!$("input[name='regular_vaccine']:checked").val()) {
                 validate = validate + "Please give answer of the question 1</br>";
             }

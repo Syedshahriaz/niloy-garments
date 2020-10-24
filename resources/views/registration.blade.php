@@ -95,7 +95,7 @@
             <label class="control-label">Phone  you want to get reminder*</label>
             <input class="form-control placeholder-no-fix" id="telephone" type="text" name="phone" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$phone}}" />
             <span id="valid-msg" class="hide">✓ Valid</span>
-            <span id="error-msg" class="hide">Invalid</span>
+            <span id="error-msg" class="hide"></span>
         </div>
         <div class="form-group">
             <label class="control-label">Password</label>
@@ -186,7 +186,7 @@
         var countryData = iti.getSelectedCountryData();
         //console.log(countryData.iso2);
         if(countryData.iso2 == 'bd'){
-            
+
             var this_val = $(this).val().charAt(0);
             if(this_val != 0){
                 $('#error-msg').removeClass('hide').text('Enter 0 as first digit');
@@ -209,6 +209,7 @@
         var username = $("#username").val();
         var email = $("#email").val();
         var phone = $("#telephone").val();
+        var phone_error_msg = $("#error-msg").text();
         var country_code = $(".iti__selected-dial-code").text();
         var password = $("#password").val();
         var repassword = $("#repassword").val();
@@ -230,6 +231,11 @@
         }
         if (phone.trim() == "") {
             validate = validate + "Phone is required</br>";
+        }
+        if (phone.trim() != "") {
+            if(phone_error_msg!=''){
+                validate = validate + "Invalid phone number</br>";
+            }
         }
         if (email.trim() == "") {
             validate = validate + "Email is required</br>";

@@ -3,17 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="30ac861d-5d9e-4f10-8043-5ef91ebd9341" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MessageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MessageController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/NotificationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/NotificationController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PaymentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PaymentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Service/PaymentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Service/PaymentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Service/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Service/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserDashboardController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserDashboardController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/settings/coupon.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/settings/coupon.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/offer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/offer.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/user/project/all_project.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/user/project/all_project.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/promotion.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/promotion.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/registration.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/registration.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/app/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/app/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" afterDir="false" />
     </list>
@@ -193,6 +186,7 @@
       <workItem from="1603333995692" duration="2110000" />
       <workItem from="1603384370217" duration="534000" />
       <workItem from="1603510449757" duration="6072000" />
+      <workItem from="1603536042055" duration="3735000" />
     </task>
     <servers />
   </component>

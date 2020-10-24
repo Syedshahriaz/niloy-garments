@@ -52,6 +52,7 @@
                                     <th>Coupon Code</th>
                                     <th>Discount(%)</th>
                                     <th>Available for</th>
+                                    <th>Total Used</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -64,6 +65,7 @@
                                     <td>{{$coupon->code}}</td>
                                     <td>{{$coupon->discount}}</td>
                                     <td>{{$coupon->availability}}</td>
+                                    <td>{{$coupon->number_of_use}}</td>
                                     <td class="text-center">
                                         <a href="#" title="Edit Offer" onclick="edit_coupon({{$coupon->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Edit Offer">
