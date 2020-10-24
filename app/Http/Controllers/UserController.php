@@ -84,7 +84,7 @@ class UserController extends Controller
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
                     $shipment = UserShipment::where('user_id', $user->id)->first();
                     if (empty($shipment)) {
-                        return redirect('select_shipment/'.$user->id);
+                        return redirect('select_offer/'.$user->id);
                     }
 
                     return redirect('all_project');
@@ -198,28 +198,91 @@ class UserController extends Controller
 
     public function saveOffer(Request $request){
         try {
+            DB::beginTransaction();
+
             $user_id = $request->user_id;
-            $shipment = UserShipment::where('user_id',$user_id)->first();
-            if($request->offer == 1){
-                $shipment->has_ofer_1 = 1;
-                $shipment->has_ofer_2 = 0;
-            }
-            else{
-                $shipment->has_ofer_1 = 0;
-                $shipment->has_ofer_2 = 1;
+            $gender = $request->gender;
+            $offer = $request->offer;
+            $shipment_date = $request->shipment_date;
+
+            $shipment = UserShipment::where('user_id',$request->user_id)->first();
+            if($shipment->shipment_date != ''){
+                return [ 'status' => 401, 'reason' => 'You have already added your shipment date'];
             }
 
-            $shipment->save();
+            /*
+             * Update user
+             * */
+            $user = User::where('users.id',$user_id)
+                ->select('users.*','user_payments.created_at as purchase_date')
+                ->join('user_payments','user_payments.user_id','=','users.id')
+                ->first();
+            $user->gender = $gender;
+            $user->save();
 
-            return redirect('select_shipment/'.$user_id);
+            $purchase_date = $user->purchase_date;
+
+            /*
+             * Save shipment date
+             * */
+            $shipment = $this->saveShipmentDetails($user_id,$gender,$shipment_date,$offer);
+
+            $has_offer_1 = $shipment->has_ofer_1;
+            $has_offer_2 = $shipment->has_ofer_2;
+
+            /*
+             * Get user project based on selected offer
+             * */
+            $projects = Common::getOfferedProject($gender,$has_offer_1,$has_offer_2);
+
+            /*
+             * Save user project
+             * */
+            $result = Common::saveUserProject($projects,$user_id,$shipment,$purchase_date);
+
+            DB::commit();
+
+            /*
+             * check and prepare for task editable
+             * */
+            $result = Common::checkAndPrepareForTaskProcessing($user_id,$shipment_date);
+
+            Session::put('selected_user',$user_id);
+
+            /*
+             * Check and send task warning email and sms
+             * */
+            $result = Common::sendTaskWarningEmail($user_id);
+
+            return redirect('all_project?u_id='.$user_id);
 
         }
         catch (\Exception $e) {
+            DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'saveOffer', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return back();
         }
+    }
+
+    private function saveShipmentDetails($user_id,$gender,$shipment_date,$offer){
+        $shipment = UserShipment::where('user_id',$user_id)->first();
+        $shipment->shipment_date = date('Y-m-d',strtotime($shipment_date));
+        if($offer == 1){
+            $shipment->has_ofer_1 = 1;
+            $shipment->has_ofer_2 = 0;
+        }
+        else{
+            $shipment->has_ofer_1 = 0;
+            $shipment->has_ofer_2 = 1;
+        }
+        if($gender == 'Female'){
+            $shipment->has_ofer_3 = 1;
+        }
+        $shipment->save();
+
+        return $shipment;
     }
 
     public function expiredAccount(Request $request){
@@ -282,7 +345,7 @@ class UserController extends Controller
                     return redirect('promotion/'.$user->id);
                 }
                 if($user_status=='empty_shipment'){
-                    return redirect('select_shipment/'.$user->id);
+                    return redirect('select_offer/'.$user->id);
                 }
                 /*
                  * User status checking ends
@@ -571,7 +634,7 @@ class UserController extends Controller
                     return redirect('promotion/'.$user->id);
                 }
                 if($user_status=='empty_shipment'){
-                    return redirect('select_shipment/'.$user->id);
+                    return redirect('select_offer/'.$user->id);
                 }
                 /*
                  * User status checking ends

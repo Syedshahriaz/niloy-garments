@@ -185,7 +185,7 @@ class PaymentController extends Controller
              * */
             $this->reAuthenticateUser($user_id);
 
-            return redirect('select_shipment/'.$user_id);
+            return redirect('select_offer/'.$user_id);
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'PaymentController', 'success', $e->getLine(),
                 //$e->getFile(), '', '', '', '');

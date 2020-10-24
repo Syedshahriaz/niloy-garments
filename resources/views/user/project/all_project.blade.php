@@ -57,8 +57,8 @@
                                             @if($user->shipment_date !='')
                                                 <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('all_project').'?u_id='.$user->id}}" class="item-2" data-name="all_project?u_id={{$user->id}}" data-item="2">{{$user->username}}</a></li>
                                             @else
-                                                <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('select_shipment',$user->id)}}" class="" >{{$user->username}}</a></li>
-                                                {{--<li class="@if($user->id==$user_id) active @endif"><a href="{{url('select_shipment',$user->id)}}" class="ajax_item item-7" data-segment="select_shipment" data-name="select_shipment/{{$user->id}}" data-item="7">{{$user->username}}</a></li>--}}
+                                                <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('select_offer',$user->id)}}" class="" >{{$user->username}}</a></li>
+                                                {{--<li class="@if($user->id==$user_id) active @endif"><a href="{{url('select_offer',$user->id)}}" class="ajax_item item-7" data-segment="select_offer" data-name="select_offer/{{$user->id}}" data-item="7">{{$user->username}}</a></li>--}}
                                             @endif
                                         @endforeach
                                     </ul>

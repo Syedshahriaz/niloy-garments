@@ -205,7 +205,7 @@ class UserProjectController extends Controller
                     return redirect('promotion/'.$user_id);
                 }
                 if ($shipment->shipment_date == '') {
-                    return redirect('select_shipment/'.$user_id);
+                    return redirect('select_offer/'.$user_id);
                 }
 
                 /*

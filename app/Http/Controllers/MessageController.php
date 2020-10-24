@@ -56,7 +56,7 @@ class MessageController extends Controller
             return redirect('promotion/'.$user->id);
         }
         if($user_status=='empty_shipment'){
-            return redirect('select_shipment/'.$user->id);
+            return redirect('select_offer/'.$user->id);
         }
         /*
          * User status checking ends

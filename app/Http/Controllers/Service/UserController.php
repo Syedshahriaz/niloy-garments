@@ -67,7 +67,7 @@ class UserController extends Controller
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
                     $shipment = UserShipment::where('user_id', $user->id)->first();
                     if (empty($shipment)) {
-                        return redirect('select_shipment/'.$user->id);
+                        return redirect('select_offer/'.$user->id);
                     }
 
                     return redirect('all_project');
@@ -117,7 +117,7 @@ class UserController extends Controller
                     return redirect('promotion/'.$user->id);
                 }
                 if($user_status=='empty_shipment'){
-                    return redirect('select_shipment/'.$user->id);
+                    return redirect('select_offer/'.$user->id);
                 }
                 /*
                  * User status checking ends
@@ -406,7 +406,7 @@ class UserController extends Controller
                     return redirect('promotion/'.$user->id);
                 }
                 if($user_status=='empty_shipment'){
-                    return redirect('select_shipment/'.$user->id);
+                    return redirect('select_offer/'.$user->id);
                 }
                 /*
                  * User status checking ends

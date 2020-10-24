@@ -32,7 +32,7 @@ class UserDashboardController extends Controller
 
             $shipment = UserShipment::where('user_id', $user_id)->first();
             if (empty($shipment)) {
-                return redirect('select_shipment/'.$user_id);
+                return redirect('select_offer/'.$user_id);
             }
             $projects = UserProject::with('tasks','running_task','last_task')
                 ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id')
@@ -60,7 +60,7 @@ class UserDashboardController extends Controller
                 return redirect('promotion/'.$user->id);
             }
             if($user_status=='empty_shipment'){
-                return redirect('select_shipment/'.$user->id);
+                return redirect('select_offer/'.$user->id);
             }
             /*
              * User status checking ends
