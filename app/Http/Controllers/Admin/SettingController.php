@@ -245,6 +245,9 @@ class SettingController extends Controller
                 ->get();
 
             foreach($offer_prices as $offer_price){
+                $offer_price->currency = $request->currency;
+                $offer_price->save();
+
                 foreach($offer_price_details as $key=>$price){
                     $opd = NEW OfferPriceDetail();
                     $opd->offer_price_id = $offer_price->id;
