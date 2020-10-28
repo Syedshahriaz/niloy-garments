@@ -8,7 +8,11 @@ use App\SMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserShipment;
+use App\Models\Payment;
 use App\Models\UserProject;
+use App\Models\UserPermission;
+use App\Models\Message;
+use App\Models\UserSms;
 use App\Models\Buyer;
 use App\Models\User;
 use App\Common;
@@ -168,14 +172,45 @@ class UserController extends Controller
     public function deleteUserPermanently(Request $request)
     {
         try {
-            User::where('id', $request->user_id)->delete();
+            DB::beginTransaction();
+            $user_id = $request->user_id;
+            User::where('id', $user_id)->delete();
 
             /*
-             * Delete user related other data
+             * Delete user payment data
              * */
+            Payment::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user shipment
+             * */
+            UserShipment::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user project data
+             * */
+            UserProject::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user permission
+             * */
+            UserPermission::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user message
+             * */
+            Message::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user sms
+             * */
+            UserSms::where('user_id',$user_id)->delete();
+
+            DB::commit();
 
             return ['status'=>200, 'reason'=>'User deleted successfully'];
         } catch (\Exception $e) {
+            DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
