@@ -165,6 +165,24 @@ class UserController extends Controller
         }
     }
 
+    public function deleteUserPermanently(Request $request)
+    {
+        try {
+            User::where('id', $request->user_id)->delete();
+
+            /*
+             * Delete user related other data
+             * */
+
+            return ['status'=>200, 'reason'=>'User deleted successfully'];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
     public function updateUserOffer(Request $request)
     {
         try {

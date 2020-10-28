@@ -106,6 +106,7 @@ Route::get('admin/users', 'Admin\UserController@userList');
 Route::get('admin/deleted_users', 'Admin\UserController@deletedUserList');
 Route::get('admin/user_dashboard', 'Admin\UserController@dashboard');
 Route::post('admin/update_user_status', 'Admin\UserController@updateStatus');
+Route::post('admin/delete_user_permanently', 'Admin\UserController@deleteUserPermanently');
 Route::post('admin/update_user_offer', 'Admin\UserController@updateUserOffer');
 Route::post('admin/send_user_email', 'Admin\UserController@sendUserEmail');
 Route::post('admin/send_user_sms', 'Admin\UserController@sendUserSms');

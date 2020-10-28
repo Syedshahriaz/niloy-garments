@@ -43,7 +43,7 @@
                             <div class="actions hidden" id="action_buttons">
                                 {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
                                 <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All SMS" id="send_sms_all">Send SMS to User</button>--}}
-                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="restore_user_all">Restore Users</button>
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Restore Users" id="restore_user_all">Restore Users</button>
                             </div>
                             {{--<button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>--}}
                         </div>
@@ -124,7 +124,10 @@
                                     </td>
                                     <td class="text-center" style="min-width: 170px;">
                                         <a href="#" title="Restore User" id="restore_user" onclick="user_status_update_warning({{$user->id}},'active')">
-                                            <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Restore">
+                                            <img class="action-icon" src="{{asset('assets/global/img/icons/restore.jpg')}}" alt="Restore">
+                                        </a>
+                                        <a href="#" title="Delete User Permanently" id="delete_user" onclick="user_delete_warning({{$user->id}})">
+                                            <img class="action-icon" src="{{asset('assets/global/img/icons/trash.png')}}" alt="Delete User">
                                         </a>
                                     </td>
                                 </tr>
@@ -140,257 +143,6 @@
         </div>
         <!-- END CONTENT BODY -->
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="send_email_modal" tabindex="-1" role="send_email_modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send email</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <form id="email_form" method="post" action="">
-                            <div class="col-md-12">
-                                <div class="alert alert-success" id="success_message" style="display:none"></div>
-                                <div class="alert alert-danger" id="error_message" style="display: none"></div>
-                            </div>
-                            {{csrf_field()}}
-                            <input type="hidden" name="user_id" id="user_id" value="">
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="control-label">Subject</label>
-                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter email subject*" name="subject" id="subject" value=""  autocomplete="off"/>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label">Message</label>
-                                    <textarea class="form-control placeholder-no-fix" name="message" id="email_message"></textarea>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="submit" class="btn theme-btn pull-right" id="send_email">Send Email</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="send_sms_modal" tabindex="-1" role="send_sms_modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send SMS</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <form id="sms_form" method="post" action="">
-                            <div class="col-md-12">
-                                <div class="alert alert-success" id="sms_success_message" style="display:none"></div>
-                                <div class="alert alert-danger" id="sms_error_message" style="display: none"></div>
-                            </div>
-                            {{csrf_field()}}
-                            <input type="hidden" name="user_id" id="sms_user_id" value="">
-                            <input type="hidden" name="sms_type" id="sms_type" value="">
-
-                            <div class="col-md-12">
-                                <div class="form-group" id="telephone_area">
-                                    <label class="control-label">Phone*</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon" id="phone-addon">+88</span>
-                                        <input class="form-control placeholder-no-fix" id="telephone02" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label">Message</label>
-                                    <textarea class="form-control placeholder-no-fix" rows="6" name="message" id="sms_message"></textarea>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="submit" class="btn theme-btn pull-right" id="send_sms">Send SMS</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="send_message_modal" tabindex="-1" role="send_message_modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Send Message</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <form id="message_form" method="post" action="" enctype="multipart/form-data">
-                            <div class="col-md-12">
-                                <div class="alert alert-success" id="message_success_message" style="display:none"></div>
-                                <div class="alert alert-danger" id="message_error_message" style="display: none"></div>
-                            </div>
-                            {{csrf_field()}}
-                            <input type="hidden" name="user_id" id="message_user_id" value="">
-                            <input type="hidden" name="message_id" id="message_id" value="">
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="control-label">Message</label>
-                                    <textarea class="form-control placeholder-no-fix" name="message" id="message"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label">File</label>
-                                    <input class="form-control placeholder-no-fix" type="file" name="message_file" id="image_upload_input" value=""  autocomplete="off"/>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="submit" class="btn theme-btn pull-right" id="send_message">Send Message</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- END CONTENT -->
-
-    <!-- Modal -->
-    <div class="modal fade" id="change_offer_modal" tabindex="-1" role="change_offer_modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Change offer</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <form id="offer_form" method="post" action="">
-                            <div class="col-md-12">
-                                <div class="alert alert-success" id="offer_success_message" style="display:none"></div>
-                                <div class="alert alert-danger" id="offer_error_message" style="display: none"></div>
-                            </div>
-                            {{csrf_field()}}
-                            <input type="hidden" name="user_id" id="offer_user_id" value="">
-
-                            <div class="col-md-12">
-                                <div class="admin_offer_change">
-                                    <label class="text-center" for=""><b>Choose Offer</b></label>
-                                    <div class="offer-itemlist">
-                                        <div class="offer-item">
-                                            <div class="offer-option-item green-offer-option">
-                                                <p>Green</p>
-                                                <input type="radio" name="offer" value="1" hidden="">
-                                            </div>
-                                        </div>
-                                        <div class="offer-item">
-                                            <div class="offer-option-item red-offer-option">
-                                                <p>Red</p>
-                                                <input type="radio" name="offer" value="2" hidden="">
-                                            </div>
-                                        </div>
-                                        <div class="offer-item">
-                                            <div class="offer-option-item pink-offer-option">
-                                                <p>{{$offer->offer3_name}}</p>
-                                                <input type="radio" name="offer_3" value="3" disabled="" hidden="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="submit" class="btn theme-btn" id="update_offer">Update</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- END CONTENT -->
-
-    <!-- Modal -->
-    <div class="modal fade" id="unlock_shipping_modal" tabindex="-1" role="unlock_shipping_modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock Birth Date</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row" style="text-align:center;">
-                        <input type="hidden" name="user_id" id="unlock_user_id" value="">
-                        <h4>Are you sure you want to unlock this user's birth date update?</h4>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="button" class="btn theme-btn" id="unlock_shipping">Yes</button>
-                        <button type="button" class="btn" data-dismiss="modal">No</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- END CONTENT -->
-    <!-- Modal -->
-    <div class="modal fade" id="unlock_user_gender_modal" tabindex="-1" role="unlock_user_gender_modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Unlock User Gender</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row" style="text-align:center;">
-                        <input type="hidden" name="user_id" id="unlock_gender_user_id" value="">
-                        <h4>Are you sure you want to unlock this user's gender update?</h4>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="text-center">
-                        <button type="button" class="btn theme-btn" id="unlock_gender">Yes</button>
-                        <button type="button" class="btn" data-dismiss="modal">No</button>
-                    </div>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- END CONTENT -->
 
 @endsection
 
@@ -533,11 +285,24 @@
             $('#item_type').val(status);
         }
 
+        function user_delete_warning(user_id){
+            $(".warning_message").text('Are you sure you want to delete this users permanently? This can not be undone.');
+            $("#warning_modal").modal('show');
+            $('#item_id').val(user_id);
+            $('#item_type').val('delete');
+        }
+
         $(document).on('click','#warning_ok',function() {
             var user_id = $('#item_id').val();
             var status = $('#item_type').val();
 
-            update_user_status(user_id,status);
+            if(status=='delete'){
+                delete_user_permanently(user_id);
+            }
+            else{
+                update_user_status(user_id,status);
+            }
+
         });
 
         function update_user_status(user_id,status){
@@ -561,6 +326,49 @@
                     if(data.status == 200){
                         $('#warning_modal').modal('hide');
                         //show_success_message('User Successfully '+status);
+                        location.reload();
+                    }
+                    else if(data.status == 402){
+                        show_error_message(data.reason);
+                        setTimeout(function(){
+                            window.location.href="{{url('login')}}";
+                        },2000);
+                    }
+                    else{
+                        HoldOn.close();
+                        show_error_message(data);
+                    }
+                },
+                error: function (data) {
+                    HoldOn.close();
+                    show_error_message('Authentication failed. Login again.');
+                    setTimeout(function(){
+                        //window.location.href="{{url('login')}}";
+                    },2000);
+                }
+            });
+        }
+
+        function delete_user_permanently(user_id){
+            var options = {
+                theme:"sk-cube-grid",
+                message:'Please wait while deleting all data.....',
+                backgroundColor:"#1847B1",
+                textColor:"white"
+            };
+
+            HoldOn.open(options);
+
+            var url = "{{ url('admin/delete_user_permanently')}}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {user_id:user_id,'_token':'{{ csrf_token() }}'},
+                success: function (data) {
+                    HoldOn.close();
+
+                    if(data.status == 200){
+                        $('#warning_modal').modal('hide');
                         location.reload();
                     }
                     else if(data.status == 402){
