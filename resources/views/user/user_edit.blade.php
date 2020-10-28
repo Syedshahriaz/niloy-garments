@@ -302,6 +302,19 @@
                 input.addEventListener('keyup', reset);
 
             }
+
+            // 0 1st digit in phone field
+            $('#telephone01').on("keyup change", function () {
+                var countryData = iti.getSelectedCountryData();
+                //console.log(countryData.iso2);
+                if(countryData.iso2 == 'bd'){
+
+                    var this_val = $(input).val().charAt(0);
+                    if(this_val != 0){
+                        $('#error-msg').removeClass('hide').text('Enter 0 as first digit');
+                    }
+                }
+            });
         });
 
         $(document).on('change','#gender', function(){

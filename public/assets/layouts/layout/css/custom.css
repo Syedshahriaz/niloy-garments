@@ -912,6 +912,11 @@
     display: flex;
     align-items: center;
   }
+
+  #profile_form .iti__selected-flag{
+    cursor: not-allowed;
+    pointer-events: none;
+  }
   
   /*Custom CSS Finished*/
   @media only screen and (max-width: 767px) {
