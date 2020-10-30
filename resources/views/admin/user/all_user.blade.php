@@ -40,6 +40,9 @@
                                 <span class="caption-subject font-dark bold uppercase">All users</span>
                                 <span class="caption-helper"></span>
                             </div>
+                            @if(App\Common::can_access('custom_sms'))
+                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
+                            @endif
                             <div class="actions hidden" id="action_buttons">
                                 @if(App\Common::can_access('send_email'))
                                     <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Send All Email" id="send_email_all">Send All Email</button>
@@ -51,9 +54,6 @@
                                     <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm" title="Remove Users" id="delete_user_all">Delete Users</button>
                                 @endif
                             </div>
-                            @if(App\Common::can_access('custom_sms'))
-                                <button type="button" class="btn btn-transparent theme-btn btn-circle btn-sm custom-sms" title="Send Custom SMS" id="send_sms_custom">Send Custom SMS</button>
-                            @endif
                         </div>
                         <div class="portlet-body p-relative">
                             <div class="all_user_sort">
@@ -146,6 +146,11 @@
                                             @if(App\Common::can_access('change_offer'))
                                                 <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
                                                     <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
+                                                </a>
+                                            @endif
+                                            @if(App\Common::can_access('edit_email'))
+                                                <a href="#" title="Change Email" onclick="edit_email({{$user->id}},'{{$user->email}}')">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/edit_email.png')}}" alt="Change Email">
                                                 </a>
                                             @endif
                                             @if(App\Common::can_access('unlock_birth_date'))
@@ -259,9 +264,14 @@
                             <div class="col-md-12">
                                 <div class="form-group" id="telephone_area">
                                     <label class="control-label">Phone*</label>
-                                    <div class="input-group">
+                                    {{--<div class="input-group">
                                         <span class="input-group-addon" id="phone-addon">+88</span>
-                                        <input class="form-control placeholder-no-fix" id="telephone02" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
+                                        <input class="form-control placeholder-no-fix" id="telephone01" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
+                                    </div>--}}
+                                    <div>
+                                        <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->country_code.$user->phone}}">
+                                        <span id="valid-msg" class="hide">✓ Valid</span>
+                                        <span id="error-msg" class="hide">Invalid</span>
                                     </div>
                                 </div>
 
@@ -379,6 +389,46 @@
                 <div class="modal-footer">
                     <div class="text-center">
                         <button type="submit" class="btn theme-btn" id="update_offer">Update</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- END CONTENT -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="change_email_modal" tabindex="-1" role="change_email_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="select_delivery_modalLabel">Change email</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="email_update_form" method="post" action="">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="email_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="email_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="email_user_id" value="">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label ">Email*</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Email*" name="email" id="user_email" value="" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn" id="update_email">Update</button>
                     </div>
                 </div>
             </div>
@@ -555,7 +605,7 @@
 
             $('#sms_type').val('bulk');
             $('#sms_user_id').val(userIDs);
-            $('#telephone02').val('');
+            $('#telephone01').val('');
             $('#sms_message').val('');
             $('#telephone_area').addClass('hidden');
             $("#send_sms_modal").modal('show');
@@ -564,7 +614,7 @@
         $(document).on('click','#send_sms_custom',function(){
             $('#sms_type').val('single');
             $('#sms_user_id').val('');
-            $('#telephone02').val('');
+            $('#telephone01').val('');
             $('#sms_message').val('');
             $('#telephone_area').removeClass('hidden');
             $("#send_sms_modal").modal('show');
@@ -713,7 +763,7 @@
             $('#sms_type').val('single');
             $('#sms_user_id').val(user_id);
             $('#telephone_area').removeClass('hidden');
-            $('#telephone02').val(phone);
+            $('#telephone01').val(phone);
             $('#sms_message').val('');
             $("#send_sms_modal").modal('show');
         }
@@ -731,7 +781,8 @@
             HoldOn.open(options);
 
             var sms_type = $('#sms_type').val();
-            var phone = $("#telephone02").val();
+            var phone = $("#telephone01").val();
+            var country_code = $(".iti__selected-dial-code").val();
             var message = $("#sms_message").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
@@ -746,6 +797,7 @@
 
             if (validate == "") {
                 var formData = new FormData($("#sms_form")[0]);
+                formData.append('country_code', country_code);
                 var url = "{{ url('admin/send_user_sms') }}";
 
                 $.ajax({
@@ -909,6 +961,71 @@
                 $("#offer_success_message").hide();
                 $("#offer_error_message").show();
                 $("#offer_error_message").html(validate);
+            }
+        });
+
+        function edit_email(user_id,email){
+            $('#email_user_id').val(user_id);
+            $('#user_email').val(email);
+            $("#email_success_message").hide();
+            $("#email_error_message").hide();
+            $("#change_email_modal").modal('show');
+        }
+
+        $(document).on("click", "#update_email", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending email.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var email = $("#user_email").val();
+
+            var validate = "";
+
+            if (email.trim() == "") {
+                validate = validate + "Email is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#email_update_form")[0]);
+                var url = "{{ url('admin/update_user_email') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            location.reload();
+
+                        } else {
+                            $("#email_success_message").hide();
+                            $("#email_error_message").show();
+                            $("#email_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#email_success_message").hide();
+                        $("#email_error_message").show();
+                        $("#email_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#email_success_message").hide();
+                $("#email_error_message").show();
+                $("#email_error_message").html(validate);
             }
         });
 

@@ -157,7 +157,7 @@
                         @if(App\Common::can_access('common_setting'))
                             <li class="nav-item start @if($page=='common_setting') active @endif">
                                 <a href="{{url('admin/common_setting')}}" class="nav-link">
-                                    <span class="title">Common</span>
+                                    <span class="title">Common and target setting</span>
                                 </a>
                             </li>
                         @endif

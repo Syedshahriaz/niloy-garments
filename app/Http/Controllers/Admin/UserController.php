@@ -301,6 +301,52 @@ class UserController extends Controller
         }
     }
 
+    public function updateUserEmail(Request $request)
+    {
+        //try {
+            DB::beginTransaction();
+
+            $user_id  = $request->user_id;
+            $email  = $request->email;
+
+            $checkEmail = User::where('email',$request->email)->first();
+            if(!empty($checkEmail) && $checkEmail->id != $user_id){
+                return [ 'status' => 401, 'reason' => 'This email address already exists. Please try with another email address.'];
+            }
+
+            /*
+             * Save offer details
+             * */
+            $user = User::where('id',$user_id)->first();
+            $user->email = $email;
+            $user->save();
+
+            /*
+             * Update child user email
+             * */
+            User::where('parent_id',$user_id)
+                ->update(['email' => $email]);
+
+
+
+            DB::commit();
+
+            /*
+             * Save notification
+             * */
+            $message = "Member ".$user->unique_id.": Email have been changed to ".$email;
+            $result = Common::saveNotification($user,$message);
+
+            return ['status'=>200, 'reason'=>'Email Successfully updated'];
+        /*} catch (\Exception $e) {
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateUserEmail', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
     public function sendUserEmail(Request $request)
     {
         try {
@@ -351,6 +397,9 @@ class UserController extends Controller
                 $response = SMS::sendCampaignSms($phones,$message_body,'Attention');
             }
             else{ // This is a single sms
+                //$country_code = $request->country_code;
+                $country_code = '+88';
+                $phones = $country_code.$phones;
                 $response = SMS::sendSingleSms($phones,$message_body);
             }
 
