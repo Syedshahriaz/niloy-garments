@@ -10,6 +10,10 @@ Member Details <br>
         <th>{{$user->username}}</th>
     </tr>
     <tr style="text-align: left;">
+        <th>Email</th>
+        <th>{{$user->email}}</th>
+    </tr>
+    <tr style="text-align: left;">
         <th>Phone</th>
         <th>{{$user->phone}}</th>
     </tr>

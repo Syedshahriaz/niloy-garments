@@ -35,13 +35,14 @@ class PublicController extends Controller
             if(empty($user)){
                 return ['status'=>401, 'reason'=>'Sorry no user found with this email address in the system.'];
             }
+
+            $otp = Common::generaterandomNumber(4);
+
             $token = base64_encode(time().'#'.$user->id);
 
             DB::table('password_resets')->insert(
-                ['email' => $request->email, 'token' => $token, 'created_at'=>date('Y-m-d h:i:s')]
+                ['email' => $request->email, 'token' => $otp, 'created_at'=>date('Y-m-d h:i:s')]
             );
-
-            $reset_link = url('reset_password').'?token='.$token;
 
             /*
              * Send confirmation email
@@ -55,7 +56,7 @@ class PublicController extends Controller
             $emailData['email'] = $email_to;
             $emailData['email_cc'] = $email_cc;
             $emailData['email_bcc'] = $email_bcc;
-            $emailData['reset_link'] = $reset_link;
+            $emailData['otp'] = $otp;
             $emailData['subject'] = Common::SITE_TITLE.'- Password reset request';
 
             $emailData['bodyMessage'] = '';
@@ -64,7 +65,17 @@ class PublicController extends Controller
 
             $result = SendMails::sendMail($emailData, $view);
 
-            return ['status'=>200, 'reason'=>'An email with password reset link have been sent to your email address.'];
+            /*
+             * Send password reset OTP as sms
+             * */
+            $message_body = 'A password reset request have been received.';
+            if($otp !=''){
+                $message_body .='Use '.$otp.' as OTP to reset your password.';
+            }
+            $message_body .='Please visit www.vujadetec.com to get more information about our product & services.';
+            $response = SMS::sendSingleSms($user->phone,$message_body);
+
+            return ['status'=>200, 'token'=>$token, 'reason'=>'Password reset OTP have been sent to your email and phone number.'];
         }
         catch (\Exception $e) {
             return ['status'=>401, 'reason'=>'Something went wrong. Try again later.'];
@@ -75,37 +86,43 @@ class PublicController extends Controller
     {
         try {
             $token = $request->token;
-            $password_reset = DB::table('password_resets')->where('token', $token)->first();
-            if(empty($password_reset)){
+            if($token==''){
+                return redirect('error_404');
+            }
+            $tokenData = base64_decode($token);
+            $tokenArray = explode('#',$tokenData);
+            $user_id = $tokenArray[1];
+
+            $user = DB::table('users')
+                ->where('id', $user_id)
+                ->where('parent_id',0)
+                ->first();
+            if(empty($user)){
                 return redirect('error_404');
             }
 
-            $user = User::where('email', $password_reset->email)
-                ->where('parent_id',0)
-                ->first();
-
-            return view('auth.passwords.reset',compact('token','password_reset','user'));
+            return view('auth.passwords.reset',compact('token','user'));
 
         }
         catch (\Exception $e) {
-            return ['status'=>401, 'reason'=>'Something went wrong. Try again later.'];
+            return redirect('error_404');
         }
     }
 
     public function updatePassword(Request $request)
     {
         try {
-            $token = $request->reset_token;
-            $password_reset = DB::table('password_resets')->where('token', $token)->first();
+            $otp = $request->otp;
+            $password_reset = DB::table('password_resets')->where('token', $otp)->first();
             if(empty($password_reset)){
-                return redirect('error_404');
+                return ['status'=>401, 'reason'=>'Invalid OTP given.'];
             }
 
             $user = User::where('id', $request->user_id)->first();
             $user->password = bcrypt($request->password);
             $user->save();
 
-            DB::table('password_resets')->where('token',  $token)->delete();
+            DB::table('password_resets')->where('token',  $otp)->delete();
 
             return ['status'=>200, 'reason'=>'Password successfully updated'];
 

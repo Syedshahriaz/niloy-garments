@@ -1,4 +1,4 @@
 <h2>{{App\Common::SITE_TITLE}}</h2>
 A password reset request have been received. <br>
-If this is sent by you then click below link to reset password. Otherwise ignore this email. <br>
-<a href="{{$reset_link}}" target="_blank">{{$reset_link}}</a>
+Use {{$otp}} as OTP to reset your password. <br>
+If this is not sent by you then ignore this email. <br>

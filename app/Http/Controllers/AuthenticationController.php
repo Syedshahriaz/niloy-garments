@@ -87,8 +87,6 @@ class AuthenticationController extends Controller
             $userDetails->verification_token = $token;
             $userDetails->save();
 
-            $verification_link = url('verify_email').'?token='.$token;
-
             /*
              * Send confirmation email to admin
              */

@@ -120,7 +120,7 @@
 
         <div class="form-group row mb-0">
             <div class="col-md-12">
-                <button type="submit" class="btn uppercase theme-btn pull-right">Submit</button>
+                <button type="submit" class="btn uppercase theme-btn pull-right" id="submit_button">Submit</button>
             </div>
         </div>
     </form>
@@ -179,6 +179,7 @@
 <script>
     $(document).on("submit", "#forget_password_form", function(event) {
         event.preventDefault();
+        $('#submit_button').prop('disabled',true);
 
         var email = $("#email").val();
         var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -207,13 +208,16 @@
                         $("#success_message").show();
                         $("#error_message").hide();
                         $("#success_message").html(data.reason);
+                        window.location.href="{{url('reset_password')}}?token="+data.token;
                     } else {
+                        $('#submit_button').prop('disabled',false);
                         $("#success_message").hide();
                         $("#error_message").show();
                         $("#error_message").html(data.reason);
                     }
                 },
                 error: function(data) {
+                    $('#submit_button').prop('disabled',false);
                     $("#success_message").hide();
                     $("#error_message").show();
                     $("#error_message").html(data.reason);
@@ -223,6 +227,7 @@
                 processData: false
             });
         } else {
+            $('#submit_button').prop('disabled',false);
             $("#success_message").hide();
             $("#error_message").show();
             $("#error_message").html(validate);
