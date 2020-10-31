@@ -238,3 +238,10 @@ b, optgroup, strong {
     left: 5px;
     transform: rotate(45deg);
 }
+.renewal-error{
+    padding: 10px; 
+    width: 100%; 
+    color: #fff; 
+    text-align: center;
+    background: #ec0404; 
+}

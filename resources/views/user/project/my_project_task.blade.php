@@ -62,7 +62,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="portlet-body">
+                            <div class="portlet-body p-relative">
 
                                 <?php
                                 $total_task = count($tasks);
@@ -241,6 +241,10 @@
                                     } // endforeach ?>
                                     </tbody>
                                 </table>
+
+                                <div class="renewal-notice">
+                                    <p>Your subscription is over. To renew subscription please <a href="#">Click here.</a></p>
+                                </div>
                             </div>
                         </div>
                     @endif

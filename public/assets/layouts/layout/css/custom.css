@@ -917,6 +917,29 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+  .p-relative{
+    position: relative;
+  }
+  .renewal-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 999;
+    background-color: #fffffff2;
+    top: 0;
+  }
+  .renewal-notice>p {
+    background-color: #f40000;
+    padding: 15px 30px;
+    color: #fff;
+  }
+  .renewal-notice a {
+    color: #fff !important;
+    text-decoration: underline;
+  }
   
   /*Custom CSS Finished*/
   @media only screen and (max-width: 767px) {

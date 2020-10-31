@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="portlet-body">
+                        <div class="portlet-body p-relative">
                             <div class="row">
                                 <?php
                                 foreach($projects as $project){
@@ -195,11 +195,10 @@
                                 }
                                 ?>
                             </div>
-                            <!-- <div class="row">
-                                <div class="col-md-12 text-right">
-                                    <button type="submit" class="btn green">Add Selected Project</button>
-                                </div>
-                            </div> -->
+
+                            <div class="renewal-notice">
+                                <p>Your subscription is over. To renew subscription please <a href="#">Click here.</a></p>
+                            </div>
                         </div>
                     </div>
                     <!-- END PORTLET-->
