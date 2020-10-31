@@ -143,6 +143,13 @@
                                                     <img class="action-icon" src="{{asset('assets/global/img/icons/speed.png')}}" alt="Dashboard">
                                                 </a>
                                             @endif
+                                            @if(App\Common::can_access('update_payment'))
+                                                @if($user->payment_status != 'Completed')
+                                                    <a href="#" title="Update Payment" onclick="update_payment({{$user->id}})">
+                                                        <img class="action-icon" src="{{asset('assets/global/img/icons/payment_update.png')}}" alt="Change Offer">
+                                                    </a>
+                                                @endif
+                                            @endif
                                             @if(App\Common::can_access('change_offer'))
                                                 <a href="#" title="Change Offer" onclick="change_offer({{$user->id}})">
                                                     <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
@@ -440,6 +447,173 @@
     <!-- END CONTENT -->
 
     <!-- Modal -->
+    <div class="modal fade" id="update_payment_modal" tabindex="-1" role="update_payment_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="update_payment_modalLabel">Update payment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="payment_update_form" method="post" action="">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="payment_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="payment_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="payment_user_id" value="">
+                            <input type="hidden" name="age" id="age" value="0">
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="select-container">
+                                                <div class="custom-select-wrapper">
+                                                    <div class="custom-select">
+                                                        <div class="custom-options">
+                                                            <label class="">Select subscription plan</label>
+                                                            <select class="form-control" name="subscription_plan_id" id="subscription_plan_id">
+                                                                <option value="">Select</option>
+                                                                @foreach($subscription_plans as $plan)
+                                                                   <option value="{{$plan->id}}">{{$plan->name}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <div class="row">
+                                    <div class="col-md-8 offset-2">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-4 offset-4 form-group">
+                                                    <label class="">Gender of vaccine</label>
+                                                    <select name="gender" id="gender" class="form-control">
+                                                        <option value="">Select Gender</option>
+                                                        <option value="Male">Male</option></option></option>
+                                                        <option value="Female">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4 form-group">
+                                                    <label class="">Date of birth for vaccine</label>
+                                                    <select name="day" id="day" class="form-control">
+                                                        <option disabled="true" value="">Day</option>
+                                                        @for($i=1; $i<=31; $i++)
+                                                            <option value="{{$i}}" @if($i==date('d')) selected @endif>{{$i}}</option>
+                                                        @endfor
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-4 form-group">
+                                                    <select name="month" id="month" class="form-control">
+                                                        <option disabled="true" value="">Month</option>
+                                                        <option value="1" @if(date('m')==1) selected @endif>Jan</option>
+                                                        <option value="2" @if(date('m')==2) selected @endif>Feb</option>
+                                                        <option value="3" @if(date('m')==3) selected @endif>Mar</option>
+                                                        <option value="4" @if(date('m')==4) selected @endif>Apr</option>
+                                                        <option value="5" @if(date('m')==5) selected @endif>May</option>
+                                                        <option value="6" @if(date('m')==6) selected @endif>Jun</option>
+                                                        <option value="7" @if(date('m')==7) selected @endif>Jul</option>
+                                                        <option value="8" @if(date('m')==8) selected @endif>Aug</option>
+                                                        <option value="9" @if(date('m')==9) selected @endif>Sep</option>
+                                                        <option value="10" @if(date('m')==10) selected @endif>Oct</option>
+                                                        <option value="11" @if(date('m')==11) selected @endif>Nov</option>
+                                                        <option value="12" @if(date('m')==12) selected @endif>Dec</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-4 form-group">
+                                                    <select name="year" id="year" class="form-control">
+                                                        <option disabled="true" value="">Year</option>
+                                                        @for($i=date('Y'); $i>=1920; $i--)
+                                                            <option value="{{$i}}" @if($i==date('Y')) selected @endif>{{$i}}</option>
+                                                        @endfor
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <input class="date-picker-hidden" type="hidden" name="shipment_date" id="shipment_date" value="{{date('Y-m-d')}}"/>
+                                        </div>
+
+                                        <div class="hidden" id="question_area">
+                                            <div class="">
+                                                <h5 class="text-center mb-3">Do you take vaccine regularly?</h5>
+                                                <div class="row">
+                                                    <div class="col-md-4 offset-4 form-group text-center mb-0">
+                                                        <label class="radio-inline mr-3">
+                                                            <input class="question_radio" type="radio" name="regular_vaccine" id="regular_vaccine_yes" value="1"> Yes
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input class="question_radio" type="radio" name="regular_vaccine" id="regular_vaccine_no" value="0"> No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="">
+                                                <h5 class="text-center mb-3">Did you miss any vaccine?</h5>
+                                                <div class="row">
+                                                    <div class="col-md-4 offset-4 form-group text-center mb-0">
+                                                        <label class="radio-inline mr-3">
+                                                            <input class="question_radio" type="radio" name="miss_vaccine" id="miss_vaccine_yes" value="1"> Yes
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input class="question_radio" type="radio" name="miss_vaccine" id="miss_vaccine_no" value="0"> No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group hidden">
+                                            <div class="offer-itemlist">
+                                                <div class="offer-option-item green-offer-option active_offer_option selected-offer">
+                                                    <p>{{$offer->offer1_name}}</p>
+                                                    <input type="radio" name="offer" value="1" hidden="" checked >
+                                                </div>
+                                                <div class="offer-option-item red-offer-option active_offer_option">
+                                                    <p>{{$offer->offer2_name}}</p>
+                                                    <input type="radio" name="offer" value="2" hidden="">
+                                                </div>
+                                                <div class="offer-option-item pink-offer-option">
+                                                    <p>{{$offer->offer3_name}}</p>
+                                                    <input type="radio" name="offer_3" value="3" disabled="" hidden="">
+                                                </div>
+                                            </div>
+                                            <p class="text-center mt-3">Pink is free for female if any female buy green or red offer. </p>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn" id="update_payment">Update</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- END CONTENT -->
+
+    <!-- Modal -->
     <div class="modal fade" id="unlock_shipping_modal" tabindex="-1" role="unlock_shipping_modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -522,6 +696,55 @@
                         .draw();
                 });
             });
+
+        });
+
+        $(document).on('change','#day, #month, #year',function(){
+            var day = $('#day').val();
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var date = year+'-'+month+'-'+day;
+
+            var start = new Date(date);
+            var end   = new Date();
+            var diff  = new Date(end - start);
+            var months  = diff/1000/60/60/24/30;
+
+            if(months>=23){
+                $('#question_area').removeClass('hidden');
+            }
+            else{
+                $('#question_area').addClass('hidden');
+            }
+            $('#age').val(months);
+        });
+
+        //Auto select offer
+        $('.question_radio').on('click',function(){
+            var isRegular = $('input[name="regular_vaccine"]:checked').val();
+            var isMissed = $('input[name="miss_vaccine"]:checked').val();
+            if(isRegular == 1 && isMissed == 1){
+                $('.offer-option-item ').each(function(){
+                    var filtered_offer =$(this).children('input[name="offer"]').val();
+                    if(filtered_offer == 1){
+                        $(this).children('input[name="offer"]').prop('checked', true);
+                        $('.offer-option-item').removeClass('selected-offer');
+                        $(this).addClass('selected-offer');
+                        //alert($(this).children('input[name="offer"]:checked').val());
+                    }
+                });
+            }
+            else{
+                $('.offer-option-item ').each(function(){
+                    var filtered_offer =$(this).children('input[name="offer"]').val();
+                    if(filtered_offer == 2){
+                        $(this).children('input[name="offer"]').prop('checked', true);
+                        $('.offer-option-item').removeClass('selected-offer');
+                        $(this).addClass('selected-offer');
+                        //alert($(this).children('input[name="offer"]:checked').val());
+                    }
+                });
+            }
         });
 
         $(document).on('click','.offer-option-item',function(){
@@ -898,6 +1121,99 @@
                 $("#message_success_message").hide();
                 $("#message_error_message").show();
                 $("#message_error_message").html(validate);
+            }
+        });
+
+        function update_payment(user_id){
+            $('#payment_user_id').val(user_id);
+            $("#payment_success_message").hide();
+            $("#payment_error_message").hide();
+            $("#update_payment_modal").modal('show');
+        }
+
+        $(document).on("click", "#update_payment", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while saving data.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var subscription_plan_id = $("#subscription_plan_id").val();
+            var gender = $("#gender").val();
+            var shipment_date = $("#shipment_date").val();
+            var day = $('#day').val();
+            var month = $('#month').val();
+            var year = $('#year').val();
+            var age = $('#age').val();
+
+            var validate = "";
+
+            if (subscription_plan_id.trim() == "") {
+                validate = validate + "Subscription plan is required</br>";
+            }
+            if (gender.trim() == "") {
+                validate = validate + "Gender is required</br>";
+            }
+            if (shipment_date.trim() == "") {
+                validate = validate + "Birth date is required</br>";
+            }
+            if (shipment_date.trim() != "" && isFutureDate(shipment_date)) {
+                validate = validate + "You can not select a future date</br>";
+            }
+
+            if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
+                validate = validate + "Birth date is required</br>";
+            }
+
+            if(age>=23){
+                if (!$("input[name='regular_vaccine']:checked").val()) {
+                    validate = validate + "Please give answer of the question 1</br>";
+                }
+
+                if (!$("input[name='miss_vaccine']:checked").val()) {
+                    validate = validate + "Please give answer of the question 2</br>";
+                }
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#payment_update_form")[0]);
+                var url = "{{ url('admin/update_user_payment') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            location.reload();
+
+                        } else {
+                            $("#payment_success_message").hide();
+                            $("#payment_error_message").show();
+                            $("#payment_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#payment_success_message").hide();
+                        $("#payment_error_message").show();
+                        $("#payment_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#payment_success_message").hide();
+                $("#payment_error_message").show();
+                $("#payment_error_message").html(validate);
             }
         });
 

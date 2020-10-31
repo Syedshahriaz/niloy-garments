@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Offer;
+use App\Models\SubscriptionPlan;
 use App\Models\TaskTitle;
 use App\SMS;
 use Illuminate\Http\Request;
@@ -35,9 +36,13 @@ class UserController extends Controller
             }
 
             $offer = Offer::first();
+            $subscription_plans = SubscriptionPlan::select('subscription_plans.*')
+                ->where('subscription_plans.status','active')
+                ->get();
 
             $users = User::with('projects.passed_task','projects.recent_due_task')
-                ->select('users.*', 'user_shipments.shipment_date','messages.id as message_id')
+                ->select('users.*', 'user_payments.payment_status', 'user_shipments.shipment_date','messages.id as message_id')
+                ->leftJoin('user_payments', 'user_payments.user_id', '=', 'users.id')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                 ->leftJoin('messages', 'messages.user_id', '=', 'users.id')
                 ->where('users.role',3)
@@ -46,11 +51,11 @@ class UserController extends Controller
                 ->get();
 
             if ($request->ajax()) {
-                $returnHTML = View::make('admin.user.all_user', compact('offer','users'))->renderSections()['content'];
+                $returnHTML = View::make('admin.user.all_user', compact('offer','subscription_plans','users'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
 
-            return view('admin.user.all_user', compact('offer','users'));
+            return view('admin.user.all_user', compact('offer','subscription_plans','users'));
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
@@ -163,6 +168,109 @@ class UserController extends Controller
             return ['status'=>200, 'reason'=>'Status Successfully updated'];
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updatePayment(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user_id = $request->user_id;
+            $gender = $request->gender;
+            $offer = $request->offer;
+            $shipment_date = $request->shipment_date;
+
+            $user = User::where('id',$user_id)->first();
+            $user->gender = $gender;
+            $user->status = 'active';
+            $user->save();
+
+            /*
+             * Subscription plan price
+             * */
+            $subscription_plan = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
+                ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
+                ->join('offer_prices','offer_prices.id','=','offer_price_details.offer_price_id')
+                ->join('countries','countries.id','=','offer_prices.country_id')
+                ->where('subscription_plans.status','active')
+                ->where('countries.dial_code',$user->country_code)
+                ->first();
+
+            /*
+             * Update payment information
+             * */
+            $payment = Payment::where('user_id', $user_id)->first();
+            if(empty($payment)){
+                $payment = NEW Payment();
+            }
+            $payment->user_id = $user_id;
+            $payment->amount = $subscription_plan->offer_price;
+            $payment->store_amount = $subscription_plan->offer_price;
+            $payment->payment_status = 'Completed';
+            $payment->txn_id = 'Manual_'.Common::generaterandomNumber(4);
+            $payment->payment_date = date('Y-m-d h:i:s');
+            $payment->payment_source = 'manual';
+            $payment->validation_status = 'VALID';
+            $payment->response = '';
+            $payment->updated_at = date('Y-m-d h:i:s');
+            $payment->save();
+
+            /*
+             * Save offer details
+             * */
+            $shipment = UserShipment::where('user_id',$user_id)->first();
+            if(empty($shipment)){
+                $shipment = NEW UserShipment();
+                $shipment->user_id = $user_id;
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 0;
+                $shipment->subscription_plan_id = $request->subscription_plan_id;
+
+                $shipment->save();
+            }
+
+            /*
+             * Save
+             * */
+
+            $purchase_date = $payment->payment_date;
+            /*
+             * Save shipment date
+             * */
+            $shipment = Common::saveShipmentDetails($user_id,$gender,$shipment_date,$offer);
+
+            $has_offer_1 = $shipment->has_ofer_1;
+            $has_offer_2 = $shipment->has_ofer_2;
+
+            /*
+             * Get user project based on selected offer
+             * */
+            $projects = Common::getOfferedProject($gender,$has_offer_1,$has_offer_2);
+
+            /*
+             * Save user project
+             * */
+            $result = Common::saveUserProject($projects,$user_id,$shipment,$purchase_date);
+
+            DB::commit();
+
+            /*
+             * check and prepare for task editable
+             * */
+            $result = Common::checkAndPrepareForTaskProcessing($user_id,$shipment_date);
+
+            /*
+             * Check and send task warning email and sms
+             * */
+            $result = Common::sendTaskWarningEmail($user_id);
+
+            return ['status'=>200, 'reason'=>'User payment successfully updated'];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updatePayment', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

@@ -431,6 +431,7 @@ class AuthenticationController extends Controller
         Session::forget('first_name');
         Session::forget('last_name');
         Session::forget('user_photo');
+        Session::forget('selected_user');
         Session::forget('user_guide_seen');
 
         return redirect('login');

@@ -225,7 +225,7 @@ class UserController extends Controller
             /*
              * Save shipment date
              * */
-            $shipment = $this->saveShipmentDetails($user_id,$gender,$shipment_date,$offer);
+            $shipment = Common::saveShipmentDetails($user_id,$gender,$shipment_date,$offer);
 
             $has_offer_1 = $shipment->has_ofer_1;
             $has_offer_2 = $shipment->has_ofer_2;

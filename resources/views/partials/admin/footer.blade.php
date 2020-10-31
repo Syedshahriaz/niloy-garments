@@ -331,6 +331,8 @@
 
 </script>
 @yield('js')
+
+@include('partials.js.user.common_js')
 </body>
 
 </html>
