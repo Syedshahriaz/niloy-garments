@@ -87,7 +87,7 @@ class Common
             ->where('user_shipments.user_id',$user->id)
             ->first();
 
-        if($shipment->is_lifetime==0){
+        if(!empty($shipment) && $shipment->is_lifetime==0){
             $expiry_date = date('Y-m-d h:i:s', strtotime('+'.$shipment->year.' years', strtotime($shipment->payment_date)));
             if( strtotime($expiry_date) < time() ){ // Subscription plan expired
                 /*
@@ -332,6 +332,25 @@ class Common
         UserProject::where('user_id',$user_id)->delete();
 
         return 'ok';
+    }
+
+    public static function saveShipmentDetails($user_id,$gender,$shipment_date,$offer){
+        $shipment = UserShipment::where('user_id',$user_id)->first();
+        $shipment->shipment_date = date('Y-m-d',strtotime($shipment_date));
+        if($offer == 1){
+            $shipment->has_ofer_1 = 1;
+            $shipment->has_ofer_2 = 0;
+        }
+        else{
+            $shipment->has_ofer_1 = 0;
+            $shipment->has_ofer_2 = 1;
+        }
+        if($gender == 'Female'){
+            $shipment->has_ofer_3 = 1;
+        }
+        $shipment->save();
+
+        return $shipment;
     }
 
     public static function getOfferedProject($gender,$has_offer_1,$has_offer_2){

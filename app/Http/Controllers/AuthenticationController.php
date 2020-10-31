@@ -46,7 +46,7 @@ class AuthenticationController extends Controller
 
     public function storeUser(Request $request){
         try {
-            $checkEmail = User::where('email',$request->email)->first();
+            $checkEmail = User::where('email',$request->email)->where('parent_id',0)->first();
             if(!empty($checkEmail)){
                 return [ 'status' => 401, 'reason' => 'This email address already registered. Please try with another email address.'];
             }
@@ -86,8 +86,6 @@ class AuthenticationController extends Controller
             $userDetails = User::where('id',$user->id)->first();
             $userDetails->verification_token = $token;
             $userDetails->save();
-
-            $verification_link = url('verify_email').'?token='.$token;
 
             /*
              * Send confirmation email to admin
@@ -433,6 +431,7 @@ class AuthenticationController extends Controller
         Session::forget('first_name');
         Session::forget('last_name');
         Session::forget('user_photo');
+        Session::forget('selected_user');
         Session::forget('user_guide_seen');
 
         return redirect('login');

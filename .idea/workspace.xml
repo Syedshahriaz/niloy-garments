@@ -2,8 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30ac861d-5d9e-4f10-8043-5ef91ebd9341" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../product_crud/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product_crud/.idea/product_crud.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/SettingController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/partials/admin/footer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/partials/admin/footer.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product_crud/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../product_crud/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/app/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/app/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" afterDir="false" />
     </list>
@@ -145,7 +154,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../vanessa" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../product_crud" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -183,7 +192,12 @@
       <workItem from="1603333995692" duration="2110000" />
       <workItem from="1603384370217" duration="534000" />
       <workItem from="1603510449757" duration="6072000" />
-      <workItem from="1603536042055" duration="4728000" />
+      <workItem from="1603536042055" duration="4794000" />
+      <workItem from="1603869293794" duration="2845000" />
+      <workItem from="1603896066459" duration="2722000" />
+      <workItem from="1603940558605" duration="2402000" />
+      <workItem from="1604033371062" duration="12615000" />
+      <workItem from="1604113966995" duration="9715000" />
     </task>
     <servers />
   </component>
@@ -195,17 +209,17 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="419" y="198" width="584" height="396" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1299.741@67.27.1299.741" timestamp="1602585566097" />
-    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1603119901028">
+    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1604115495417">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/67.27.1299.741@67.27.1299.741" timestamp="1603119901028" />
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1603118492604">
+    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/67.27.1299.741@67.27.1299.741" timestamp="1604115495417" />
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1603944654708">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1603118492604" />
-    <state x="407" y="135" width="618" height="580" key="find.popup" timestamp="1603512697413">
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1603944654708" />
+    <state x="407" y="135" width="618" height="580" key="find.popup" timestamp="1604055285221">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="407" y="135" width="618" height="580" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1603512697413" />
+    <state x="407" y="135" width="618" height="580" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1604055285221" />
   </component>
 </project>

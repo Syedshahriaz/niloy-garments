@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Offer;
+use App\Models\SubscriptionPlan;
 use App\Models\TaskTitle;
 use App\SMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserShipment;
+use App\Models\Payment;
 use App\Models\UserProject;
+use App\Models\UserPermission;
+use App\Models\Message;
+use App\Models\UserSms;
 use App\Models\Buyer;
 use App\Models\User;
 use App\Common;
@@ -31,9 +36,13 @@ class UserController extends Controller
             }
 
             $offer = Offer::first();
+            $subscription_plans = SubscriptionPlan::select('subscription_plans.*')
+                ->where('subscription_plans.status','active')
+                ->get();
 
             $users = User::with('projects.passed_task','projects.recent_due_task')
-                ->select('users.*', 'user_shipments.shipment_date','messages.id as message_id')
+                ->select('users.*', 'user_payments.payment_status', 'user_shipments.shipment_date','messages.id as message_id')
+                ->leftJoin('user_payments', 'user_payments.user_id', '=', 'users.id')
                 ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                 ->leftJoin('messages', 'messages.user_id', '=', 'users.id')
                 ->where('users.role',3)
@@ -42,11 +51,11 @@ class UserController extends Controller
                 ->get();
 
             if ($request->ajax()) {
-                $returnHTML = View::make('admin.user.all_user', compact('offer','users'))->renderSections()['content'];
+                $returnHTML = View::make('admin.user.all_user', compact('offer','subscription_plans','users'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
 
-            return view('admin.user.all_user', compact('offer','users'));
+            return view('admin.user.all_user', compact('offer','subscription_plans','users'));
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
@@ -165,6 +174,158 @@ class UserController extends Controller
         }
     }
 
+    public function updatePayment(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user_id = $request->user_id;
+            $gender = $request->gender;
+            $offer = $request->offer;
+            $shipment_date = $request->shipment_date;
+
+            $user = User::where('id',$user_id)->first();
+            $user->gender = $gender;
+            $user->status = 'active';
+            $user->save();
+
+            /*
+             * Subscription plan price
+             * */
+            $subscription_plan = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
+                ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
+                ->join('offer_prices','offer_prices.id','=','offer_price_details.offer_price_id')
+                ->join('countries','countries.id','=','offer_prices.country_id')
+                ->where('subscription_plans.status','active')
+                ->where('countries.dial_code',$user->country_code)
+                ->first();
+
+            /*
+             * Update payment information
+             * */
+            $payment = Payment::where('user_id', $user_id)->first();
+            if(empty($payment)){
+                $payment = NEW Payment();
+            }
+            $payment->user_id = $user_id;
+            $payment->amount = $subscription_plan->offer_price;
+            $payment->store_amount = $subscription_plan->offer_price;
+            $payment->payment_status = 'Completed';
+            $payment->txn_id = 'Manual_'.Common::generaterandomNumber(4);
+            $payment->payment_date = date('Y-m-d h:i:s');
+            $payment->payment_source = 'manual';
+            $payment->validation_status = 'VALID';
+            $payment->response = '';
+            $payment->updated_at = date('Y-m-d h:i:s');
+            $payment->save();
+
+            /*
+             * Save offer details
+             * */
+            $shipment = UserShipment::where('user_id',$user_id)->first();
+            if(empty($shipment)){
+                $shipment = NEW UserShipment();
+                $shipment->user_id = $user_id;
+                $shipment->has_ofer_1 = 0;
+                $shipment->has_ofer_2 = 0;
+                $shipment->subscription_plan_id = $request->subscription_plan_id;
+
+                $shipment->save();
+            }
+
+            /*
+             * Save
+             * */
+
+            $purchase_date = $payment->payment_date;
+            /*
+             * Save shipment date
+             * */
+            $shipment = Common::saveShipmentDetails($user_id,$gender,$shipment_date,$offer);
+
+            $has_offer_1 = $shipment->has_ofer_1;
+            $has_offer_2 = $shipment->has_ofer_2;
+
+            /*
+             * Get user project based on selected offer
+             * */
+            $projects = Common::getOfferedProject($gender,$has_offer_1,$has_offer_2);
+
+            /*
+             * Save user project
+             * */
+            $result = Common::saveUserProject($projects,$user_id,$shipment,$purchase_date);
+
+            DB::commit();
+
+            /*
+             * check and prepare for task editable
+             * */
+            $result = Common::checkAndPrepareForTaskProcessing($user_id,$shipment_date);
+
+            /*
+             * Check and send task warning email and sms
+             * */
+            $result = Common::sendTaskWarningEmail($user_id);
+
+            return ['status'=>200, 'reason'=>'User payment successfully updated'];
+        } catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updatePayment', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function deleteUserPermanently(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user_id = $request->user_id;
+            User::where('id', $user_id)->delete();
+
+            /*
+             * Delete user payment data
+             * */
+            Payment::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user shipment
+             * */
+            UserShipment::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user project data
+             * */
+            UserProject::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user permission
+             * */
+            UserPermission::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user message
+             * */
+            Message::where('user_id',$user_id)->delete();
+
+            /*
+             * Delete user sms
+             * */
+            UserSms::where('user_id',$user_id)->delete();
+
+            DB::commit();
+
+            return ['status'=>200, 'reason'=>'User deleted successfully'];
+        } catch (\Exception $e) {
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateStatus', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
     public function updateUserOffer(Request $request)
     {
         try {
@@ -248,6 +409,52 @@ class UserController extends Controller
         }
     }
 
+    public function updateUserEmail(Request $request)
+    {
+        //try {
+            DB::beginTransaction();
+
+            $user_id  = $request->user_id;
+            $email  = $request->email;
+
+            $checkEmail = User::where('email',$request->email)->first();
+            if(!empty($checkEmail) && $checkEmail->id != $user_id){
+                return [ 'status' => 401, 'reason' => 'This email address already exists. Please try with another email address.'];
+            }
+
+            /*
+             * Save offer details
+             * */
+            $user = User::where('id',$user_id)->first();
+            $user->email = $email;
+            $user->save();
+
+            /*
+             * Update child user email
+             * */
+            User::where('parent_id',$user_id)
+                ->update(['email' => $email]);
+
+
+
+            DB::commit();
+
+            /*
+             * Save notification
+             * */
+            $message = "Member ".$user->unique_id.": Email have been changed to ".$email;
+            $result = Common::saveNotification($user,$message);
+
+            return ['status'=>200, 'reason'=>'Email Successfully updated'];
+        /*} catch (\Exception $e) {
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateUserEmail', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }*/
+    }
+
     public function sendUserEmail(Request $request)
     {
         try {
@@ -298,6 +505,9 @@ class UserController extends Controller
                 $response = SMS::sendCampaignSms($phones,$message_body,'Attention');
             }
             else{ // This is a single sms
+                //$country_code = $request->country_code;
+                $country_code = '+88';
+                $phones = $country_code.$phones;
                 $response = SMS::sendSingleSms($phones,$message_body);
             }
 

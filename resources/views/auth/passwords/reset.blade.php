@@ -55,7 +55,6 @@
     <form id="reset_password_form" method="POST" class="login-form"  action="{{ url('email_password_link') }}">
         {{csrf_field()}}
             <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
-            <input type="hidden" name="reset_token" id="reset_token" value="{{$token}}">
     <!-- BEGIN LOGO -->
         <div class="logo">
             <img src="{{asset('assets/layouts/layout/img/logoVujade.jpg')}}" alt="Vujadetec logo" />
@@ -64,8 +63,16 @@
 
         <h3 class="form-title font-theme">Reset Password</h3>
 
-        <div class="alert alert-success" id="success_message" style="display:none"></div>
+        <div class="alert alert-success" id="success_message" style="">
+            Password reset OTP have been sent to your email and phone number. Use that OTP here to reset your password.
+        </div>
         <div class="alert alert-danger" id="error_message" style="display: none"></div>
+
+        <div class="form-group">
+            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+            <label class="control-label visible-ie8 visible-ie9">OTP</label>
+            <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="OTP" name="otp" id="otp" value="" autofocus/>
+        </div>
 
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
@@ -82,7 +89,7 @@
 
         <div class="form-group row mb-0">
             <div class="col-md-12">
-                <button type="submit" class="btn uppercase theme-btn pull-right">Submit</button>
+                <button type="submit" class="btn uppercase theme-btn pull-right" id="submit_button">Submit</button>
             </div>
         </div>
     </form>
@@ -142,11 +149,17 @@
     $(document).on("submit", "#reset_password_form", function(event) {
         event.preventDefault();
 
+        $('#submit_button').prop('disabled',true);
+
+        var otp = $("#otp").val();
         var password = $("#password").val();
         var conf_password = $("#conf_password").val();
 
         var validate = "";
 
+        if (otp.trim() == "") {
+            validate = validate + "OTP is required</br>";
+        }
         if (password.trim() == "") {
             validate = validate + "Password is required</br>";
         }
@@ -171,12 +184,14 @@
                             window.location.href="{{url('login')}}";
                         },2000)
                     } else {
+                        $('#submit_button').prop('disabled',false);
                         $("#success_message").hide();
                         $("#error_message").show();
                         $("#error_message").html(data.reason);
                     }
                 },
                 error: function(data) {
+                    $('#submit_button').prop('disabled',false);
                     $("#success_message").hide();
                     $("#error_message").show();
                     $("#error_message").html(data.reason);
@@ -186,6 +201,7 @@
                 processData: false
             });
         } else {
+            $('#submit_button').prop('disabled',false);
             $("#success_message").hide();
             $("#error_message").show();
             $("#error_message").html(validate);
