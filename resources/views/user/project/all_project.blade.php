@@ -53,12 +53,12 @@
                             <div class="actions">
                                 <div class="user-list-tag">
                                     <ul>
-                                        @foreach($child_users as $user)
-                                            @if($user->shipment_date !='')
-                                                <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('all_project').'?u_id='.$user->id}}" class="item-2" data-name="all_project?u_id={{$user->id}}" data-item="2">{{$user->username}}</a></li>
+                                        @foreach($child_users as $c_user)
+                                            @if($c_user->shipment_date !='')
+                                                <li class="@if($c_user->id==$user_id) active @endif project_list_item"><a href="{{url('all_project').'?u_id='.$c_user->id}}" class="item-2" data-name="all_project?u_id={{$c_user->id}}" data-item="2">{{$c_user->username}}</a></li>
                                             @else
-                                                <li class="@if($user->id==$user_id) active @endif project_list_item"><a href="{{url('select_offer',$user->id)}}" class="" >{{$user->username}}</a></li>
-                                                {{--<li class="@if($user->id==$user_id) active @endif"><a href="{{url('select_offer',$user->id)}}" class="ajax_item item-7" data-segment="select_offer" data-name="select_offer/{{$user->id}}" data-item="7">{{$user->username}}</a></li>--}}
+                                                <li class="@if($c_user->id==$user_id) active @endif project_list_item"><a href="{{url('select_offer',$c_user->id)}}" class="" >{{$c_user->username}}</a></li>
+                                                {{--<li class="@if($c_user->id==$user_id) active @endif"><a href="{{url('select_offer',$c_user->id)}}" class="ajax_item item-7" data-segment="select_offer" data-name="select_offer/{{$c_user->id}}" data-item="7">{{$c_user->username}}</a></li>--}}
                                             @endif
                                         @endforeach
                                     </ul>
@@ -196,9 +196,11 @@
                                 ?>
                             </div>
 
-                            <div class="renewal-notice">
-                                <p>Your subscription is over. To renew subscription please <a href="#">Click here.</a></p>
-                            </div>
+                            @if($user->status=='expired' || App\Common::checkIfUserSubscriptionExpired($user))
+                                <div class="renewal-notice">
+                                    <p>Your subscription is over. To renew subscription please <a href="{{url('expired_account',$user->id)}}">Click here.</a></p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <!-- END PORTLET-->

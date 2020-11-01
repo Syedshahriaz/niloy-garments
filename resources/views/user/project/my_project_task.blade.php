@@ -242,9 +242,11 @@
                                     </tbody>
                                 </table>
 
-                                <div class="renewal-notice">
-                                    <p>Your subscription is over. To renew subscription please <a href="#">Click here.</a></p>
-                                </div>
+                                @if($user->status=='expired' || App\Common::checkIfUserSubscriptionExpired($user))
+                                    <div class="renewal-notice">
+                                        <p>Your subscription is over. To renew subscription please <a href="{{url('expired_account',$user->id)}}">Click here.</a></p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @endif

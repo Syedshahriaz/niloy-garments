@@ -190,13 +190,6 @@ class UserProjectController extends Controller
                  * Check if user subscription is expired or not
                  * */
                 $user = User::where('users.id', $user_id)->first();
-                if($user->status=='expired'){
-                    return redirect('expired_account/'.$user->id);
-                }
-
-                if(Common::checkIfUserSubscriptionExpired($user)){
-                    return redirect('expired_account/'.$user->id);
-                }
 
                 $setting = Setting::select('message_to_user')->first();
 
@@ -232,11 +225,11 @@ class UserProjectController extends Controller
 
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.all_project',
-                        compact('user_id','setting', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
+                        compact('user_id','user','setting', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
                 return view('user.project.all_project',
-                    compact('user_id','setting', 'child_users', 'shipment', 'projects'));
+                    compact('user_id','user','setting', 'child_users', 'shipment', 'projects'));
             }
             else{
                 return redirect('login');
@@ -305,7 +298,7 @@ class UserProjectController extends Controller
                 }
 
                 $user_project_id = $request->id;
-                $user = UserProject::select('users.id','users.username', 'users.email','has_special_date','special_date')
+                $user = UserProject::select('users.id','users.username', 'users.email','users.status','has_special_date','special_date')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();

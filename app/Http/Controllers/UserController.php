@@ -76,10 +76,6 @@ class UserController extends Controller
                     return redirect('verify_account');
                 }
 
-                if($user->status=='expired'){
-                    return redirect('expired_account/'.$user->id);
-                }
-
                 $payment = Payment::where('user_id', $user->id)->first();
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
                     $shipment = UserShipment::where('user_id', $user->id)->first();
@@ -153,10 +149,6 @@ class UserController extends Controller
 
                 if($user->parent_id ==0 && $user->status=='pending'){
                     return redirect('verify_account');
-                }
-
-                if($user->status=='expired'){
-                    return redirect('expired_account/'.$user->id);
                 }
 
                 /*
