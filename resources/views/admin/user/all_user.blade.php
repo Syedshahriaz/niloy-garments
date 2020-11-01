@@ -697,7 +697,93 @@
                 });
             });
 
+            function init_phone() {
+                //Telephone number validation
+                var input = document.querySelector("#telephone01");
+                if(input != null){
+                    var iti = window.intlTelInput(input, {
+                        initialCountry: "bd",
+                        separateDialCode: true,
+                        utilsScript: "../assets/global/plugins/intl-tel-input-master/js/utils.js"
+                    });
+
+                    errorMsg = document.querySelector("#error-msg"),
+                    validMsg = document.querySelector("#valid-msg");
+
+                    // here, the index maps to the error code returned from getValidationError - see readme
+                    var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+                    var reset = function() {
+                        input.classList.remove("error");
+                        errorMsg.innerHTML = "";
+                        errorMsg.classList.add("hide");
+                        validMsg.classList.add("hide");
+                    };
+
+                    // on blur: validate
+                    input.addEventListener('blur', function() {
+                        reset();
+
+                        if (input.value.trim()) {
+                            if (iti.isValidNumber()) {
+                                validMsg.classList.remove("hide");
+                            } else {
+                                input.classList.add("error");
+                                var errorCode = iti.getValidationError();
+                                errorMsg.innerHTML = errorMap[errorCode];
+                                errorMsg.classList.remove("hide");
+                            }
+                        }
+                    });
+
+                // on keyup / change flag: reset
+                    input.addEventListener('change', reset);
+                    input.addEventListener('keyup', reset);
+
+                }
+            };
+
+            setTimeout(() => {
+                init_phone();
+            }, 4000);
+
+            // $('#send_sms_modal').on('shown.bs.modal', function (e) {
+            //     var input = document.querySelector("#telephone01");
+            //     if(input != null){
+            //         var iti = window.intlTelInput(input);
+            //         iti.destroy();
+            //         // input.classList.remove("error");
+            //         // errorMsg.innerHTML = "";
+            //         // errorMsg.classList.add("hide");
+            //         // validMsg.classList.add("hide");
+            //     }
+            //     //init_phone();
+            // });
+            
+            $('#send_sms_modal').on('hidden.bs.modal', function (e) {
+                var iti = intlTelInput(input);
+                iti.destroy();
+                input.classList.remove("error");
+                errorMsg.innerHTML = "";
+                errorMsg.classList.add("hide");
+                validMsg.classList.add("hide");
+            });
+
+            // 0 1st digit in phone field
+            $('#telephone01').on("keyup change", function () {
+                var countryData = iti.getSelectedCountryData();
+                //console.log(countryData.iso2);
+                if(countryData.iso2 == 'bd'){
+
+                    var this_val = $(input).val().charAt(0);
+                    if(this_val != 0){
+                        $('#error-msg').removeClass('hide').text('Enter 0 as first digit');
+                    }
+                }
+            });
+
         });
+
 
         $(document).on('change','#day, #month, #year',function(){
             var day = $('#day').val();
