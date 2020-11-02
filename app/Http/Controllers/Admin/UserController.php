@@ -411,7 +411,7 @@ class UserController extends Controller
 
     public function updateUserEmail(Request $request)
     {
-        //try {
+        try {
             DB::beginTransaction();
 
             $user_id  = $request->user_id;
@@ -425,7 +425,7 @@ class UserController extends Controller
             /*
              * Save offer details
              * */
-            $user = User::where('id',$user_id)->first();
+            $user = User::select('users.*','users.id as user_id')->where('id',$user_id)->first();
             $user->email = $email;
             $user->save();
 
@@ -446,13 +446,13 @@ class UserController extends Controller
             $result = Common::saveNotification($user,$message);
 
             return ['status'=>200, 'reason'=>'Email Successfully updated'];
-        /*} catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'updateUserEmail', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function sendUserEmail(Request $request)

@@ -271,14 +271,9 @@
                             <div class="col-md-12">
                                 <div class="form-group" id="telephone_area">
                                     <label class="control-label">Phone*</label>
-                                    {{--<div class="input-group">
+                                    <div class="input-group">
                                         <span class="input-group-addon" id="phone-addon">+88</span>
-                                        <input class="form-control placeholder-no-fix" id="telephone01" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
-                                    </div>--}}
-                                    <div>
-                                        <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
-                                        <span id="valid-msg" class="hide">✓ Valid</span>
-                                        <span id="error-msg" class="hide">Invalid</span>
+                                        <input class="form-control placeholder-no-fix" id="phone" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
                                     </div>
                                 </div>
 
@@ -293,6 +288,58 @@
                 <div class="modal-footer">
                     <div class="text-center">
                         <button type="submit" class="btn theme-btn pull-right" id="send_sms">Send SMS</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="send_custom_sms_modal" tabindex="-1" role="send_custom_sms_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="send_custom_sms_modalLabel">Send SMS</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form id="custom_sms_form" method="post" action="">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" id="custom_sms_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="custom_sms_error_message" style="display: none"></div>
+                            </div>
+                            {{csrf_field()}}
+                            <input type="hidden" name="user_id" id="custom_sms_user_id" value="">
+                            <input type="hidden" name="sms_type" id="custom_sms_type" value="">
+
+                            <div class="col-md-12">
+                                <div class="form-group" id="">
+                                    <label class="control-label">Phone*</label>
+                                    {{--<div class="input-group">
+                                        <span class="input-group-addon" id="phone-addon">+88</span>
+                                        <input class="form-control placeholder-no-fix" id="telephone01" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
+                                    </div>--}}
+                                    <div>
+                                        <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
+                                        <span id="valid-msg" class="hide">✓ Valid</span>
+                                        <span id="error-msg" class="hide">Invalid</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Message</label>
+                                    <textarea class="form-control placeholder-no-fix" rows="6" name="message" id="custom_sms_message"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn theme-btn pull-right" id="send_custom_sms">Send SMS</button>
                     </div>
                 </div>
             </div>
@@ -921,12 +968,11 @@
         });
 
         $(document).on('click','#send_sms_custom',function(){
-            $('#sms_type').val('single');
-            $('#sms_user_id').val('');
+            $('#custom_sms_type').val('single');
+            $('#custom_sms_user_id').val('');
             $('#telephone01').val('');
             $('#sms_message').val('');
-            $('#telephone_area').removeClass('hidden');
-            $("#send_sms_modal").modal('show');
+            $("#send_custom_sms_modal").modal('show');
         });
 
         $(document).on('click','#delete_user_all',function(){
@@ -1072,8 +1118,9 @@
             $('#sms_type').val('single');
             $('#sms_user_id').val(user_id);
             $('#telephone_area').removeClass('hidden');
-            $('#telephone01').val(phone);
-            //$("#telephone01").intlTelInput("setNumber", country_code+phone);
+            $('#phone').prop('readonly', true);
+            $('#phone').val(phone);
+            $('#phone-addon').text(country_code);
             $('#sms_message').val('');
             $("#send_sms_modal").modal('show');
         }
@@ -1091,8 +1138,8 @@
             HoldOn.open(options);
 
             var sms_type = $('#sms_type').val();
-            var phone = $("#telephone01").val();
-            var country_code = $(".iti__selected-dial-code").text();
+            var phone = $("#phone").val();
+            var country_code = $("#phone-addon").text();
             var message = $("#sms_message").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
@@ -1144,6 +1191,75 @@
                 $("#sms_success_message").hide();
                 $("#sms_error_message").show();
                 $("#sms_error_message").html(validate);
+            }
+        });
+
+        $(document).on("click", "#send_custom_sms", function(event) {
+            event.preventDefault();
+
+            var options = {
+                theme: "sk-cube-grid",
+                message: 'Please wait while sending sms.....',
+                backgroundColor: "#1847B1",
+                textColor: "white"
+            };
+
+            HoldOn.open(options);
+
+            var sms_type = $('#custom_sms_type').val();
+            var phone = $("#telephone01").val();
+            var country_code = $(".iti__selected-dial-code").text();
+            var message = $("#custom_sms_message").val();
+            var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            var validate = "";
+
+            if (sms_type == "single" && phone.trim() == "") { // Phone validation fo single sms
+                validate = validate + "Phone is required</br>";
+            }
+            if (message.trim() == "") {
+                validate = validate + "Message is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#sms_form")[0]);
+                formData.append('country_code', country_code);
+                var url = "{{ url('admin/send_user_sms') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        HoldOn.close();
+                        if (data.status == 200) {
+                            $("#custom_sms_success_message").show();
+                            $("#custom_sms_error_message").hide();
+                            $("#custom_sms_success_message").html(data.reason);
+                            setTimeout(function(){
+                                location.reload();
+                            },2000)
+                        } else {
+                            $("#custom_sms_success_message").hide();
+                            $("#custom_sms_error_message").show();
+                            $("#custom_sms_error_message").html(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        HoldOn.close();
+                        $("#custom_sms_success_message").hide();
+                        $("#custom_sms_error_message").show();
+                        $("#custom_sms_error_message").html(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                HoldOn.close();
+                $("#custom_sms_success_message").hide();
+                $("#custom_sms_error_message").show();
+                $("#custom_sms_error_message").html(validate);
             }
         });
 
