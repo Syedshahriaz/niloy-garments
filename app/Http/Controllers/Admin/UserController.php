@@ -505,8 +505,7 @@ class UserController extends Controller
                 $response = SMS::sendCampaignSms($phones,$message_body,'Attention');
             }
             else{ // This is a single sms
-                //$country_code = $request->country_code;
-                $country_code = '+88';
+                $country_code = $request->country_code;
                 $phones = $country_code.$phones;
                 $response = SMS::sendSingleSms($phones,$message_body);
             }

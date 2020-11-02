@@ -276,7 +276,7 @@
                                         <input class="form-control placeholder-no-fix" id="telephone01" type="text" name="phone" placeholder="017********" aria-describedby="phone-addon" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="" />
                                     </div>--}}
                                     <div>
-                                        <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="{{$user->country_code.$user->phone}}">
+                                        <input type="text" class="form-control" name="phone" id="telephone01" onkeyup="this.value=this.value.replace(/[^\d]/,'')" value="">
                                         <span id="valid-msg" class="hide">✓ Valid</span>
                                         <span id="error-msg" class="hide">Invalid</span>
                                     </div>
@@ -759,7 +759,7 @@
             //     }
             //     //init_phone();
             // });
-            
+
             $('#send_sms_modal').on('hidden.bs.modal', function (e) {
                 var iti = intlTelInput(input);
                 iti.destroy();
@@ -1073,6 +1073,7 @@
             $('#sms_user_id').val(user_id);
             $('#telephone_area').removeClass('hidden');
             $('#telephone01').val(phone);
+            //$("#telephone01").intlTelInput("setNumber", country_code+phone);
             $('#sms_message').val('');
             $("#send_sms_modal").modal('show');
         }
@@ -1091,7 +1092,7 @@
 
             var sms_type = $('#sms_type').val();
             var phone = $("#telephone01").val();
-            var country_code = $(".iti__selected-dial-code").val();
+            var country_code = $(".iti__selected-dial-code").text();
             var message = $("#sms_message").val();
             var re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 

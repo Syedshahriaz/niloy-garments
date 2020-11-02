@@ -5,10 +5,8 @@
       <change afterPath="$PROJECT_DIR$/../product_crud/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../product_crud/.idea/product_crud.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserProjectController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/user/project/all_project.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/user/project/all_project.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/user/project/my_project_task.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/user/project/my_project_task.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../product_crud/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../product_crud/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/app/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/app/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" afterDir="false" />
@@ -195,7 +193,8 @@
       <workItem from="1603940558605" duration="2402000" />
       <workItem from="1604033371062" duration="12615000" />
       <workItem from="1604113966995" duration="10318000" />
-      <workItem from="1604198141008" duration="3424000" />
+      <workItem from="1604198141008" duration="4273000" />
+      <workItem from="1604282498807" duration="2363000" />
     </task>
     <servers />
   </component>
