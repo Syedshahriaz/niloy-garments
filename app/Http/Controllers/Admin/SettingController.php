@@ -9,6 +9,7 @@ use App\Models\Offer;
 use App\Models\OfferPrices;
 use App\Models\OfferPriceDetail;
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Profession;
 use App\Models\Coupon;
 use App\Models\SubscriptionPlan;
@@ -126,16 +127,20 @@ class SettingController extends Controller
             }
 
             $countries = Country::where('status','active')->get();
+            $currencies = Currency::where('status','active')
+                ->groupBY('currency')
+                ->orderBY('currency','ASC')
+                ->get();
             $subscription_plans = SubscriptionPlan::where('status','active')->get();
             $offer_prices = OfferPrices::select('offer_prices.*','countries.name as country_name','countries.dial_code')
                 ->join('countries','countries.id','=','offer_prices.country_id')
                 ->orderBy('country_name','ASC')
                 ->get();
             if($request->ajax()) {
-                $returnHTML = View::make('admin.settings.offer_prices',compact('countries','offer_prices','subscription_plans'))->renderSections()['content'];
+                $returnHTML = View::make('admin.settings.offer_prices',compact('countries','currencies','offer_prices','subscription_plans'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.settings.offer_prices',compact('countries','offer_prices','subscription_plans'));
+            return view('admin.settings.offer_prices',compact('countries','currencies','offer_prices','subscription_plans'));
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'offerPriceSetting', $e->getLine(),

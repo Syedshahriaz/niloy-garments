@@ -156,9 +156,11 @@
                                                 </a>
                                             @endif
                                             @if(App\Common::can_access('edit_email'))
+                                                @if($user->parent_id==0)
                                                 <a href="#" title="Change Email" onclick="edit_email({{$user->id}},'{{$user->email}}')">
                                                     <img class="action-icon" src="{{asset('assets/global/img/icons/edit_email.png')}}" alt="Change Email">
                                                 </a>
+                                                @endif
                                             @endif
                                             @if(App\Common::can_access('unlock_birth_date'))
                                                 <a href="#" title="Unlock Birth Date" onclick="unlock_birth_date({{$user->id}})">

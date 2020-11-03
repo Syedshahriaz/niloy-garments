@@ -121,8 +121,9 @@
                                     <label class="control-label">Currency</label>
                                     <select class="form-control placeholder-no-fix" placeholder="Select currency*" name="currency" id="currency" value=""  autocomplete="off">
                                         <option value="">Select</option>
-                                        <option value="BDT">BDT</option>
-                                        <option value="USD">USD</option>
+                                        @foreach($currencies as $currency)
+                                        <option value="{{$currency->currency}}">{{$currency->currency}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @foreach($subscription_plans as $plan)
@@ -216,8 +217,9 @@
                                     <label class="control-label">Currency</label>
                                     <select class="form-control placeholder-no-fix" placeholder="Select currency*" name="currency" id="edit_currency" value=""  autocomplete="off">
                                         <option value="">Select</option>
-                                        <option value="BDT">BDT</option>
-                                        <option value="USD">USD</option>
+                                        @foreach($currencies as $currency)
+                                            <option value="{{$currency->currency}}">{{$currency->currency}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @foreach($subscription_plans as $plan)
@@ -266,8 +268,9 @@
                                     <label class="control-label">Currency</label>
                                     <select class="form-control placeholder-no-fix" placeholder="Select currency*" name="currency" id="all_currency" value=""  autocomplete="off">
                                         <option value="">Select</option>
-                                        <option value="BDT">BDT</option>
-                                        <option value="USD">USD</option>
+                                        @foreach($currencies as $currency)
+                                            <option value="{{$currency->currency}}">{{$currency->currency}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @foreach($subscription_plans as $plan)
