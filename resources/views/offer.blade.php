@@ -26,8 +26,38 @@
 <div class="container">
     <div class="row">
         <div class="col" style="margin-top:25px;">
-            <div class="offer-option mb-5">
+            
+            <span style="font-weight: bold;background-color:black; color:white;">&nbsp;Vujade<span style="font-weight: bold;color:#bf945b;">tec&nbsp;</span></span> has 3 offers <span style="font-weight: bold;color:#599a13;">&nbsp;Green&nbsp;</span>-<span style="font-weight: bold;color:#d61919;">&nbsp;<b>Red&nbsp;</b></span>-<span style="font-weight: bold;color:#fc0aa6;">&nbsp;Pink&nbsp;</span> which cover all ages, all gender including pregnant women. Pink offer are related to females and completely FREE if you buy Green or Red.
+            <br><br>
+            It is for those:
+            <ul>
+                <li>Who are taking regular vaccines. </li>
+                <li>Who missed the vaccine.</li>
+                <li>Who does not know or remember what vaccine was given during childhood.</li>
+            </ul>
+            <div class="Offer-info mt-5 mb-5">
+                <div class="offer-item green-offer animate__animated animate__fadeInLeft">
+                    <h3>{{$offer->offer1_name}}</h3>
+                    <p><?php echo htmlspecialchars_decode($offer->offer1_details); ?></p>
+                </div>
 
+                <div class="offer-item red-offer  animate__animated animate__fadeInRight">
+                    <h3>{{$offer->offer2_name}}</h3>
+                    <p><?php echo htmlspecialchars_decode($offer->offer2_details); ?></p>
+                </div>
+
+                <div class="offer-item pink-offer animate__animated animate__fadeInLeft">
+                    <h3>{{$offer->offer3_name}}</h3>
+                    <p><?php echo htmlspecialchars_decode($offer->offer3_details); ?></p>
+                </div>
+
+                <div>
+                    <p>So, please register to know more about vaccines of all ages &amp; buy vaccine-care tracker only ৳0 for Bangladesh &amp; $0 for other countries per person for the next 2 years. You can extend it up to a whole lifetime if you are happy with our service.</p>
+                </div>
+
+            </div>
+
+            <div class="offer-option mb-5">
                 <form id="offer_form" class="login-form" action="{{url('save_offer')}}" method="post">
                     {{csrf_field()}}
                     <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
@@ -150,37 +180,6 @@
                         <button type="button" class="btn btn-primary" id="offer_submit_btn">Submit</button>
                     </div>
                 </form>
-            </div>
-
-
-            <span style="font-weight: bold;background-color:black; color:white;">&nbsp;Vujade<span style="font-weight: bold;color:#bf945b;">tec&nbsp;</span></span> has 3 offers <span style="font-weight: bold;color:#599a13;">&nbsp;Green&nbsp;</span>-<span style="font-weight: bold;color:#d61919;">&nbsp;<b>Red&nbsp;</b></span>-<span style="font-weight: bold;color:#fc0aa6;">&nbsp;Pink&nbsp;</span> which cover all ages, all gender including pregnant women. Pink offer are related to females and completely FREE if you buy Green or Red.
-            <br><br>
-            It is for those:
-            <ul>
-                <li>Who are taking regular vaccines. </li>
-                <li>Who missed the vaccine.</li>
-                <li>Who does not know or remember what vaccine was given during childhood.</li>
-            </ul>
-            <div class="Offer-info mt-5">
-                <div class="offer-item green-offer animate__animated animate__fadeInLeft">
-                    <h3>{{$offer->offer1_name}}</h3>
-                    <p><?php echo htmlspecialchars_decode($offer->offer1_details); ?></p>
-                </div>
-
-                <div class="offer-item red-offer  animate__animated animate__fadeInRight">
-                    <h3>{{$offer->offer2_name}}</h3>
-                    <p><?php echo htmlspecialchars_decode($offer->offer2_details); ?></p>
-                </div>
-
-                <div class="offer-item pink-offer animate__animated animate__fadeInLeft">
-                    <h3>{{$offer->offer3_name}}</h3>
-                    <p><?php echo htmlspecialchars_decode($offer->offer3_details); ?></p>
-                </div>
-
-                <div>
-                    <p>So, please register to know more about vaccines of all ages &amp; buy vaccine-care tracker only ৳0 for Bangladesh &amp; $0 for other countries per person for the next 2 years. You can extend it up to a whole lifetime if you are happy with our service.</p>
-                </div>
-
             </div>
         </div>
     </div>

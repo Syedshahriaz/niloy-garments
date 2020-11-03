@@ -513,20 +513,20 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="payment_user_id" value="">
                             <input type="hidden" name="age" id="age" value="0">
-
-                            <div class="col-md-12">
+                            
+                            <div class="col-md-10 col-md-offset-1">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6 col-md-offset-3">
                                         <div class="form-group">
                                             <div class="select-container">
                                                 <div class="custom-select-wrapper">
                                                     <div class="custom-select">
                                                         <div class="custom-options">
-                                                            <label class="">Select subscription plan</label>
+                                                            <label class="w-100 text-center"><b>Select subscription plan</b></label>
                                                             <select class="form-control" name="subscription_plan_id" id="subscription_plan_id">
                                                                 <option value="">Select</option>
                                                                 @foreach($subscription_plans as $plan)
-                                                                   <option value="{{$plan->id}}">{{$plan->name}}</option>
+                                                                    <option value="{{$plan->id}}">{{$plan->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -536,14 +536,13 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="">
+
                                 <div class="row">
-                                    <div class="col-md-8 offset-2">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-md-4 offset-4 form-group">
-                                                    <label class="">Gender of vaccine</label>
+                                            <div class="row mt-1">
+                                                <div class="col-md-6 col-md-offset-3 form-group">
+                                                    <label class="w-100 text-center"><b>Gender of vaccine</b></label>
                                                     <select name="gender" id="gender" class="form-control">
                                                         <option value="">Select Gender</option>
                                                         <option value="Male">Male</option></option></option>
@@ -552,9 +551,9 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+                                            <div class="row mt-1">
                                                 <div class="col-md-4 form-group">
-                                                    <label class="">Date of birth for vaccine</label>
+                                                    <label class="">&nbsp;</label>
                                                     <select name="day" id="day" class="form-control">
                                                         <option disabled="true" value="">Day</option>
                                                         @for($i=1; $i<=31; $i++)
@@ -564,6 +563,7 @@
                                                 </div>
 
                                                 <div class="col-md-4 form-group">
+                                                    <label class="w-100 text-center"><b>Date of birth for vaccine</b></label>
                                                     <select name="month" id="month" class="form-control">
                                                         <option disabled="true" value="">Month</option>
                                                         <option value="1" @if(date('m')==1) selected @endif>Jan</option>
@@ -582,6 +582,7 @@
                                                 </div>
 
                                                 <div class="col-md-4 form-group">
+                                                    <label class="">&nbsp;</label>
                                                     <select name="year" id="year" class="form-control">
                                                         <option disabled="true" value="">Year</option>
                                                         @for($i=date('Y'); $i>=1920; $i--)
@@ -595,10 +596,10 @@
                                         </div>
 
                                         <div class="hidden" id="question_area">
-                                            <div class="">
-                                                <h5 class="text-center mb-3">Do you take vaccine regularly?</h5>
+                                            <div class="mb-3">
+                                                <h5 class="text-center"><b>Do you take vaccine regularly?</b></h5>
                                                 <div class="row">
-                                                    <div class="col-md-4 offset-4 form-group text-center mb-0">
+                                                    <div class="col-md-4 col-md-offset-4 form-group text-center">
                                                         <label class="radio-inline mr-3">
                                                             <input class="question_radio" type="radio" name="regular_vaccine" id="regular_vaccine_yes" value="1"> Yes
                                                         </label>
@@ -609,10 +610,10 @@
                                                 </div>
                                             </div>
 
-                                            <div class="">
-                                                <h5 class="text-center mb-3">Did you miss any vaccine?</h5>
+                                            <div class="mb-1">
+                                                <h5 class="text-center"><b>Did you miss any vaccine?</b></h5>
                                                 <div class="row">
-                                                    <div class="col-md-4 offset-4 form-group text-center mb-0">
+                                                    <div class="col-md-4 col-md-offset-4 form-group text-center">
                                                         <label class="radio-inline mr-3">
                                                             <input class="question_radio" type="radio" name="miss_vaccine" id="miss_vaccine_yes" value="1"> Yes
                                                         </label>
@@ -646,6 +647,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </form>
                     </div>
                 </div>
@@ -722,12 +724,6 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            // $('#user_list_table').DataTable({
-            //     //"paging":   true,
-            //     //"ordering": true,
-            //     //"info":     true,
-            //     //"searching": true
-            // });
             $(function() {
                 var table = $('#user_list_table').DataTable({
                     "columnDefs": [
@@ -788,49 +784,36 @@
                 // on keyup / change flag: reset
                     input.addEventListener('change', reset);
                     input.addEventListener('keyup', reset);
-
                 }
+
+                var countryData = iti.getSelectedCountryData();
+                if(countryData.iso2 == 'bd'){
+                    $('#telephone01').css('padding-left', '82px');
+                }
+
+                // 0 1st digit in phone field
+                $('#telephone01').on("keyup change", function () {
+                    var countryData = iti.getSelectedCountryData();
+                    if(countryData.iso2 == 'bd'){
+                        var this_val = $(input).val().charAt(0);
+                        if(this_val != 0){
+                            $('#error-msg').removeClass('hide').text('Enter 0 as first digit');
+                        }
+                    }
+                });
+
+                $('#send_custom_sms_modal').on('hidden.bs.modal', function (e) {
+                    var input = document.querySelector("#telephone01");
+                    input.classList.remove("error");
+                    errorMsg.innerHTML = "";
+                    errorMsg.classList.add("hide");
+                    validMsg.classList.add("hide");
+                });
             };
 
             setTimeout(() => {
                 init_phone();
-            }, 4000);
-
-            // $('#send_sms_modal').on('shown.bs.modal', function (e) {
-            //     var input = document.querySelector("#telephone01");
-            //     if(input != null){
-            //         var iti = window.intlTelInput(input);
-            //         iti.destroy();
-            //         // input.classList.remove("error");
-            //         // errorMsg.innerHTML = "";
-            //         // errorMsg.classList.add("hide");
-            //         // validMsg.classList.add("hide");
-            //     }
-            //     //init_phone();
-            // });
-
-            $('#send_sms_modal').on('hidden.bs.modal', function (e) {
-                var iti = intlTelInput(input);
-                iti.destroy();
-                input.classList.remove("error");
-                errorMsg.innerHTML = "";
-                errorMsg.classList.add("hide");
-                validMsg.classList.add("hide");
-            });
-
-            // 0 1st digit in phone field
-            $('#telephone01').on("keyup change", function () {
-                var countryData = iti.getSelectedCountryData();
-                //console.log(countryData.iso2);
-                if(countryData.iso2 == 'bd'){
-
-                    var this_val = $(input).val().charAt(0);
-                    if(this_val != 0){
-                        $('#error-msg').removeClass('hide').text('Enter 0 as first digit');
-                    }
-                }
-            });
-
+            }, 100);
         });
 
 
