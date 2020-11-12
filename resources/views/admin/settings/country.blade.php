@@ -52,6 +52,7 @@
                                     <th>Country Name</th>
                                     <th>Country Code</th>
                                     <th>Dial Code</th>
+                                    <th>Currency</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -64,6 +65,7 @@
                                     <td>{{$country->name}}</td>
                                     <td>{{$country->country_code}}</td>
                                     <td>{{$country->dial_code}}</td>
+                                    <td>{{$country->currency}}</td>
                                     <td class="text-center">
                                         <a href="#" title="Edit Offer" onclick="edit_country({{$country->id}})">
                                             <img class="action-icon" src="{{asset('assets/global/img/icons/edit.png')}}" alt="Edit Offer">
@@ -116,6 +118,10 @@
                                     <label class="control-label">Dial Code</label>
                                     <input class="form-control placeholder-no-fix" type="text" placeholder="Enter dial code*" name="dial_code" id="dial_code" value=""  autocomplete="off"/>
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label">Currency</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter currency*" name="currency" id="currency" value=""  autocomplete="off"/>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -163,6 +169,10 @@
                                 <div class="form-group">
                                     <label class="control-label">Dial Code</label>
                                     <input class="form-control placeholder-no-fix" type="text" placeholder="Enter dial code*" name="dial_code" id="edit_dial_code" value=""  autocomplete="off"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Currency</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Enter currency*" name="currency" id="edit_currency" value=""  autocomplete="off"/>
                                 </div>
                             </div>
                         </form>
@@ -213,6 +223,7 @@
             var name = $("#name").val();
             var country_code = $("#country_code").val();
             var dial_code = $("#dial_code").val();
+            var currency = $("#currency").val();
 
             var validate = "";
 
@@ -224,6 +235,9 @@
             }
             if (dial_code.trim() == "") {
                 validate = validate + "Dial code is required</br>";
+            }
+            if (currency.trim() == "") {
+                validate = validate + "Currency is required</br>";
             }
 
             if (validate == "") {
@@ -283,6 +297,7 @@
                         $('#edit_name').val(data.country.name);
                         $('#edit_country_code').val(data.country.country_code);
                         $('#edit_dial_code').val(data.country.dial_code);
+                        $('#edit_currency').val(data.country.currency);
                         $("#edit_country_modal").modal('show');
                     }
                     else{
@@ -310,6 +325,7 @@
             var name = $("#edit_name").val();
             var country_code = $("#edit_country_code").val();
             var dial_code = $("#edit_dial_code").val();
+            var currency = $("#edit_currency").val();
 
             var validate = "";
 
@@ -321,6 +337,9 @@
             }
             if (dial_code.trim() == "") {
                 validate = validate + "Dial code is required</br>";
+            }
+            if (currency.trim() == "") {
+                validate = validate + "Currency is required</br>";
             }
 
             if (validate == "") {

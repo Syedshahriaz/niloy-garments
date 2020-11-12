@@ -9,7 +9,6 @@ use App\Models\Offer;
 use App\Models\OfferPrices;
 use App\Models\OfferPriceDetail;
 use App\Models\Country;
-use App\Models\Currency;
 use App\Models\Profession;
 use App\Models\Coupon;
 use App\Models\SubscriptionPlan;
@@ -127,7 +126,8 @@ class SettingController extends Controller
             }
 
             $countries = Country::where('status','active')->get();
-            $currencies = Currency::where('status','active')
+            $currencies = Country::select('currency')
+                ->where('status','active')
                 ->groupBY('currency')
                 ->orderBY('currency','ASC')
                 ->get();
@@ -319,6 +319,7 @@ class SettingController extends Controller
             $country->name = $request->name;
             $country->country_code = $request->country_code;
             $country->dial_code = $request->dial_code;
+            $country->currency = $request->currency;
             $country->save();
 
             /*
@@ -326,6 +327,7 @@ class SettingController extends Controller
              * */
             $offer_prices = NEW OfferPrices();
             $offer_prices->country_id = $country->id;
+            $offer_prices->currency = $request->currency;
             $offer_prices->save();
 
             /*
@@ -370,6 +372,7 @@ class SettingController extends Controller
             $country->name = $request->name;
             $country->country_code = $request->country_code;
             $country->dial_code = $request->dial_code;
+            $country->currency = $request->currency;
             $country->save();
 
             return ['status'=>200, 'reason'=>'Successfully updated'];
