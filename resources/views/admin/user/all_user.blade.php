@@ -513,7 +513,7 @@
                             {{csrf_field()}}
                             <input type="hidden" name="user_id" id="payment_user_id" value="">
                             <input type="hidden" name="age" id="age" value="0">
-                            
+
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="row">
                                     <div class="col-md-6 col-md-offset-3">
@@ -647,7 +647,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </form>
                     </div>
                 </div>
@@ -1207,7 +1207,7 @@
             }
 
             if (validate == "") {
-                var formData = new FormData($("#sms_form")[0]);
+                var formData = new FormData($("#custom_sms_form")[0]);
                 formData.append('country_code', country_code);
                 var url = "{{ url('admin/send_user_sms') }}";
 
