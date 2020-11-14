@@ -115,10 +115,19 @@ class SMS
         $new_message_body = wordwrap($message_body, 740, "<br />\n");
         $new_message_body = explode("<br />\n",$new_message_body);
 
+        if (strpos($mobile_no, '+880') !== false) { // If number from Bangladesh
+            $api_key = env('SMS_API_KEY');
+            $api_secret = env('SMS_API_SECRET');
+        }
+        else{ // If international number
+            $api_key = env('INT_SMS_API_KEY');
+            $api_secret = env('INT_SMS_API_SECRET');
+        }
+
         foreach($new_message_body as $message){
             $postdata = array(
-                'api_key' => env('SMS_API_KEY'),
-                'api_secret' => env('SMS_API_SECRET'),
+                'api_key' => $api_key,
+                'api_secret' => $api_secret,
                 'request_type' => 'SINGLE_SMS',
                 'message_type' => 'TEXT',
                 'mobile' => $mobile_no,
@@ -152,9 +161,18 @@ class SMS
      * you can use this API.
      * */
     public static function sendOtpSms($mobile_no,$message_body){
+        if (strpos($mobile_no, '+880') !== false) { // If number from Bangladesh
+            $api_key = env('SMS_API_KEY');
+            $api_secret = env('SMS_API_SECRET');
+        }
+        else{ // If international number
+            $api_key = env('INT_SMS_API_KEY');
+            $api_secret = env('INT_SMS_API_SECRET');
+        }
+
         $postdata = array(
-            'api_key' => env('SMS_API_KEY'),
-            'api_secret' => env('SMS_API_SECRET'),
+            'api_key' => $api_key,
+            'api_secret' => $api_secret,
             'request_type' => 'OTP',
             'message_type' => 'TEXT',
             'mobile' => $mobile_no,
@@ -188,13 +206,22 @@ class SMS
      * Multiple mobile numbers should be comma-separated.
      * */
     public static function sendCampaignSms($mobile_no,$message_body,$campaign_title){
+        if (strpos($mobile_no, '+880') !== false) { // If number from Bangladesh
+            $api_key = env('SMS_API_KEY');
+            $api_secret = env('SMS_API_SECRET');
+        }
+        else{ // If international number
+            $api_key = env('INT_SMS_API_KEY');
+            $api_secret = env('INT_SMS_API_SECRET');
+        }
+
         $new_message_body = wordwrap($message_body, 740, "<br />\n");
         $new_message_body = explode("<br />\n",$new_message_body);
 
         foreach($new_message_body as $message){
             $postdata = array(
-                'api_key' => env('SMS_API_KEY'),
-                'api_secret' => env('SMS_API_SECRET'),
+                'api_key' => $api_key,
+                'api_secret' => $api_secret,
                 'request_type' => 'GENERAL_CAMPAIGN',
                 'message_type' => 'TEXT',
                 'mobile' => $mobile_no, // comma separated mobile numbers, ex. 018XXXXXXXX,017XXXXXXXX
