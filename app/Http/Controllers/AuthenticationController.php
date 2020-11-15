@@ -117,6 +117,7 @@ class AuthenticationController extends Controller
             /*
              * Send registration confirmation message
              * */
+            $phone_number = $request->country_code.$phone_number;
             $response = Common::sendRegistrationConfirmationSms($request->username,$phone_number,$otp);
 
             return ['status' => 200, 'reason' => 'Registration successfully done. An sms with verification OTP have been sent to your phone.'];

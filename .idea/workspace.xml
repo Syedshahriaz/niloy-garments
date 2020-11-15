@@ -3,11 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="30ac861d-5d9e-4f10-8043-5ef91ebd9341" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Service/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Service/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SMS.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/SMS.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/partials/footer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/partials/footer.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/registration_thankyou.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/registration_thankyou.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthenticationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/app/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/app/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" afterDir="false" />
     </list>
@@ -205,7 +203,7 @@
       <workItem from="1605182524641" duration="714000" />
       <workItem from="1605338374124" duration="3169000" />
       <workItem from="1605423351508" duration="2075000" />
-      <workItem from="1605434340992" duration="952000" />
+      <workItem from="1605434340992" duration="2009000" />
     </task>
     <servers />
   </component>
@@ -225,9 +223,9 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1603944654708" />
-    <state x="407" y="135" width="618" height="580" key="find.popup" timestamp="1605434994303">
+    <state x="407" y="135" width="618" height="580" key="find.popup" timestamp="1605436349337">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="407" y="135" width="618" height="580" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1605434994303" />
+    <state x="407" y="135" width="618" height="580" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1605436349337" />
   </component>
 </project>

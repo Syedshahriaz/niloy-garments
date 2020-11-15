@@ -672,17 +672,19 @@ class Common
                 }
             }
 
+            $phone = $user->country_code.$user->phone;
+
             if($past_message_body !=''){
                 $past_message_body = $message_initiate.', '.$past_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $past_email_body = $message_initiate.', <br>'.$past_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
-                $sms_response = self::sendPastDayWarningSms($user->phone,$past_message_body);
+                $sms_response = self::sendPastDayWarningSms($phone,$past_message_body);
                 $email_response = self::sendPastDayWarningEmail($email,$past_email_body);
                 $result = self::storeSmsRecord($user->id, $past_message_body);
             }
             if($warning_message_body !=''){
                 $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $warning_email_body = $message_initiate.', <br>'.$warning_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
-                $sms_response = self::sendPastDayWarningSms($user->phone,$warning_message_body);
+                $sms_response = self::sendPastDayWarningSms($phone,$warning_message_body);
                 $email_response = self::send7dayWarningEmail($email,$warning_email_body);
                 $result = self::storeSmsRecord($user->id, $warning_message_body);
             }
