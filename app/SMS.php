@@ -112,10 +112,12 @@ class SMS
      * you can use this API.
      * */
     public static function sendSingleSms($mobile_no,$message_body){
+        $mobile_no = preg_replace('/[^\p{L}\p{N}\s]/u', '', $mobile_no);
+
         $new_message_body = wordwrap($message_body, 740, "<br />\n");
         $new_message_body = explode("<br />\n",$new_message_body);
 
-        if (strpos($mobile_no, '+880') !== false) { // If number from Bangladesh
+        if (strpos($mobile_no, '880') !== false) { // If number from Bangladesh
             $api_key = env('SMS_API_KEY');
             $api_secret = env('SMS_API_SECRET');
         }
@@ -161,7 +163,8 @@ class SMS
      * you can use this API.
      * */
     public static function sendOtpSms($mobile_no,$message_body){
-        if (strpos($mobile_no, '+880') !== false) { // If number from Bangladesh
+        $mobile_no = preg_replace('/[^\p{L}\p{N}\s]/u', '', $mobile_no);
+        if (strpos($mobile_no, '880') !== false) { // If number from Bangladesh
             $api_key = env('SMS_API_KEY');
             $api_secret = env('SMS_API_SECRET');
         }
@@ -206,6 +209,7 @@ class SMS
      * Multiple mobile numbers should be comma-separated.
      * */
     public static function sendCampaignSms($mobile_no,$message_body,$campaign_title){
+        $mobile_no = preg_replace('/[^\p{L}\p{N}\s]/u', '', $mobile_no);
         if (strpos($mobile_no, '+880') !== false) { // If number from Bangladesh
             $api_key = env('SMS_API_KEY');
             $api_secret = env('SMS_API_SECRET');

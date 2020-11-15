@@ -47,9 +47,9 @@
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
     <div class="form-group">
-        <h4>Thank you for your registration to Niloy Garments!</h4>
-        <p>An email with verification link have been sent to your email address</p>
-        <p>Verify your email to <a href="{{url('login')}}">login</a> to this portal</p>
+        <h4>Thank you for your registration to Vujadetec!</h4>
+        <p>An sms and email with verification OTP have been sent to your phone and email address.</p>
+        <p>Use that OTP to verify your account after <a href="{{url('login')}}">login</a> to this portal.</p>
     </div>
     <!-- END LOGIN FORM -->
 </div>

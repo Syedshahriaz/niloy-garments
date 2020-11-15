@@ -41,7 +41,7 @@ class HomeController extends Controller
                 'request_type' => 'SINGLE_SMS',
                 'message_type' => 'TEXT',
                 'mobile' => '01749472736',
-                'message_body' => 'This is a test SMS from Niloy Garments. Please ignore this.',
+                'message_body' => 'This is a test SMS from Vujadetec. Please ignore this.',
             );
 
             //$result = file_get_contents(env('SMS_PORTAL') . '/api/v1/secure/send-sms', false, $context);
