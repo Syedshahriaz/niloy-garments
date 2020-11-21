@@ -26,7 +26,7 @@
 <div class="container">
     <div class="row">
         <div class="col" style="margin-top:25px;">
-            
+
             <span style="font-weight: bold;background-color:black; color:white;">&nbsp;Vujade<span style="font-weight: bold;color:#bf945b;">tec&nbsp;</span></span> has 3 offers <span style="font-weight: bold;color:#599a13;">&nbsp;Green&nbsp;</span>-<span style="font-weight: bold;color:#d61919;">&nbsp;<b>Red&nbsp;</b></span>-<span style="font-weight: bold;color:#fc0aa6;">&nbsp;Pink&nbsp;</span> which cover all ages, all gender including pregnant women. Pink offer are related to females and completely FREE if you buy Green or Red.
             <br><br>
             It is for those:
@@ -124,7 +124,7 @@
 
                                 <div class="d-none" id="question_area">
                                     <div class="offer-item">
-                                        <h5 class="text-center mb-3">Do you take vaccine regularly?</h5>
+                                        <h5 class="text-center mb-3">Do you take vaccine regularly from childhood? (If answer is yes, it is GREEN offer)</h5>
                                         <div class="row">
                                             <div class="col-md-4 offset-4 form-group text-center mb-0">
                                                 <label class="radio-inline mr-3">
@@ -138,7 +138,7 @@
                                     </div>
 
                                     <div class="offer-item">
-                                        <h5 class="text-center mb-3">Did you miss any vaccine?</h5>
+                                        <h5 class="text-center mb-3">Did you have all vaccine record from childhood? (If answer is yes, it is GREEN offer)</h5>
                                         <div class="row">
                                             <div class="col-md-4 offset-4 form-group text-center mb-0">
                                                 <label class="radio-inline mr-3">

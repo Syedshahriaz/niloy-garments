@@ -33,6 +33,7 @@ class Common
     const FROM_EMAIL = 'vujadetec@gmail.com';
     const FROM_NAME = 'Vujadetec';
     const ADMIN_EMAIL = 'info@vujadetec.com';
+    const PAYMENT_EMAIL = 'arif@vujadetec.com';
 
     /* You can set EASYPAY_MODE to sandbox or live*/
     const EASYPAY_MODE = 'live';

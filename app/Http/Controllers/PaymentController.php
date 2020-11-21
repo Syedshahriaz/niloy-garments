@@ -292,7 +292,7 @@ class PaymentController extends Controller
         /*
          * Send payment confirmation email to admin
          */
-        $email_to = [Common::ADMIN_EMAIL];
+        $email_to = [Common::PAYMENT_EMAIL];
         $email_cc = [];
         $email_bcc = [];
 
