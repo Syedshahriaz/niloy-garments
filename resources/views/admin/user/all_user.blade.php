@@ -117,7 +117,13 @@
                                         <td>{{$user->unique_id}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
-                                        <td>{{$user->status}}</td>
+                                        <td>
+                                            @if($user->payment_status=='Completed')
+                                                active
+                                            @else
+                                                pending
+                                            @endif
+                                        </td>
                                         <td style="min-width: 170px;">
                                             @if($user->shipment_date !='')
                                                 {{date('l d, M, Y', strtotime($user->shipment_date))}}

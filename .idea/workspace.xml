@@ -5,9 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/laravel_vue2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laravel_vue2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Common.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PaymentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PaymentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/offer.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/offer.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/app/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/app/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" afterDir="false" />
     </list>
@@ -147,9 +145,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ecommerce" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -212,29 +211,16 @@
       <workItem from="1605595378481" duration="610000" />
       <workItem from="1605761131051" duration="2907000" />
       <workItem from="1605779617581" duration="1375000" />
-      <workItem from="1605935052950" duration="912000" />
+      <workItem from="1605935052950" duration="1584000" />
+      <workItem from="1606014619312" duration="639000" />
+      <workItem from="1606543967544" duration="1001000" />
+      <workItem from="1607054988176" duration="630000" />
+      <workItem from="1607062136757" duration="15406000" />
+      <workItem from="1607322286271" duration="1173000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="419" y="198" width="591" height="396" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604406155482">
-      <screen x="67" y="27" width="1299" height="741" />
-    </state>
-    <state x="419" y="198" width="591" height="396" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1299.741@67.27.1299.741" timestamp="1604406155482" />
-    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1604115495417">
-      <screen x="67" y="27" width="1299" height="741" />
-    </state>
-    <state x="449" y="154" width="524" height="484" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/67.27.1299.741@67.27.1299.741" timestamp="1604115495417" />
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1605779734675">
-      <screen x="67" y="27" width="1299" height="741" />
-    </state>
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1605779734675" />
-    <state x="407" y="135" width="618" height="580" key="find.popup" timestamp="1605436349337">
-      <screen x="67" y="27" width="1299" height="741" />
-    </state>
-    <state x="407" y="135" width="618" height="580" key="find.popup/67.27.1299.741@67.27.1299.741" timestamp="1605436349337" />
   </component>
 </project>

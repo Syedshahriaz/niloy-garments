@@ -123,5 +123,6 @@
     <orderEntry type="module" module-name="vanessa" />
     <orderEntry type="module" module-name="product_crud" />
     <orderEntry type="module" module-name="laravel_vue" />
+    <orderEntry type="module" module-name="ecommerce" />
   </component>
 </module>
