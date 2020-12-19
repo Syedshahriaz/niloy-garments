@@ -29,8 +29,44 @@
                 <div class="offer-option mb-5">
                     <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
                         <input type="hidden" name="subscription_type" value="new">
-
                         <div class="mb-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <h2 class="mb-5 text-center underline-text">Choose Your plan</h2>
+                                        <div class="category-select-container">
+                                            <div class="radio-button">
+                                                <label class="radio-button__label-wrapper" for="COVID-19">
+                                                    <h4 class="radio-button__label-title">
+                                                        Free COVID-19 Vaccine Schedule
+                                                    </h4>
+                                                    <span class="radio-button__label-subtext">
+                                                        You will get only COVID vaccine schedules  
+                                                    </span>
+                                                    <input type="radio" name="select_plan" id="COVID-19" value="COVID" class="radio-button__input">
+                                                    <div class="radio-button__custom-indicator"></div>  
+                                                </label>
+                                            </div>
+
+                                            <div class="radio-button">
+                                                <label class="radio-button__label-wrapper" for="Premium">
+                                                    <h4 class="radio-button__label-title">
+                                                        All Vaccine Schedule (Premium)
+                                                    </h4>
+                                                    <span class="radio-button__label-subtext">
+                                                        You will get all vaccine schedules
+                                                    </span>
+                                                    <input type="radio" name="select_plan" id="Premium" value="Premium" class="radio-button__input" checked="checked">
+                                                    <div class="radio-button__custom-indicator"></div>    
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 subscription-content">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -59,7 +95,7 @@
                             </div>
                         </div>
 
-                        <div class="promotion-address-field">
+                        <div class="promotion-address-field subscription-content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -314,6 +350,17 @@
                 }
             });
         })
+
+        $('input[type=radio][name=select_plan]').change(function() {
+            if (this.value == 'COVID') {
+                $('.subscription-content').slideUp();
+                $('.page-footer').addClass('fixed-footer')
+            }
+            else if (this.value == 'Premium') {
+                $('.subscription-content').slideDown();
+                $('.page-footer').removeClass('fixed-footer')
+            }
+        });
 
     </script>
 </body>

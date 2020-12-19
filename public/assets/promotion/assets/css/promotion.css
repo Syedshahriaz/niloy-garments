@@ -245,3 +245,96 @@ b, optgroup, strong {
     text-align: center;
     background: #ec0404; 
 }
+.underline-text{
+    position: relative;
+}
+.underline-text:after{
+    left: 50%;
+    content: '';
+    height: 1px;
+    width: 310px;
+    bottom: -13px;
+    display: block;
+    position: absolute;
+    background-color: #672e94;
+    transform: translateX(-50%);
+}
+.category-select-container {
+    max-width: 37%;
+    margin: 0px auto;
+    margin-bottom: 30px;
+}
+@media only screen and (max-width: 768px) {
+    .category-select-container {
+        max-width: 100%;
+    } 
+}
+.fixed-footer{
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    position: fixed;   
+}
+@media only screen and (max-width: 768px) {
+    .fixed-footer{
+        position: relative;   
+    } 
+}
+.radio-button {
+    margin-bottom: 1rem;
+}
+.radio-button__label-wrapper {
+    border-radius: 50%;
+    cursor: pointer;
+    display: block;
+    padding-left: 2.5rem;
+    position: relative;
+    top: 0.25rem;
+}
+.radio-button__label-wrapper:hover .radio-button__input ~ .radio-button__custom-indicator {
+    border-color: black;
+}
+.radio-button__label-title {
+    margin-bottom: 0.25rem;
+}
+.radio-button__label-subtext {
+    display: block;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+.radio-button__custom-indicator {
+    background-color: white;
+    border: 1px solid #999;
+    border-radius: 50%;
+    height: 24px;
+    left: 0;
+    position: absolute;
+    top: 7px;
+    width: 24px;
+}
+.radio-button__custom-indicator::after {
+    background-color: #672e94;
+    border-radius: 50%;
+    content: "";
+    display: none;
+    height: 18px;
+    left: 2px;
+    position: absolute;
+    top: 2px;
+    width: 18px;
+}
+.radio-button__input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+.radio-button__input:focus ~ .radio-button__custom-indicator {
+    border-color: black;
+}
+.radio-button__input:checked ~ .radio-button__custom-indicator::after {
+    display: block;
+}
+.radio-button__input:disabled ~ .radio-button__custom-indicator {
+    opacity: 0.6;
+    pointer-events: none;
+}
