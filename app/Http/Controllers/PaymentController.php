@@ -32,13 +32,30 @@ class PaymentController extends Controller
         $user_id = $request->id;
         $tran_id = "TXN_".uniqid();
 
+        $user_type = $request->user_type;
+
         $user = User::where('id',$user_id)->first();
         $user->address = $request->address;
         $user->city = $request->city;
         $user->state = $request->state;
         $user->postcode = $request->postcode;
         $user->country = $request->country;
+        $user->user_type = $request->user_type;
         $user->save();
+
+        /*
+         * If user type is free then redirect to offer page instead of payment page
+         * */
+        if($user_type=='free'){
+            $shipment = NEW UserShipment();
+            $shipment->user_id = $user_id;
+            $shipment->has_ofer_1 = 0;
+            $shipment->has_ofer_2 = 0;
+            $shipment->save();
+
+            $url_forward = url('select_offer',$user->id);
+            return redirect($url_forward);
+        }
 
         /*
          * Update coupon usability if coupon applied

@@ -123,15 +123,22 @@
                                             else if($day_left<=7){
                                                 $bg_class = 'bg-warning';
                                             }
+
+                                            if($user->user_type=='free' && $project->type !='free'){
+                                                $premium_class= 'only-premium';
+                                            }
+                                            else{
+                                                $premium_class= '';
+                                            }
                                         }
                                     ?>
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                         @if($project->type=='upcoming')
-                                            <a class="project-item-title" href="javascript:void(0)" title="{{$project->name}}">
+                                            <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}">
                                         @elseif($project->has_special_date==1 && $project->special_date=='')
-                                            <a class="project-item-title" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
+                                            <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
                                         @else
-                                            <a class="project-item-title item-2" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
+                                            <a class="project-item-title item-2 {{$premium_class}}" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
                                         @endif
                                             <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
                                                 <div class="display title-section">

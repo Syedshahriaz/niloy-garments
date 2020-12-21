@@ -77,8 +77,22 @@ class UserController extends Controller
                 }
 
                 $payment = Payment::where('user_id', $user->id)->first();
+                $shipment = UserShipment::where('user_id', $user->id)->first();
+
+                /*
+                 * If user type is premium
+                 * */
                 if (!empty($payment) && $payment->payment_status == 'Completed') {
-                    $shipment = UserShipment::where('user_id', $user->id)->first();
+                    if (empty($shipment)) {
+                        return redirect('select_offer/'.$user->id);
+                    }
+
+                    return redirect('all_project');
+                }
+                /*
+                 * If user type is free
+                 * */
+                if (empty($payment) && $user->user_type == 'free') {
                     if (empty($shipment)) {
                         return redirect('select_offer/'.$user->id);
                     }
@@ -154,20 +168,25 @@ class UserController extends Controller
                 /*
                  * Check if payment completed or not
                  * */
-                $payment = Payment::where('user_id', $user->id)->first();
-                if (empty($payment)) {
-                    return redirect('promotion/'.$user->id);
-                }
-                if ($payment->payment_status != 'Completed') {
-                    return redirect('promotion/'.$user->id);
+
+                if($user->user_type=='premium'){
+                    $payment = Payment::where('user_id', $user->id)->first();
+                    if (empty($payment)) {
+                        return redirect('promotion/'.$user->id);
+                    }
+                    if ($payment->payment_status != 'Completed') {
+                        return redirect('promotion/'.$user->id);
+                    }
                 }
 
                 /*
                  * Check if shipment date already selected
                  * */
                 $shipment = UserShipment::where('user_id', $user->id)->first();
-                if ($shipment->has_ofer_1==1 || $shipment->has_ofer_2==1) { // If offer already selected
-                    return redirect('all_project');
+                if(!empty($shipment)){
+                    if ($shipment->has_ofer_1==1 || $shipment->has_ofer_2==1) { // If offer already selected
+                        return redirect('all_project');
+                    }
                 }
 
                 if ($request->ajax()) {
@@ -189,7 +208,7 @@ class UserController extends Controller
     }
 
     public function saveOffer(Request $request){
-        try {
+        //try {
             DB::beginTransaction();
 
             $user_id = $request->user_id;
@@ -198,7 +217,7 @@ class UserController extends Controller
             $shipment_date = $request->shipment_date;
 
             $shipment = UserShipment::where('user_id',$request->user_id)->first();
-            if($shipment->shipment_date != ''){
+            if(!empty($shipment) && $shipment->shipment_date != ''){
                 return [ 'status' => 401, 'reason' => 'You have already added your shipment date'];
             }
 
@@ -207,12 +226,17 @@ class UserController extends Controller
              * */
             $user = User::where('users.id',$user_id)
                 ->select('users.*','user_payments.created_at as purchase_date')
-                ->join('user_payments','user_payments.user_id','=','users.id')
+                ->leftJoin('user_payments','user_payments.user_id','=','users.id')
                 ->first();
             $user->gender = $gender;
             $user->save();
 
-            $purchase_date = $user->purchase_date;
+            if($user->purchase_date != ''){
+                $purchase_date = $user->purchase_date;
+            }
+            else{
+                $purchase_date = date('Y-m-d h:i:s');
+            }
 
             /*
              * Save shipment date
@@ -248,14 +272,14 @@ class UserController extends Controller
 
             return redirect('all_project?u_id='.$user_id);
 
-        }
+        /*}
         catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'saveOffer', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return back();
-        }
+        }*/
     }
 
     private function saveShipmentDetails($user_id,$gender,$shipment_date,$offer){

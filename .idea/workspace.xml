@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/laravel_vue2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laravel_vue2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/user/all_user.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/app/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/app/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/../vanessa/resources/views/auth/login.blade.php" afterDir="false" />
     </list>
@@ -148,7 +147,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ecommerce" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../laravel_vue" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -216,7 +215,11 @@
       <workItem from="1606543967544" duration="1001000" />
       <workItem from="1607054988176" duration="630000" />
       <workItem from="1607062136757" duration="15406000" />
-      <workItem from="1607322286271" duration="1173000" />
+      <workItem from="1607322286271" duration="1917000" />
+      <workItem from="1607526472639" duration="2992000" />
+      <workItem from="1607570132325" duration="234000" />
+      <workItem from="1607579278922" duration="1155000" />
+      <workItem from="1607913079015" duration="248000" />
     </task>
     <servers />
   </component>

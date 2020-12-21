@@ -41,10 +41,10 @@
                                                         Free COVID-19 Vaccine Schedule
                                                     </h4>
                                                     <span class="radio-button__label-subtext">
-                                                        You will get only COVID vaccine schedules  
+                                                        You will get only COVID vaccine schedules
                                                     </span>
-                                                    <input type="radio" name="select_plan" id="COVID-19" value="COVID" class="radio-button__input">
-                                                    <div class="radio-button__custom-indicator"></div>  
+                                                    <input type="radio" name="user_type" id="COVID-19" value="free" class="radio-button__input">
+                                                    <div class="radio-button__custom-indicator"></div>
                                                 </label>
                                             </div>
 
@@ -56,8 +56,8 @@
                                                     <span class="radio-button__label-subtext">
                                                         You will get all vaccine schedules
                                                     </span>
-                                                    <input type="radio" name="select_plan" id="Premium" value="Premium" class="radio-button__input" checked="checked">
-                                                    <div class="radio-button__custom-indicator"></div>    
+                                                    <input type="radio" name="user_type" id="Premium" value="premium" class="radio-button__input" checked="checked">
+                                                    <div class="radio-button__custom-indicator"></div>
                                                 </label>
                                             </div>
                                         </div>
@@ -232,6 +232,7 @@
          $(document).on('click','#payment_button', function(event){
              event.preventDefault();
 
+             var user_type = $("input[name='user_type']:checked").val();
              var subscription_plan_id = $('#subscription_plan_id').val();
              var address = $('#address').val();
              var city = $('#city').val();
@@ -239,9 +240,12 @@
              var postcode = $('#postcode').val();
              var validate = '';
 
-             if (subscription_plan_id.trim() == "") {
-                 validate = validate + "Subscription plan is required</br>";
+             if(user_type=='premium'){
+                 if (subscription_plan_id.trim() == "") {
+                     validate = validate + "Subscription plan is required</br>";
+                 }
              }
+
              if (address.trim() == "") {
                  validate = validate + "Address is required</br>";
              }
@@ -351,12 +355,12 @@
             });
         })
 
-        $('input[type=radio][name=select_plan]').change(function() {
-            if (this.value == 'COVID') {
+        $('input[type=radio][name=user_type]').change(function() {
+            if (this.value == 'free') {
                 $('.subscription-content').slideUp();
                 $('.page-footer').addClass('fixed-footer')
             }
-            else if (this.value == 'Premium') {
+            else if (this.value == 'premium') {
                 $('.subscription-content').slideDown();
                 $('.page-footer').removeClass('fixed-footer')
             }

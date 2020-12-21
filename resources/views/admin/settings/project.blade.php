@@ -236,6 +236,8 @@
                                     <label for="running_project">Running</label>
                                     <input type="radio" class="" name="project_type" id="upcoming_project" value="upcoming">
                                     <label for="upcoming_project">Upcoming</label>
+                                    <input type="radio" class="" name="project_type" id="free_project" value="free">
+                                    <label for="upcoming_project">Free</label>
                                 </div>
                             </div>
                         </div>
@@ -284,10 +286,17 @@
                         if(project.type=='running'){
                             $("#running_project").prop("checked", true);
                             $("#upcoming_project").prop("checked", false);
+                            $("#free_project").prop("checked", false);
+                        }
+                        else if(project.type=='free'){
+                            $("#running_project").prop("checked", false);
+                            $("#upcoming_project").prop("checked", false);
+                            $("#free_project").prop("checked", true);
                         }
                         else{
                             $("#running_project").prop("checked", false);
                             $("#upcoming_project").prop("checked", true);
+                            $("#free_project").prop("checked", false);
                         }
                         $('#project_edit_modal').modal('show');
                     }
