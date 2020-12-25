@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
     <link rel="stylesheet" href="{{asset('assets/promotion/assets/css/promotion.css')}}">
-    <title>Prmotion</title>
+    <title>Upgrade Account</title>
 </head>
 
 <body>
@@ -27,12 +27,14 @@
     <div class="row">
         <div class="col" style="margin-top:25px;">
             <div class="offer-option mb-5">
-                <div class="renewal-error">Your account subscription has been expired. Please renew your subscription plan to continue.</div>
-                <br><br>
                 <form id="payment_form" class="login-form" action="{{url('initiate_payment',$user->id)}}" method="get">
-                    <input type="hidden" name="subscription_type" value="renew">
-
+                    <input type="hidden" name="subscription_type" value="upgrade">
+                    <input type="hidden" name="user_type" id="Premium" value="premium">
                     <div class="mb-4">
+
+                    </div>
+
+                    <div class="mb-4 subscription-content">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -46,7 +48,7 @@
                                                 <div class="custom-options">
                                                     <span class="custom-option selected" data-id="">Select</span>
                                                     @foreach($subscription_plans as $plan)
-                                                        <span class="custom-option" data-id="{{$plan->id}}" data-price="{{$plan->offer_price}}">{{$plan->name}}</span>
+                                                        <span class="custom-option" data-id="{{$plan->id}}" data-price="{{$plan->offer_price}}" data-currency="{{$plan->currency}}">{{$plan->name}}</span>
                                                     @endforeach
                                                     <input type="hidden" name="subscription_plan_id" id="subscription_plan_id" value="">
                                                     <input type="hidden" name="currency" id="currency" value="{{$plan->currency}}">
@@ -61,7 +63,7 @@
                         </div>
                     </div>
 
-                    <div class="promotion-address-field">
+                    <div class="promotion-address-field subscription-content">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -77,12 +79,54 @@
                             </div>
 
                             <div class="col-md-6 d-none" id="price_preview">
-                                <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currensy">BDT</span> <span class="prev_cost">00.00</span></strong></p>
-                                <p>After discount your total cost is BDT <strong><span class="slected_currensy">BDT</span> <span class="payable_cost">00.00</span></strong></p>
+                                <p class="mb-0 mt-4">Your total cost is <strong><span class="slected_currency">BDT</span> <span class="prev_cost">00.00</span></strong></p>
+                                <p>After discount your total cost is BDT <strong><span class="slected_currency">BDT</span> <span class="payable_cost">00.00</span></strong></p>
                             </div>
                         </div>
                     </div>
 
+                    <div class="promotion-address-field">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Your Address</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Address*" name="address" id="address"  value="{{$user->address}}"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">City</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="City*" name="city" id="city" value="{{$user->city}}"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">State</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="State*" name="state" id="state" value="{{$user->state}}"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Postcode</label>
+                                    <input class="form-control placeholder-no-fix" type="text" placeholder="Poscode*" name="postcode" id="postcode" value="{{$user->postcode}}" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label visible-ie8 visible-ie9">Country</label>
+                                    <select class="form-control placeholder-no-fix" placeholder="Select country*" name="country" id="country" autocomplete="off">
+                                        <option value="">Select</option>
+                                        @foreach($countries as $country)
+                                            <option value="{{$country->name}}" @if($user->country==$country->name) selected @endif>{{$country->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="text-center">
                         <buton type="button" class="btn btn-lg btn-success" id="payment_button">Submit</buton>
                     </div>
@@ -157,10 +201,27 @@
         event.preventDefault();
 
         var subscription_plan_id = $('#subscription_plan_id').val();
+        var address = $('#address').val();
+        var city = $('#city').val();
+        var state = $('#state').val();
+        var postcode = $('#postcode').val();
         var validate = '';
 
         if (subscription_plan_id.trim() == "") {
             validate = validate + "Subscription plan is required</br>";
+        }
+
+        if (address.trim() == "") {
+            validate = validate + "Address is required</br>";
+        }
+        if (city.trim() == "") {
+            validate = validate + "City is required</br>";
+        }
+        if (state.trim() == "") {
+            validate = validate + "State is required</br>";
+        }
+        if (postcode.trim() == "") {
+            validate = validate + "Post code is required</br>";
         }
 
         if (validate == "") {
@@ -195,6 +256,7 @@
 
                 var subscription_id = $(this).attr('data-id');
                 var subscription_price = $(this).attr('data-price');
+                var currency = $(this).attr('data-currency');
                 $('#subscription_plan_id').val(subscription_id);
                 $('#promo').val('');
                 if(subscription_id != ''){
@@ -202,6 +264,7 @@
                     $('#price_preview').removeClass('d-none');
                     $('#subscription_price').val(subscription_price);
                     $('#coupon_id').val('');
+                    $('.slected_currency').text(currency);
                     $('.prev_cost').text(subscription_price);
                     $('.payable_cost').text(subscription_price);
                 }
@@ -246,14 +309,27 @@
                     $('#coupon_apply_button').prop('disabled',true);
                 }
                 else{
+                    $('#coupon_apply_button').prop('disabled',false);
                     show_error_message(data.reason);
                 }
             },
             error: function (data) {
+                $('#coupon_apply_button').prop('disabled',false);
                 show_error_message(data);
             }
         });
     })
+
+    $('input[type=radio][name=user_type]').change(function() {
+        if (this.value == 'free') {
+            $('.subscription-content').slideUp();
+            $('.page-footer').addClass('fixed-footer')
+        }
+        else if (this.value == 'premium') {
+            $('.subscription-content').slideDown();
+            $('.page-footer').removeClass('fixed-footer')
+        }
+    });
 
 </script>
 </body>

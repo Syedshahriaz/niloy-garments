@@ -317,9 +317,11 @@ class Common
     }
 
     public static function removeUserProject($user_id){
-        $user_project_ids = UserProject::select('id')
-            ->where('user_id',$user_id)
-            ->pluck('id')
+        $user_project_ids = UserProject::select('user_projects.id')
+            ->join('projects','projects.id','=','user_projects.project_id')
+            ->where('user_projects.user_id',$user_id)
+            ->where('projects.type','!=','free')
+            ->pluck('user_projects.id')
             ->toArray();
 
         /*
@@ -330,7 +332,10 @@ class Common
         /*
          * Removing user project
          * */
-        UserProject::where('user_id',$user_id)->delete();
+        UserProject::where('user_projects.user_id',$user_id)
+            ->join('projects','projects.id','=','user_projects.project_id')
+            ->where('projects.type','!=','free')
+            ->delete();
 
         return 'ok';
     }
@@ -443,6 +448,39 @@ class Common
                 $projectTask->status = 'not initiate';
             }
             $projectTask->freeze_forever = $task->freeze_forever;
+            $projectTask->save();
+        }
+    }
+
+    public static function removeUserProjectTask($user_project_id){
+        UserProjectTask::where('user_project_id',$user_project_id)->delete();
+    }
+
+    public static function saveUserCovidProjectTask($covid_doses,$userProject,$shipment,$user_vaccine_company){
+        foreach($covid_doses as $key=>$task){
+            $projectTask = NEW UserProjectTask();
+            $projectTask->user_project_id = $userProject->id;
+            $projectTask->task_id = $task->id;
+            $projectTask->covid_vaccine_dose_id = $task->id;
+            if($task->status =='active'){
+                $days_to_add = $task->days_to_add;
+
+                if($task->day_add_with=='company_vaccine_date') {
+                    $projectTask->due_date = date('Y-m-d',
+                        strtotime($user_vaccine_company->dose_date . ' + ' . $days_to_add. ' days'));
+                    $projectTask->original_delivery_date = date('Y-m-d',
+                        strtotime($user_vaccine_company->dose_date . ' + ' . $days_to_add . ' days'));
+                }
+                else{
+                    // keep due_date and original_delivery_date NULL
+                }
+            }
+            if($key==0){
+                $projectTask->status = 'processing';
+            }
+            else{
+                $projectTask->status = 'not initiate';
+            }
             $projectTask->save();
         }
     }
@@ -591,6 +629,35 @@ class Common
         return $days_to_add;
     }
 
+    public static function calculateCovidVaccineDaysToAdd($task,$shipment_date){
+        $years_diff = (time()-strtotime($shipment_date))/(3600*24*365.25);
+
+        if($task->under_age_rule !='' && $years_diff<$task->under_age_rule){ // If task has under_age_rule and age is less than under_age_rule years
+            $days_to_add = $task->under_age_days_to_add;
+        }
+        else if($task->project_id==34 && $years_diff>=15){ // If project id=34 and age is greater than 15 years
+            $days_to_add = $task->days_to_add;
+        }
+        else if($task->alternet_days_to_add==''){
+            $days_to_add = $task->days_to_add;
+        }
+        else{
+            /*
+             * Check if dependent task freeze or active
+             * */
+            $dependentTask = Task::where('id',$task->dependent_task_to_add_days)->first();
+            $in_date_range = self::task_in_date_range($shipment_date,$dependentTask->days_range_start,$dependentTask->days_range_end);
+            if($in_date_range==0){ // The dependent task is freezed
+                $days_to_add = $task->alternet_days_to_add;
+            }
+            else{ // Dependent task is active
+                $days_to_add = $task->days_to_add;
+            }
+        }
+
+        return $days_to_add;
+    }
+
     public static function makeCorrectTaskEditable($task,$shipment_date){
         return 1;
         /*$project_task = UserProjectTask::where('id',$task->id)->first();
@@ -678,14 +745,18 @@ class Common
             if($past_message_body !=''){
                 $past_message_body = $message_initiate.', '.$past_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $past_email_body = $message_initiate.', <br>'.$past_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
-                $sms_response = self::sendPastDayWarningSms($phone,$past_message_body);
+                if($user->user_type=='premium'){ // Sending sms only to premium users
+                    $sms_response = self::sendPastDayWarningSms($phone,$past_message_body);
+                }
                 $email_response = self::sendPastDayWarningEmail($email,$past_email_body);
                 $result = self::storeSmsRecord($user->id, $past_message_body);
             }
             if($warning_message_body !=''){
                 $warning_message_body = $message_initiate.', '.$warning_message_body.'Please visit www.vujadetec.com to get more information about our product & services.';
                 $warning_email_body = $message_initiate.', <br>'.$warning_email_body.' <br>Please visit <a href="www.vujadetec.com">www.vujadetec.com</a> to get more information about our product & services.';
-                $sms_response = self::sendPastDayWarningSms($phone,$warning_message_body);
+                if($user->user_type=='premium') { // Sending sms only to premium users
+                    $sms_response = self::sendPastDayWarningSms($phone, $warning_message_body);
+                }
                 $email_response = self::send7dayWarningEmail($email,$warning_email_body);
                 $result = self::storeSmsRecord($user->id, $warning_message_body);
             }

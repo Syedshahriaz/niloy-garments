@@ -33,6 +33,7 @@ Route::get('logout', 'AuthenticationController@logout');
 Route::get('/registration', 'AuthenticationController@registration')->name('registration');
 Route::get('/thankyou', 'AuthenticationController@registrationThankYou');
 Route::get('/promotion/{id}', 'UserController@promotion');
+Route::get('/upgrade_account/{id}', 'UserController@upgradeAccount');
 Route::post('/calculate_coupon_code', 'UserController@calculateCouponCode');
 Route::get('/select_offer/{id}', 'UserController@selectOffer');
 Route::post('/save_offer', 'UserController@saveOffer');
@@ -86,6 +87,7 @@ Route::get('select_shipment/{id}', 'UserProjectController@selectShipment')->name
 Route::post('store_shipment', 'UserProjectController@storeShipment')->name('user.store_shipment');
 Route::get('all_project', 'UserProjectController@allProject')->name('user.all_project');
 Route::post('update_project_special_date', 'UserProjectController@updateProjectSpecialDate')->name('user.update_project_special_date');
+Route::post('update_covid_company', 'UserProjectController@updateCovidCompany')->name('user.update_project_special_date');
 Route::get('my_project', 'UserProjectController@myProject')->name('user.my_project');
 Route::get('my_project_task/{id}', 'UserProjectController@myProjectTask')->name('user.my_project_details');
 Route::post('update_task_delivery_status', 'UserProjectController@updateProjectTaskDeliveryStatus')->name('user.update_task_delivery_status');
@@ -156,6 +158,10 @@ Route::post('admin/save_subscription_plan', 'Admin\SettingController@storeSubscr
 Route::post('admin/get_subscription_plan', 'Admin\SettingController@getSubscriptionPlanDetails');
 Route::post('admin/update_subscription_plan', 'Admin\SettingController@updateSubscriptionPlan');
 Route::post('admin/delete_subscription_plan', 'Admin\SettingController@deleteSubscriptionPlan');
+
+Route::get('admin/covid_vaccine_companies', 'Admin\SettingController@covidVaccineCompanyList');
+Route::post('admin/get_covid_vaccine_company', 'Admin\SettingController@getCovidVaccineCompanyDetails');
+Route::post('admin/update_covid_vaccine_company', 'Admin\SettingController@updateCovidVaccineCompany');
 
 Route::get('admin/message', 'Admin\MessageController@message');
 Route::post('admin/store_message', 'Admin\MessageController@store');

@@ -40,7 +40,7 @@ class PaymentController extends Controller
         $user->state = $request->state;
         $user->postcode = $request->postcode;
         $user->country = $request->country;
-        $user->user_type = $request->user_type;
+        $user->user_type = 'free';
         $user->save();
 
         /*
@@ -271,6 +271,7 @@ class PaymentController extends Controller
 
         $user = User::where('id',$user_id)->first();
         $user->status = 'active';
+        $user->user_type = 'premium';
         $user->save();
 
         $payment = Payment::where('user_id', $user_id)->first();
@@ -296,9 +297,10 @@ class PaymentController extends Controller
             $shipment = NEW UserShipment();
             $shipment->user_id = $user_id;
             $subscription_plan = $response['opt_b'];
-            if($response['opt_c'] == 'new'){ // If new subscription
+            if($response['opt_c'] == 'new' || $response['opt_c'] == 'upgrade'){ // If new subscription or upgraded subscription
                 $shipment->has_ofer_1 = 0;
                 $shipment->has_ofer_2 = 0;
+                $shipment->shipment_date = NULL;
             }
             $shipment->subscription_plan_id = $subscription_plan;
 

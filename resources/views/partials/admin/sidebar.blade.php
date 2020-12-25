@@ -139,7 +139,7 @@
                         <span class="title">Settings</span>
                         <span class="arrow"></span>
                     </a>
-                    <ul class="sub-menu" @if($page=='promotion_setting' || $page=='project_setting' || $page=='common_setting' || $page=='offer_price_setting' || $page=='country_setting' || $page=='profession_setting' || $page=='coupon_setting' || $page=='subscription_plan_setting') style="display: block;" @endif>
+                    <ul class="sub-menu" @if($page=='promotion_setting' || $page=='project_setting' || $page=='common_setting' || $page=='offer_price_setting' || $page=='country_setting' || $page=='profession_setting' || $page=='coupon_setting' || $page=='subscription_plan_setting' || $page=='covid_vaccine_companies') style="display: block;" @endif>
                         @if(App\Common::can_access('promotion_setting'))
                         <li class="nav-item start @if($page=='promotion_setting') active @endif">
                             <a href="{{url('admin/promotion_setting')}}" class="nav-link">
@@ -196,6 +196,11 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-item start @if($page=='covid_vaccine_companies') active @endif">
+                            <a href="{{url('admin/covid_vaccine_companies')}}" class="nav-link">
+                                <span class="title">COVID Vaccine Companies</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endif

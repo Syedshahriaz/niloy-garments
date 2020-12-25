@@ -117,6 +117,50 @@ class UserController extends Controller
         }
     }
 
+    public function upgradeAccount(Request $request){
+        try {
+            if (Auth::check()) {
+                if(!Common::is_user_login()){
+                    return redirect('error_404');
+                }
+                $countries = Country::where('status','active')->get();
+
+                $user = user::where('id', $request->id)->first();
+                $offer = Offer::first();
+                $subscription_plans = SubscriptionPlan::select('subscription_plans.*','offer_prices.currency','offer_price_details.offer_price','countries.name as country_name')
+                    ->join('offer_price_details','offer_price_details.subscription_plan_id','=','subscription_plans.id')
+                    ->join('offer_prices','offer_prices.id','=','offer_price_details.offer_price_id')
+                    ->join('countries','countries.id','=','offer_prices.country_id')
+                    ->where('subscription_plans.status','active')
+                    ->where('countries.dial_code',$user->country_code)
+                    ->get();
+
+                if($user->parent_id ==0 && $user->status=='pending'){
+                    return redirect('verify_account');
+                }
+
+                $payment = Payment::where('user_id', $user->id)->first();
+                $shipment = UserShipment::where('user_id', $user->id)->first();
+
+
+                if ($request->ajax()) {
+                    $returnHTML = View::make('upgrade_account', compact('user','offer','subscription_plans','countries'))->renderSections()['content'];
+                    return response()->json(array('status' => 200, 'html' => $returnHTML));
+                }
+                return view('upgrade_account', compact('user','offer','subscription_plans','countries'));
+            }
+            else{
+                return redirect('login');
+            }
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'promotion', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return back();
+        }
+    }
+
     public function calculateCouponCode(Request $request){
         try {
             if(!Common::is_user_login()){
@@ -208,7 +252,7 @@ class UserController extends Controller
     }
 
     public function saveOffer(Request $request){
-        //try {
+        try {
             DB::beginTransaction();
 
             $user_id = $request->user_id;
@@ -247,6 +291,12 @@ class UserController extends Controller
             $has_offer_2 = $shipment->has_ofer_2;
 
             /*
+             * Remove previous projects and tasks of this user if user is upgrading from free to premium account
+             * But keep project record for COVID 19 vaccine
+             * */
+            $result = Common::removeUserProject($user_id);
+
+            /*
              * Get user project based on selected offer
              * */
             $projects = Common::getOfferedProject($gender,$has_offer_1,$has_offer_2);
@@ -272,14 +322,14 @@ class UserController extends Controller
 
             return redirect('all_project?u_id='.$user_id);
 
-        /*}
+        }
         catch (\Exception $e) {
             DB::rollback();
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'saveOffer', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return back();
-        }*/
+        }
     }
 
     private function saveShipmentDetails($user_id,$gender,$shipment_date,$offer){

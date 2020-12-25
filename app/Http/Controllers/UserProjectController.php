@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CovidVaccineDose;
 use App\Models\Offer;
 use App\Models\Payments;
 use App\Models\TaskTitle;
@@ -14,6 +15,8 @@ use App\Models\UserShipment;
 use App\Models\UserProject;
 use App\Models\UserProjectTask;
 use App\Models\User;
+use App\Models\CovidVaccineCompany;
+use App\Models\UserCovidVaccineCompany;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -113,6 +116,12 @@ class UserProjectController extends Controller
             $has_offer_2 = $shipment->has_ofer_2;
 
             /*
+             * Remove previous projects and tasks of this user if user is upgrading from free to premium account
+             * But keep project record for COVID 19 vaccine
+             * */
+            $result = Common::removeUserProject($user_id);
+
+            /*
              * Get user project based on selected offer
              * */
             $projects = Common::getOfferedProject($gender,$has_offer_1,$has_offer_2);
@@ -134,7 +143,9 @@ class UserProjectController extends Controller
             /*
              * Check and send task warning email and sms
              * */
-            $result = Common::sendTaskWarningEmail($user_id);
+            if($user->user_type=='premium') { // Sending sms only to premium users
+                $result = Common::sendTaskWarningEmail($user_id);
+            }
 
             return ['status'=>200, 'reason'=>'Date of birth successfully saved'];
         }
@@ -191,7 +202,13 @@ class UserProjectController extends Controller
                  * */
                 $user = User::where('users.id', $user_id)->first();
 
+                $user_covid_vaccine_company = UserCovidVaccineCompany::where('user_id',$user->id)
+                    ->first();
+
                 $setting = Setting::select('message_to_user')->first();
+                $covid_vaccine_companies = CovidVaccineCompany::select('covid_vaccine_companies.*')
+                    ->where('status','active')
+                    ->get();
 
                 $shipment = UserShipment::where('user_id', $user_id)->first();
                 if (empty($shipment)) {
@@ -214,22 +231,34 @@ class UserProjectController extends Controller
                     ->groupBy('user_shipments.user_id')
                     //->orderBy('parent_id','ASC')
                     ->get();
+
                 $projects = UserProject::with('running_task','last_task','completed_tasks')
                     ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.special_date_update_count','user_projects.user_id')
                     ->join('projects', 'projects.id', '=', 'user_projects.project_id')
                     ->join('tasks', 'tasks.project_id', '=', 'projects.id')
                     ->where('user_projects.user_id', $user_id)
                     ->where('projects.status', 'active')
+                    ->where('projects.type','!=', 'free')
+                    ->groupBy('projects.id')
+                    ->get();
+
+                $free_projects = UserProject::with('free_running_task','free_last_task','free_completed_tasks')
+                    ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id', 'user_projects.has_special_date','user_projects.special_date','user_projects.special_date_update_count','user_projects.user_id')
+                    ->join('projects', 'projects.id', '=', 'user_projects.project_id')
+                    ->join('tasks', 'tasks.project_id', '=', 'projects.id')
+                    ->where('user_projects.user_id', $user_id)
+                    ->where('projects.status', 'active')
+                    ->where('projects.type', 'free')
                     ->groupBy('projects.id')
                     ->get();
 
                 if ($request->ajax()) {
                     $returnHTML = View::make('user.project.all_project',
-                        compact('user_id','user','setting', 'child_users', 'shipment', 'projects'))->renderSections()['content'];
+                        compact('user_id','user','setting', 'child_users', 'shipment', 'projects','free_projects','covid_vaccine_companies','user_covid_vaccine_company'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
                 return view('user.project.all_project',
-                    compact('user_id','user','setting', 'child_users', 'shipment', 'projects'));
+                    compact('user_id','user','setting', 'child_users', 'shipment', 'projects','free_projects','covid_vaccine_companies','user_covid_vaccine_company'));
             }
             else{
                 return redirect('login');
@@ -282,6 +311,49 @@ class UserProjectController extends Controller
         }
     }
 
+    public function updateCovidCompany(Request $request){
+        try{
+            $user_id = $request->user_id;
+
+            $user_vaccine_company = UserCovidVaccineCompany::where('user_id',$user_id)->first();
+            if(empty($user_vaccine_company)){
+                $user_vaccine_company = NEW UserCovidVaccineCompany();
+            }
+
+            $user_vaccine_company->user_id = $user_id;
+            $user_vaccine_company->company_id = $request->covid_vaccine_company;
+            $user_vaccine_company->dose_date = $request->covid_vaccine_date;
+            $user_vaccine_company->save();
+
+            DB::beginTransaction();
+            /*
+             * First remove user project tasks for this user project if any
+             * */
+            $result = Common::removeUserProjectTask($request->user_project_id);
+
+            /*
+             * Now adding new tasks for this user projects
+             * */
+            $user_project = UserProject::where('id',$request->user_project_id)
+                ->first();
+            $shipment = UserShipment::where('user_id',$request->user_id)->first();
+            $covid_doses = CovidVaccineDose::where('company_id',$request->covid_vaccine_company)->get();
+
+            $result = Common::saveUserCovidProjectTask($covid_doses,$user_project,$shipment,$user_vaccine_company);
+
+            DB::commit();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'updateCovidCompany', $e->getLine(),
+                //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
     private function addSpecialDateToProjectTask($project_tasks,$special_date){
         foreach($project_tasks as $key=>$p_task){
             $p_task->due_date = date('Y-m-d', strtotime($special_date. ' + '.$p_task->days_to_add.' days'));
@@ -291,32 +363,51 @@ class UserProjectController extends Controller
     }
 
     public function myProjectTask(Request $request){
-        try{
+        //try{
             if (Auth::check()) {
                 if(!Common::is_user_login()){
                     return redirect('error_404');
                 }
 
                 $user_project_id = $request->id;
+
+                $projectDetails = UserProject::select('projects.*')
+                    ->join('projects','projects.id','=','user_projects.project_id')
+                    ->where('user_projects.id',$user_project_id)
+                    ->first();
+
                 $user = UserProject::select('users.id','users.username', 'users.email','users.status','has_special_date','special_date')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
 
-                $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','projects.has_offer_1')
-                    ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
-                    ->join('projects', 'projects.id', '=', 'tasks.project_id')
-                    ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
-                    ->where('user_project_id', $user_project_id)
-                    ->where('tasks.status', 'active')
-                    ->get();
+                if($projectDetails->type=='free'){
+                    $tasks = UserProjectTask::select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','projects.has_offer_1')
+                        ->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+                        ->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id')
+                        ->join('projects', 'projects.id', '=', 'tasks.project_id')
+                        ->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id')
+                        ->where('user_project_id', $user_project_id)
+                        ->where('covid_vaccine_doses.status', 'active')
+                        ->get();
+                }
+                else{
+                    $tasks = UserProjectTask::select('user_project_tasks.*', 'task_title.name as title', 'tasks.rule', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','projects.has_offer_1')
+                        ->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+                        ->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id')
+                        ->join('projects', 'projects.id', '=', 'tasks.project_id')
+                        ->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id')
+                        ->where('user_project_id', $user_project_id)
+                        ->where('tasks.status', 'active')
+                        ->get();
+                }
 
                 $task_titles = TaskTitle::where('status','!=','deleted')
                     ->get();
 
                 if (count($tasks) != 0) {
                     $project = Project::select('projects.*')
-                        ->where('id', $tasks[0]->project_id)
+                        ->where('id', $projectDetails->id)
                         ->first();
                 } else {
                     $project = array();
@@ -352,13 +443,13 @@ class UserProjectController extends Controller
             else{
                 return redirect('login');
             }
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){

@@ -148,6 +148,77 @@
         }
     });
 
+    function show_covid_company_modal(user_project_id){
+        $('#covid_user_project_id').val(user_project_id);
+        $('#covid_company_modal').modal('show');
+    }
+
+    $(document).on("submit", "#covid_company_form", function(event) {
+        event.preventDefault();
+
+        show_loader();
+
+        var day = $('#covid_day').val();
+        var month = $('#covid_month').val();
+        var year = $('#covid_year').val();
+        var covid_vaccine_company = $("#covid_vaccine_company").val();
+        var covid_vaccine_date = $("#covid_vaccine_date").val();
+        var user_project_id = $("#covid_user_project_id").val();
+
+        var validate = "";
+
+        if (covid_vaccine_company.trim() == "") {
+            validate = validate + "Company is required</br>";
+        }
+        if (covid_vaccine_date.trim() == "") {
+            validate = validate + "Date is required</br>";
+        }
+
+        /*if (covid_date.trim() != "" && isFutureDate(covid_date)) {
+            validate = validate + "You can not select a future date</br>";
+        }*/
+
+        if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
+            validate = validate + "Date is required</br>";
+        }
+
+        if (validate == "") {
+            var formData = new FormData($("#covid_company_form")[0]);
+            var url = "{{ url('update_covid_company') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                success: function(data) {
+                    hide_loader();
+                    if (data.status == 200) {
+                        $('#covid_company_modal').modal('hide');
+
+                        setTimeout(function(){
+                            window.location.href="{{url('my_project_task')}}/"+user_project_id;
+                        },200)
+
+                    } else {
+                        show_error_message(data.reason);
+                    }
+                },
+                error: function(data) {
+                    hide_loader();
+                    show_error_message(data);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        } else {
+            hide_loader();
+            $("#covid_success_message").hide();
+            $("#covid_error_message").show();
+            $("#covid_error_message").html(validate);
+        }
+    });
+
 
 
     /*
