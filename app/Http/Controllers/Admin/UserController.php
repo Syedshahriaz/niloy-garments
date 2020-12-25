@@ -118,6 +118,17 @@ class UserController extends Controller
                 ->leftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
                 ->where('user_projects.user_id', $user_id)
                 ->where('projects.status', 'active')
+                ->where('projects.type','!=', 'free')
+                ->groupBy('projects.id')
+                ->get();
+
+            $free_projects = UserProject::with('free_tasks','free_running_task','free_last_task')
+                ->select('projects.*', 'tasks.title', 'tasks.days_to_add', 'user_projects.id as user_project_id')
+                ->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id')
+                ->leftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
+                ->where('user_projects.user_id', $user_id)
+                ->where('projects.status', 'active')
+                ->where('projects.type', 'free')
                 ->groupBy('projects.id')
                 ->get();
 
@@ -128,10 +139,10 @@ class UserController extends Controller
 
             if ($request->ajax()) {
                 $returnHTML = View::make('admin.user.dashboard',
-                    compact('user_id','user','projects','task_titles','buyer'))->renderSections()['content'];
+                    compact('user_id','user','projects','free_projects','task_titles','buyer'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
-            return view('admin.user.dashboard',compact('user_id','user','projects','task_titles','buyer'));
+            return view('admin.user.dashboard',compact('user_id','user','projects','free_projects','task_titles','buyer'));
             //echo "<pre>"; print_r($projects); echo "</pre>";
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/UserController', 'dashboard', $e->getLine(),

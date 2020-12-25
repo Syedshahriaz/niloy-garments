@@ -84,6 +84,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {{-- For premium projects --}}
+
                                                 @foreach($projects as $project)
 
                                                     <!-- First table -->
@@ -166,6 +168,90 @@
                                                     </tr>
 
                                                 @endforeach
+
+                                                {{-- For free projects --}}
+                                                @foreach($free_projects as $project)
+
+                                                    <!-- First table -->
+                                                    <tr class="focus-tr">
+                                                        <td> <b>Project</b></td>
+                                                        <td> <b>Rule</b></td>
+                                                        @foreach($project->free_tasks as $task)
+                                                            @if($task->task_status !='deleted')
+                                                                <td> <b>{{$task->rule}}</b> </td>
+                                                            @endif
+                                                        @endforeach
+                                                    </tr>
+                                                    <tr>
+                                                        <td rowspan="2"> <b>{{$project->name}}</b>
+                                                        <td> <b>Due Date</b>
+                                                        </td>
+                                                        @foreach($project->free_tasks as $task)
+                                                            @if($task->task_status !='deleted')
+                                                                <td>
+                                                                    @if($task->task_status =='active')
+                                                                        {{date('D', strtotime($task->due_date))}},
+                                                                        {{date('M d, Y', strtotime($task->due_date))}}
+                                                                    @endif
+                                                                </td>
+                                                            @endif
+                                                        @endforeach
+                                                    </tr>
+                                                    <tr>
+                                                        <td> <b>Delivery Date</b></td>
+                                                        <?php foreach($project->free_tasks as $task){
+                                                        $hidden_class = 'hidden';
+                                                        $bg_class = '';
+
+                                                        /*
+                                                         * Calculate number of days left to complete
+                                                         * */
+                                                        $now = time();
+                                                        $datediff = strtotime($task->due_date) - $now;
+                                                        $day_left = round($datediff / (60 * 60 * 24));
+
+                                                        /*
+                                                         * Create hidden class
+                                                         * */
+                                                        if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                                            $hidden_class = '';
+                                                        }
+                                                        else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                                            $hidden_class = 'hidden';
+                                                        }
+
+                                                        /*
+                                                         * Create bg class
+                                                         * */
+                                                        if($task->status == 'completed'){
+                                                            $bg_class = 'bg-success';
+                                                        }
+                                                        else{
+                                                            if(strtotime($task->due_date) < time()) {
+                                                                $bg_class = 'bg-danger';
+                                                            }
+                                                            else if($day_left<=7){
+                                                                $bg_class = 'bg-warning';
+                                                            }
+                                                        }
+                                                        ?>
+
+                                                        @if($task->task_status !='deleted')
+                                                            <td class="@if($task->delivery_date_update_count > 1) unlock-task-td @endif @if($task->due_date !='') {{$bg_class}} @endif">{{--bg-success, bg-warning, bg-danger--}}
+
+                                                                @if($task->task_status =='active')
+                                                                    {{date('D', strtotime($task->original_delivery_date))}},
+                                                                    {{date('M d, Y', strtotime($task->original_delivery_date))}}
+                                                                    <div class="unlock-task">
+                                                                        <a class="unlock-task" title="Edit" onclick="open_unlock_modal({{$task->id}})"><i class="icons icon-lock-open"></i></a>
+                                                                    </div>
+                                                                @endif
+                                                            </td>
+                                                        @endif
+                                                        <?php } ?>
+                                                    </tr>
+
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -182,6 +268,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <!-- For premium project -->
                                             @foreach($projects as $project)
                                                 <?php foreach($project->tasks as $task){
                                                     if($task->task_status !='deleted'){
@@ -239,6 +326,67 @@
                                                             </td>
                                                         </tr>
                                                     <?php } // endif
+                                                } // endforeach ?>
+                                            @endforeach
+
+                                            {{-- For free projects --}}
+                                            @foreach($projects as $project)
+                                                <?php foreach($project->free_tasks as $task){
+                                                if($task->task_status !='deleted'){
+                                                $hidden_class = 'hidden';
+                                                $bg_class = '';
+
+                                                /*
+                                                 * Calculate number of days left to complete
+                                                 * */
+                                                $now = time();
+                                                $datediff = strtotime($task->due_date) - $now;
+                                                $day_left = round($datediff / (60 * 60 * 24));
+
+                                                /*
+                                                 * Create hidden class
+                                                 * */
+                                                if($task->status == 'processing' && $task->delivery_date_update_count<2){
+                                                    $hidden_class = '';
+                                                }
+                                                else if($task->status == 'processing' && $task->delivery_date_update_count>1){
+                                                    $hidden_class = 'hidden';
+                                                }
+
+                                                /*
+                                                 * Create bg class
+                                                 * */
+                                                if($task->status == 'completed'){
+                                                    $bg_class = 'bg-success';
+                                                }
+                                                else{
+                                                    if(strtotime($task->due_date) < time()) {
+                                                        $bg_class = 'bg-danger';
+                                                    }
+                                                    else if($day_left<=7){
+                                                        $bg_class = 'bg-warning';
+                                                    }
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td> <b>{{$project->name}}</b></td>
+                                                    <td> <b>{{$task->title}}</b></td>
+                                                    <td> <b>{{$task->rule}}</b></td>
+                                                    <td>
+                                                        @if($task->task_status =='active')
+                                                            {{date('D, F d, Y', strtotime($task->due_date))}}
+                                                        @endif
+                                                    </td>
+                                                    <td class="@if($task->due_date !='') {{$bg_class}} @endif">
+                                                        <div class="edit-table-date">
+                                                            @if($task->task_status =='active')
+                                                                {{date('D, F d, Y', strtotime($task->original_delivery_date))}}
+                                                                <a class="" title="Edit" onclick="open_unlock_modal({{$task->id}})"><i class="icons icon-note"></i></a>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php } // endif
                                                 } // endforeach ?>
                                             @endforeach
                                         </tbody>

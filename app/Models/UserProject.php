@@ -29,7 +29,7 @@ class UserProject extends Model
         $instance = $instance->leftJoin('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
         $instance = $instance->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
-        $instance = $instance->where('tasks.status','active');
+        $instance = $instance->where('covid_vaccine_doses.status','active');
         return $instance;
     }
 
