@@ -198,6 +198,7 @@ class UserController extends Controller
             $user = User::where('id',$user_id)->first();
             $user->gender = $gender;
             $user->status = 'active';
+            $user->user_type = 'premium';
             $user->save();
 
             /*
