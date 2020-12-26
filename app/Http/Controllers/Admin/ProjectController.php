@@ -30,6 +30,7 @@ class ProjectController extends Controller
 
             $projects = Project::with('tasks')
                 ->where('status','!=','deleted')
+                ->where('type','!=','free')
                 ->get();
             $task_titles = TaskTitle::where('status','!=','deleted')
                 ->get();

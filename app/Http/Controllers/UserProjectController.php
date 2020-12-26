@@ -458,9 +458,10 @@ class UserProjectController extends Controller
             $date_increased = 0;
             $daysAdded = 0;
             $task = UserProjectTask::where('user_project_tasks.id',$request->project_task_id)
-                ->select('user_project_tasks.*','tasks.has_freeze_rule','user_projects.user_id')
-                ->join('tasks','tasks.id','=','user_project_tasks.task_id')
+                ->select('user_project_tasks.*','tasks.has_freeze_rule','user_projects.user_id','projects.type as project_type')
+                ->leftjoin('tasks','tasks.id','=','user_project_tasks.task_id')
                 ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
+                ->leftjoin('projects','projects.id','=','user_projects.project_id')
                 ->first();
 
             if($task->delivery_date_update_count>1){
@@ -511,7 +512,12 @@ class UserProjectController extends Controller
              * Update next task original due date if date updated by user
              * */
             if($date_updated==1){
-                $result = $this->updateNextTaskOriginalDeliveryDate($request->project_task_id,$task->user_project_id,$date_increased,$daysAdded);
+                if($task->project_type !='free'){
+                    $result = $this->updateNextTaskOriginalDeliveryDate($request->project_task_id,$task->user_project_id,$date_increased,$daysAdded);
+                }
+                else{
+                    $result = $this->updateNextFreeTaskOriginalDeliveryDate($request->project_task_id,$task->user_project_id,$date_increased,$daysAdded);
+                }
             }
 
             /*
@@ -637,6 +643,41 @@ class UserProjectController extends Controller
                     $taskData->save();
                 }
             }
+        }
+    }
+
+    private function updateNextFreeTaskOriginalDeliveryDate($project_task_id,$user_project_id,$date_increased,$daysAdded){
+        /*
+         * Get all next task of this user project
+         * */
+        $project_tasks = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
+            ->select('user_project_tasks.*')
+            ->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
+            ->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id')
+            ->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id')
+            ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
+            ->join('projects','projects.id','=','user_projects.project_id')
+            ->join('users','users.id','=','user_projects.user_id')
+            ->where('user_project_id',$user_project_id)
+            ->where('covid_vaccine_doses.status','active')
+            ->whereIn('user_project_tasks.status',['not initiate','processing'])
+            ->where('tasks.update_date_with','self_task')
+            ->get();
+
+
+        foreach($project_tasks as $key=>$p_task){
+            $user_id = $p_task->user_id;
+
+            $taskData = UserProjectTask::where('id',$p_task->id)->first();
+            if($date_increased==1){ // If date increased
+                $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' + '.abs(round($daysAdded)).' days'));
+                $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' + '.abs(round($daysAdded)).' days'));
+            }
+            else{
+                $taskData->due_date = date('Y-m-d', strtotime($taskData->due_date. ' - '.abs(round($daysAdded)).' days'));
+                $taskData->original_delivery_date = date('Y-m-d', strtotime($taskData->original_delivery_date. ' - '.abs(round($daysAdded)).' days'));
+            }
+            $taskData->save();
         }
     }
 
