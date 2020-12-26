@@ -363,7 +363,7 @@ class UserProjectController extends Controller
     }
 
     public function myProjectTask(Request $request){
-        //try{
+        try{
             if (Auth::check()) {
                 if(!Common::is_user_login()){
                     return redirect('error_404');
@@ -382,7 +382,7 @@ class UserProjectController extends Controller
                     ->first();
 
                 if($projectDetails->type=='free'){
-                    $tasks = UserProjectTask::select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','projects.has_offer_1')
+                    $tasks = UserProjectTask::select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'covid_vaccine_doses.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','projects.has_offer_1')
                         ->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                         ->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id')
                         ->join('projects', 'projects.id', '=', 'tasks.project_id')
@@ -443,13 +443,13 @@ class UserProjectController extends Controller
             else{
                 return redirect('login');
             }
-        /*}
+        }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserProjectController', 'myProject', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }*/
+        }
     }
 
     public function updateProjectTaskDeliveryStatus(Request $request){
