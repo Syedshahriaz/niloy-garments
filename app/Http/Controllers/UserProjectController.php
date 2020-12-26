@@ -661,7 +661,6 @@ class UserProjectController extends Controller
             ->where('user_project_id',$user_project_id)
             ->where('covid_vaccine_doses.status','active')
             ->whereIn('user_project_tasks.status',['not initiate','processing'])
-            ->where('tasks.update_date_with','self_task')
             ->get();
 
 

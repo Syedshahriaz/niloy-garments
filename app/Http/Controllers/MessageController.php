@@ -52,12 +52,12 @@ class MessageController extends Controller
          * Check user status and redirect
          * */
         $user_status = Common::checkPaymentAndShipentStatus();
-        if($user_status=='empty_payment'){
+        /*if($user_status=='empty_payment'){
             return redirect('promotion/'.$user->id);
         }
         if($user_status=='empty_shipment'){
             return redirect('select_offer/'.$user->id);
-        }
+        }*/
         /*
          * User status checking ends
          * */

@@ -80,7 +80,7 @@
                         $("#success_message").html(data.reason);
 
                         $('#user_id').val(data.user_id);
-                        window.location.href="{{url('promotion')}}/"+data.user_id;
+                        window.location.href="{{url('promotion')}}/"+data.user_id+"?ref=child";
                     } else {
                         $("#success_message").hide();
                         $("#error_message").show();

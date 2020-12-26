@@ -60,6 +60,9 @@ class UserController extends Controller
                 if(!Common::is_user_login()){
                     return redirect('error_404');
                 }
+
+                $reference_page = $request->ref;
+
                 $countries = Country::where('status','active')->get();
 
                 $user = user::where('id', $request->id)->first();
@@ -93,11 +96,17 @@ class UserController extends Controller
                  * If user type is free
                  * */
                 if (empty($payment) && $user->user_type == 'free') {
-                    if (empty($shipment)) {
-                        return redirect('select_offer/'.$user->id);
+                    if($reference_page !='child'){
+                        if (empty($shipment)) {
+                            return redirect('select_offer/'.$user->id);
+                        }
+
+                        return redirect('all_project');
                     }
 
-                    return redirect('all_project');
+                    /*
+                     * if come from (reference page) child user creation page then redirect to promoton page
+                     * */
                 }
                 if ($request->ajax()) {
                     $returnHTML = View::make('promotion', compact('user','offer','subscription_plans','countries'))->renderSections()['content'];
@@ -407,12 +416,12 @@ class UserController extends Controller
                  * Check user status and redirect
                  * */
                 $user_status = Common::checkPaymentAndShipentStatus();
-                if($user_status=='empty_payment'){
+                /*if($user_status=='empty_payment'){
                     return redirect('promotion/'.$user->id);
                 }
                 if($user_status=='empty_shipment'){
                     return redirect('select_offer/'.$user->id);
-                }
+                }*/
                 /*
                  * User status checking ends
                  * */
@@ -695,13 +704,13 @@ class UserController extends Controller
                  * Check user status and redirect
                  * */
                 $user = Auth::user();
-                $user_status = Common::checkPaymentAndShipentStatus();
+                /*$user_status = Common::checkPaymentAndShipentStatus();
                 if($user_status=='empty_payment'){
                     return redirect('promotion/'.$user->id);
                 }
                 if($user_status=='empty_shipment'){
                     return redirect('select_offer/'.$user->id);
-                }
+                }*/
                 /*
                  * User status checking ends
                  * */
@@ -799,6 +808,7 @@ class UserController extends Controller
             $user->password = $parentUser->password;
             $user->role = 3;
             $user->status = 'pending';
+            $user->user_type = 'free';
             $user->save();
 
             /*
