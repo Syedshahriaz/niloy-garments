@@ -52,6 +52,29 @@
                                     <span class="caption-helper"></span>
                                 </div>
 
+                                <?php
+                                $covid_company_changable = 1;
+                                if($project->type=='free'){
+                                    if(count($projectDetails->free_completed_tasks) > 0){
+                                        $covid_company_changable = 0;
+                                    }
+                                }
+                                ?>
+
+                                @if($project->type=='free' && $covid_company_changable==1)
+                                <div class="actions">
+                                    <select name="covid_vaccine_company" id="covid_vaccine_company" class="form-control">
+                                        <option value="">Change Vaccine </option>
+                                        @foreach($covid_vaccine_companies as $company)
+                                            <option value="{{$company->id}}" @if($company->id == $user_covid_vaccine_company->company_id) selected @endif>{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="hidden" name="user_project_id" id="covid_user_project_id" value="{{$user_project_id}}">
+                                    <input type="hidden" name="user_id" id="covid_user_id" value="{{$user->id}}">
+                                    <input type="hidden" name="old_company_id" id="old_company_id" value="{{$user_covid_vaccine_company->company_id}}">
+                                </div>
+                                @endif
+
                                 <div class="actions">
                                     <a data-toggle="modal" href="#task_summery_modal" class="btn btn-transparent green btn-circle btn-sm">{{$project->name}} Facts</a>
                                     <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_view_btn">
@@ -385,6 +408,40 @@
                 // scrollY:        200,
                 // scroller:       true
             });
+
+            $(document).on('change','#covid_vaccine_company', function(){
+                show_loader();
+
+                var company_id = $(this).val();
+                var old_company_id = $('#old_company_id').val();
+                var user_project_id = $('#covid_user_project_id').val();
+                var user_id = $('#covid_user_id').val();
+                if(company_id != '' && company_id != old_company_id){
+                    var url = "{{ url('update_covid_company') }}";
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: {covid_vaccine_company:company_id,user_project_id:user_project_id,user_id:user_id,'_token':'<?php echo e(csrf_token()); ?>'},
+                        success: function(data) {
+                            if (data.status == 200) {
+                                setTimeout(function(){
+                                    hide_loader();
+                                    location.reload();
+                                },200)
+
+                            } else {
+                                hide_loader();
+                                show_error_message(data.reason);
+                            }
+                        },
+                        error: function(data) {
+                            hide_loader();
+                            show_error_message(data);
+                        }
+                    });
+                }
+            })
         });
     </script>
 @endsection

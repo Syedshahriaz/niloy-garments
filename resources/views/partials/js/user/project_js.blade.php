@@ -158,28 +158,13 @@
 
         show_loader();
 
-        var day = $('#covid_day').val();
-        var month = $('#covid_month').val();
-        var year = $('#covid_year').val();
         var covid_vaccine_company = $("#covid_vaccine_company").val();
-        var covid_vaccine_date = $("#covid_vaccine_date").val();
         var user_project_id = $("#covid_user_project_id").val();
 
         var validate = "";
 
         if (covid_vaccine_company.trim() == "") {
             validate = validate + "Company is required</br>";
-        }
-        if (covid_vaccine_date.trim() == "") {
-            validate = validate + "Date is required</br>";
-        }
-
-        /*if (covid_date.trim() != "" && isFutureDate(covid_date)) {
-            validate = validate + "You can not select a future date</br>";
-        }*/
-
-        if (day.trim() == "" || month.trim() =='' || year.trim() =='') {
-            validate = validate + "Date is required</br>";
         }
 
         if (validate == "") {
@@ -218,8 +203,6 @@
             $("#covid_error_message").html(validate);
         }
     });
-
-
 
     /*
     * ********** my project task js

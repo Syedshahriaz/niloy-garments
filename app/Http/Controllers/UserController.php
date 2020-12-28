@@ -691,7 +691,7 @@ class UserController extends Controller
                     ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
                     ->leftJoin('separate_user_logs', 'separate_user_logs.user_id', '=', 'users.id')
                     ->where('users.id','!=',Session::get('user_id'))
-                    ->where('users.status','active')
+                    ->whereIn('users.status',['active','pending'])
                     ->orderBy('users.id', 'ASC')
                     ->get();
                 if ($request->ajax()) {

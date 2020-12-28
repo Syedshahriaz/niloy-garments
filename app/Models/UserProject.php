@@ -50,9 +50,10 @@ class UserProject extends Model
     public function free_running_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule');
+        $instance = $instance->select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','covid_vaccine_companies.name as company_name');
         $instance = $instance->leftJoin('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
+        $instance = $instance->leftJoin('covid_vaccine_companies', 'covid_vaccine_companies.id', '=', 'covid_vaccine_doses.company_id');
         $instance = $instance->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
         $instance = $instance->where('covid_vaccine_doses.status','active');
         //$instance = $instance->where('tasks.has_freeze_rule',0);
@@ -78,9 +79,10 @@ class UserProject extends Model
     public function free_last_task()
     {
         $instance = $this->hasOne('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule');
+        $instance = $instance->select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','covid_vaccine_companies.name as company_name');
         $instance = $instance->leftJoin('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
+        $instance = $instance->leftJoin('covid_vaccine_companies', 'covid_vaccine_companies.id', '=', 'covid_vaccine_doses.company_id');
         $instance = $instance->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
         $instance = $instance->where('covid_vaccine_doses.status','active');
         //$instance = $instance->where('tasks.has_freeze_rule',0);
@@ -103,9 +105,10 @@ class UserProject extends Model
     public function free_completed_tasks()
     {
         $instance = $this->hasMany('App\Models\UserProjectTask','user_project_id','user_project_id');
-        $instance = $instance->select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule');
+        $instance = $instance->select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'tasks.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','covid_vaccine_companies.name as company_name');
         $instance = $instance->leftJoin('tasks','tasks.id','user_project_tasks.task_id');
         $instance = $instance->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
+        $instance = $instance->leftJoin('covid_vaccine_companies', 'covid_vaccine_companies.id', '=', 'covid_vaccine_doses.company_id');
         $instance = $instance->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
         $instance = $instance->where('covid_vaccine_doses.status','active');
         $instance = $instance->where('user_project_tasks.status','completed');

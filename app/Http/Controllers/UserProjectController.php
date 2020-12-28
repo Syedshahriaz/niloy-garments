@@ -322,7 +322,7 @@ class UserProjectController extends Controller
 
             $user_vaccine_company->user_id = $user_id;
             $user_vaccine_company->company_id = $request->covid_vaccine_company;
-            $user_vaccine_company->dose_date = $request->covid_vaccine_date;
+            $user_vaccine_company->dose_date = date('Y-m-d');
             $user_vaccine_company->save();
 
             DB::beginTransaction();
@@ -371,18 +371,38 @@ class UserProjectController extends Controller
 
                 $user_project_id = $request->id;
 
-                $projectDetails = UserProject::select('projects.*')
+                /*
+                 * Getting project details
+                 * */
+                $projectDetails = UserProject::with('free_completed_tasks')
+                    ->select('projects.*','user_projects.id as user_project_id')
                     ->join('projects','projects.id','=','user_projects.project_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
 
+                /*
+                 * Getting user details
+                 * */
                 $user = UserProject::select('users.id','users.username', 'users.email','users.status','has_special_date','special_date')
                     ->join('users','users.id','=','user_projects.user_id')
                     ->where('user_projects.id',$user_project_id)
                     ->first();
 
+                /*
+                 * Getting covid vaccine companies
+                 * */
+                $covid_vaccine_companies = CovidVaccineCompany::select('covid_vaccine_companies.*')
+                    ->where('status','active')
+                    ->get();
+
+                /*
+                 * Getting user selected covid vaccine company
+                 * */
+                $user_covid_vaccine_company = UserCovidVaccineCompany::where('user_id',$user->id)->first();
+
+                //echo "<pre>"; print_r($user_covid_vaccine_company); echo "</pre>"; exit();
                 if($projectDetails->type=='free'){
-                    $tasks = UserProjectTask::select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'covid_vaccine_doses.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','projects.has_offer_1')
+                    $tasks = UserProjectTask::select('user_project_tasks.*', 'covid_vaccine_doses.dose_name as title', 'covid_vaccine_doses.company_id', 'covid_vaccine_doses.rule', 'covid_vaccine_doses.status as task_status', 'tasks.project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','projects.has_offer_1')
                         ->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
                         ->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id')
                         ->join('projects', 'projects.id', '=', 'tasks.project_id')
@@ -424,7 +444,7 @@ class UserProjectController extends Controller
                     }
 
                     $returnHTML = View::make('user.project.my_project_task',
-                        compact('user_project_id','user','project', 'tasks','shipment','task_titles'))->renderSections()['content'];
+                        compact('user_project_id','user','project', 'projectDetails', 'tasks','shipment','task_titles','covid_vaccine_companies','user_covid_vaccine_company'))->renderSections()['content'];
                     return response()->json(array('status' => 200, 'html' => $returnHTML));
                 }
 
@@ -438,7 +458,7 @@ class UserProjectController extends Controller
                     return redirect('all_project?u_id='.$user->id);
                 }
 
-                return view('user.project.my_project_task', compact('user_project_id','user','project', 'tasks', 'shipment','task_titles'));
+                return view('user.project.my_project_task', compact('user_project_id','user','project', 'projectDetails', 'tasks', 'shipment','task_titles','covid_vaccine_companies','user_covid_vaccine_company'));
             }
             else{
                 return redirect('login');

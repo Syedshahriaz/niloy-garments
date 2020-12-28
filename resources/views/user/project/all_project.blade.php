@@ -79,6 +79,7 @@
 
                                     $task = '';
                                     $premium_class = '';
+                                    $selected_vaccine_company = '';
                                     if(!empty($project->free_running_task)){
                                         $task = $project->free_running_task;
                                     }
@@ -106,6 +107,8 @@
                                         $day_left = round($datediff / (60 * 60 * 24));
 
                                         $covid_company_changable = 1;
+
+                                        $selected_vaccine_company = $task->company_name;
 
                                         /*
                                          * Create bg class
@@ -166,6 +169,9 @@
                                                                         <div class="number">
                                                                             <h5 class="font-theme project-item-name">
                                                                                 {{$project->name}}
+                                                                                @if($selected_vaccine_company != '')
+                                                                                -{{$selected_vaccine_company}}
+                                                                                @endif
                                                                             </h5>
                                                                         </div>
                                                                         @if($project->has_special_date==1 && $project->special_date_update_count < 4)
@@ -563,45 +569,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for=""><b>Dose Start Date</b></label>
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
-                                            <select name="day" id="covid_day" class="form-control">
-                                                <option value="">Day</option>
-                                                @for($i=1; $i<=31; $i++)
-                                                    <option value="{{$i}}" @if($i==date('d')) selected @endif>{{$i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
 
-                                        <div class="col-md-4 form-group">
-                                            <select name="month" id="covid_month" class="form-control">
-                                                <option value="">Month</option>
-                                                <option value="1" @if(date('m')==1) selected @endif>Jan</option>
-                                                <option value="2" @if(date('m')==2) selected @endif>Feb</option>
-                                                <option value="3" @if(date('m')==3) selected @endif>Mar</option>
-                                                <option value="4" @if(date('m')==4) selected @endif>Apr</option>
-                                                <option value="5" @if(date('m')==5) selected @endif>May</option>
-                                                <option value="6" @if(date('m')==6) selected @endif>Jun</option>
-                                                <option value="7" @if(date('m')==7) selected @endif>Jul</option>
-                                                <option value="8" @if(date('m')==8) selected @endif>Aug</option>
-                                                <option value="9" @if(date('m')==9) selected @endif>Sep</option>
-                                                <option value="10" @if(date('m')==10) selected @endif>Oct</option>
-                                                <option value="11" @if(date('m')==11) selected @endif>Nov</option>
-                                                <option value="12" @if(date('m')==12) selected @endif>Dec</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-4 form-group">
-                                            <select name="year" id="covid_year" class="form-control">
-                                                <option value="">Year</option>
-                                                @for($i=date('Y'); $i>=1920; $i--)
-                                                    <option value="{{$i}}" @if($i==date('Y')) selected @endif>{{$i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <input class="date-picker-hidden" type="hidden" name="covid_vaccine_date" id="covid_vaccine_date" value="{{date('Y-m-d')}}"/>
                                 </div>
                             </div>
                         </div>
@@ -649,13 +617,6 @@
             var company_id = $(this).attr('data-company');
             var date = $(this).attr('data-date');
             if(date !=''){
-                date_array = date.split("-");
-                $y = date_array[0];
-                $m = date_array[1];
-                $d = date_array[2];
-                $('#covid_year').val(date_array[0]);
-                $('#covid_month').val(date_array[1]);
-                $('#covid_day').val(date_array[2]);
                 $('#covid_vaccine_date').val(date);
             }
             $('#covid_user_project_id').val(id);
