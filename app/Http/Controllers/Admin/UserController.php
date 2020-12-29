@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\CovidVaccineCompany;
 use App\Models\Offer;
 use App\Models\SubscriptionPlan;
 use App\Models\TaskTitle;
@@ -40,6 +41,13 @@ class UserController extends Controller
                 ->where('subscription_plans.status','active')
                 ->get();
 
+            /*
+             * Getting covid vaccine companies
+             * */
+            $covid_vaccine_companies = CovidVaccineCompany::select('covid_vaccine_companies.*')
+                ->where('status','active')
+                ->get();
+
             $users = User::with('projects.passed_task','projects.recent_due_task')
                 ->select('users.*', 'user_payments.payment_status', 'user_shipments.shipment_date','messages.id as message_id')
                 ->leftJoin('user_payments', 'user_payments.user_id', '=', 'users.id')
@@ -51,11 +59,11 @@ class UserController extends Controller
                 ->get();
 
             if ($request->ajax()) {
-                $returnHTML = View::make('admin.user.all_user', compact('offer','subscription_plans','users'))->renderSections()['content'];
+                $returnHTML = View::make('admin.user.all_user', compact('offer','subscription_plans','covid_vaccine_companies','users'))->renderSections()['content'];
                 return response()->json(array('status' => 200, 'html' => $returnHTML));
             }
 
-            return view('admin.user.all_user', compact('offer','subscription_plans','users'));
+            return view('admin.user.all_user', compact('offer','subscription_plans','covid_vaccine_companies','users'));
         } catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'UserController', 'userList', $e->getLine(),
                 //$e->getFile(), '', '', '', '');

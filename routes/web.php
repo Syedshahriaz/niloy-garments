@@ -163,6 +163,9 @@ Route::get('admin/covid_vaccine_companies', 'Admin\SettingController@covidVaccin
 Route::post('admin/get_covid_vaccine_company', 'Admin\SettingController@getCovidVaccineCompanyDetails');
 Route::post('admin/update_covid_vaccine_company', 'Admin\SettingController@updateCovidVaccineCompany');
 
+Route::post('admin/get_user_covid_vaccine_company', 'Admin\SettingController@getUserCovidVaccineCompanyDetails');
+Route::post('admin/update_user_covid_company', 'Admin\SettingController@updateUserCovidVaccineCompany');
+
 Route::get('admin/message', 'Admin\MessageController@message');
 Route::post('admin/store_message', 'Admin\MessageController@store');
 Route::post('admin/get_unread_message', 'Admin\MessageController@getUnreadMessage');

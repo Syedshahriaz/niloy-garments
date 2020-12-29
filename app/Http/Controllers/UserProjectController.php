@@ -322,6 +322,7 @@ class UserProjectController extends Controller
 
             $user_vaccine_company->user_id = $user_id;
             $user_vaccine_company->company_id = $request->covid_vaccine_company;
+            $user_vaccine_company->user_project_id = $request->user_project_id;
             $user_vaccine_company->dose_date = date('Y-m-d');
             $user_vaccine_company->save();
 

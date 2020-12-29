@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\CovidVaccineDose;
+use App\Models\UserProject;
+use App\Models\UserShipment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
@@ -13,6 +16,7 @@ use App\Models\Profession;
 use App\Models\Coupon;
 use App\Models\SubscriptionPlan;
 use App\Models\CovidVaccineCompany;
+use App\Models\UserCovidVaccineCompany;
 use App\Common;
 use App\SendMails;
 use Illuminate\Support\Facades\Auth;
@@ -752,6 +756,73 @@ class SettingController extends Controller
         }
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getCovidVaccineCompanyDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function getUserCovidVaccineCompanyDetails(Request $request){
+        try{
+            $user_covid_vaccine_company = UserCovidVaccineCompany::where('user_id',$request->user_id)->first();
+
+            /*
+             * Getting user free project id
+             * */
+            $user_project = UserProject::select('user_projects.id as user_project_id')
+                ->join('projects','projects.id','=','user_projects.project_id')
+                ->where('user_projects.user_id',$request->user_id)
+                ->where('projects.type','free')
+                ->first();
+
+            return ['status'=>200, 'reason'=>'', 'user_covid_vaccine_company'=>$user_covid_vaccine_company, 'user_project'=>$user_project];
+        }
+        catch (\Exception $e) {
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'getUserCovidVaccineCompanyDetails', $e->getLine(),
+            //$e->getFile(), '', '', '', '');
+            // message, view file, controller, method name, Line number, file,  object, type, argument, email.
+            return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
+        }
+    }
+
+    public function updateUserCovidVaccineCompany(Request $request){
+        try{
+            $user_id = $request->user_id;
+
+            $user_vaccine_company = UserCovidVaccineCompany::where('user_id',$user_id)->first();
+            if(empty($user_vaccine_company)){
+                $user_vaccine_company = NEW UserCovidVaccineCompany();
+            }
+
+            $user_vaccine_company->user_id = $user_id;
+            $user_vaccine_company->company_id = $request->covid_vaccine_company;
+            $user_vaccine_company->user_project_id = $request->user_project_id;
+            $user_vaccine_company->dose_date = date('Y-m-d');
+            $user_vaccine_company->save();
+
+            DB::beginTransaction();
+            /*
+             * First remove user project tasks for this user project if any
+             * */
+            $result = Common::removeUserProjectTask($request->user_project_id);
+
+            /*
+             * Now adding new tasks for this user projects
+             * */
+            $user_project = UserProject::where('id',$request->user_project_id)
+                ->first();
+            $shipment = UserShipment::where('user_id',$request->user_id)->first();
+            $covid_doses = CovidVaccineDose::where('company_id',$request->covid_vaccine_company)->get();
+
+            $result = Common::saveUserCovidProjectTask($covid_doses,$user_project,$shipment,$user_vaccine_company);
+
+            DB::commit();
+
+            return ['status'=>200, 'reason'=>'Successfully saved'];
+        }
+        catch (\Exception $e) {
+            DB::rollback();
+            //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/SettingController', 'updateUserCovidVaccineCompany', $e->getLine(),
             //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];

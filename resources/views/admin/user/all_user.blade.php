@@ -161,6 +161,11 @@
                                                     <img class="action-icon" src="{{asset('assets/global/img/icons/offer.png')}}" alt="Change Offer">
                                                 </a>
                                             @endif
+                                            @if($user->shipment_date !=''){{-- If covid vaccine(project) already selected --}}
+                                                <a href="#" title="Change COVID Vaccine Company" onclick="change_covid_vaccine_company({{$user->id}})">
+                                                    <img class="action-icon" src="{{asset('assets/global/img/icons/covid19.png')}}" alt="Change COVID Vaccine Company">
+                                                </a>
+                                            @endif
                                             @if(App\Common::can_access('edit_email'))
                                                 @if($user->parent_id==0)
                                                 <a href="#" title="Change Email" onclick="edit_email({{$user->id}},'{{$user->email}}')">
@@ -460,6 +465,54 @@
     </div>
 
     <!-- END CONTENT -->
+
+    <!-- START covid vacine company MODAL -->
+    <div class="modal fade" id="covid_company_modal" tabindex="-1" role="covid_company_modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title text-center font-theme uppercase" id="covid_company_modalLabel">Select COVID Vaccine Company</h4>
+                </div>
+                <form id="covid_company_form" method="post" action="">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="user_project_id" id="covid_user_project_id" value="">
+                    <input type="hidden" name="user_id" id="covid_user_id" value="">
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="alert alert-success" id="covid_success_message" style="display:none"></div>
+                                <div class="alert alert-danger" id="covid_error_message" style="display: none"></div>
+                            </div>
+
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for=""><b>COVID Vaccine Company</b></label>
+                                    <select name="covid_vaccine_company" id="covid_vaccine_company" class="form-control">
+                                        <option value="">Select Company</option>
+                                        @foreach($covid_vaccine_companies as $company)
+                                            <option value="{{$company->id}}">{{$company->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;">
+                        <button type="submit" class="btn theme-btn" id="covid_vaccine_company_submit_button">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- END covid vacine company MODAL -->
 
     <!-- Modal -->
     <div class="modal fade" id="change_email_modal" tabindex="-1" role="change_email_modal" aria-hidden="true">
@@ -1471,6 +1524,88 @@
                 $("#offer_success_message").hide();
                 $("#offer_error_message").show();
                 $("#offer_error_message").html(validate);
+            }
+        });
+
+        function change_covid_vaccine_company(user_id){
+            var url = "{{ url('admin/get_user_covid_vaccine_company') }}";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {user_id:user_id,'_token':'{{ csrf_token() }}'},
+                success: function(data) {
+                    HoldOn.close();
+                    var selected_company = data.user_covid_vaccine_company;
+                    if (data.status == 200) {
+                        if(selected_company !==null){
+                            $('#covid_vaccine_company').val(selected_company.company_id);
+                        }
+                        else{
+                            $('#covid_vaccine_company').val('');
+                        }
+                        $('#covid_user_project_id').val(data.user_project.user_project_id);
+                        $('#covid_user_id').val(user_id);
+                        $("#covid_company_modal").modal('show');
+                    } else {
+                        show_error_message('Something went wrong. TRy again later');
+                    }
+                },
+                error: function(data) {
+                    HoldOn.close();
+                    show_error_message('Something went wrong. Try again later');
+                }
+            });
+
+        }
+        $(document).on("submit", "#covid_company_form", function(event) {
+            event.preventDefault();
+
+            show_loader();
+
+            var covid_vaccine_company = $("#covid_vaccine_company").val();
+            var user_project_id = $("#covid_user_project_id").val();
+
+            var validate = "";
+
+            if (covid_vaccine_company.trim() == "") {
+                validate = validate + "Company is required</br>";
+            }
+
+            if (validate == "") {
+                var formData = new FormData($("#covid_company_form")[0]);
+                var url = "{{ url('admin/update_user_covid_company') }}";
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function(data) {
+                        hide_loader();
+                        if (data.status == 200) {
+                            $('#covid_company_modal').modal('hide');
+
+                            setTimeout(function(){
+                                //location.reload();
+                            },200)
+
+                        } else {
+                            show_error_message(data.reason);
+                        }
+                    },
+                    error: function(data) {
+                        hide_loader();
+                        show_error_message(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            } else {
+                hide_loader();
+                $("#covid_success_message").hide();
+                $("#covid_error_message").show();
+                $("#covid_error_message").html(validate);
             }
         });
 
