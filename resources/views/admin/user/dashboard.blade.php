@@ -61,6 +61,21 @@
                             </div>
 
                             <div class="actions">
+                                <?php
+                                $selected_offer = '';
+                                if($user->has_ofer_1==1){
+                                    $selected_offer = 'Green';
+                                }
+                                if($user->has_ofer_2==1){
+                                    $selected_offer = 'Red';
+                                }
+                                ?>
+                                <span>
+                                    User Type- <span class="text-capitalize">{{$user->user_type}}</span>
+                                </span> <br>
+                                <span>
+                                    Selected Offer- {{$selected_offer}}
+                                </span>
                                 <!-- <a title="Vertical View" class="btn btn-transparent theme-btn btn-outline btn-circle btn-sm" href="javascript:;" id="vertical_dash_view_btn">
                                     Vertical View
                                 </a> -->

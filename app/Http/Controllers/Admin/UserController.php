@@ -112,8 +112,9 @@ class UserController extends Controller
 
             $user_id = $request->u_id;
 
-            $user = User::select('unique_id','username')
-                ->where('id',$user_id)
+            $user = User::select('unique_id','username','user_type','user_shipments.has_ofer_1','user_shipments.has_ofer_2')
+                ->leftJoin('user_shipments', 'user_shipments.user_id', '=', 'users.id')
+                ->where('users.id',$user_id)
                 ->first();
 
             /*$shipment = UserShipment::where('user_id', $user_id)->first();
