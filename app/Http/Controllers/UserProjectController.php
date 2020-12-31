@@ -519,11 +519,13 @@ class UserProjectController extends Controller
             }
             $task->save();
 
+            $project_type = $task->project_type;
+
             /*
              * Make immediate next task to processing
              * */
             if($delivery_date_update_count < 2 ){
-                $next_task = $this->makeImmediateNextTaskProcessing($request->project_task_id,$task->user_project_id,$shipment->shipment_date);
+                $next_task = $this->makeImmediateNextTaskProcessing($request->project_task_id,$task->user_project_id,$shipment->shipment_date,$project_type);
                 if(!empty($next_task)){
                     $result = $this->makePreviousNotInitiateTaskForeverFreeze($task->user_project_id);
                 }
@@ -573,12 +575,12 @@ class UserProjectController extends Controller
         }
     }
 
-    private function makeImmediateNextTaskProcessing($project_task_id,$user_project_id,$shipment_date){
-        $next_task = $this->getNextTask($project_task_id,$user_project_id);
+    private function makeImmediateNextTaskProcessing($project_task_id,$user_project_id,$shipment_date,$project_type='free'){
+        $next_task = $this->getNextTask($project_task_id,$user_project_id,$project_type);
         if(!empty($next_task)){
             $task_in_date_range = Common::task_in_date_range($shipment_date,$next_task->days_range_start,$next_task->days_range_end);
             if($task_in_date_range==0){
-                $result = $this->makeImmediateNextTaskProcessing($next_task->id,$user_project_id,$shipment_date);
+                $result = $this->makeImmediateNextTaskProcessing($next_task->id,$user_project_id,$shipment_date,$project_type);
             }
             else{
                 $next_task->status = 'processing';
@@ -590,19 +592,38 @@ class UserProjectController extends Controller
         return 1;
     }
 
-    private function getNextTask($project_task_id,$user_project_id){
-        $next_task = UserProjectTask::where('user_project_tasks.id','>',$project_task_id)
-            ->select('user_project_tasks.*','projects.name as project_name','task_title.name as task_name', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','users.username','users.email','users.phone')
-            ->join('tasks', 'tasks.id', '=', 'user_project_tasks.task_id')
-            ->join('task_title', 'task_title.id', '=', 'tasks.title_id')
-            ->join('user_projects','user_projects.id','=','user_project_tasks.user_project_id')
-            ->join('projects','projects.id','=','user_projects.project_id')
-            ->join('users','users.id','=','user_projects.user_id')
-            ->where('user_project_id',$user_project_id)
-            ->where('tasks.status','active')
-            ->where('user_project_tasks.freeze_forever',0)
-            ->orderBy('user_project_tasks.id','ASC')
-            ->first();
+    private function getNextTask($project_task_id,$user_project_id,$type='free'){
+        if($type != 'free'){
+            $next_task = UserProjectTask::where('user_project_tasks.id','>',$project_task_id);
+            $next_task = $next_task->select('user_project_tasks.*','projects.name as project_name','task_title.name as task_name', 'tasks.status as task_status', 'tasks.project_id','tasks.days_to_add','tasks.days_range_start','tasks.days_range_end','tasks.update_date_with','tasks.has_freeze_rule','tasks.freeze_dependent_with','tasks.skip_background_rule','users.username','users.email','users.phone');
+            $next_task = $next_task->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+            $next_task = $next_task->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
+            $next_task = $next_task->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
+            $next_task = $next_task->leftJoin('user_projects','user_projects.id','=','user_project_tasks.user_project_id');
+            $next_task = $next_task->leftJoin('projects','projects.id','=','user_projects.project_id');
+            $next_task = $next_task->leftJoin('users','users.id','=','user_projects.user_id');
+            $next_task = $next_task->where('user_project_id',$user_project_id);
+            $next_task = $next_task->where('tasks.status','active');
+            $next_task = $next_task->where('user_project_tasks.freeze_forever',0);
+            $next_task = $next_task->orderBy('user_project_tasks.id','ASC');
+            $next_task = $next_task->first();
+        }
+        else{
+            $next_task = UserProjectTask::where('user_project_tasks.id','>',$project_task_id);
+            $next_task = $next_task->select('user_project_tasks.*','projects.name as project_name','covid_vaccine_doses.dose_name as task_name', 'covid_vaccine_doses.status as task_status', 'projects.id as project_id','covid_vaccine_doses.days_to_add','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','covid_vaccine_doses.update_date_with','covid_vaccine_doses.has_freeze_rule','covid_vaccine_doses.freeze_dependent_with','covid_vaccine_doses.skip_background_rule','users.username','users.email','users.phone');
+            $next_task = $next_task->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+            $next_task = $next_task->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
+            $next_task = $next_task->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
+            $next_task = $next_task->leftJoin('user_projects','user_projects.id','=','user_project_tasks.user_project_id');
+            $next_task = $next_task->leftJoin('projects','projects.id','=','user_projects.project_id');
+            $next_task = $next_task->leftJoin('users','users.id','=','user_projects.user_id');
+            $next_task = $next_task->where('user_project_id',$user_project_id);
+            $next_task = $next_task->where('covid_vaccine_doses.status','active');
+            $next_task = $next_task->where('user_project_tasks.freeze_forever',0);
+            $next_task = $next_task->orderBy('user_project_tasks.id','ASC');
+            $next_task = $next_task->first();
+        }
+
         return $next_task;
     }
 

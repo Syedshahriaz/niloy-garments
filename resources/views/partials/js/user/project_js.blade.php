@@ -295,7 +295,7 @@
                         $('#select_delivery_modal').modal('hide');
 
                         setTimeout(function(){
-                            //location.reload();
+                            location.reload();
                         },200)
 
                     } else {
