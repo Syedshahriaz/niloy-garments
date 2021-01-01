@@ -89,7 +89,7 @@
 
                                     // If last task is completed then use this task
                                     if(!empty($project->free_last_task) && $project->free_last_task->status=='completed'){
-                                        $task = $project->last_task;
+                                        $task = $project->free_last_task;
                                     }
 
                                     if(!empty($project->free_running_task)){
@@ -159,75 +159,75 @@
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                         @if($project->type=='upcoming')
                                             <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}">
-                                                @elseif($project->has_special_date==1 && $project->special_date=='')
-                                                    <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
-                                                        @else
-                                                            <a class="project-item-title item-2 {{$premium_class}}" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
-                                                                @endif
-                                                                <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
-                                                                    <div class="display title-section">
-                                                                        <div class="number">
-                                                                            <h5 class="font-theme project-item-name">
-                                                                                {{$project->name}}
-                                                                                @if($selected_vaccine_company != '')
-                                                                                -{{$selected_vaccine_company}}
+                                        @elseif($project->has_special_date==1 && $project->special_date=='')
+                                            <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
+                                        @else
+                                            <a class="project-item-title item-2 {{$premium_class}}" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
+                                        @endif
+                                        <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
+                                            <div class="display title-section">
+                                                <div class="number">
+                                                    <h5 class="font-theme project-item-name">
+                                                        {{$project->name}}
+                                                        @if($selected_vaccine_company != '')
+                                                        -{{$selected_vaccine_company}}
+                                                        @endif
+                                                    </h5>
+                                                </div>
+                                                @if($project->has_special_date==1 && $project->special_date_update_count < 4)
+                                                    <div class="icon change_special_date" data-id="{{$project->user_project_id}}" title="Change special date">
+                                                        <i class="icon-settings"></i>
+                                                        @elseif($project->type=='free' && $covid_company_changable==1)
+                                                            <div class="icon change_covid_company" data-id="{{$project->user_project_id}}" data-company="{{$user_covid_vaccine_company->company_id}}" data-date="{{$user_covid_vaccine_company->dose_date}}" title="Change COVID company">
+                                                                <i class="icon-settings"></i>
+                                                                @else
+                                                                    <div class="icon">
+                                                                        <i class="icon-arrow-right"></i>
+                                                                        @endif
+                                                                    </div>
+                                                            </div>
+                                                            <div class="display">
+                                                                <p class="project-item-sub">{{$project->sub_title}}</p>
+                                                                <p class="project-item-task font-theme">
+                                                                    @if($bg_class !='bg-success' && $bg_class !='bg-upcoming')
+                                                                        {{$task->title}}
+                                                                    @endif
+                                                                </p>
+                                                            </div>
+                                                            @if($bg_class=='bg-success')
+                                                                <div class="progress-info">
+                                                                    <div class="progress">
+                                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
+                                                                    </div>
+                                                                    <div class="status">
+                                                                        <div class="status-title"> Course Completed </div>
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <div class="progress-info">
+                                                                    <div class="progress">
+                                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
+                                                                    </div>
+                                                                    <div class="status">
+                                                                        @if($bg_class !='bg-upcoming')
+                                                                            <div class="status-title"> Due Date </div>
+                                                                            <div class="status-number">
+                                                                                @if($task->original_delivery_date !='')
+                                                                                    {{date('l M d, Y', strtotime($task->original_delivery_date))}}
+                                                                                @else
+                                                                                    Special Date
                                                                                 @endif
-                                                                            </h5>
-                                                                        </div>
-                                                                        @if($project->has_special_date==1 && $project->special_date_update_count < 4)
-                                                                            <div class="icon change_special_date" data-id="{{$project->user_project_id}}" title="Change special date">
-                                                                                <i class="icon-settings"></i>
-                                                                                @elseif($project->type=='free' && $covid_company_changable==1)
-                                                                                    <div class="icon change_covid_company" data-id="{{$project->user_project_id}}" data-company="{{$user_covid_vaccine_company->company_id}}" data-date="{{$user_covid_vaccine_company->dose_date}}" title="Change COVID company">
-                                                                                        <i class="icon-settings"></i>
-                                                                                        @else
-                                                                                            <div class="icon">
-                                                                                                <i class="icon-arrow-right"></i>
-                                                                                                @endif
-                                                                                            </div>
-                                                                                    </div>
-                                                                                    <div class="display">
-                                                                                        <p class="project-item-sub">{{$project->sub_title}}</p>
-                                                                                        <p class="project-item-task font-theme">
-                                                                                            @if($bg_class !='bg-success' && $bg_class !='bg-upcoming')
-                                                                                                {{$task->title}}
-                                                                                            @endif
-                                                                                        </p>
-                                                                                    </div>
-                                                                                    @if($bg_class=='bg-success')
-                                                                                        <div class="progress-info">
-                                                                                            <div class="progress">
-                                                                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                                                                            </div>
-                                                                                            <div class="status">
-                                                                                                <div class="status-title"> Course Completed </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @else
-                                                                                        <div class="progress-info">
-                                                                                            <div class="progress">
-                                                                                                <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                                                                            </div>
-                                                                                            <div class="status">
-                                                                                                @if($bg_class !='bg-upcoming')
-                                                                                                    <div class="status-title"> Due Date </div>
-                                                                                                    <div class="status-number">
-                                                                                                        @if($task->original_delivery_date !='')
-                                                                                                            {{date('l M d, Y', strtotime($task->original_delivery_date))}}
-                                                                                                        @else
-                                                                                                            Special Date
-                                                                                                        @endif
-                                                                                                    </div>
-                                                                                                    <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
-                                                                                                @endif
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @endif
-
-                                                                                    <input type="hidden" class="project-item-check" name="project_check[]" value="0">
-                                                                                    <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}">
                                                                             </div>
-                                                            </a>
+                                                                            <input type="hidden" name="start_dates[]" value="@if($task->original_delivery_date !=''){{date('Y-m-d', strtotime($task->original_delivery_date))}}@endif">
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+
+                                                            <input type="hidden" class="project-item-check" name="project_check[]" value="0">
+                                                            <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}">
+                                                    </div>
+                                    </a>
                                     </div>
                                     <?php
                                     } // End if
@@ -236,66 +236,66 @@
                                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                         @if($project->type=='upcoming')
                                             <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}">
-                                                @elseif($project->has_special_date==1 && $project->special_date=='')
-                                                    <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
+                                        @elseif($project->has_special_date==1 && $project->special_date=='')
+                                            <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_special_date_modal({{$project->user_project_id}})">
+                                        @elseif($project->type=='free')
+                                            <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_covid_company_modal({{$project->user_project_id}})">
+                                        @else
+                                            <a class="project-item-title item-2 {{$premium_class}}" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
+                                        @endif
+                                        <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
+                                            <div class="display title-section">
+                                                <div class="number">
+                                                    <h5 class="font-theme project-item-name">
+                                                        {{$project->name}}
+                                                    </h5>
+                                                </div>
+                                                @if($project->has_special_date==1 && $project->special_date_update_count < 4)
+                                                    <div class="icon change_special_date" data-id="{{$project->user_project_id}}" title="Change special date">
+                                                        <i class="icon-settings"></i>
                                                         @elseif($project->type=='free')
-                                                            <a class="project-item-title {{$premium_class}}" href="javascript:void(0)" title="{{$project->name}}" onclick="show_covid_company_modal({{$project->user_project_id}})">
+                                                            <div class="icon change_covid_company" data-id="{{$project->user_project_id}}" data-company="" data-date="" title="Change COVID company">
+                                                                <i class="icon-settings"></i>
                                                                 @else
-                                                                    <a class="project-item-title item-2 {{$premium_class}}" href="{{url('my_project_task',$project->user_project_id)}}" title="{{$project->name}}" data-name="my_project_task/{{$project->user_project_id}}" data-item="2">
+                                                                    <div class="icon">
+                                                                        <i class="icon-arrow-right"></i>
                                                                         @endif
-                                                                        <div class="dashboard-stat2 project-item @if($project->has_offer_3==1)bg-pink extra-offer @endif {{$bg_class}}">
-                                                                            <div class="display title-section">
-                                                                                <div class="number">
-                                                                                    <h5 class="font-theme project-item-name">
-                                                                                        {{$project->name}}
-                                                                                    </h5>
-                                                                                </div>
-                                                                                @if($project->has_special_date==1 && $project->special_date_update_count < 4)
-                                                                                    <div class="icon change_special_date" data-id="{{$project->user_project_id}}" title="Change special date">
-                                                                                        <i class="icon-settings"></i>
-                                                                                        @elseif($project->type=='free')
-                                                                                            <div class="icon change_covid_company" data-id="{{$project->user_project_id}}" data-company="" data-date="" title="Change COVID company">
-                                                                                                <i class="icon-settings"></i>
-                                                                                                @else
-                                                                                                    <div class="icon">
-                                                                                                        <i class="icon-arrow-right"></i>
-                                                                                                        @endif
-                                                                                                    </div>
-                                                                                            </div>
-                                                                                            <div class="display">
-                                                                                                <p class="project-item-sub">{{$project->sub_title}}</p>
-                                                                                                <p class="project-item-task font-theme">
-                                                                                                    @if($bg_class !='bg-success' && $bg_class !='bg-upcoming')
-                                                                                                        {{-- Task title --}}
-                                                                                                    @endif
-                                                                                                </p>
-                                                                                            </div>
-                                                                                            @if($bg_class=='bg-success')
-                                                                                                <div class="progress-info">
-                                                                                                    <div class="progress">
-                                                                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                                                                                    </div>
-                                                                                                    <div class="status">
-                                                                                                        <div class="status-title"> Course Completed </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            @else
-                                                                                                <div class="progress-info">
-                                                                                                    <div class="progress">
-                                                                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
-                                                                                                    </div>
-                                                                                                    <div class="status">
-                                                                                                        @if($bg_class !='bg-upcoming')
-                                                                                                            <div class="status-title"> Due Date </div>
-                                                                                                        @endif
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            @endif
+                                                                    </div>
+                                                            </div>
+                                                            <div class="display">
+                                                                <p class="project-item-sub">{{$project->sub_title}}</p>
+                                                                <p class="project-item-task font-theme">
+                                                                    @if($bg_class !='bg-success' && $bg_class !='bg-upcoming')
+                                                                        {{-- Task title --}}
+                                                                    @endif
+                                                                </p>
+                                                            </div>
+                                                            @if($bg_class=='bg-success')
+                                                                <div class="progress-info">
+                                                                    <div class="progress">
+                                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
+                                                                    </div>
+                                                                    <div class="status">
+                                                                        <div class="status-title"> Course Completed </div>
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <div class="progress-info">
+                                                                    <div class="progress">
+                                                                        <span style="width: 100%;" class="progress-bar theme-bg"></span>
+                                                                    </div>
+                                                                    <div class="status">
+                                                                        @if($bg_class !='bg-upcoming')
+                                                                            <div class="status-title"> Due Date </div>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            @endif
 
-                                                                                            <input type="hidden" class="project-item-check" name="project_check[]" value="0">
-                                                                                            <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}">
-                                                                                    </div>
-                                                                    </a>
+                                                            <input type="hidden" class="project-item-check" name="project_check[]" value="0">
+                                                            <input type="hidden" class="project-item-id" name="project_id[]" value="{{$project->id}}">
+                                                    </div>
+                                    </a>
                                     </div>
                                     <?php } // end else
                                     }
