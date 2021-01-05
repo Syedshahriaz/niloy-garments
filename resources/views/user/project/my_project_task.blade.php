@@ -64,7 +64,6 @@
                                 @if($project->type=='free' && $covid_company_changable==1)
                                 <div class="actions">
                                     <select name="covid_vaccine_company" id="covid_vaccine_company" class="form-control">
-                                        <option value="">Change Vaccine </option>
                                         @foreach($covid_vaccine_companies as $company)
                                             <option value="{{$company->id}}" @if($company->id == $user_covid_vaccine_company->company_id) selected @endif>{{$company->name}}</option>
                                         @endforeach
@@ -135,7 +134,7 @@
                                              * */
                                             $now = time();
                                             $datediff = strtotime($task->due_date) - $now;
-                                            $day_left = round($datediff / (60 * 60 * 24));
+                                            $day_left = $datediff / (60 * 60 * 24);
 
                                             /*
                                              * Create hidden class
@@ -212,7 +211,7 @@
                                          * */
                                         $now = time();
                                         $datediff = strtotime($task->due_date) - $now;
-                                        $day_left = round($datediff / (60 * 60 * 24));
+                                        $day_left = $datediff / (60 * 60 * 24);
 
                                         /*
                                          * Create hidden class

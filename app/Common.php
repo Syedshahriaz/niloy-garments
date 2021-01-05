@@ -680,8 +680,9 @@ class Common
         $allow_date = date('Y-m-d', strtotime('+6 days'));
 
         $users = User::select('users.*','user_shipments.shipment_date');
+        $users = User::select('users.*');
         $users = $users->join('user_shipments', 'user_shipments.user_id', '=', 'users.id');
-        $users = $users->where('status','active');
+        $users = $users->whereIn('status',['active','pending']);
         if($user_id !=''){
             $users = $users->where('users.id', $user_id);
         }

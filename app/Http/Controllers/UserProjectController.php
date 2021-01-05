@@ -344,6 +344,11 @@ class UserProjectController extends Controller
 
             DB::commit();
 
+            /*
+             * Sending warning message (if needed)
+             * */
+            $result = Common::sendTaskWarningEmail($user_id,$request->user_project_id);
+
             return ['status'=>200, 'reason'=>'Successfully saved'];
         }
         catch (\Exception $e) {

@@ -104,7 +104,7 @@
                                      * */
                                         $now = time();
                                         $datediff = strtotime($task->due_date) - $now;
-                                        $day_left = round($datediff / (60 * 60 * 24));
+                                        $day_left = $datediff / (60 * 60 * 24);
 
                                         $covid_company_changable = 1;
 
@@ -324,7 +324,7 @@
                                          * */
                                         $now = time();
                                         $datediff = strtotime($task->due_date) - $now;
-                                        $day_left = round($datediff / (60 * 60 * 24));
+                                        $day_left = $datediff / (60 * 60 * 24);
 
                                         /*
                                          * Create bg class
