@@ -680,7 +680,6 @@ class Common
         $allow_date = date('Y-m-d', strtotime('+6 days'));
 
         $users = User::select('users.*','user_shipments.shipment_date');
-        $users = User::select('users.*');
         $users = $users->join('user_shipments', 'user_shipments.user_id', '=', 'users.id');
         $users = $users->whereIn('status',['active','pending']);
         if($user_id !=''){
@@ -689,111 +688,119 @@ class Common
         $users = $users->get();
 
         foreach($users as $user){
+            $user_age = (time()-strtotime($user->shipment_date))/(3600*24*365.25);
+
             $message_initiate = 'Dear '.$user->username;
-
-            /*
-             * Getting premium tasks
-             * */
-            $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','task_title.name as task_name', 'tasks.rule',
-                'tasks.project_id','tasks.days_range_start','tasks.days_range_end','users.unique_id','users.username','users.email','users.phone');
-            $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
-            $tasks = $tasks->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
-            $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
-            $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
-            $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
-            $tasks = $tasks->whereIn('projects.type', ['running']);
-            $tasks = $tasks->where('users.id', $user->id);
-            if($user_project_id !=''){
-                $tasks = $tasks->where('user_project_tasks.user_project_id', $user_project_id);
-            }
-            $tasks = $tasks->whereIn('user_project_tasks.status', ['processing','not initiate']);
-            if($user_project_id==''){
-                $tasks = $tasks->where('user_project_tasks.warning_sent',0);
-            }
-            $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
-                $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
-                $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
-            });
-            $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
-            $tasks = $tasks->get();
-
-            /*
-             * Getting free tasks
-             * */
-            $free_tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','covid_vaccine_doses.dose_name as task_name', 'covid_vaccine_doses.rule',
-                'projects.id as project_id','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','users.unique_id','users.username','users.email','users.phone');
-            $free_tasks = $free_tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
-            $free_tasks = $free_tasks->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
-            $free_tasks = $free_tasks->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
-            $free_tasks = $free_tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
-            $free_tasks = $free_tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
-            $free_tasks = $free_tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
-            $free_tasks = $free_tasks->whereIn('projects.type', ['free']);
-            $free_tasks = $free_tasks->where('users.id', $user->id);
-            if($user_project_id !=''){
-                $free_tasks = $free_tasks->where('user_project_tasks.user_project_id', $user_project_id);
-            }
-            $free_tasks = $free_tasks->whereIn('user_project_tasks.status', ['processing','not initiate']);
-            if($user_project_id==''){
-                $free_tasks = $free_tasks->where('user_project_tasks.warning_sent',0);
-            }
-            $free_tasks = $free_tasks->where(function ($query) use ($today,$next_day,$allow_date) {
-                $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
-                $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
-            });
-            $free_tasks = $free_tasks->orderBy('user_project_tasks.id','ASC');
-            $free_tasks = $free_tasks->get();
 
             $past_message_body = '';
             $past_email_body = '';
             $warning_message_body = '';
             $warning_email_body = '';
 
-            foreach($free_tasks as $free_task){
-                //$free_task_in_date_range = self::task_in_date_range($user->shipment_date,$free_task->days_range_start,$free_task->days_range_end);
-                $is_task_editable = self::isTaskEditable($free_task,$user->shipment_date);
-                if($is_task_editable==1){
-                    $email = [$free_task->email];
-
-                    if($free_task->original_delivery_date<$today){ // Due date have been past
-                        $past_message_body .=' Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. ';
-                        $past_email_body .='Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. <br>';
-
-                    }
-                    else{
-                        $warning_message_body .= 'Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. ';
-                        $warning_email_body .= 'Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. <br>';
-                    }
-
-                    /*
-                     * Update task warning email sent status
-                     * */
-                    $free_task->warning_sent = 1;
-                    $free_task->save();
+            //if($user_age >= 18){ // Free COVID 19 vaccine will be applicable only for 18+ aged user
+                /*
+                 * Getting free tasks
+                 * */
+                $free_tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','covid_vaccine_doses.dose_name as task_name', 'covid_vaccine_doses.rule',
+                    'projects.id as project_id','covid_vaccine_doses.days_range_start','covid_vaccine_doses.days_range_end','users.unique_id','users.username','users.email','users.phone');
+                $free_tasks = $free_tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+                $free_tasks = $free_tasks->leftJoin('covid_vaccine_doses', 'covid_vaccine_doses.id', '=', 'user_project_tasks.covid_vaccine_dose_id');
+                $free_tasks = $free_tasks->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
+                $free_tasks = $free_tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
+                $free_tasks = $free_tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
+                $free_tasks = $free_tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+                $free_tasks = $free_tasks->whereIn('projects.type', ['free']); // These are free projects
+                $free_tasks = $free_tasks->where('users.id', $user->id);
+                if($user_project_id !=''){
+                    $free_tasks = $free_tasks->where('user_project_tasks.user_project_id', $user_project_id);
                 }
-            }
+                $free_tasks = $free_tasks->whereIn('user_project_tasks.status', ['processing','not initiate']);
+                if($user_project_id==''){
+                    $free_tasks = $free_tasks->where('user_project_tasks.warning_sent',0);
+                }
+                $free_tasks = $free_tasks->where(function ($query) use ($today,$next_day,$allow_date) {
+                    $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
+                    $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
+                });
+                $free_tasks = $free_tasks->orderBy('user_project_tasks.id','ASC');
+                $free_tasks = $free_tasks->get();
 
-            foreach($tasks as $task){
-                //$task_in_date_range = self::task_in_date_range($user->shipment_date,$task->days_range_start,$task->days_range_end);
-                $is_task_editable = self::isTaskEditable($task,$user->shipment_date);
-                if($is_task_editable==1){
-                    $email = [$task->email];
+                foreach($free_tasks as $free_task){
+                    //$free_task_in_date_range = self::task_in_date_range($user->shipment_date,$free_task->days_range_start,$free_task->days_range_end);
+                    $is_task_editable = self::isTaskEditable($free_task,$user->shipment_date);
+                    if($is_task_editable==1){
+                        $email = [$free_task->email];
 
-                    if($task->original_delivery_date<$today){ // Due date have been past
-                        $past_message_body .=' Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                        $past_email_body .='Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+                        if($free_task->original_delivery_date<$today){ // Due date have been past
+                            $past_message_body .=' Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. ';
+                            $past_email_body .='Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. <br>';
 
+                        }
+                        else{
+                            $warning_message_body .= 'Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. ';
+                            $warning_email_body .= 'Your '.$free_task->project_name.' '.$free_task->task_name.' due date is on '.date('d F, Y',strtotime($free_task->original_delivery_date)).'. <br>';
+                        }
+
+                        /*
+                         * Update task warning email sent status
+                         * */
+                        $free_task->warning_sent = 1;
+                        $free_task->save();
                     }
-                    else{
-                        $warning_message_body .= 'Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
-                        $warning_email_body .= 'Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
-                    }
+                }
+            //}
 
-                    /*
-                     * Update task warning email sent status
-                     * */
-                    $task->warning_sent = 1;
-                    $task->save();
+
+
+            /*
+             * Getting premium tasks
+             * */
+            if($user->user_type=='premium'){
+                $tasks = UserProjectTask::select('user_project_tasks.*','projects.name as project_name', 'tasks.title','task_title.name as task_name', 'tasks.rule',
+                    'tasks.project_id','tasks.days_range_start','tasks.days_range_end','users.unique_id','users.username','users.email','users.phone');
+                $tasks = $tasks->leftJoin('tasks', 'tasks.id', '=', 'user_project_tasks.task_id');
+                $tasks = $tasks->leftJoin('task_title', 'task_title.id', '=', 'tasks.title_id');
+                $tasks = $tasks->leftJoin('user_projects', 'user_projects.id', '=', 'user_project_tasks.user_project_id');
+                $tasks = $tasks->leftJoin('projects', 'projects.id', '=', 'user_projects.project_id');
+                $tasks = $tasks->leftJoin('users', 'users.id', '=', 'user_projects.user_id');
+                $tasks = $tasks->whereIn('projects.type', ['running']); // These are premium projects
+                $tasks = $tasks->where('users.id', $user->id);
+                if($user_project_id !=''){
+                    $tasks = $tasks->where('user_project_tasks.user_project_id', $user_project_id);
+                }
+                $tasks = $tasks->whereIn('user_project_tasks.status', ['processing','not initiate']);
+                if($user_project_id==''){
+                    $tasks = $tasks->where('user_project_tasks.warning_sent',0);
+                }
+                $tasks = $tasks->where(function ($query) use ($today,$next_day,$allow_date) {
+                    $query->orWhereBetween('user_project_tasks.original_delivery_date',[$next_day,$allow_date]);
+                    $query->orWhere('user_project_tasks.original_delivery_date','<',$today);
+                });
+                $tasks = $tasks->orderBy('user_project_tasks.id','ASC');
+                $tasks = $tasks->get();
+
+                foreach($tasks as $task){
+                    //$task_in_date_range = self::task_in_date_range($user->shipment_date,$task->days_range_start,$task->days_range_end);
+                    $is_task_editable = self::isTaskEditable($task,$user->shipment_date);
+                    if($is_task_editable==1){
+                        $email = [$task->email];
+
+                        if($task->original_delivery_date<$today){ // Due date have been past
+                            $past_message_body .=' Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                            $past_email_body .='Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+
+                        }
+                        else{
+                            $warning_message_body .= 'Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. ';
+                            $warning_email_body .= 'Your '.$task->project_name.' '.$task->task_name.' due date is on '.date('d F, Y',strtotime($task->original_delivery_date)).'. <br>';
+                        }
+
+                        /*
+                         * Update task warning email sent status
+                         * */
+                        $task->warning_sent = 1;
+                        $task->save();
+                    }
                 }
             }
 
