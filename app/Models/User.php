@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function permissions()
     {
-        $instance = $this->hasMany('App\Models\UserPermission','user_id','id');
+        $instance = $this->hasMany('App\Models\GroupPermission','user_id','id');
         return $instance;
     }
 

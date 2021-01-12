@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Permission;
-use App\Models\UserPermission;
+use App\Models\GroupPermission;
 use App\Models\User;
 use App\Common;
 use App\SendMails;
@@ -67,11 +67,11 @@ class UserController extends Controller
     {
         try {
             $permissions = $request->permission;
-            UserPermission::where('user_id',$request->user_id)->delete();
+            GroupPermission::where('user_id',$request->user_id)->delete();
 
             if(count($permissions) != 0){
                 foreach($permissions as $permission){
-                    $upr = NEW UserPermission();
+                    $upr = NEW GroupPermission();
                     $upr->user_id = $request->user_id;
                     $upr->permission_id = $permission;
                     $upr->save();

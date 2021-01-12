@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserShipment;
 use App\Models\Payment;
 use App\Models\UserProject;
-use App\Models\UserPermission;
+use App\Models\GroupPermission;
 use App\Models\Message;
 use App\Models\UserSms;
 use App\Models\Buyer;
@@ -323,7 +323,7 @@ class UserController extends Controller
             /*
              * Delete user permission
              * */
-            UserPermission::where('user_id',$user_id)->delete();
+            GroupPermission::where('user_id',$user_id)->delete();
 
             /*
              * Delete user message
