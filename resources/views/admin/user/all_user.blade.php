@@ -1696,7 +1696,7 @@
             var validate = "";
 
             if (validate == "") {
-                var url = "{{ url('admin/unlock_birth_date') }}";
+                var url = "{{ url('admin/unlock_shipping_date') }}";
 
                 $.ajax({
                     type: "POST",
