@@ -224,12 +224,12 @@ class ProjectController extends Controller
     }
 
     public function unlockShippingDate(Request $request){
-        try{
+        //try{
             $shipment = UserShipment::where('user_id', $request->user_id)->first();
-            if($shipment->shipment_date_update_count != 0){
+            if(!empty($shipment)){
                 $shipment->shipment_date_update_count = 0;
+                $shipment->save();
             }
-            $shipment->save();
 
             $user = User::select('users.*','users.id as user_id')->where('id',$request->user_id)->first();
             $message = "Member ".$user->unique_id.": Birth date have been unlocked";
@@ -240,12 +240,12 @@ class ProjectController extends Controller
             $result = Common::saveNotification($user,$message);
 
             return ['status'=>200, 'reason'=>'Shipment date unlocked successfully'];
-        }
+        /*}
         catch (\Exception $e) {
             //SendMails::sendErrorMail($e->getMessage(), null, 'Admin/ProjectController', 'unlockShippingDate', $e->getLine(),
                 //$e->getFile(), '', '', '', '');
             // message, view file, controller, method name, Line number, file,  object, type, argument, email.
             return [ 'status' => 401, 'reason' => 'Something went wrong. Try again later'];
-        }
+        }*/
     }
 }
